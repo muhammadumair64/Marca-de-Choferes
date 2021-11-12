@@ -180,6 +180,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/SubmitButton"
                 android:layout_width="match_parent"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_height="@dimen/_55sdp"
                 android:layout_marginTop="@dimen/_35sdp"
                 android:background="@drawable/button_gradient"

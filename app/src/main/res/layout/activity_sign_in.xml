@@ -159,6 +159,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="match_parent"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_height="@dimen/_55sdp"
             android:background="@drawable/button_gradient"
             android:text="Sign In"
