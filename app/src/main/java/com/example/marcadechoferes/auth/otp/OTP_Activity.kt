@@ -3,6 +3,8 @@ package com.example.marcadechoferes.auth.otp
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.example.marcadechoferes.R
@@ -23,6 +25,13 @@ class OTP_Activity : AppCompatActivity() {
 
     fun initViews(){
         otpViewModel.viewsForOTPScreen(context,binding)
+        showSoftKeyboard(binding.edt1)
+    }
 
+    fun showSoftKeyboard(view: View) {
+        if (view.requestFocus()) {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 }

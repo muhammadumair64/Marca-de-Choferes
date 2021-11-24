@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:top="@dimen/switch_padding"
+    android:bottom="@dimen/switch_padding"
+    android:start="@dimen/switch_padding"
+    android:end="@dimen/switch_padding"
+    android:gravity="center_vertical">
+    <shape
+        >
+        <stroke
+            android:color="#7a59fc"
+            android:width="@dimen/_1sdp"/>
+        <size
+            android:height="@dimen/switch_size"
+            android:width="@dimen/switch_size"
+            />
+
+        <corners
+            android:radius="@dimen/switch_raduis"/>
+    </shape>
+</item>
+</layer-list>

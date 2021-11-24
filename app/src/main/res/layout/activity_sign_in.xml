@@ -48,9 +48,11 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/open_sans_semibold"
                 android:gravity="center"
-                android:text="Sign in to your account"
+                android:text="Inicia sesión en tu cuenta"
                 android:textColor="@color/auth_text_color"
-                android:textSize="@dimen/_17sdp" />
+                android:textSize="@dimen/_17sdp"
+                android:textStyle="bold"
+                />
 
         </LinearLayout>
 
@@ -69,12 +71,12 @@
             android:paddingBottom="@dimen/_5sdp">
 
             <TextView
-                android:textColor="@color/auth_hint_color"
                 android:id="@+id/Email_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/open_sans_regular"
-                android:text="Email"
+                android:text="Correo electrónico"
+                android:textColor="@color/auth_hint_color"
                 android:textSize="@dimen/_10sdp" />
 
 
@@ -83,6 +85,7 @@
                 android:layout_width="@dimen/_200sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_below="@+id/Email_title"
+                android:textColor="@color/Privacy_policy_text_color"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -90,7 +93,7 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:inputType="textEmailAddress"
                 android:text="michael@gmail.com"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_13sdp" />
 
         </RelativeLayout>
 
@@ -108,12 +111,12 @@
             android:paddingBottom="@dimen/_5sdp">
 
             <TextView
-                android:textColor="@color/auth_hint_color"
                 android:id="@+id/password_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/open_sans_regular"
-                android:text="Password"
+                android:text="Contraseña"
+                android:textColor="@color/auth_hint_color"
                 android:textSize="@dimen/_10sdp" />
 
 
@@ -128,8 +131,8 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:gravity="center_vertical"
                 android:inputType="textPassword"
-                android:text="helloWorld "
-                android:textSize="@dimen/_15sdp" />
+                android:text="hola android"
+                android:textSize="@dimen/_13sdp" />
 
             <ImageView
                 android:id="@+id/show_pass_btn"
@@ -153,22 +156,23 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/open_sans_regular"
-            android:text="Forgot your password?"
+            android:text="¿Ha olvidado su contraseña?"
             android:textColor="@color/Forgot_password_Option_Color"
-            android:textSize="@dimen/_12sdp" />
+            android:textSize="@dimen/_10sdp" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="match_parent"
+            android:id="@+id/sign_in_btn"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_height="@dimen/_55sdp"
-            android:background="@drawable/button_gradient"
-            android:text="Sign In"
-            android:textColor="@color/white"
-            android:textAllCaps="false"
-            android:textSize="@dimen/_18sdp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_63sdp"
             android:layout_below="@id/forgotPassword"
             android:layout_marginTop="@dimen/_30sdp"
-            android:fontFamily="@font/open_sans_regular" />
+            android:background="@drawable/button_gradient"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="Inicia sesión"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp" />
 
 
         <LinearLayout
@@ -180,20 +184,15 @@
             android:layout_marginBottom="@dimen/_30sdp">
 
             <TextView
+                android:gravity="center"
                 android:textColor="@color/Privacy_policy_text_color"
                 android:fontFamily="@font/open_sans_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="By singing in you agree to our "
+                android:text="Al iniciar sesión, usted acepta nuestra Política de privacidad y Términos.  "
                 android:textSize="@dimen/_9sdp" />
 
-            <TextView
-                android:textColor="@color/Privacy_policy_text_color"
-                android:fontFamily="@font/open_sans_regular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_text"
-                android:textSize="@dimen/_9sdp" />
+
 
 
         </LinearLayout>

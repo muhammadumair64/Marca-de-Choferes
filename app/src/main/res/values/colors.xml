@@ -15,4 +15,13 @@
     <color name="gradient_end">#653FFB</color>
     <color name="Privacy_policy_text_color">#000000</color>
     <color name="auth_hint_color">#979797</color>
+    <color name="blue_textColor">#7A59FC</color>
+    <color name="red_text">#FF4D4C</color>
+    <color name="defaultWorkColor">#E6EAF2</color>
+    <color name="redGradiendStart">#FF4D4E</color>
+    <color name="redGradientcenter">#FF4C5D</color>
+    <color name="redGradientend">#FF4B6E</color>
+    <color name="barColor">#7A59FC</color>
+    <color name="vehiclesNameText">#C6C6C6</color>
+    <color name="selectedColor">#42D595</color>
 </resources>

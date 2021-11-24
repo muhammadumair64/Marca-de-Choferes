@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_40sdp"
                 android:fontFamily="@font/open_sans_semibold"
-                android:text="Enter verification code"
+                android:text="Introduzca el código de verificación"
                 android:textColor="@color/auth_text_color"
                 android:textSize="@dimen/_20sdp" />
 
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:fontFamily="@font/open_sans_regular"
-                android:text="We sent you a verification code via Email."
+                android:text="Introduzca el código de verificación"
                 android:textSize="@dimen/_10sdp" />
 
 
@@ -185,7 +185,7 @@
                 android:layout_marginTop="@dimen/_35sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"
-                android:text="Submit"
+                android:text="Enviar"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_18sdp"

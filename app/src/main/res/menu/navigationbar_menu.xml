@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_icon_feather_calendar"
+        android:title="Jornada"
+        app:cnb_backgroundColor="#7A59FC"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white"
+        />
+    <item
+        android:id="@+id/User"
+        android:icon="@drawable/ic_user"
+        android:title="Perfil"
+        app:cnb_backgroundColor="#7A59FC"
+        app:cnb_iconColor="@color/white"
+        app:cnb_textColor="@color/white"
+        />
+    <item
+        android:id="@+id/Settings"
+        android:icon="@drawable/ic_settings"
+       app:cnb_iconSize="20dp"
+        android:title="Configuración"
+        app:cnb_iconColor="@color/white"
+        app:cnb_backgroundColor="#7A59FC"
+        app:cnb_textColor="@color/white"
+    />
+
+</menu>

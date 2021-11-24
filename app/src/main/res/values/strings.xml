@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Marca de Choferes</string>
     <string name="my_text"><u>Privacy Policy and Terms</u></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="start">Start</string>
 </resources>

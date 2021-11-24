@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    >
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dialogbox_shape"
+        >
+
+        <LinearLayout
+            android:layout_margin="@dimen/_10sdp"
+            android:id="@+id/searchbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:orientation="horizontal"
+            android:background="@drawable/item_searchbox"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingBottom="@dimen/_3sdp"
+            android:paddingStart="@dimen/_6sdp"
+            android:paddingEnd="@dimen/_6sdp">
+
+            <SearchView
+                android:id="@+id/searchText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:searchIcon="@null"
+                android:text="Search Vehicle here"
+                android:background="@null"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                android:searchHintIcon="@null"
+                android:searchIcon="@null"
+                app:closeIcon="@drawable/ic_close" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/divider"
+            android:layout_below="@id/searchbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@drawable/ic_line_" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/vehiclesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/divider"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:scrollIndicators="right"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_vehiclelist" />
+
+
+    </RelativeLayout>
+</layout>
