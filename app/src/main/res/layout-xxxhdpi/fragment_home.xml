@@ -197,7 +197,6 @@
             android:layout_below="@id/timerLayout"
             >
             <RelativeLayout
-                android:visibility="gone"
                 android:id="@+id/spacer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_17sdp"/>
@@ -438,7 +437,7 @@
             android:visibility="gone" />
 
         <LinearLayout
-android:visibility="gone"
+            android:visibility="gone"
             android:id="@+id/StateActive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

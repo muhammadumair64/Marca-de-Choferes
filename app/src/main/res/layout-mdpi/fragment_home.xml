@@ -14,11 +14,12 @@
         android:paddingStart="@dimen/_15sdp"
         android:paddingEnd="@dimen/_15sdp"
         tools:context=".mainscreen.home.HomeFragment">
+
         <RelativeLayout
             android:id="@+id/upper_layout"
-            android:layout_marginTop="@dimen/_15sdp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_60sdp">
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/_15sdp">
 
         </RelativeLayout>
 
@@ -36,12 +37,12 @@
                 android:transitionName="image_small" />
 
             <LinearLayout
-                android:layout_marginTop="@dimen/_3sdp"
                 android:id="@+id/namelayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginStart="@dimen/_10sdp"
+
+                android:layout_marginTop="@dimen/_3sdp"
                 android:layout_toEndOf="@id/profile_image"
                 android:orientation="vertical"
                 android:transitionName="small_name_layout">
@@ -74,8 +75,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/_7sdp"
                 android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_7sdp"
                 android:orientation="vertical"
                 android:transitionName="small_date">
 
@@ -108,8 +109,7 @@
             android:id="@+id/timerLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_210sdp"
-            android:layout_below="@id/upper_layout"
-          >
+            android:layout_below="@id/upper_layout">
 
             <com.mikhaellopez.circularprogressbar.CircularProgressBar
                 android:id="@+id/bar"
@@ -192,26 +192,26 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_below="@id/timerLayout"
-            >
+            android:orientation="vertical">
+
             <RelativeLayout
-                android:visibility="gone"
                 android:id="@+id/spacer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_15sdp"/>
+                android:layout_height="@dimen/_15sdp"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
                 >
+
                 <LinearLayout
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -233,7 +233,7 @@
                             android:fontFamily="@font/open_sans_regular"
                             android:text="jornada laboral (08:30)"
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_9sdp" />
 
 
                     </LinearLayout>
@@ -258,7 +258,7 @@
                             android:fontFamily="@font/open_sans_regular"
                             android:text="Tiempo trabajado"
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_9sdp" />
 
 
                     </LinearLayout>
@@ -283,7 +283,7 @@
                             android:fontFamily="@font/open_sans_regular"
                             android:text="Descansar"
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_9sdp" />
 
 
                     </LinearLayout>
@@ -308,7 +308,7 @@
                             android:fontFamily="@font/open_sans_regular"
                             android:text="Horas extras (00:00)"
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_9sdp" />
 
 
                     </LinearLayout>
@@ -319,9 +319,9 @@
                 <LinearLayout
                     android:id="@+id/vehicle_list_btn"
                     android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_35sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
                     <ImageView
@@ -365,9 +365,9 @@
                 <LinearLayout
                     android:id="@+id/status_list_btn"
                     android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_35sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/_55sdp"
+                    android:layout_marginTop="@dimen/_43sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
 
@@ -398,10 +398,9 @@
         <RelativeLayout
             android:id="@+id/initialState"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_35sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_above="@id/bottemLayout"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/item_textboxboarderforname"
             android:paddingStart="@dimen/_15sdp"
             android:paddingEnd="@dimen/_15sdp">
@@ -424,9 +423,9 @@
             android:id="@+id/secondState"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_35sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_above="@id/bottemLayout"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
             android:text="Empezar"
@@ -437,19 +436,18 @@
             android:visibility="gone" />
 
         <LinearLayout
-
             android:id="@+id/StateActive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+            android:layout_above="@id/bottemLayout"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/TakeBreak"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"
                 android:text="Descansar"
@@ -459,12 +457,10 @@
                 android:textStyle="bold" />
 
             <RelativeLayout
-
                 android:id="@+id/EndDay"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_15sdp"
                 android:background="@drawable/item_textboxredboarder"
                 android:paddingStart="@dimen/_15sdp"
                 android:paddingEnd="@dimen/_15sdp">
@@ -487,6 +483,12 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/bottemLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_55sdp"
+            android:layout_alignParentBottom="true"
+            />
 
 
     </RelativeLayout>

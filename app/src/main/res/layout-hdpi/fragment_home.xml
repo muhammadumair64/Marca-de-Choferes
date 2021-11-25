@@ -14,6 +14,7 @@
         android:paddingStart="@dimen/_15sdp"
         android:paddingEnd="@dimen/_15sdp"
         tools:context=".mainscreen.home.HomeFragment">
+
         <RelativeLayout
             android:id="@+id/upper_layout"
             android:layout_marginTop="@dimen/_15sdp"
@@ -140,7 +141,7 @@
             android:layout_height="@dimen/_200sdp"
             android:layout_below="@id/upper_layout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:gravity="center">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -195,7 +196,7 @@
             android:layout_below="@id/timerLayout"
             >
             <RelativeLayout
-
+                android:visibility="gone"
                 android:id="@+id/spacer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_17sdp"/>
@@ -218,20 +219,21 @@
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/_15sdp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_defualtwork"
+                            android:background="@drawable/ic_defualtwork"
 
                             />
 
                         <TextView
+                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/open_sans_regular"
                             android:text="jornada laboral (08:30)"
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_9sdp" />
 
 
                     </LinearLayout>
@@ -243,20 +245,21 @@
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/_15sdp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_workdone"
+                            android:background="@drawable/ic_workdone"
 
                             />
 
                         <TextView
+                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/open_sans_regular"
                             android:text="Tiempo trabajado"
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_9sdp" />
 
 
                     </LinearLayout>
@@ -268,9 +271,9 @@
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/_15sdp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_break"
+                            android:background="@drawable/ic_break"
 
                             />
 
@@ -280,8 +283,9 @@
                             android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/open_sans_regular"
                             android:text="Descansar"
+                            android:layout_gravity="center_vertical"
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_9sdp" />
 
 
                     </LinearLayout>
@@ -293,20 +297,21 @@
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="@dimen/_15sdp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_overtime"
+                            android:background="@drawable/ic_overtime"
 
                             />
 
                         <TextView
+                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/open_sans_regular"
                             android:text="Horas extras (00:00)"
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_10sdp" />
+                            android:textSize="@dimen/_9sdp" />
 
 
                     </LinearLayout>
@@ -425,7 +430,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
-       android:layout_above="@id/bottemLayout"
+            android:layout_above="@id/bottemLayout"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
@@ -434,7 +439,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold"
-             />
+            />
 
         <LinearLayout
             android:visibility="gone"
@@ -445,6 +450,7 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatButton
+
                 android:id="@+id/TakeBreak"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"

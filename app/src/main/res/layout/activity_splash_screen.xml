@@ -6,15 +6,21 @@
     <data>
 
     </data>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".splashscreen.SplashScreen"
-        android:background="@drawable/bg"
         android:paddingEnd="@dimen/_15sdp"
         android:paddingStart="@dimen/_15sdp">
-
         <ImageView
             android:id="@+id/Logo"
             android:layout_width="wrap_content"
@@ -51,4 +57,8 @@
 
 
     </RelativeLayout>
+</RelativeLayout>
+
+
+
 </layout>

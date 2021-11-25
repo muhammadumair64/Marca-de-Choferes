@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_50sdp">
 
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -425,7 +426,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
-       android:layout_above="@id/bottemLayout"
+            android:layout_above="@id/bottemLayout"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
@@ -434,7 +435,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold"
-             />
+            />
 
         <LinearLayout
             android:visibility="gone"
