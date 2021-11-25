@@ -31,6 +31,9 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item_textboxredboarder.xml" value="0.12916666666666668" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item_track.xml" value="0.150814332247557" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/track.xml" value="0.13472222222222222" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-mdpi/fragment_home.xml" value="0.5" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxhdpi/fragment_home.xml" value="0.18227848101265823" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxxhdpi/fragment_home.xml" value="0.16" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/activity_create_new_password_screen.xml" value="0.2" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/activity_forgot_password.xml" value="0.25" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/activity_loading_screen.xml" value="0.14210526315789473" />
@@ -40,7 +43,7 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/activity_splash_screen.xml" value="0.18" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/activity_testing.xml" value="0.14" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_configuration.xml" value="0.67" />
-        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_profile.xml" value="0.5" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item.xml" value="0.14210526315789473" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item_searchviewbox.xml" value="0.14210526315789473" />
@@ -62,6 +65,7 @@
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

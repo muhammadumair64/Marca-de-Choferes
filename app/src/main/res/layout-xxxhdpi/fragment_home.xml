@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:paddingStart="@dimen/_15sdp"
+        android:paddingEnd="@dimen/_15sdp"
+        tools:context=".mainscreen.home.HomeFragment">
+        <RelativeLayout
+            android:id="@+id/upper_layout"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_60sdp">
+
+        </RelativeLayout>
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_400sdp"
+            android:layout_marginTop="@dimen/_15sdp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:src="@drawable/profile_img"
+                android:transitionName="image_small" />
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/_7sdp"
+                android:id="@+id/namelayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toEndOf="@id/profile_image"
+                android:orientation="vertical"
+                android:transitionName="small_name_layout">
+
+                <TextView
+                    android:id="@+id/Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="Johnathan"
+                    android:textColor="@color/Privacy_policy_text_color"
+                    android:textSize="@dimen/_18sdp"
+                    android:transitionName="small_name"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_regular"
+                    android:text="Michelle"
+                    android:textColor="@color/auth_hint_color"
+                    android:textSize="@dimen/_17sdp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dateLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:orientation="vertical"
+                android:transitionName="small_date">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_semibold"
+                    android:text="Lunes"
+                    android:textColor="@color/Privacy_policy_text_color"
+                    android:textSize="@dimen/_18sdp"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:fontFamily="@font/open_sans_regular"
+                    android:text="26 Oct."
+                    android:textColor="@color/blue_textColor"
+                    android:textSize="@dimen/_17sdp" />
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/timerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_210sdp"
+            android:layout_below="@id/upper_layout"
+            android:layout_marginTop="@dimen/_15sdp">
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/bar"
+                android:layout_width="@dimen/_210sdp"
+                android:layout_height="@dimen/_210sdp"
+                android:layout_centerHorizontal="true"
+                app:cpb_background_progressbar_color="@color/defaultWorkColor"
+                app:cpb_background_progressbar_width="10dp"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progressbar_color="@color/barColor"
+                app:cpb_progressbar_width="10dp"
+                app:cpb_round_border="true" />
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/breakBar"
+                android:layout_width="@dimen/_180sdp"
+                android:layout_height="@dimen/_180sdp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                app:cpb_background_progressbar_color="@color/white"
+                app:cpb_background_progressbar_width="5dp"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progressbar_width="10dp"
+                app:cpb_round_border="true" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_below="@id/upper_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:gravity="center">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/workTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/open_sans_regular"
+                    android:includeFontPadding="false"
+                    android:text="00:00"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_38sdp"
+                    android:textStyle="bold"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/aligner"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/TimerBreak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/open_sans_regular"
+                    android:includeFontPadding="false"
+                    android:text="00:00"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/aligner"
+                    app:layout_constraintStart_toEndOf="@id/workTimer"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/aligner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_42sdp"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteY="1dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/timerLayout"
+            >
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/spacer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_17sdp"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                >
+                <LinearLayout
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="@dimen/_35sdp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_defualtwork"
+
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:fontFamily="@font/open_sans_regular"
+                            android:text="jornada laboral (08:30)"
+                            android:textColor="@color/Privacy_policy_text_color"
+                            android:textSize="@dimen/_10sdp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_workdone"
+
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:fontFamily="@font/open_sans_regular"
+                            android:text="Tiempo trabajado"
+                            android:textColor="@color/Privacy_policy_text_color"
+                            android:textSize="@dimen/_10sdp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_break"
+
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:fontFamily="@font/open_sans_regular"
+                            android:text="Descansar"
+                            android:textColor="@color/Privacy_policy_text_color"
+                            android:textSize="@dimen/_10sdp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_overtime"
+
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:fontFamily="@font/open_sans_regular"
+                            android:text="Horas extras (00:00)"
+                            android:textColor="@color/Privacy_policy_text_color"
+                            android:textSize="@dimen/_10sdp" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/vehicle_list_btn"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/_35sdp"
+                    android:background="@drawable/item_popup_btn_bg">
+
+                    <ImageView
+                        android:id="@+id/icon_car"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_17sdp"
+                        android:src="@drawable/ic_icon_awesome_car_alt" />
+
+                    <TextView
+                        android:id="@+id/vehicle_name_selected"
+                        android:layout_width="@dimen/_58sdp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:gravity="center_vertical"
+                        android:text="Vehículo "
+                        android:textColor="@color/Privacy_policy_text_color" />
+
+                    <TextView
+                        android:id="@+id/dots"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="..."
+                        android:textColor="@color/white"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/Arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:src="@drawable/ic_arrow_down" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/status_list_btn"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/_85sdp"
+                    android:background="@drawable/item_popup_btn_bg">
+
+
+                    <TextView
+                        android:id="@+id/status_selected"
+                        android:layout_width="@dimen/_85sdp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:gravity="center_vertical"
+                        android:text="Selección estado"
+                        android:textColor="@color/Privacy_policy_text_color"
+                        android:textSize="@dimen/_10sdp" />/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:src="@drawable/ic_arrow" />
+
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/initialState"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_55sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_35sdp"
+            android:background="@drawable/item_textboxboarderforname"
+            android:paddingStart="@dimen/_15sdp"
+            android:paddingEnd="@dimen/_15sdp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:background="@color/white"
+                android:fontFamily="@font/open_sans_regular"
+                android:gravity="center"
+                android:text="Empezar"
+                android:textColor="@color/auth_hint_color"
+                android:textSize="@dimen/_18sdp" />
+
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/secondState"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_55sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_35sdp"
+            android:background="@drawable/button_gradient"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="Empezar"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <LinearLayout
+android:visibility="gone"
+            android:id="@+id/StateActive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/TakeBreak"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_55sdp"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:background="@drawable/button_gradient"
+                android:fontFamily="@font/open_sans_regular"
+                android:text="Descansar"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18sdp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/EndDay"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_55sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:background="@drawable/item_textboxredboarder"
+                android:paddingStart="@dimen/_15sdp"
+                android:paddingEnd="@dimen/_15sdp">
+
+                <TextView
+                    android:id="@+id/Logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/open_sans_regular"
+                    android:gravity="center"
+                    android:text="Finalizar jornada"
+                    android:textColor="@color/red_text"
+                    android:textSize="@dimen/_18sdp" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+</layout>
