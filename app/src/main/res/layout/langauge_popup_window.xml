@@ -6,7 +6,7 @@
     >
     <RelativeLayout
         android:id="@+id/upper_layout"
-        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_15sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_25sdp"
@@ -26,18 +26,18 @@
 
         <ImageView
             android:id="@+id/close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_17sdp"
+            android:layout_height="@dimen/_17sdp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_close" />
+            android:background="@drawable/ic_close" />
 
 
     </RelativeLayout>
     <TextView
         android:id="@+id/divider"
         android:layout_below="@id/upper_layout"
-        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_3sdp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
         android:background="@drawable/ic_separator"
@@ -45,21 +45,21 @@
 
     <RelativeLayout
         android:id="@+id/spanish"
-        android:layout_below="@id/divider"
-        android:layout_marginTop="@dimen/_20sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/divider"
         android:layout_marginStart="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:layout_marginEnd="@dimen/_25sdp">
 
         <TextView
-            android:layout_centerVertical="true"
-            android:textSize="@dimen/_14sdp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:text="Español"
-            android:textColor="@color/auth_hint_color" />
+            android:textColor="@color/auth_hint_color"
+            android:textSize="@dimen/_14sdp" />
 
         <ImageView
             android:layout_width="wrap_content"

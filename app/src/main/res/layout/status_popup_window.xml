@@ -7,7 +7,7 @@
     android:background="@drawable/dialogbox_shape">
     <RelativeLayout
         android:id="@+id/upper_layout"
-        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_15sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_25sdp"
@@ -27,31 +27,31 @@
 
         <ImageView
             android:id="@+id/close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_17sdp"
+            android:layout_height="@dimen/_17sdp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_close" />
+            android:background="@drawable/ic_close" />
 
 
     </RelativeLayout>
     <TextView
         android:id="@+id/divider"
         android:layout_below="@id/upper_layout"
-        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_2sdp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
         android:background="@drawable/ic_separator"
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:id="@+id/status_RV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/divider"
         android:layout_marginStart="@dimen/_22sdp"
-        android:layout_marginTop="@dimen/_22sdp"
+        android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginEnd="@dimen/_22sdp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_status_list" />
 </RelativeLayout>

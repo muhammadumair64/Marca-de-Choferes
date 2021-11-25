@@ -31,6 +31,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_40sdp"
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:fontFamily="@font/open_sans_regular"
-                android:text="Introduzca el código de verificación"
+                android:text="Le enviamos un código de verificación por correo electrónico."
                 android:textSize="@dimen/_10sdp" />
 
 
@@ -181,7 +182,7 @@
                 android:id="@+id/SubmitButton"
                 android:layout_width="match_parent"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/_55sdp"
+                android:layout_height="@dimen/_58sdp"
                 android:layout_marginTop="@dimen/_35sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"

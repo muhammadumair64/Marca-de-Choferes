@@ -26,18 +26,23 @@
                 app:navGraph="@navigation/nav_graph" />
 
         </FrameLayout>
-
+<androidx.cardview.widget.CardView
+    android:elevation="@dimen/_40sdp"
+    app:cardElevation="@dimen/_10sdp"
+    android:layout_alignParentBottom="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
         <com.ismaeldivita.chipnavigation.ChipNavigationBar
-             android:textSize="@dimen/_15sdp"
             android:id="@+id/menu"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_50sdp"
-            android:layout_alignParentBottom="true"
             android:background="@drawable/item_chipnavigationlayout"
-            android:elevation="@dimen/_16sdp"
+            android:elevation="@dimen/_40sdp"
+            android:textSize="@dimen/_22sdp"
             app:cnb_iconColor="@color/white"
+            app:cnb_iconSize="@dimen/_16sdp"
             app:cnb_menuResource="@menu/navigationbar_menu"
             app:cnb_orientationMode="horizontal" />
-
+</androidx.cardview.widget.CardView>
     </RelativeLayout>
 </layout>

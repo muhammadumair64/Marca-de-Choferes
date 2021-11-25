@@ -164,7 +164,7 @@
             android:id="@+id/sign_in_btn"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_63sdp"
+            android:layout_height="@dimen/_58sdp"
             android:layout_below="@id/forgotPassword"
             android:layout_marginTop="@dimen/_30sdp"
             android:background="@drawable/button_gradient"

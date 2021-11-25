@@ -107,14 +107,14 @@
         <RelativeLayout
             android:id="@+id/timerLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_210sdp"
             android:layout_below="@id/upper_layout"
             android:layout_marginTop="@dimen/_15sdp">
 
             <com.mikhaellopez.circularprogressbar.CircularProgressBar
                 android:id="@+id/bar"
-                android:layout_width="@dimen/_245sdp"
-                android:layout_height="@dimen/_245sdp"
+                android:layout_width="@dimen/_210sdp"
+                android:layout_height="@dimen/_210sdp"
                 android:layout_centerHorizontal="true"
                 app:cpb_background_progressbar_color="@color/defaultWorkColor"
                 app:cpb_background_progressbar_width="10dp"
@@ -125,8 +125,8 @@
 
             <com.mikhaellopez.circularprogressbar.CircularProgressBar
                 android:id="@+id/breakBar"
-                android:layout_width="@dimen/_210sdp"
-                android:layout_height="@dimen/_210sdp"
+                android:layout_width="@dimen/_180sdp"
+                android:layout_height="@dimen/_180sdp"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="@dimen/_10sdp"
                 app:cpb_background_progressbar_color="@color/white"
@@ -138,11 +138,11 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
             android:layout_below="@id/upper_layout"
-            android:layout_marginTop="@dimen/_15sdp"
             android:layout_centerHorizontal="true"
-            android:layout_width="@dimen/_245sdp"
-            android:layout_height="@dimen/_245sdp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:gravity="center">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -158,13 +158,12 @@
                     android:includeFontPadding="false"
                     android:text="00:00"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_42sdp"
+                    android:textSize="@dimen/_38sdp"
                     android:textStyle="bold"
                     app:layout_constraintBaseline_toBaselineOf="@+id/aligner"
                     tools:ignore="MissingConstraints" />
 
                 <TextView
-                    app:layout_constraintBaseline_toBaselineOf="@+id/aligner"
                     android:id="@+id/TimerBreak"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -173,8 +172,8 @@
                     android:includeFontPadding="false"
                     android:text="00:00"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"
-                    android:textStyle="bold"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/aligner"
                     app:layout_constraintStart_toEndOf="@id/workTimer"
                     tools:ignore="MissingConstraints" />
 
@@ -198,6 +197,7 @@
          android:layout_below="@id/timerLayout"
          >
          <RelativeLayout
+             android:visibility="gone"
              android:id="@+id/spacer"
              android:layout_width="match_parent"
              android:layout_height="@dimen/_17sdp"/>
@@ -234,7 +234,7 @@
                          android:fontFamily="@font/open_sans_regular"
                          android:text="jornada laboral (08:30)"
                          android:textColor="@color/Privacy_policy_text_color"
-                         android:textSize="@dimen/_12sdp" />
+                         android:textSize="@dimen/_10sdp" />
 
 
                  </LinearLayout>
@@ -259,7 +259,7 @@
                          android:fontFamily="@font/open_sans_regular"
                          android:text="Tiempo trabajado"
                          android:textColor="@color/Privacy_policy_text_color"
-                         android:textSize="@dimen/_12sdp" />
+                         android:textSize="@dimen/_10sdp" />
 
 
                  </LinearLayout>
@@ -284,7 +284,7 @@
                          android:fontFamily="@font/open_sans_regular"
                          android:text="Descansar"
                          android:textColor="@color/Privacy_policy_text_color"
-                         android:textSize="@dimen/_12sdp" />
+                         android:textSize="@dimen/_10sdp" />
 
 
                  </LinearLayout>
@@ -309,7 +309,7 @@
                          android:fontFamily="@font/open_sans_regular"
                          android:text="Horas extras (00:00)"
                          android:textColor="@color/Privacy_policy_text_color"
-                         android:textSize="@dimen/_12sdp" />
+                         android:textSize="@dimen/_10sdp" />
 
 
                  </LinearLayout>
@@ -323,7 +323,7 @@
                  android:layout_height="@dimen/_35sdp"
                  android:layout_alignParentRight="true"
                  android:layout_marginTop="@dimen/_25sdp"
-                 android:background="@drawable/item_textboxboarderforname">
+                 android:background="@drawable/item_popup_btn_bg">
 
                  <ImageView
                      android:id="@+id/icon_car"
@@ -334,23 +334,24 @@
                      android:src="@drawable/ic_icon_awesome_car_alt" />
 
                  <TextView
-                     android:gravity="center_vertical"
                      android:id="@+id/vehicle_name_selected"
                      android:layout_width="@dimen/_58sdp"
                      android:layout_height="@dimen/_15sdp"
                      android:layout_gravity="center_vertical"
                      android:layout_marginStart="@dimen/_5sdp"
+                     android:gravity="center_vertical"
                      android:text="Vehículo "
                      android:textColor="@color/Privacy_policy_text_color" />
+
                  <TextView
-                     android:visibility="gone"
                      android:id="@+id/dots"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:layout_gravity="center_vertical"
                      android:text="..."
                      android:textColor="@color/white"
-                     />
+                     android:visibility="gone" />
+
                  <ImageView
                      android:id="@+id/Arrow"
                      android:layout_width="wrap_content"
@@ -368,11 +369,10 @@
                  android:layout_height="@dimen/_35sdp"
                  android:layout_alignParentRight="true"
                  android:layout_marginTop="@dimen/_75sdp"
-                 android:background="@drawable/item_textboxboarderforname">
+                 android:background="@drawable/item_popup_btn_bg">
 
 
                  <TextView
-                     android:textSize="@dimen/_10sdp"
                      android:id="@+id/status_selected"
                      android:layout_width="@dimen/_85sdp"
                      android:layout_height="@dimen/_15sdp"
@@ -380,7 +380,8 @@
                      android:layout_marginStart="@dimen/_10sdp"
                      android:gravity="center_vertical"
                      android:text="Selección estado"
-                     android:textColor="@color/Privacy_policy_text_color" />/>
+                     android:textColor="@color/Privacy_policy_text_color"
+                     android:textSize="@dimen/_10sdp" />/>
 
                  <ImageView
                      android:layout_width="wrap_content"
@@ -398,7 +399,7 @@
         <RelativeLayout
             android:id="@+id/initialState"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_55sdp"
+            android:layout_height="@dimen/_50sdp"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_35sdp"
@@ -419,23 +420,25 @@
                 android:textSize="@dimen/_18sdp" />
 
         </RelativeLayout>
-        <androidx.appcompat.widget.AppCompatButton
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_35sdp"
-            android:id="@+id/secondState"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_55sdp"
-            android:background="@drawable/button_gradient"
-            android:fontFamily="@font/open_sans_regular"
-            android:text="Empezar"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_18sdp"
-            android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/secondState"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/_35sdp"
+                android:background="@drawable/button_gradient"
+                android:fontFamily="@font/open_sans_regular"
+                android:text="Empezar"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18sdp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
         <LinearLayout
-         android:visibility="gone"
+
             android:id="@+id/StateActive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -446,7 +449,7 @@
                 android:id="@+id/TakeBreak"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_55sdp"
+                android:layout_height="@dimen/_45sdp"
                 android:layout_marginTop="@dimen/_30sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"
@@ -460,7 +463,7 @@
 
                 android:id="@+id/EndDay"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_55sdp"
+                android:layout_height="@dimen/_45sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_15sdp"
                 android:background="@drawable/item_textboxredboarder"

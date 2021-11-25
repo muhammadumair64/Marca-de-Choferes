@@ -16,6 +16,7 @@ import javax.inject.Inject
 import android.animation.ValueAnimator
 import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.graphics.Color
+import android.graphics.Typeface
 import android.transition.Fade
 
 import android.widget.TextView
@@ -179,8 +180,18 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             dataBinding?.breakBar?.progressBarColor= Color.parseColor("#FFD6D9")
             dataBinding?.StateActive?.setVisibility(View.GONE)
             dataBinding?.spacer?.setVisibility(View.VISIBLE)
-            dataBinding?.secondState?.setVisibility(View.VISIBLE)
-            dataBinding?.initialState?.setVisibility(View.GONE)
+            dataBinding?.secondState?.setVisibility(View.GONE)
+            dataBinding?.initialState?.setVisibility(View.VISIBLE)
+            dataBinding?.vehicleListBtn?.setBackgroundResource(R.drawable.item_popup_btn_bg)
+            dataBinding?.iconCar?.setImageResource(R.drawable.ic_icon_awesome_car_alt)
+            dataBinding?.vehicleNameSelected?.setTextColor(Color.parseColor("#000000"))
+            dataBinding?.vehicleNameSelected?.text = "Vehículo "
+            (activityContext as MainActivity).time = 0.0
+            dataBinding?.workTimer?.text="00:00"
+            dataBinding?.TimerBreak?.text="00:00"
+            dataBinding?.statusSelected?.text="Selección estado"
+            dataBinding?.statusListBtn?.visibility=View.GONE
+            dataBinding?.vehicleNameSelected?.setTypeface(dataBinding?.vehicleNameSelected?.getTypeface(), Typeface.NORMAL)
 
         }
 
@@ -203,8 +214,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
 
     fun workTimerSmallToLarge(){
-        val startSize = 15f // Size in pixels
-        val endSize = 52f
+        dataBinding?.workTimer?.setTypeface(dataBinding?.workTimer?.getTypeface(), Typeface.BOLD)
+        val startSize = 12f // Size in pixels
+        val endSize = 42f
         val animationDuration: Long = 500 // Animation duration in ms
 
         val animator = ValueAnimator.ofFloat(startSize, endSize)
@@ -218,8 +230,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         animator.start()
     }
     fun workTimerLargeToSmall(){
-        val startSize = 52f // Size in pixels
-        val endSize = 15f
+        dataBinding?.workTimer?.setTypeface(dataBinding?.workTimer?.getTypeface(), Typeface.NORMAL)
+        val startSize = 42f // Size in pixels
+        val endSize = 12f
         val animationDuration: Long = 500 // Animation duration in ms
 
         val animator = ValueAnimator.ofFloat(startSize, endSize)
@@ -234,8 +247,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun breakTimerSmallToLarge(){
-        val startSize = 15f // Size in pixels
-        val endSize = 52f
+        dataBinding?.TimerBreak?.setTypeface(dataBinding?.TakeBreak?.getTypeface(), Typeface.BOLD)
+        val startSize = 12f // Size in pixels
+        val endSize = 42f
         val animationDuration: Long = 500 // Animation duration in ms
 
         val animator = ValueAnimator.ofFloat(startSize, endSize)
@@ -249,8 +263,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         animator.start()
     }
     fun breakTimerLargeToSmall(){
-        val startSize = 52f // Size in pixels
-        val endSize = 15f
+        dataBinding?.TimerBreak?.setTypeface(dataBinding?.TakeBreak?.getTypeface(), Typeface.NORMAL)
+        val startSize = 42f // Size in pixels
+        val endSize = 12f
         val animationDuration: Long = 500 // Animation duration in ms
 
         val animator = ValueAnimator.ofFloat(startSize, endSize)

@@ -39,7 +39,7 @@
             android:id="@+id/start_button"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_63sdp"
+            android:layout_height="@dimen/_58sdp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/_50sdp"
             android:background="@drawable/button_gradient"
