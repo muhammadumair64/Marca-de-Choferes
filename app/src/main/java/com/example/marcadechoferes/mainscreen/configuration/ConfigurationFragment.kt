@@ -73,7 +73,7 @@ lateinit var binding :FragmentConfigurationBinding
             alertDialog.setView(contactPopupView)
             alertDialog.show()
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-            val height = (resources.displayMetrics.heightPixels * 0.29).toInt()
+            val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
             alertDialog.getWindow()?.setLayout(width, height)
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
