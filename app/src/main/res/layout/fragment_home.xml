@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
-                    android:text="Johnathan"
+                    android:text="Rodrigo"
                     android:textColor="@color/Privacy_policy_text_color"
                     android:textSize="@dimen/_18sdp"
                     android:transitionName="small_name"
@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_regular"
-                    android:text="Michelle"
+                    android:text="Àlvarez"
                     android:textColor="@color/auth_hint_color"
                     android:textSize="@dimen/_17sdp" />
 
@@ -232,10 +232,18 @@
                          android:layout_height="wrap_content"
                          android:layout_marginStart="@dimen/_5sdp"
                          android:fontFamily="@font/open_sans_regular"
-                         android:text="jornada laboral (08:30)"
+                         android:text="@string/Defult_time"
                          android:textColor="@color/Privacy_policy_text_color"
                          android:textSize="@dimen/_10sdp" />
-
+                     <TextView
+                         android:id="@+id/maxTimer"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginStart="@dimen/_5sdp"
+                         android:fontFamily="@font/open_sans_regular"
+                         android:text="(08:30)"
+                         android:textColor="@color/Privacy_policy_text_color"
+                         android:textSize="@dimen/_10sdp" />
 
                  </LinearLayout>
 
@@ -257,7 +265,7 @@
                          android:layout_height="wrap_content"
                          android:layout_marginStart="@dimen/_5sdp"
                          android:fontFamily="@font/open_sans_regular"
-                         android:text="Tiempo trabajado"
+                         android:text="@string/Work_Time"
                          android:textColor="@color/Privacy_policy_text_color"
                          android:textSize="@dimen/_10sdp" />
 
@@ -282,7 +290,7 @@
                          android:layout_height="wrap_content"
                          android:layout_marginStart="@dimen/_5sdp"
                          android:fontFamily="@font/open_sans_regular"
-                         android:text="Descansar"
+                         android:text="@string/take_break"
                          android:textColor="@color/Privacy_policy_text_color"
                          android:textSize="@dimen/_10sdp" />
 
@@ -307,10 +315,18 @@
                          android:layout_height="wrap_content"
                          android:layout_marginStart="@dimen/_5sdp"
                          android:fontFamily="@font/open_sans_regular"
-                         android:text="Horas extras (00:00)"
+                         android:text="@string/over_time"
                          android:textColor="@color/Privacy_policy_text_color"
                          android:textSize="@dimen/_10sdp" />
-
+                     <TextView
+                         android:id="@+id/overTime"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginStart="@dimen/_5sdp"
+                         android:fontFamily="@font/open_sans_regular"
+                         android:text="(00:00)"
+                         android:textColor="@color/Privacy_policy_text_color"
+                         android:textSize="@dimen/_10sdp" />
 
                  </LinearLayout>
 
@@ -340,7 +356,7 @@
                      android:layout_gravity="center_vertical"
                      android:layout_marginStart="@dimen/_5sdp"
                      android:gravity="center_vertical"
-                     android:text="Vehículo "
+                     android:text="@string/vehicle"
                      android:textColor="@color/Privacy_policy_text_color" />
 
                  <TextView
@@ -379,7 +395,7 @@
                      android:layout_gravity="center_vertical"
                      android:layout_marginStart="@dimen/_10sdp"
                      android:gravity="center_vertical"
-                     android:text="Selección estado"
+                     android:text="@string/select_status"
                      android:textColor="@color/Privacy_policy_text_color"
                      android:textSize="@dimen/_10sdp" />/>
 
@@ -415,7 +431,7 @@
                 android:background="@color/white"
                 android:fontFamily="@font/open_sans_regular"
                 android:gravity="center"
-                android:text="Empezar"
+                android:text="@string/start_Timer"
                 android:textColor="@color/auth_hint_color"
                 android:textSize="@dimen/_18sdp" />
 
@@ -430,7 +446,7 @@
                 android:layout_marginBottom="@dimen/_35sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"
-                android:text="Empezar"
+                android:text="@string/start_Timer"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_18sdp"
@@ -453,7 +469,7 @@
                 android:layout_marginTop="@dimen/_30sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"
-                android:text="Descansar"
+                android:text="@string/take_break"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_18sdp"
@@ -479,7 +495,7 @@
                     android:background="@color/white"
                     android:fontFamily="@font/open_sans_regular"
                     android:gravity="center"
-                    android:text="Finalizar jornada"
+                    android:text="@string/end_day"
                     android:textColor="@color/red_text"
                     android:textSize="@dimen/_18sdp" />
 

@@ -14,15 +14,15 @@
         android:layout_marginBottom="@dimen/_15sdp">
 
         <TextView
-            android:layout_centerVertical="true"
             android:id="@+id/vehicleName"
-            android:textSize="@dimen/_17sdp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@id/close"
-            android:text="Seleccionar idioma"
-            android:textColor="@color/Privacy_policy_text_color" />
+            android:text="@string/select_language"
+            android:textColor="@color/Privacy_policy_text_color"
+            android:textSize="@dimen/_17sdp" />
 
         <ImageView
             android:id="@+id/close"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Español"
+            android:text="@string/spanish"
             android:textColor="@color/auth_hint_color"
             android:textSize="@dimen/_14sdp" />
 
@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Portugués"
+            android:text="@string/portogous"
             android:textColor="@color/auth_hint_color" />
 
         <ImageView
@@ -113,7 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Inglés"
+            android:text="@string/english"
             android:textColor="@color/auth_hint_color" />
 
         <ImageView

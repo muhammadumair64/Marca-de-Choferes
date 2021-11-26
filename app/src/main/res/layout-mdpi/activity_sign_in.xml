@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.marcadechoferes.auth.signin.viewModel.SigninViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".auth.signin.SignInActivity"
+        android:paddingStart="@dimen/_15sdp"
+        android:paddingEnd="@dimen/_15sdp"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/layoutForLogo"
+            android:layout_width="@dimen/_150sdp"
+            android:layout_height="@dimen/_80sdp"
+            android:layout_marginTop="@dimen/_35sdp"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/_5sdp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:maxWidth="@dimen/_150sdp"
+                android:src="@drawable/logo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/TilteLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_below="@id/layoutForLogo"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/open_sans_semibold"
+                android:gravity="center"
+                android:text="Inicia sesión en tu cuenta"
+                android:textColor="@color/auth_text_color"
+                android:textSize="@dimen/_17sdp"
+                android:textStyle="bold"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+
+            android:id="@+id/EmailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/TilteLayout"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:background="@drawable/item_textboxboarder"
+            android:paddingStart="@dimen/_15sdp"
+            android:paddingTop="@dimen/_5sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_5sdp">
+
+            <TextView
+                android:id="@+id/Email_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_regular"
+                android:text="Correo electrónico"
+                android:textColor="@color/auth_hint_color"
+                android:textSize="@dimen/_10sdp" />
+
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_below="@+id/Email_title"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:background="@color/white"
+                android:fontFamily="@font/open_sans_regular"
+                android:inputType="textEmailAddress"
+                android:text="michael@gmail.com"
+                android:textColor="@color/Privacy_policy_text_color"
+                android:textSize="@dimen/_13sdp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/password_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/EmailLayout"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:background="@drawable/item_textboxboarder"
+            android:paddingStart="@dimen/_15sdp"
+            android:paddingTop="@dimen/_5sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_5sdp">
+
+            <TextView
+                android:id="@+id/password_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_regular"
+                android:text="Contraseña"
+                android:textColor="@color/auth_hint_color"
+                android:textSize="@dimen/_10sdp" />
+
+
+            <EditText
+                android:id="@+id/edit_password"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_below="@+id/password_title"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:background="@color/white"
+                android:fontFamily="@font/open_sans_regular"
+                android:gravity="center_vertical"
+                android:inputType="textPassword"
+                android:text="hola android"
+                android:textSize="@dimen/_13sdp" />
+
+            <ImageView
+                android:id="@+id/show_pass_btn"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_7sdp"
+                android:alpha=".5"
+                android:src="@drawable/ic_icon_visibility" />
+
+
+        </RelativeLayout>
+
+        <TextView
+
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/password_toggle"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="¿Ha olvidado su contraseña?"
+            android:textColor="@color/Forgot_password_Option_Color"
+            android:textSize="@dimen/_10sdp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sign_in_btn"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_below="@id/forgotPassword"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="@drawable/button_gradient"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="Inicia sesión"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp" />
+
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/_30sdp">
+
+            <TextView
+                android:gravity="center"
+                android:textColor="@color/Privacy_policy_text_color"
+                android:fontFamily="@font/open_sans_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Al iniciar sesión, usted acepta nuestra Política de privacidad y Términos.  "
+                android:textSize="@dimen/_9sdp" />
+
+
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</layout>

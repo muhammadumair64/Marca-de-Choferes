@@ -120,7 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             android:orientation="vertical"
 
@@ -155,7 +155,7 @@
                     <TextView
                         android:id="@+id/TitleName"
                         android:layout_width="@dimen/_200sdp"
-                        android:layout_height="@dimen/_20sdp"
+                        android:layout_height="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:layout_marginBottom="@dimen/_5sdp"
@@ -163,7 +163,7 @@
                         android:fontFamily="@font/open_sans_regular"
                         android:text="Rodrigo "
                         android:textColor="@color/Privacy_policy_text_color"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_10sdp" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -194,7 +194,7 @@
                     <TextView
                         android:id="@+id/FatherName"
                         android:layout_width="@dimen/_200sdp"
-                        android:layout_height="@dimen/_20sdp"
+                        android:layout_height="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:layout_marginBottom="@dimen/_5sdp"
@@ -202,7 +202,7 @@
                         android:fontFamily="@font/open_sans_regular"
                         android:text="Àlvarez"
                         android:textColor="@color/Privacy_policy_text_color"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_10sdp" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -233,7 +233,7 @@
                     <TextView
                         android:id="@+id/Email"
                         android:layout_width="@dimen/_200sdp"
-                        android:layout_height="@dimen/_20sdp"
+                        android:layout_height="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:layout_marginBottom="@dimen/_5sdp"
@@ -241,7 +241,7 @@
                         android:fontFamily="@font/open_sans_regular"
                         android:text="RodrigoÀlvarez@gmail.com"
                         android:textColor="@color/Privacy_policy_text_color"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_10sdp" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -279,7 +279,7 @@
                         <TextView
                             android:id="@+id/password"
                             android:layout_width="@dimen/_200sdp"
-                            android:layout_height="@dimen/_20sdp"
+                            android:layout_height="@dimen/_15sdp"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_marginBottom="@dimen/_5sdp"
@@ -287,14 +287,14 @@
                             android:fontFamily="@font/open_sans_regular"
                             android:text="● ● ● ● ● ● ● ● ● "
                             android:textColor="@color/Privacy_policy_text_color"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_10sdp" />
 
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/edit"
                         android:layout_width="@dimen/_40sdp"
-                        android:layout_height="@dimen/_30sdp"
+                        android:layout_height="@dimen/_25sdp"
                         android:layout_alignParentEnd="true"
                         android:background="@drawable/item_editbutton">
 
@@ -312,7 +312,7 @@
 
             <RelativeLayout
                 android:id="@+id/Logout"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_10sdp"
@@ -322,16 +322,16 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_20sdp"
+                    android:layout_height="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
-                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:background="@color/white"
                     android:fontFamily="@font/open_sans_regular"
                     android:gravity="center"
                     android:text="@string/log_out"
                     android:textColor="@color/red_text"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="@dimen/_10sdp" />
 
 
             </RelativeLayout>

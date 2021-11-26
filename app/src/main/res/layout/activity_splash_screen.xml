@@ -50,7 +50,7 @@
             android:layout_marginBottom="@dimen/_50sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_semibold"
-            android:text="Comenzar"
+            android:text="@string/start"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp" />

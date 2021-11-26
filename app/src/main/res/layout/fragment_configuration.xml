@@ -74,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/open_sans_regular"
-                android:text="Notificaciones push"
+                android:text="@string/push_notification"
                 android:textColor="@color/Privacy_policy_text_color"
                 android:textSize="@dimen/_13sdp" />
 
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:text="No me lo perdería por el mundo. Pero si apareciera algo más, definitivamente no iría."
+                android:text="@string/notification_discription"
                 android:textColor="@color/auth_hint_color"
                 android:textSize="@dimen/_10sdp" />
 
@@ -99,7 +99,6 @@
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_alignParentRight="true"
                 android:checked="true"
                 android:padding="@dimen/_5sdp"
@@ -124,7 +123,7 @@
                 android:id="@+id/language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Idioma"
+                android:text="@string/language"
                 android:textColor="@color/Privacy_policy_text_color"
                 android:textSize="@dimen/_13sdp" />
 
@@ -132,7 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/language"
-                android:text=" (ENG)"
+                android:text=" (ESP)"
                 android:textColor="@color/auth_hint_color"
                 android:textSize="@dimen/_13sdp"
 
@@ -161,7 +160,7 @@
                 android:id="@+id/about"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Acerca de"
+                android:text="@string/about"
                 android:textColor="@color/Privacy_policy_text_color"
                 android:textSize="@dimen/_13sdp" />
 

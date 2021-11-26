@@ -5,7 +5,7 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/ic_icon_feather_calendar"
-        android:title="Jornada"
+        android:title="@string/calender"
         app:cnb_backgroundColor="#7A59FC"
         app:cnb_iconColor="@color/white"
         app:cnb_textColor="@color/white"
@@ -13,7 +13,7 @@
     <item
         android:id="@+id/User"
         android:icon="@drawable/ic_user"
-        android:title="Perfil"
+        android:title="@string/profile"
         app:cnb_backgroundColor="#7A59FC"
         app:cnb_iconColor="@color/white"
         app:cnb_textColor="@color/white"
@@ -21,7 +21,7 @@
     <item
         android:id="@+id/Settings"
         android:icon="@drawable/ic_settings"
-        android:title="Configuración"
+        android:title="@string/configuration"
         app:cnb_iconColor="@color/white"
         app:cnb_backgroundColor="#7A59FC"
         app:cnb_textColor="@color/white"
