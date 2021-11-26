@@ -127,7 +127,10 @@ class HomeFragment : Fragment(),OnclickItem {
             searchAdapter.notifyDataSetChanged()
             alertDialog.setView(contactPopupView)
             alertDialog.show()
-            alertDialog.getWindow()?.setLayout(650, 800);
+
+            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+            val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+            alertDialog.getWindow()?.setLayout(width,height);
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         }
@@ -136,7 +139,9 @@ class HomeFragment : Fragment(),OnclickItem {
             statusAdapter.notifyDataSetChanged()
             dialog.setView(statusPopupView)
             dialog.show()
-            dialog.getWindow()?.setLayout(650, 750);
+            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+            val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
+            dialog.getWindow()?.setLayout(width,height);
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
         statusRecyclerView = statusPopupView.findViewById(R.id.status_RV)

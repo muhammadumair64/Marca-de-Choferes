@@ -15,7 +15,7 @@
         <LinearLayout
             android:id="@+id/upper_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_210sdp"
             android:layout_marginTop="@dimen/_30sdp"
             android:background="@drawable/ic_configurationbackground"
             android:orientation="horizontal" />
@@ -24,21 +24,21 @@
             android:layout_width="@dimen/_130sdp"
             android:layout_height="@dimen/_108sdp"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/_110sdp"
+            android:layout_marginTop="@dimen/_100sdp"
             android:layout_marginEnd="@dimen/_10sdp">
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/animationView"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
                 android:background="@null"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/settings" />
 
             <com.airbnb.lottie.LottieAnimationView
-                android:layout_width="@dimen/_55sdp"
-                android:layout_height="@dimen/_55sdp"
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_45sdp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/_40sdp"
                 android:background="@null"
@@ -47,8 +47,8 @@
                 app:lottie_rawRes="@raw/settings" />
 
             <com.airbnb.lottie.LottieAnimationView
-                android:layout_width="@dimen/_35sdp"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
                 android:layout_marginStart="@dimen/_66sdp"
                 android:layout_marginTop="@dimen/_47sdp"
                 android:background="@null"
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/upper_layout"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_45sdp"
+            android:layout_marginTop="@dimen/_40sdp"
             android:layout_marginEnd="@dimen/_15sdp">
 
             <TextView
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_2sdp"
                 android:layout_below="@id/text_notification"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/ic_separator" />
 
             <Switch
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:checked="true"
-                android:padding="@dimen/_5sdp"
+                android:padding="@dimen/_3sdp"
                 android:thumb="@drawable/ic_thumb"
                 android:track="@drawable/item_track"
 
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/push_noti"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginEnd="@dimen/_15sdp">
 
             <TextView
@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/language_layout"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_15sdp">
 
             <TextView

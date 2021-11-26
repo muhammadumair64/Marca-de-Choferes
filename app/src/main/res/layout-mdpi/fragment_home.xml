@@ -378,6 +378,14 @@
 
 
                 </LinearLayout>
+                <RelativeLayout
+                    android:visibility="gone"
+                    android:id="@+id/stopper"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    />
 
                 <LinearLayout
                     android:id="@+id/status_list_btn"
@@ -506,6 +514,7 @@
             android:layout_height="@dimen/_55sdp"
             android:layout_alignParentBottom="true"
             />
+
 
 
     </RelativeLayout>

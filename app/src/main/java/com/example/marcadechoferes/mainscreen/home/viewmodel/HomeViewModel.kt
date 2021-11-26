@@ -146,6 +146,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
                 dataBinding?.secondState?.setVisibility(View.GONE)
                 dataBinding?.StateActive?.setVisibility(View.VISIBLE)
+                dataBinding?.vehicleListBtn?.isClickable=false
                 dataBinding?.spacer?.setVisibility(View.GONE)
 
             } else {
@@ -153,6 +154,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 dataBinding?.bar?.progressBarColor= Color.parseColor("#7A59FC")
                 dataBinding?.secondState?.setVisibility(View.GONE)
                 dataBinding?.StateActive?.setVisibility(View.VISIBLE)
+                dataBinding?.vehicleListBtn?.isClickable=false
                 dataBinding?.spacer?.setVisibility(View.GONE)
             }
         }
@@ -166,6 +168,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             breakTimerSmallToLarge()
 
             dataBinding?.StateActive?.setVisibility(View.GONE)
+            dataBinding?.vehicleListBtn?.isClickable=true
             dataBinding?.spacer?.setVisibility(View.VISIBLE)
             dataBinding?.secondState?.text = "Fin del descanso"
             dataBinding?.secondState?.setVisibility(View.VISIBLE)
@@ -179,13 +182,16 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             dataBinding?.bar?.progressBarColor= Color.parseColor("#C1B1FF")
             dataBinding?.breakBar?.progressBarColor= Color.parseColor("#FFD6D9")
             dataBinding?.StateActive?.setVisibility(View.GONE)
+            dataBinding?.vehicleListBtn?.isClickable=true
             dataBinding?.spacer?.setVisibility(View.VISIBLE)
             dataBinding?.secondState?.setVisibility(View.GONE)
             dataBinding?.initialState?.setVisibility(View.VISIBLE)
             dataBinding?.vehicleListBtn?.setBackgroundResource(R.drawable.item_popup_btn_bg)
             dataBinding?.iconCar?.setImageResource(R.drawable.ic_icon_awesome_car_alt)
             dataBinding?.vehicleNameSelected?.setTextColor(Color.parseColor("#000000"))
-            dataBinding?.vehicleNameSelected?.text = "Vehículo "
+            dataBinding?.vehicleNameSelected?.text = "Vehículo"
+            dataBinding?.Arrow?.setVisibility(View.VISIBLE)
+            dataBinding?.dots?.visibility=View.GONE
             (activityContext as MainActivity).time = 0.0
             dataBinding?.workTimer?.text="00:00"
             dataBinding?.TimerBreak?.text="00:00"

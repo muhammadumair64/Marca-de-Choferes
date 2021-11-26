@@ -72,7 +72,9 @@ lateinit var binding :FragmentConfigurationBinding
         binding.languageLayout.setOnClickListener {
             alertDialog.setView(contactPopupView)
             alertDialog.show()
-            alertDialog.getWindow()?.setLayout(650, 600)
+            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+            val height = (resources.displayMetrics.heightPixels * 0.29).toInt()
+            alertDialog.getWindow()?.setLayout(width, height)
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
         dismiss = contactPopupView.findViewById(R.id.close)

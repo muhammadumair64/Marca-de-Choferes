@@ -397,7 +397,7 @@
                      android:gravity="center_vertical"
                      android:text="@string/select_status"
                      android:textColor="@color/Privacy_policy_text_color"
-                     android:textSize="@dimen/_10sdp" />/>
+                     android:textSize="@dimen/_10sdp" />
 
                  <ImageView
                      android:layout_width="wrap_content"

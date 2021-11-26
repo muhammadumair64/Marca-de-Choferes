@@ -24,10 +24,10 @@
 
             <ImageView
                 android:id="@+id/Logo"
-                android:layout_width="@dimen/_90sdp"
+                android:layout_width="@dimen/_85sdp"
                 android:layout_height="@dimen/_100sdp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_140sdp"
+                android:layout_marginTop="@dimen/_100sdp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_layer1" />
 

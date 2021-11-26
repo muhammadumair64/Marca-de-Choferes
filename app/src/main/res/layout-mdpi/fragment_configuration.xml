@@ -15,30 +15,30 @@
         <LinearLayout
             android:id="@+id/upper_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_210sdp"
             android:layout_marginTop="@dimen/_30sdp"
             android:background="@drawable/ic_configurationbackground"
             android:orientation="horizontal" />
 
         <RelativeLayout
-            android:layout_width="@dimen/_130sdp"
-            android:layout_height="@dimen/_108sdp"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_100sdp"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/_110sdp"
+            android:layout_marginTop="@dimen/_100sdp"
             android:layout_marginEnd="@dimen/_10sdp">
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/animationView"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
                 android:background="@null"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/settings" />
 
             <com.airbnb.lottie.LottieAnimationView
-                android:layout_width="@dimen/_55sdp"
-                android:layout_height="@dimen/_55sdp"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/_40sdp"
                 android:background="@null"
@@ -47,9 +47,9 @@
                 app:lottie_rawRes="@raw/settings" />
 
             <com.airbnb.lottie.LottieAnimationView
-                android:layout_width="@dimen/_35sdp"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginStart="@dimen/_66sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_63sdp"
                 android:layout_marginTop="@dimen/_47sdp"
                 android:background="@null"
                 app:lottie_autoPlay="true"
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/upper_layout"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_45sdp"
+            android:layout_marginTop="@dimen/_30sdp"
             android:layout_marginEnd="@dimen/_15sdp">
 
             <TextView
@@ -76,7 +76,7 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:text="@string/push_notification"
                 android:textColor="@color/Privacy_policy_text_color"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_12sdp" />
 
             <TextView
                 android:id="@+id/text_notification"
@@ -86,14 +86,14 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:text="@string/notification_discription"
                 android:textColor="@color/auth_hint_color"
-                android:textSize="@dimen/_10sdp" />
+                android:textSize="@dimen/_9sdp" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_2sdp"
                 android:layout_below="@id/text_notification"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/ic_separator" />
 
             <Switch
@@ -101,8 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:checked="true"
-                android:padding="@dimen/_5sdp"
-                android:thumb="@drawable/ic_thumb"
+                android:padding="@dimen/_3sdp"
+                android:thumb="@drawable/ic_thumb_mdpi"
                 android:track="@drawable/item_track"
 
                 />
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/push_noti"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginEnd="@dimen/_15sdp">
 
             <TextView
@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/language"
                 android:textColor="@color/Privacy_policy_text_color"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_12sdp" />
 
             <TextView
                 android:id="@+id/language_name"
@@ -134,7 +134,7 @@
                 android:layout_toEndOf="@id/language"
                 android:text=" (ESP)"
                 android:textColor="@color/auth_hint_color"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
 
                 />
 
@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/language_layout"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_15sdp">
 
             <TextView
@@ -163,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/about"
                 android:textColor="@color/Privacy_policy_text_color"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_12sdp" />
 
             <ImageView
                 android:layout_width="wrap_content"

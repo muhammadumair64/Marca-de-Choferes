@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.view.KeyEvent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -16,6 +18,12 @@ import com.example.marcadechoferes.mainscreen.home.timerServices.TimerService
 import com.example.marcadechoferes.mainscreen.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
+import android.os.Looper
+
+import android.widget.Toast
+
+
+
 
 
 
@@ -26,7 +34,6 @@ import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     val mainViewModel: MainViewModel by viewModels()
     var context: Context = this
     var timerStarted = false
@@ -149,6 +156,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun makeTimeStringB(hour: Int, min: Int, sec: Int): String =
         String.format("%02d:%02d", hour, min)
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
 
 
 }
