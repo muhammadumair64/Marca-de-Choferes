@@ -22,7 +22,7 @@
                 android:id="@+id/upper_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/_35sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
                 android:background="@drawable/bg_spanish_design">
 
                 <LinearLayout
@@ -31,7 +31,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_15sdp"
-                    android:layout_marginBottom="@dimen/_70sdp"
                     android:orientation="vertical"
                     android:transitionName="large_name_layout">
 
@@ -42,7 +41,7 @@
                         android:fontFamily="@font/open_sans_bold"
                         android:text="Rodrigo "
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_20sdp"
+                        android:textSize="@dimen/_19sdp"
                         android:textStyle="bold"
                         android:transitionName="large_name"
 
@@ -55,7 +54,7 @@
                         android:fontFamily="@font/open_sans_regular"
                         android:text="Àlvarez"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_19sdp" />
+                        android:textSize="@dimen/_17sdp" />
 
 
                 </LinearLayout>
@@ -65,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_9sdp"
                     android:orientation="vertical"
                     android:transitionName="large_date">
 
@@ -75,7 +74,7 @@
                         android:fontFamily="@font/open_sans_semibold"
                         android:text="Lunes"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_18sdp"
+                        android:textSize="@dimen/_17sdp"
                         android:textStyle="bold"
 
                         />
@@ -87,7 +86,7 @@
                         android:fontFamily="@font/open_sans_regular"
                         android:text="26 Oct."
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_17sdp"
+                        android:textSize="@dimen/_16sdp"
                         android:textStyle="bold" />
 
 
@@ -97,8 +96,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="@dimen/_75sdp"
-                android:layout_height="@dimen/_75sdp"
+                android:layout_width="@dimen/_65sdp"
+                android:layout_height="@dimen/_65sdp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:src="@drawable/profile_img"
@@ -106,12 +105,12 @@
 
             <ImageView
                 android:id="@+id/edit_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_alignRight="@id/profile_image"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/_58sdp"
-                android:src="@drawable/ic_editicon" />
+                android:layout_marginBottom="@dimen/_50sdp"
+                android:background="@drawable/ic_editicon" />
         </RelativeLayout>
 
         <LinearLayout
@@ -315,7 +314,7 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_10sdp"
+
                 android:background="@drawable/item_textboxredboarder"
                 android:paddingStart="@dimen/_15sdp"
                 android:paddingEnd="@dimen/_15sdp">
@@ -339,7 +338,7 @@
             <RelativeLayout
                 android:id="@+id/bottemLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_65sdp"
+                android:layout_height="@dimen/_55sdp"
                 android:layout_alignParentBottom="true"
                 />
         </LinearLayout>

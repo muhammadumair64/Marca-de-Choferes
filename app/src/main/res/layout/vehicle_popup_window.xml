@@ -32,7 +32,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:searchIcon="@null"
-                android:text="Search Vehicle here"
                 android:background="@null"
                 android:iconifiedByDefault="false"
                 android:queryBackground="@android:color/transparent"

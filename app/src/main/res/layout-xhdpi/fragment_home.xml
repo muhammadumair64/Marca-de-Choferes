@@ -195,11 +195,6 @@
             android:orientation="vertical"
             android:layout_below="@id/timerLayout"
             >
-            <RelativeLayout
-
-                android:id="@+id/spacer"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_17sdp"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -210,7 +205,7 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -337,9 +332,9 @@
                 <LinearLayout
                     android:id="@+id/vehicle_list_btn"
                     android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_35sdp"
+                    android:layout_height="@dimen/_33sdp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
                     <ImageView
@@ -358,8 +353,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:text="@string/vehicle"
-                        android:textSize="@dimen/_10sdp"
-                        android:textColor="@color/Privacy_policy_text_color" />
+                        android:textColor="@color/Privacy_policy_text_color"
+                        android:textSize="@dimen/_10sdp" />
 
                     <TextView
                         android:id="@+id/dots"
@@ -381,20 +376,13 @@
 
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/stopper"
-                    android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    />
 
                 <LinearLayout
                     android:id="@+id/status_list_btn"
                     android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_35sdp"
+                    android:layout_height="@dimen/_33sdp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/_48sdp"
+                    android:layout_marginTop="@dimen/_43sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
 
@@ -425,7 +413,7 @@
         <RelativeLayout
             android:id="@+id/initialState"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_above="@id/bottemLayout"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/item_textboxboarderforname"
@@ -447,13 +435,12 @@
         </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:visibility="gone"
             android:id="@+id/secondState"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_above="@id/bottemLayout"
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/start_Timer"
@@ -461,6 +448,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold"
+            android:visibility="gone"
             />
 
         <LinearLayout
@@ -469,45 +457,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/bottemLayout"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
 
             <androidx.appcompat.widget.AppCompatButton
+                android:layout_margin="@dimen/_5sdp"
                 android:id="@+id/TakeBreak"
                 style="?android:attr/borderlessButtonStyle"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"
                 android:text="@string/take_break"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_18sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
-            <RelativeLayout
+            <LinearLayout
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_weight="1"
                 android:id="@+id/EndDay"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/item_textboxredboarder"
                 android:paddingStart="@dimen/_15sdp"
                 android:paddingEnd="@dimen/_15sdp">
 
                 <TextView
                     android:id="@+id/Logout"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="@dimen/_5sdp"
                     android:background="@color/white"
                     android:fontFamily="@font/open_sans_regular"
                     android:gravity="center"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/end_day"
                     android:textColor="@color/red_text"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -515,7 +507,7 @@
         <RelativeLayout
             android:id="@+id/bottemLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_55sdp"
+            android:layout_height="@dimen/_53sdp"
             android:layout_alignParentBottom="true"
             />
 

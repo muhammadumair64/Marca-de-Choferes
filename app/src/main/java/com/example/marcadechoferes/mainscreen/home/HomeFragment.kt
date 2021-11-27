@@ -170,6 +170,7 @@ class HomeFragment : Fragment(),OnclickItem {
             .getIdentifier("android:id/search_src_text", null, null)
         val textView = searchView.findViewById(id) as TextView
         textView.hint = "Buscar vehículo aquí ..."
+        textView.textSize=20f
         textView.typeface = typeface
 
         searchView.setOnQueryTextListener(object :

@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Theme.MarcaDeChoferes" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryDark">@color/purple_700</item>
-        <item name="colorAccent">@color/teal_200</item>
+        <item name="colorPrimary">@color/status_barColor</item>
+        <item name="colorPrimaryDark">@color/status_barColor</item>
+        <item name="colorAccent">@color/status_barColor</item>
         <item name="fontFamily">@font/open_sans_regular</item>
         <!-- Customize your theme here. -->
     </style>

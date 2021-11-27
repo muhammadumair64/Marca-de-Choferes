@@ -292,7 +292,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 fun setMaxMini(){
     var temp:Float? = (activityContext as MainActivity).dpWidth
 
-  if(temp!! >= 800.0){
+  if(temp!! >= 650.0){
       max=100f
       mini=30f
   }else{

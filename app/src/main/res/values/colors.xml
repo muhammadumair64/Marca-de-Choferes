@@ -24,4 +24,5 @@
     <color name="barColor">#7A59FC</color>
     <color name="vehiclesNameText">#C6C6C6</color>
     <color name="selectedColor">#42D595</color>
+    <color name="status_barColor">#7A59FC</color>
 </resources>

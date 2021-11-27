@@ -12,8 +12,8 @@
             android:color="#7a59fc"
             android:width="@dimen/_1sdp"/>
         <size
-            android:height="@dimen/switch_size"
-            android:width="@dimen/switch_size"
+            android:height="@dimen/_21sdp"
+            android:width="@dimen/_21sdp"
             />
 
         <corners
