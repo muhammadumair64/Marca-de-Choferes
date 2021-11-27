@@ -97,8 +97,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="@dimen/_75sdp"
-                android:layout_height="@dimen/_75sdp"
+                android:layout_width="@dimen/_55sdp"
+                android:layout_height="@dimen/_65sdp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:src="@drawable/profile_img"
@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/profile_image"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/_58sdp"
+                android:layout_marginBottom="@dimen/_48sdp"
                 android:src="@drawable/ic_editicon" />
         </RelativeLayout>
 
@@ -135,7 +135,7 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_3sdp"
                     android:fontFamily="@font/open_sans_regular"
                     android:text="@string/name"
                     android:textColor="@color/auth_hint_color"
@@ -215,7 +215,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_3sdp"
                     android:fontFamily="@font/open_sans_regular"
                     android:text="@string/email"
                     android:textColor="@color/auth_hint_color"
@@ -254,7 +254,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginBottom="@dimen/_3sdp"
                     android:fontFamily="@font/open_sans_regular"
                     android:text="@string/password"
                     android:textColor="@color/auth_hint_color"
@@ -339,7 +339,7 @@
             <RelativeLayout
                 android:id="@+id/bottemLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_65sdp"
+                android:layout_height="@dimen/_55sdp"
                 android:layout_alignParentBottom="true"
                 />
         </LinearLayout>

@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.marcadechoferes.mainscreen.viewModel.MainViewModel
 import com.example.marcadechoferes.mainscreen.home.Adapter.SearchAdapter
 import com.example.marcadechoferes.mainscreen.home.Adapter.StatusAdapter
+import android.util.DisplayMetrics
+import android.util.Log
 
 
 @AndroidEntryPoint
@@ -203,7 +205,7 @@ class HomeFragment : Fragment(),OnclickItem {
         println("selected text $text")
         binding.apply {
             vehicleListBtn.setBackgroundResource(R.drawable.bg_selectedvehicleback)
-            iconCar.setImageResource(R.drawable.ic_white_car)
+            iconCar.setBackgroundResource(R.drawable.ic_white_car)
             vehicleNameSelected.setTextColor(Color.WHITE)
             vehicleNameSelected.text = text
             Arrow.visibility = View.GONE
@@ -220,6 +222,9 @@ class HomeFragment : Fragment(),OnclickItem {
         var text= viewModel.statusArrayList[position]
         binding.statusSelected.text = text
     }
+
+
+
 }
 
 

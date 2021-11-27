@@ -339,7 +339,7 @@
             <RelativeLayout
                 android:id="@+id/bottemLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_65sdp"
+                android:layout_height="@dimen/_55sdp"
                 android:layout_alignParentBottom="true"
                 />
         </LinearLayout>

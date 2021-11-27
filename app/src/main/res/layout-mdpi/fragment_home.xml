@@ -117,10 +117,10 @@
                 android:layout_height="@dimen/_210sdp"
                 android:layout_centerHorizontal="true"
                 app:cpb_background_progressbar_color="@color/defaultWorkColor"
-                app:cpb_background_progressbar_width="10dp"
+                app:cpb_background_progressbar_width="@dimen/_8sdp"
                 app:cpb_progress_direction="to_right"
                 app:cpb_progressbar_color="@color/barColor"
-                app:cpb_progressbar_width="10dp"
+                app:cpb_progressbar_width="@dimen/_8sdp"
                 app:cpb_round_border="true" />
 
             <com.mikhaellopez.circularprogressbar.CircularProgressBar
@@ -132,7 +132,7 @@
                 app:cpb_background_progressbar_color="@color/white"
                 app:cpb_background_progressbar_width="5dp"
                 app:cpb_progress_direction="to_right"
-                app:cpb_progressbar_width="10dp"
+                app:cpb_progressbar_width="@dimen/_8sdp"
                 app:cpb_round_border="true" />
 
         </RelativeLayout>
@@ -195,11 +195,6 @@
             android:layout_below="@id/timerLayout"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/spacer"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_15sdp"
-                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -341,22 +336,25 @@
                     android:layout_marginTop="@dimen/_8sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
+
                     <ImageView
                         android:id="@+id/icon_car"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_15sdp"
+                        android:layout_height="@dimen/_12sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_17sdp"
-                        android:src="@drawable/ic_icon_awesome_car_alt" />
+                        android:background="@drawable/ic_icon_awesome_car_alt" />
 
                     <TextView
+
                         android:id="@+id/vehicle_name_selected"
                         android:layout_width="@dimen/_58sdp"
-                        android:layout_height="@dimen/_15sdp"
+                        android:layout_height="@dimen/_12sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:gravity="center_vertical"
+
                         android:text="@string/vehicle"
+                        android:textSize="@dimen/_10sdp"
                         android:textColor="@color/Privacy_policy_text_color" />
 
                     <TextView
@@ -370,11 +368,11 @@
 
                     <ImageView
                         android:id="@+id/Arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_5sdp"
+                        android:layout_height="@dimen/_7sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:src="@drawable/ic_arrow_down" />
+                        android:background="@drawable/ic_arrow_down" />
 
 
                 </LinearLayout>
@@ -408,11 +406,11 @@
                         android:textSize="@dimen/_10sdp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_7sdp"
+                        android:layout_height="@dimen/_4sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:src="@drawable/ic_arrow" />
+                        android:background="@drawable/ic_arrow" />
 
 
                 </LinearLayout>
@@ -450,7 +448,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_above="@id/bottemLayout"
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/start_Timer"
@@ -458,19 +456,24 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:visibility="gone"
+             />
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/StateActive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/bottemLayout"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:orientation="horizontal"
+            android:weightSum="2"
+          >
 
             <androidx.appcompat.widget.AppCompatButton
+                android:layout_margin="@dimen/_5sdp"
                 android:id="@+id/TakeBreak"
                 style="?android:attr/borderlessButtonStyle"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/button_gradient"
@@ -478,32 +481,33 @@
                 android:text="@string/take_break"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_15sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
-            <RelativeLayout
+            <LinearLayout
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_weight="1"
                 android:id="@+id/EndDay"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/item_textboxredboarder"
                 android:paddingStart="@dimen/_15sdp"
                 android:paddingEnd="@dimen/_15sdp">
 
                 <TextView
                     android:id="@+id/Logout"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="@dimen/_5sdp"
                     android:background="@color/white"
                     android:fontFamily="@font/open_sans_regular"
-                    android:gravity="center"
+                   android:gravity="center"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/end_day"
                     android:textColor="@color/red_text"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
 
         </LinearLayout>

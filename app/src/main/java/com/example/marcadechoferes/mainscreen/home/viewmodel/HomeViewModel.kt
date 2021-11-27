@@ -18,6 +18,7 @@ import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.graphics.Color
 import android.graphics.Typeface
 import android.transition.Fade
+import android.util.Log
 
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
@@ -29,6 +30,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     var dataBinding: FragmentHomeBinding? = null
     var statusArrayList = ArrayList<String>()
     var searchedArrayList = ArrayList<String>()
+       var max:Float? =null
+    var mini:Float? =null
+
 
 
 
@@ -37,6 +41,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     fun viewsForHomeFragment(context: Context, binding: FragmentHomeBinding) {
         activityContext = context
         dataBinding = binding
+        setMaxMini()
         dataBinding?.bar?.progressBarColor= Color.parseColor("#C1B1FF")
     }
 
@@ -187,7 +192,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
             dataBinding?.secondState?.setVisibility(View.GONE)
             dataBinding?.initialState?.setVisibility(View.VISIBLE)
             dataBinding?.vehicleListBtn?.setBackgroundResource(R.drawable.item_popup_btn_bg)
-            dataBinding?.iconCar?.setImageResource(R.drawable.ic_icon_awesome_car_alt)
+            dataBinding?.iconCar?.setBackgroundResource(R.drawable.ic_icon_awesome_car_alt)
             dataBinding?.vehicleNameSelected?.setTextColor(Color.parseColor("#000000"))
             dataBinding?.vehicleNameSelected?.text = "Vehículo"
             dataBinding?.Arrow?.setVisibility(View.VISIBLE)
@@ -221,11 +226,11 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     fun workTimerSmallToLarge(){
         dataBinding?.workTimer?.setTypeface(dataBinding?.workTimer?.getTypeface(), Typeface.BOLD)
-        val startSize = 12f // Size in pixels
-        val endSize = 42f
+        val startSize = mini // Size in pixels
+        val endSize = max
         val animationDuration: Long = 500 // Animation duration in ms
 
-        val animator = ValueAnimator.ofFloat(startSize, endSize)
+        val animator = ValueAnimator.ofFloat(startSize!!, endSize!!)
         animator.duration = animationDuration
 
         animator.addUpdateListener { valueAnimator ->
@@ -237,11 +242,11 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
     fun workTimerLargeToSmall(){
         dataBinding?.workTimer?.setTypeface(dataBinding?.workTimer?.getTypeface(), Typeface.NORMAL)
-        val startSize = 42f // Size in pixels
-        val endSize = 12f
+        val startSize = max // Size in pixels
+        val endSize = mini
         val animationDuration: Long = 500 // Animation duration in ms
 
-        val animator = ValueAnimator.ofFloat(startSize, endSize)
+        val animator = ValueAnimator.ofFloat(startSize!!, endSize!!)
         animator.duration = animationDuration
 
         animator.addUpdateListener { valueAnimator ->
@@ -254,11 +259,11 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     fun breakTimerSmallToLarge(){
         dataBinding?.TimerBreak?.setTypeface(dataBinding?.TakeBreak?.getTypeface(), Typeface.BOLD)
-        val startSize = 12f // Size in pixels
-        val endSize = 42f
+        val startSize = mini // Size in pixels
+        val endSize = max
         val animationDuration: Long = 500 // Animation duration in ms
 
-        val animator = ValueAnimator.ofFloat(startSize, endSize)
+        val animator = ValueAnimator.ofFloat(startSize!!, endSize!!)
         animator.duration = animationDuration
 
         animator.addUpdateListener { valueAnimator ->
@@ -270,11 +275,11 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
     fun breakTimerLargeToSmall(){
         dataBinding?.TimerBreak?.setTypeface(dataBinding?.TakeBreak?.getTypeface(), Typeface.NORMAL)
-        val startSize = 42f // Size in pixels
-        val endSize = 12f
+        val startSize = max// Size in pixels
+        val endSize = mini
         val animationDuration: Long = 500 // Animation duration in ms
 
-        val animator = ValueAnimator.ofFloat(startSize, endSize)
+        val animator = ValueAnimator.ofFloat(startSize!!, endSize!!)
         animator.duration = animationDuration
 
         animator.addUpdateListener { valueAnimator ->
@@ -284,6 +289,22 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
         animator.start()
     }
+fun setMaxMini(){
+    var temp:Float? = (activityContext as MainActivity).dpWidth
+
+  if(temp!! >= 800.0){
+      max=100f
+      mini=30f
+  }else{
+      max=42f
+      mini=12f
+
+  }
+
+
+}
+
+
 
 
 

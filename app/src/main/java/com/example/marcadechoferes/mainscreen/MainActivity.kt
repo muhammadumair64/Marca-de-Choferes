@@ -19,6 +19,7 @@ import com.example.marcadechoferes.mainscreen.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 import android.os.Looper
+import android.util.Log
 
 import android.widget.Toast
 
@@ -39,7 +40,8 @@ class MainActivity : AppCompatActivity() {
     var timerStarted = false
     lateinit var serviceIntent: Intent
     var time = 0.0
-
+   var dpHeight:Float? =null
+    var dpWidth:Float? = null
     lateinit var binding: ActivityMainBinding
     lateinit var serviceIntentB: Intent
     private var timeB = 0.0
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         serviceIntentB = Intent(applicationContext, BreakTimerService::class.java)
         registerReceiver(updateTimeB, IntentFilter(BreakTimerService.TIMER_UPDATED_B))
         binding.menu.setItemSelected(R.id.home, true)
+        getWidth()
         NavBar()
 
 
@@ -159,6 +162,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+    }
+
+    fun getWidth(){
+        val displayMetrics = resources.displayMetrics
+         dpHeight = displayMetrics.heightPixels / displayMetrics.density
+         dpWidth = displayMetrics.widthPixels / displayMetrics.density
+        Log.d("MyHeight", dpHeight.toString() + "")
+        Log.d("MyWidth", dpWidth.toString() + "")
     }
 
 

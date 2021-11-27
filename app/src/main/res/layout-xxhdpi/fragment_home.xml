@@ -116,10 +116,10 @@
                 android:layout_height="@dimen/_210sdp"
                 android:layout_centerHorizontal="true"
                 app:cpb_background_progressbar_color="@color/defaultWorkColor"
-                app:cpb_background_progressbar_width="10dp"
+                app:cpb_background_progressbar_width="@dimen/_8sdp"
                 app:cpb_progress_direction="to_right"
                 app:cpb_progressbar_color="@color/barColor"
-                app:cpb_progressbar_width="10dp"
+                app:cpb_progressbar_width="@dimen/_8sdp"
                 app:cpb_round_border="true" />
 
             <com.mikhaellopez.circularprogressbar.CircularProgressBar
@@ -131,7 +131,7 @@
                 app:cpb_background_progressbar_color="@color/white"
                 app:cpb_background_progressbar_width="5dp"
                 app:cpb_progress_direction="to_right"
-                app:cpb_progressbar_width="10dp"
+                app:cpb_progressbar_width="@dimen/_8sdp"
                 app:cpb_round_border="true" />
 
         </RelativeLayout>
@@ -340,22 +340,22 @@
 
                     <ImageView
                         android:id="@+id/icon_car"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_15sdp"
+                        android:layout_height="@dimen/_12sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_17sdp"
-                        android:src="@drawable/ic_icon_awesome_car_alt" />
+                        android:background="@drawable/ic_icon_awesome_car_alt" />
 
                     <TextView
+
                         android:id="@+id/vehicle_name_selected"
                         android:layout_width="@dimen/_58sdp"
-                        android:layout_height="@dimen/_15sdp"
+                        android:layout_height="@dimen/_12sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:gravity="center_vertical"
                         android:text="@string/vehicle"
-                        android:textColor="@color/Privacy_policy_text_color"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/Privacy_policy_text_color" />
 
                     <TextView
                         android:id="@+id/dots"
@@ -368,11 +368,11 @@
 
                     <ImageView
                         android:id="@+id/Arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_5sdp"
+                        android:layout_height="@dimen/_7sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:src="@drawable/ic_arrow_down" />
+                        android:background="@drawable/ic_arrow_down" />
 
 
                 </LinearLayout>
@@ -405,11 +405,11 @@
                         android:textSize="@dimen/_10sdp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_7sdp"
+                        android:layout_height="@dimen/_4sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:src="@drawable/ic_arrow" />
+                        android:background="@drawable/ic_arrow" />
 
 
                 </LinearLayout>

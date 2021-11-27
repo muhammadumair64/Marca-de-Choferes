@@ -17,9 +17,9 @@
 
         <RelativeLayout
             android:id="@+id/upper_layout"
-            android:layout_marginTop="@dimen/_15sdp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp">
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/_15sdp">
 
         </RelativeLayout>
 
@@ -31,8 +31,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="@dimen/_55sdp"
-                android:layout_height="@dimen/_55sdp"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:src="@drawable/profile_img"
                 android:transitionName="image_small" />
 
@@ -41,7 +41,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_7sdp"
+
+                android:layout_marginTop="@dimen/_3sdp"
                 android:layout_toEndOf="@id/profile_image"
                 android:orientation="vertical"
                 android:transitionName="small_name_layout">
@@ -53,7 +54,7 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:text="Rodrigo"
                     android:textColor="@color/Privacy_policy_text_color"
-                    android:textSize="@dimen/_16sdp"
+                    android:textSize="@dimen/_15sdp"
                     android:transitionName="small_name"
 
                     />
@@ -64,7 +65,7 @@
                     android:fontFamily="@font/open_sans_regular"
                     android:text="Àlvarez"
                     android:textColor="@color/auth_hint_color"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_14sdp" />
 
 
             </LinearLayout>
@@ -85,7 +86,7 @@
                     android:fontFamily="@font/open_sans_semibold"
                     android:text="Lunes"
                     android:textColor="@color/Privacy_policy_text_color"
-                    android:textSize="@dimen/_16sdp"
+                    android:textSize="@dimen/_15sdp"
 
                     />
 
@@ -96,7 +97,9 @@
                     android:fontFamily="@font/open_sans_regular"
                     android:text="26 Oct."
                     android:textColor="@color/blue_textColor"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_14sdp" />
+
+
             </LinearLayout>
 
 
@@ -106,8 +109,7 @@
             android:id="@+id/timerLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_210sdp"
-            android:layout_below="@id/upper_layout"
-            android:layout_marginTop="@dimen/_5sdp">
+            android:layout_below="@id/upper_layout">
 
             <com.mikhaellopez.circularprogressbar.CircularProgressBar
                 android:id="@+id/bar"
@@ -115,10 +117,10 @@
                 android:layout_height="@dimen/_210sdp"
                 android:layout_centerHorizontal="true"
                 app:cpb_background_progressbar_color="@color/defaultWorkColor"
-                app:cpb_background_progressbar_width="10dp"
+                app:cpb_background_progressbar_width="@dimen/_8sdp"
                 app:cpb_progress_direction="to_right"
                 app:cpb_progressbar_color="@color/barColor"
-                app:cpb_progressbar_width="10dp"
+                app:cpb_progressbar_width="@dimen/_8sdp"
                 app:cpb_round_border="true" />
 
             <com.mikhaellopez.circularprogressbar.CircularProgressBar
@@ -130,7 +132,7 @@
                 app:cpb_background_progressbar_color="@color/white"
                 app:cpb_background_progressbar_width="5dp"
                 app:cpb_progress_direction="to_right"
-                app:cpb_progressbar_width="10dp"
+                app:cpb_progressbar_width="@dimen/_8sdp"
                 app:cpb_round_border="true" />
 
         </RelativeLayout>
@@ -140,7 +142,6 @@
             android:layout_height="@dimen/_200sdp"
             android:layout_below="@id/upper_layout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/_15sdp"
             android:gravity="center">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -191,20 +192,16 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_below="@id/timerLayout"
-            >
-            <RelativeLayout
-                android:visibility="gone"
-                android:id="@+id/spacer"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_17sdp"/>
+            android:orientation="vertical">
+
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
                 >
+
                 <LinearLayout
 
                     android:layout_width="wrap_content"
@@ -218,14 +215,13 @@
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:background="@drawable/ic_defualtwork"
+                            android:src="@drawable/ic_defualtwork"
 
                             />
 
                         <TextView
-                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
@@ -253,14 +249,13 @@
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:background="@drawable/ic_workdone"
+                            android:src="@drawable/ic_workdone"
 
                             />
 
                         <TextView
-                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
@@ -279,9 +274,9 @@
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:background="@drawable/ic_break"
+                            android:src="@drawable/ic_break"
 
                             />
 
@@ -291,7 +286,6 @@
                             android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/open_sans_regular"
                             android:text="@string/break_time"
-                            android:layout_gravity="center_vertical"
                             android:textColor="@color/Privacy_policy_text_color"
                             android:textSize="@dimen/_9sdp" />
 
@@ -305,14 +299,13 @@
 
                         <ImageView
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:background="@drawable/ic_overtime"
+                            android:src="@drawable/ic_overtime"
 
                             />
 
                         <TextView
-                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
@@ -322,7 +315,6 @@
                             android:textSize="@dimen/_9sdp" />
                         <TextView
                             android:id="@+id/overTime"
-                            android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
@@ -339,29 +331,30 @@
                 <LinearLayout
                     android:id="@+id/vehicle_list_btn"
                     android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_35sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
                     <ImageView
                         android:id="@+id/icon_car"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_15sdp"
+                        android:layout_height="@dimen/_12sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_17sdp"
-                        android:src="@drawable/ic_icon_awesome_car_alt" />
+                        android:background="@drawable/ic_icon_awesome_car_alt" />
 
                     <TextView
+
                         android:id="@+id/vehicle_name_selected"
                         android:layout_width="@dimen/_58sdp"
-                        android:layout_height="@dimen/_15sdp"
+                        android:layout_height="@dimen/_12sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:gravity="center_vertical"
+
                         android:text="@string/vehicle"
-                        android:textColor="@color/Privacy_policy_text_color"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/Privacy_policy_text_color" />
 
                     <TextView
                         android:id="@+id/dots"
@@ -374,16 +367,16 @@
 
                     <ImageView
                         android:id="@+id/Arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_5sdp"
+                        android:layout_height="@dimen/_7sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:src="@drawable/ic_arrow_down" />
+                        android:background="@drawable/ic_arrow_down" />
 
 
                 </LinearLayout>
-
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/stopper"
                     android:layout_width="@dimen/_120sdp"
                     android:layout_height="@dimen/_30sdp"
@@ -394,9 +387,9 @@
                 <LinearLayout
                     android:id="@+id/status_list_btn"
                     android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_35sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/_48sdp"
+                    android:layout_marginTop="@dimen/_43sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
 
@@ -412,12 +405,11 @@
                         android:textSize="@dimen/_10sdp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_7sdp"
+                        android:layout_height="@dimen/_4sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:src="@drawable/ic_arrow" />
-
+                        android:background="@drawable/ic_arrow" />
 
                 </LinearLayout>
             </RelativeLayout>
@@ -427,7 +419,7 @@
         <RelativeLayout
             android:id="@+id/initialState"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_above="@id/bottemLayout"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/item_textboxboarderforname"
@@ -449,13 +441,12 @@
         </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:visibility="gone"
             android:id="@+id/secondState"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_above="@id/bottemLayout"
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/start_Timer"
@@ -463,6 +454,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold"
+            android:visibility="gone"
             />
 
         <LinearLayout
@@ -471,47 +463,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/bottemLayout"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
 
             <androidx.appcompat.widget.AppCompatButton
-
+                android:layout_margin="@dimen/_5sdp"
                 android:id="@+id/TakeBreak"
                 style="?android:attr/borderlessButtonStyle"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"
                 android:text="@string/take_break"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_18sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
-            <RelativeLayout
+            <LinearLayout
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_weight="1"
                 android:id="@+id/EndDay"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-
+                android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/item_textboxredboarder"
                 android:paddingStart="@dimen/_15sdp"
                 android:paddingEnd="@dimen/_15sdp">
 
                 <TextView
                     android:id="@+id/Logout"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginEnd="@dimen/_5sdp"
                     android:background="@color/white"
                     android:fontFamily="@font/open_sans_regular"
                     android:gravity="center"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/end_day"
                     android:textColor="@color/red_text"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
-            </RelativeLayout>
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -522,6 +516,7 @@
             android:layout_height="@dimen/_55sdp"
             android:layout_alignParentBottom="true"
             />
+
 
 
     </RelativeLayout>
