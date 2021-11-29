@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_30sdp"
             android:layout_below="@id/layoutForLogo"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:gravity="center">
 
             <TextView
@@ -51,8 +51,7 @@
                 android:text="Inicia sesión en tu cuenta"
                 android:textColor="@color/auth_text_color"
                 android:textSize="@dimen/_17sdp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -62,11 +61,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/TilteLayout"
-            android:layout_marginTop="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/item_textboxboarder"
             android:paddingStart="@dimen/_15sdp"
-            android:paddingTop="@dimen/_10sdp"
+            android:paddingTop="@dimen/_5sdp"
             android:paddingEnd="@dimen/_10sdp"
             android:paddingBottom="@dimen/_5sdp">
 
@@ -85,7 +84,6 @@
                 android:layout_width="@dimen/_200sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_below="@+id/Email_title"
-                android:textColor="@color/Privacy_policy_text_color"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -93,6 +91,7 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:inputType="textEmailAddress"
                 android:text="michael@gmail.com"
+                android:textColor="@color/Privacy_policy_text_color"
                 android:textSize="@dimen/_13sdp" />
 
         </RelativeLayout>
@@ -102,11 +101,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/EmailLayout"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/item_textboxboarder"
             android:paddingStart="@dimen/_15sdp"
-            android:paddingTop="@dimen/_10sdp"
+            android:paddingTop="@dimen/_5sdp"
             android:paddingEnd="@dimen/_10sdp"
             android:paddingBottom="@dimen/_5sdp">
 
@@ -154,7 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/password_toggle"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
             android:fontFamily="@font/open_sans_regular"
             android:text="¿Ha olvidado su contraseña?"
             android:textColor="@color/Forgot_password_Option_Color"
@@ -164,9 +163,9 @@
             android:id="@+id/sign_in_btn"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_58sdp"
+            android:layout_height="@dimen/_48sdp"
             android:layout_below="@id/forgotPassword"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
             android:text="Inicia sesión"
@@ -181,7 +180,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/_30sdp">
+            android:layout_marginBottom="@dimen/_10sdp">
 
             <TextView
                 android:gravity="center"

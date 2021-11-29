@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/TilteLayout"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/item_textboxboarder"
             android:paddingStart="@dimen/_15sdp"
@@ -93,7 +93,7 @@
                 android:inputType="textEmailAddress"
                 android:text="michael@gmail.com"
                 android:textColor="@color/Privacy_policy_text_color"
-                android:textSize="@dimen/_10sdp" />
+                android:textSize="@dimen/_13sdp" />
 
         </RelativeLayout>
 
@@ -132,7 +132,7 @@
                 android:gravity="center_vertical"
                 android:inputType="textPassword"
                 android:text="hola android"
-                android:textSize="@dimen/_10sdp" />
+                android:textSize="@dimen/_13sdp" />
 
             <ImageView
                 android:id="@+id/show_pass_btn"
@@ -164,7 +164,7 @@
             android:id="@+id/sign_in_btn"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_height="@dimen/_48sdp"
             android:layout_below="@id/forgotPassword"
             android:layout_marginTop="@dimen/_10sdp"
             android:background="@drawable/button_gradient"
@@ -172,16 +172,17 @@
             android:text="Inicia sesión"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp" />
+            android:textSize="@dimen/_18sdp" />
 
 
         <LinearLayout
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_below="@id/sign_in_btn"
+            android:gravity="bottom"
             android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/_30sdp">
+            android:layout_marginBottom="@dimen/_20sdp">
 
             <TextView
                 android:gravity="center"
