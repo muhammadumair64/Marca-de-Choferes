@@ -413,7 +413,7 @@
         <RelativeLayout
             android:id="@+id/initialState"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_height="@dimen/_45sdp"
             android:layout_above="@id/bottemLayout"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/item_textboxboarderforname"
@@ -435,12 +435,13 @@
         </RelativeLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:visibility="gone"
             android:id="@+id/secondState"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_height="@dimen/_45sdp"
             android:layout_above="@id/bottemLayout"
-            android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/start_Timer"
@@ -448,7 +449,6 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold"
-            android:visibility="gone"
             />
 
         <LinearLayout
@@ -457,49 +457,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/bottemLayout"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            >
+            android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_margin="@dimen/_5sdp"
                 android:id="@+id/TakeBreak"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_30sdp"
                 android:background="@drawable/button_gradient"
                 android:fontFamily="@font/open_sans_regular"
                 android:text="@string/take_break"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="@dimen/_16sdp"
                 android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_margin="@dimen/_5sdp"
-                android:layout_weight="1"
+            <RelativeLayout
                 android:id="@+id/EndDay"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/item_textboxredboarder"
                 android:paddingStart="@dimen/_15sdp"
                 android:paddingEnd="@dimen/_15sdp">
 
                 <TextView
                     android:id="@+id/Logout"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="@dimen/_5sdp"
                     android:background="@color/white"
                     android:fontFamily="@font/open_sans_regular"
                     android:gravity="center"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/end_day"
                     android:textColor="@color/red_text"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="@dimen/_16sdp" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
 
         </LinearLayout>
@@ -508,8 +504,7 @@
             android:id="@+id/bottemLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_53sdp"
-            android:layout_alignParentBottom="true"
-            />
+            android:layout_alignParentBottom="true" />
 
 
     </RelativeLayout>
