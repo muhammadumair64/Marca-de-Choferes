@@ -13,8 +13,9 @@ import com.example.marcadechoferes.databinding.ActivityCreateNewPasswordScreenBi
 import android.app.Activity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class CreateNewPasswordScreen : AppCompatActivity() {
     lateinit var binding: ActivityCreateNewPasswordScreenBinding
     val context: Context = this

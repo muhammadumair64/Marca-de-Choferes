@@ -82,17 +82,17 @@
 
             <EditText
                 android:id="@+id/email"
-                android:layout_width="@dimen/_200sdp"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_below="@+id/Email_title"
-                android:textColor="@color/Privacy_policy_text_color"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:background="@color/white"
                 android:fontFamily="@font/open_sans_regular"
+                android:hint="michael@gmail.com"
                 android:inputType="textEmailAddress"
-                android:text="michael@gmail.com"
+                android:textColor="@color/Privacy_policy_text_color"
                 android:textSize="@dimen/_13sdp" />
 
         </RelativeLayout>
@@ -131,7 +131,6 @@
                 android:fontFamily="@font/open_sans_regular"
                 android:gravity="center_vertical"
                 android:inputType="textPassword"
-                android:text="hola android"
                 android:textSize="@dimen/_13sdp" />
 
             <ImageView
@@ -176,12 +175,14 @@
 
 
         <LinearLayout
+            android:layout_below="@id/sign_in_btn"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="bottom"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/_30sdp">
+  >
 
             <TextView
                 android:gravity="center"

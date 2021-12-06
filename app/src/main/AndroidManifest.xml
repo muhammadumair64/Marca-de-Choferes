@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.marcadechoferes">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:name=".myApplication.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,7 +17,12 @@
         
         <activity
             android:name=".loadingScreen.LoadingScreen"
-            android:exported="true"></activity>
+            android:exported="true"
+            android:noHistory="true"
+            >
+
+
+        </activity>
         <activity
             android:name=".splashscreen.SplashScreen"
             android:exported="true">

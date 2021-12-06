@@ -11,11 +11,12 @@ import android.view.View
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import com.example.marcadechoferes.auth.createpassword.CreateNewPasswordScreen
+import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.databinding.ActivityOtpBinding
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 @HiltViewModel
-class OTPViewModel @Inject constructor():ViewModel() {
+class OTPViewModel @Inject constructor(val authRepository: AuthRepository):ViewModel() {
 
 fun viewsForOTPScreen(context: Context,binding: ActivityOtpBinding){
     binding.edt1.addTextChangedListener(object : TextWatcher {

@@ -22,15 +22,13 @@ import android.os.Looper
 import android.util.Log
 
 import android.widget.Toast
+import android.graphics.BitmapFactory
 
-
-
-
-
-
-
-
-
+import android.graphics.Bitmap
+import android.util.Base64.DEFAULT
+import android.util.Base64.decode
+import java.lang.Byte.decode
+import java.util.*
 
 
 @AndroidEntryPoint
