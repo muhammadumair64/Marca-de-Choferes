@@ -13,6 +13,7 @@ import com.example.marcadechoferes.databinding.ActivityCreateNewPasswordScreenBi
 import android.app.Activity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.marcadechoferes.Extra.Language
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +24,8 @@ class CreateNewPasswordScreen : AppCompatActivity() {
     val createPasswordViewModel: CreatePasswordViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val language=Language()
+        language.setLanguage(baseContext)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_create_new_password_screen)
 
         initView()

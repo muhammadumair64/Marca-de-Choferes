@@ -1,8 +1,11 @@
 package com.example.marcadechoferes.network
 
-import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import android.app.Application
+import android.media.session.MediaSession
+import androidx.compose.ui.platform.LocalContext
+import com.example.marcadechoferes.Extra.TinyDB
+import com.example.marcadechoferes.myApplication.MyApplication
+import dagger.hilt.android.internal.Contexts.getApplication
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response
@@ -10,12 +13,27 @@ import java.io.IOException
 import java.io.Reader
 
 abstract class SafeApiRequest {
-
+    lateinit var tinyDB: TinyDB
 
     suspend fun<T: Any> apiRequest(call: suspend () -> Response<T>) : T{
         val response = call.invoke()
+        var Token=""
+        response.headers()
+        tinyDB= TinyDB(MyApplication.appContext)
+         Token = tinyDB.getString("Cookie").toString()
+
         when {
             response.isSuccessful -> {
+                if(Token=="") {
+                    val Cookielist = response.headers().values("Set-Cookie")
+                    val jsessionid = Cookielist[0].split(";").toTypedArray()[0]
+                    val separator = jsessionid.split("=").toTypedArray()[0]
+                    println("Headers $jsessionid")
+                    println("After Split $separator")
+                    if (separator == "choferes") {
+                        tinyDB.putString("Cookie", jsessionid)
+                    }
+                }
                 return response.body()!!
             }
             (response.code() >= 400||response.code() <= 500) -> {

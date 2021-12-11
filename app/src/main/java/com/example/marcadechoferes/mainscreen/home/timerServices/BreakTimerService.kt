@@ -3,6 +3,8 @@ package com.example.marcadechoferes.mainscreen.home.timerServices
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import com.example.marcadechoferes.Extra.TinyDB
+import com.example.marcadechoferes.myApplication.MyApplication
 import java.util.*
 
 class BreakTimerService : Service()
@@ -10,11 +12,12 @@ class BreakTimerService : Service()
     override fun onBind(p0: Intent?): IBinder? = null
 
     private val timer = Timer()
-
+    lateinit var tinyDB:TinyDB
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int
     {
-
-        val time = intent.getDoubleExtra(TIME_EXTRA_B, 0.0)
+        tinyDB = TinyDB(MyApplication.appContext)
+        var workTime=tinyDB.getInt("lasttimebreak")
+        val time = intent.getDoubleExtra(TIME_EXTRA_B, workTime.toDouble())
         timer.scheduleAtFixedRate(TimeTask(time), 0, 1000)
         return START_NOT_STICKY
     }

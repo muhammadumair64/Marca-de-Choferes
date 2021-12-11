@@ -168,7 +168,7 @@
             android:layout_marginTop="@dimen/_30sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
-            android:text="Inicia sesión"
+            android:text="@string/sign_in"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp" />

@@ -7,20 +7,20 @@ data class LastVarForRoom(
     @PrimaryKey(autoGenerate = true)
     var roomDBId: Int =0,
 
-    val LastWorkBreaklatitud: Int?,
+    val LastWorkBreaklatitud: Float,
     val lastActivity: Int?,
     val lastState: Int?,
     val lastStateDate: String?,
-    val lastStateLatitud: Int?,
-    val lastStateLongitud: Int?,
+    val lastStateLatitud: Float,
+    val lastStateLongitud: Float,
     val lastWorkBreakDateEnd: String?,
     val lastWorkBreakDateIni: String?,
-    val lastWorkBreakLongitud: Int?,
+    val lastWorkBreakLongitud: Float,
     val lastWorkBreakTotal: Int?,
     val lastWorkedHoursDateEnd: String?,
     val lastWorkedHoursDateIni: String?,
-    val lastWorkedHoursLatitud: Int?,
-    val lastWorkedHoursLongitud: Int?,
+    val lastWorkedHoursLatitud: Float,
+    val lastWorkedHoursLongitud: Float,
     val lastWorkedHoursTotal: Int?
 
 )

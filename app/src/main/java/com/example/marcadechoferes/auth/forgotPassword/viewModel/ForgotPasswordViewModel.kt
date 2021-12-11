@@ -5,22 +5,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import com.example.marcadechoferes.auth.otp.OTP_Activity
 import com.example.marcadechoferes.databinding.ActivityForgotPasswordBinding
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.forgotPassword.ForgotPasswordActivity
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
+import com.example.marcadechoferes.network.ApiException
+import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,12 +66,13 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                 try {
 
                     val response =
-                        authRepository.authInterface.forgotPassword(name!!)
+                        authRepository.retrofitInterface.forgotPassword(name!!)
 
                     println("SuccessResponse $response")
 
 
                     if(response!=null) {
+                        tinyDB.putString("User",name)
                         var intent= Intent(activityContext, OTP_Activity::class.java)
                         startActivity(activityContext!!,intent, Bundle.EMPTY)
                     }
@@ -84,6 +83,16 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     var intent= Intent(activityContext, ForgotPasswordActivity::class.java)
                     startActivity(activityContext!!,intent, Bundle.EMPTY)
                     Toast.makeText(activityContext, "Failed", Toast.LENGTH_SHORT).show()
+                }
+                catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+                catch (e: NoInternetException) {
+                    println("position 2")
+                    e.printStackTrace()
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

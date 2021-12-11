@@ -117,6 +117,21 @@ dependencies {
 
     // Saved state module for ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
+
+
+
+    //Location
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    //For Fast
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
+
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+    implementation 'com.nabinbhandari.android:permissions:3.8'
+
+    //Image picker
+    implementation 'com.github.dhaval2404:imagepicker-support:1.7.1'
+
 }
 
 

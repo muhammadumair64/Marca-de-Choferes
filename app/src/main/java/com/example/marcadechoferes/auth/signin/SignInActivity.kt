@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.signin.viewModel.SigninViewModel
 import com.example.marcadechoferes.databinding.ActivitySignInBinding
@@ -20,6 +21,8 @@ class SignInActivity : AppCompatActivity() {
     val signinViewModel:SigninViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val language= Language()
+        language.setLanguage(baseContext)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_sign_in)
         initViews()
 
@@ -28,8 +31,6 @@ class SignInActivity : AppCompatActivity() {
     fun initViews(){
 
         signinViewModel.viewsOfActivitySignin(context,binding)
-
-
 
     }
 }

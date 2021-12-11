@@ -53,6 +53,7 @@
         android:layout_marginEnd="@dimen/_25sdp">
 
         <TextView
+            android:id="@+id/text0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -62,6 +63,7 @@
             android:textSize="@dimen/_14sdp" />
 
         <ImageView
+            android:id="@+id/image0"
             android:layout_width="@dimen/_14sdp"
             android:layout_height="@dimen/_14sdp"
             android:layout_alignParentRight="true"
@@ -80,15 +82,17 @@
         >
 
         <TextView
-            android:layout_centerVertical="true"
-            android:textSize="@dimen/_14sdp"
+            android:id="@+id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:text="@string/portogous"
-            android:textColor="@color/auth_hint_color" />
+            android:textColor="@color/auth_hint_color"
+            android:textSize="@dimen/_14sdp" />
 
         <ImageView
+            android:id="@+id/image2"
             android:layout_width="@dimen/_14sdp"
             android:layout_height="@dimen/_14sdp"
             android:layout_alignParentRight="true"
@@ -108,15 +112,17 @@
         android:layout_marginEnd="@dimen/_25sdp">
 
         <TextView
-            android:layout_centerVertical="true"
-            android:textSize="@dimen/_14sdp"
+            android:id="@+id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:text="@string/english"
-            android:textColor="@color/auth_hint_color" />
+            android:textColor="@color/auth_hint_color"
+            android:textSize="@dimen/_14sdp" />
 
         <ImageView
+            android:id="@+id/image1"
             android:layout_width="@dimen/_14sdp"
             android:layout_height="@dimen/_14sdp"
             android:layout_alignParentRight="true"

@@ -14,16 +14,18 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.marcadechoferes.Extra.NavigatorC
+import com.example.marcadechoferes.BuildConfig
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.forgotPassword.ForgotPasswordActivity
-import com.example.marcadechoferes.auth.otp.OTP_Activity
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.auth.signin.SignInActivity
 import com.example.marcadechoferes.databinding.ActivitySignInBinding
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
 import com.example.marcadechoferes.mainscreen.MainActivity
+import com.example.marcadechoferes.myApplication.MyApplication
+import com.example.marcadechoferes.network.ApiException
+import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.network.signinResponse.SigninResponse
 import com.google.gson.Gson
@@ -42,11 +44,11 @@ import kotlin.concurrent.schedule
 class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
+    var Token=""
 
 
     fun viewsOfActivitySignin(context: Context, binding: ActivitySignInBinding) {
-        tinyDB= TinyDB(context)
-
+        tinyDB= TinyDB(MyApplication.appContext)
         activityContext = context
         binding.apply {
             showPassBtn.setOnClickListener {
@@ -112,7 +114,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
         var name = userName
         var password = userPassword
-        var idApp: String? = "1234"
+        var idApp: String? = BuildConfig.APPLICATION_ID
         var memUsed: String? = usedSpace
         var diskFree: String? = iAvailableSpace
         var diskTotal: String? =iTotalSpace
@@ -120,7 +122,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
         var operatingSystem: String? = "android"
         var osVersion: String? = "10"
         var appVersion: String? = "1.1.0"
-        var appBuild: String? = "198"
+        var appBuild: String? =  Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
         var uuid: String? = Settings.Secure.getString(
@@ -128,7 +130,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
             Settings.Secure.ANDROID_ID
         )
 
-        var isVirtual: String? = "false"
+        var isVirtual: String? = isEmulator().toString()
 
 
 
@@ -155,24 +157,49 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         )
 
                     println("SuccessResponse $response")
-
                     authRepository.InsertSigninData(response)
                     if(response!=null) {
+                        tinyDB.putInt("defaultWork",response.work!!.workingHours)
+                       tinyDB.putInt("defaultBreak",response.work.workBreak)
+                        tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
+                        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+                        tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
                         tinyDB.putString("User",userName)
+                        val Language =response.profile?.language
+                        val notify:Boolean =response.profile?.notify!!
+                        tinyDB.putString("language", Language.toString())
+                        tinyDB.putBoolean("notify",notify)
 
-                        var intent = Intent(activityContext,MainActivity::class.java)
-                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                        (activityContext as SignInActivity).finish()
+                        Timer().schedule(1000) {
 
-//                        Timer().schedule(5000) {
-//                                  getAvatar()
-//                        }
+                            Token = tinyDB.getString("Cookie").toString()
+                                  getAvatar()
+                        }
 
 
                     }
                 } catch (e: ResponseException) {
                     val response = convertErrorBody(e.response)
+
+
+                    withContext(Dispatchers.Main){
+                        (activityContext as SignInActivity).finish()
+                        Toast.makeText(activityContext, "Login Failed", Toast.LENGTH_SHORT).show()
+                        var intent = Intent(activityContext, SignInActivity::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
+                    }
                     println("ErrorResponse $response")
+                }
+                catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+                catch (e: NoInternetException) {
+                    println("position 2")
+                    e.printStackTrace()
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -229,7 +256,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                 try {
                    var user=tinyDB.getString("User")
 
-                    val response = authRepository.getUserAvatar()
+                    val response = authRepository.getUserAvatar(user!!,Token)
 
                     println("SuccessResponse $response")
 
@@ -239,18 +266,44 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
                         tinyDB.putString("Avatar",response.avatar)
 
+                        var intent = Intent(activityContext,MainActivity::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                        (activityContext as SignInActivity).finish()
 
 
                     }
 
-                } catch (e: ResponseException) {
+                }
+                catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+              catch (e: NoInternetException) {
+                println("position 2")
+                     e.printStackTrace()
+
+                  withContext(Dispatchers.Main){
+                      Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                  }
+                     }
+                catch (e: ResponseException) {
                     println("ErrorResponse")
+
 
                 }
             }
         }
 
 
+    }
+    fun isEmulator(): Boolean {
+        return (Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
+                || "google_sdk" == Build.PRODUCT)
     }
 
 }

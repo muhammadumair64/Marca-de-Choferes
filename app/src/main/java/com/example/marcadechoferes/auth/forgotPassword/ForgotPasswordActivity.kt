@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.forgotPassword.viewModel.ForgotPasswordViewModel
 import com.example.marcadechoferes.databinding.ActivityForgotPasswordBinding
@@ -22,6 +23,8 @@ class ForgotPasswordActivity : AppCompatActivity() {
     val forgotPasswordViewModel:ForgotPasswordViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val language=Language()
+        language.setLanguage(baseContext)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_forgot_password)
         initViews()
     }

@@ -2,20 +2,20 @@ package com.example.marcadechoferes.network.signinResponse
 
 
 data class LastVar(
-    val LastWorkBreaklatitud: Int?,
+    val LastWorkBreaklatitud: Float,
     val lastActivity: Int?,
     val lastIdVehicle: LastIdVehicle?,
     val lastState: Int?,
     val lastStateDate: String?,
-    val lastStateLatitud: Int?,
-    val lastStateLongitud: Int?,
+    val lastStateLatitud: Float,
+    val lastStateLongitud: Float,
     val lastWorkBreakDateEnd: String?,
     val lastWorkBreakDateIni: String?,
-    val lastWorkBreakLongitud: Int?,
+    val lastWorkBreakLongitud: Float,
     val lastWorkBreakTotal: Int?,
     val lastWorkedHoursDateEnd: String?,
     val lastWorkedHoursDateIni: String?,
-    val lastWorkedHoursLatitud: Int?,
-    val lastWorkedHoursLongitud: Int?,
+    val lastWorkedHoursLatitud: Float,
+    val lastWorkedHoursLongitud:Float,
     val lastWorkedHoursTotal: Int?
 )

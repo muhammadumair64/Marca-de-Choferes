@@ -6,34 +6,40 @@ import androidx.room.Room
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.localDataBase.LocalDataBase
 import com.example.marcadechoferes.localDataBase.LocalDataBaseDao
-import com.example.marcadechoferes.network.retrofitInterfaces.AuthInterface
-import dagger.Binds
+import com.example.marcadechoferes.network.retrofitInterfaces.RetrofitInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import javax.net.ssl.*
+import com.example.marcadechoferes.Extra.NetworkConnectionInterceptor
+import com.example.marcadechoferes.myApplication.MyApplication
+
+import okhttp3.*
 
 
 @Module
 @InstallIn(SingletonComponent::class)
 class MyModule {
 
-    val baseUrl = "https://logicasur.com:27123/app/v1/"
+     var context:Context? = null
 
+    val baseUrl = "https://logicasur.com:27123/app/v1/"
     @Singleton
     @Provides
-    fun provideContext(application: Application): Context = application.applicationContext
+    fun provideContext(application: Application): Context {
+      context= application.applicationContext
+
+        return context!!
+    }
 
     @Provides
     @Singleton
@@ -42,6 +48,12 @@ class MyModule {
         return HttpLoggingInterceptor()
     }
 
+    @Provides
+    @Singleton
+    fun provideNetWorkCheckInterceptor():NetworkConnectionInterceptor {
+
+        return NetworkConnectionInterceptor(MyApplication.appContext)
+    }
 
     @Provides
     @Singleton
@@ -52,7 +64,7 @@ class MyModule {
 
     @Provides
     @Singleton
-     fun provideUnsafeOkHttpClient(   okHttpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+     fun provideUnsafeOkHttpClient(   okHttpLoggingInterceptor: HttpLoggingInterceptor,networkConnectionInterceptor: NetworkConnectionInterceptor): OkHttpClient {
         return try {
             // Create a trust manager that does not validate certificate chains
             val trustAllCerts = arrayOf<TrustManager>(
@@ -91,6 +103,7 @@ class MyModule {
             val sslSocketFactory = sslContext.socketFactory
             OkHttpClient.Builder()
                 .addInterceptor(okHttpLoggingInterceptor)
+//                .addInterceptor(networkConnectionInterceptor)
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(40, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
@@ -121,6 +134,11 @@ class MyModule {
 //            .writeTimeout(30, TimeUnit.SECONDS)
 //            .build()
 
+
+
+
+
+
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(baseUrl)
@@ -131,9 +149,9 @@ class MyModule {
 
     @Provides
     @Singleton
-    fun provideAuth(retrofit: Retrofit): AuthInterface {
+    fun provideAuth(retrofit: Retrofit): RetrofitInterface {
 
-        return retrofit.create(AuthInterface::class.java)
+        return retrofit.create(RetrofitInterface::class.java)
     }
 
 
@@ -160,3 +178,7 @@ class MyModule {
 
 
 }
+
+
+
+

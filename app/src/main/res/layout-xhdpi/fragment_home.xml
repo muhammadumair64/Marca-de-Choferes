@@ -14,11 +14,12 @@
         android:paddingStart="@dimen/_15sdp"
         android:paddingEnd="@dimen/_15sdp"
         tools:context=".mainscreen.home.HomeFragment">
+
         <RelativeLayout
             android:id="@+id/upper_layout"
-            android:layout_marginTop="@dimen/_15sdp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp">
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/_15sdp">
 
 
         </RelativeLayout>
@@ -60,6 +61,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/surname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_regular"
@@ -81,6 +83,7 @@
                 android:transitionName="small_date">
 
                 <TextView
+                    android:id="@+id/day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_semibold"
@@ -91,6 +94,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"

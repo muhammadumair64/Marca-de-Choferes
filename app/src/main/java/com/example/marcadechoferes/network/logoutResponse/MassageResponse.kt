@@ -1,5 +1,5 @@
 package com.example.marcadechoferes.network.logoutResponse
 
-data class LogoutResponse(
+data class MassageResponse(
     val msg: String
 )

@@ -28,6 +28,9 @@ interface LocalDataBaseDao {
     fun insertWork(work:Work)
 
 
+
+
+
     @Query("DELETE  FROM Profile")
      fun deleteProfile()
 
@@ -49,7 +52,13 @@ interface LocalDataBaseDao {
      fun deleteWork()
 
 
+
     @Query("SELECT * FROM Profile")
     fun getProfile() : Profile
 
+    @Query("SELECT * FROM Vehicle")
+    fun getVehicles():List<Vehicle>
+
+    @Query("SELECT * FROM State")
+    fun getState():List<State>
 }

@@ -1,12 +1,14 @@
 package com.example.marcadechoferes.mainscreen
 
+import android.Manifest
 import android.content.BroadcastReceiver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.view.KeyEvent
+import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -18,32 +20,58 @@ import com.example.marcadechoferes.mainscreen.home.timerServices.TimerService
 import com.example.marcadechoferes.mainscreen.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
-import android.os.Looper
 import android.util.Log
+import androidx.lifecycle.lifecycleScope
 
-import android.widget.Toast
-import android.graphics.BitmapFactory
+import com.example.marcadechoferes.mainscreen.home.viewmodel.HomeViewModel
+import com.nabinbhandari.android.permissions.PermissionHandler
+import com.nabinbhandari.android.permissions.Permissions
+import kotlinx.coroutines.launch
+import android.content.pm.ActivityInfo
 
-import android.graphics.Bitmap
-import android.util.Base64.DEFAULT
-import android.util.Base64.decode
-import java.lang.Byte.decode
-import java.util.*
+import android.content.pm.PackageManager
+
+import android.content.pm.PackageInfo
+import android.location.GpsStatus
+
+import android.location.LocationManager
+
+import android.content.IntentSender
+import android.content.IntentSender.SendIntentException
+
+import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationServices
+
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.LocationSettingsStatusCodes
+
+import androidx.annotation.NonNull
+import com.google.android.gms.common.api.*
+
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        const val LOCATION_SETTING_REQUEST = 999
+    }
     val mainViewModel: MainViewModel by viewModels()
     var context: Context = this
     var timerStarted = false
     lateinit var serviceIntent: Intent
     var time = 0.0
-   var dpHeight:Float? =null
-    var dpWidth:Float? = null
+    var dpHeight: Float? = null
+    var dpWidth: Float? = null
     lateinit var binding: ActivityMainBinding
     lateinit var serviceIntentB: Intent
-    private var timeB = 0.0
+    private var timeBreak = 0.0
     var dataBinding: FragmentHomeBinding? = null
+    val viewModel: HomeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -51,9 +79,10 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
 
         serviceIntentB = Intent(applicationContext, BreakTimerService::class.java)
-        registerReceiver(updateTimeB, IntentFilter(BreakTimerService.TIMER_UPDATED_B))
+        registerReceiver(updateTimeBreak, IntentFilter(BreakTimerService.TIMER_UPDATED_B))
         binding.menu.setItemSelected(R.id.home, true)
         getWidth()
+        initPermission()
         NavBar()
 
 
@@ -65,16 +94,16 @@ class MainActivity : AppCompatActivity() {
 
             when (it) {
                 R.id.home -> {
-              mainViewModel.updateValueTo1()
+                    mainViewModel.updateValueTo1()
 
                 }
                 R.id.User -> {
-                     println("clicked")
-                     mainViewModel.updateValueTo2()
+                    println("clicked")
+                    mainViewModel.updateValueTo2()
 
                 }
                 R.id.Settings -> {
-                 mainViewModel.updateValueTO3()
+                    mainViewModel.updateValueTO3()
 
                 }
 
@@ -84,16 +113,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     fun startTimer() {
-        println("i am here 11")
+        println("work timer start")
         serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
         startService(serviceIntent)
         timerStarted = true
     }
 
     fun stopTimer() {
-        println("i am here 000")
+        println("work Timer stop")
         stopService(serviceIntent)
         timerStarted = false
     }
@@ -106,8 +134,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getTimeStringFromDouble(time: Double): String {
+
         val resultInt = time.roundToInt()
-        println("hello i am here $resultInt")
+        lifecycleScope.launch {
+            viewModel.workTimerupdater(time.roundToInt(), dataBinding)
+        }
+
+        println(" $resultInt")
         val hours = resultInt % 86400 / 3600
         val minutes = resultInt % 86400 % 3600 / 60
         val seconds = resultInt % 86400 % 3600 % 60
@@ -119,56 +152,125 @@ class MainActivity : AppCompatActivity() {
         String.format("%02d:%02d", hour, min)
 
     fun viewsOfFragment(binding: FragmentHomeBinding) {
-
         dataBinding = binding
-
     }
 
 
-    fun startTimerB() {
-        println("i am here 11")
-        serviceIntent.putExtra(BreakTimerService.TIME_EXTRA_B, timeB)
+    fun startTimerBreak() {
+        println("breakTimer Start")
+        serviceIntent.putExtra(BreakTimerService.TIME_EXTRA_B, timeBreak)
         startService(serviceIntentB)
         timerStarted = true
     }
 
-    fun stopTimerB() {
-        println("i am here 000")
+    fun stopTimerBreak() {
+        println("break Timer stop")
         stopService(serviceIntentB)
         timerStarted = false
     }
 
-    private val updateTimeB: BroadcastReceiver = object : BroadcastReceiver() {
+    private val updateTimeBreak: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            timeB = intent.getDoubleExtra(BreakTimerService.TIME_EXTRA_B, 0.0)
-            dataBinding?.TimerBreak?.text = getTimeStringFromDoubleB(timeB)
+            timeBreak = intent.getDoubleExtra(BreakTimerService.TIME_EXTRA_B, 0.0)
+            dataBinding?.TimerBreak?.text = getTimeStringFromDoubleBreak(timeBreak)
         }
     }
 
-    private fun getTimeStringFromDoubleB(time: Double): String {
-        val resultIntB = time.roundToInt()
-        println("hello i am here umair$resultIntB")
-        val hours = resultIntB % 86400 / 3600
-        val minutes = resultIntB % 86400 % 3600 / 60
-        val seconds = resultIntB % 86400 % 3600 % 60
+    private fun getTimeStringFromDoubleBreak(time: Double): String {
+        val resultIntBreak = time.roundToInt()
 
-        return makeTimeStringB(hours, minutes, seconds)
+        lifecycleScope.launch {
+            viewModel.breakTimerupdater(time.roundToInt(), dataBinding)
+        }
+        println("$resultIntBreak")
+        val hours = resultIntBreak % 86400 / 3600
+        val minutes = resultIntBreak % 86400 % 3600 / 60
+        val seconds = resultIntBreak % 86400 % 3600 % 60
+
+        return makeTimeStringBreak(hours, minutes, seconds)
     }
 
-    private fun makeTimeStringB(hour: Int, min: Int, sec: Int): String =
+    private fun makeTimeStringBreak(hour: Int, min: Int, sec: Int): String =
         String.format("%02d:%02d", hour, min)
 
     override fun onBackPressed() {
         super.onBackPressed()
+        finish()
     }
 
-    fun getWidth(){
+    fun getWidth() {
         val displayMetrics = resources.displayMetrics
-         dpHeight = displayMetrics.heightPixels / displayMetrics.density
-         dpWidth = displayMetrics.widthPixels / displayMetrics.density
+        dpHeight = displayMetrics.heightPixels / displayMetrics.density
+        dpWidth = displayMetrics.widthPixels / displayMetrics.density
         Log.d("MyHeight", dpHeight.toString() + "")
         Log.d("MyWidth", dpWidth.toString() + "")
     }
 
 
+
+    fun initPermission() {
+
+        val permissions =
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        Permissions.check(
+            this /*context*/,
+            permissions,
+            null /*rationale*/,
+            null /*options*/,
+            object : PermissionHandler() {
+                override fun onGranted() {
+                    // hideIcon()
+                    //startService(locationServiceIntent)
+                 CheckGpsStatus()
+
+
+                }
+            })
+
+
+    }
+
+    fun CheckGpsStatus() {
+        var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+        assert(locationManager != null)
+        var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (GpsStatus == true) {
+
+        } else {
+            showEnableLocationSetting()
+        }
+    }
+
+
+    fun showEnableLocationSetting() {
+      this.let {
+            val locationRequest = LocationRequest.create()
+            locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+            val builder = LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest)
+
+            val task = LocationServices.getSettingsClient(it)
+                .checkLocationSettings(builder.build())
+
+            task.addOnSuccessListener { response ->
+                val states = response.locationSettingsStates
+                if (states.isLocationPresent) {
+                    //Do something
+                }
+            }
+            task.addOnFailureListener { e ->
+                if (e is ResolvableApiException) {
+                    try {
+                        // Handle result in onActivityResult()
+                        e.startResolutionForResult(it,
+                            MainActivity.LOCATION_SETTING_REQUEST)
+                    } catch (sendEx: IntentSender.SendIntentException) { }
+                }
+            }
+        }
+    }
 }

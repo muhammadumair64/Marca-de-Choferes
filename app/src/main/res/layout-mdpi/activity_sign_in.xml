@@ -159,20 +159,20 @@
             android:textColor="@color/Forgot_password_Option_Color"
             android:textSize="@dimen/_10sdp" />
 
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/sign_in_btn"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_48sdp"
             android:layout_below="@id/forgotPassword"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
-            android:text="Inicia sesión"
+            android:text="@string/sign_in"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp" />
-
 
         <LinearLayout
             android:layout_alignParentBottom="true"

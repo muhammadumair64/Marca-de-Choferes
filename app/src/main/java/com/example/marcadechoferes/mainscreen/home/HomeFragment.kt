@@ -1,6 +1,7 @@
 package com.example.marcadechoferes.mainscreen.home
 
 import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -30,6 +31,8 @@ import com.example.marcadechoferes.mainscreen.home.Adapter.SearchAdapter
 import com.example.marcadechoferes.mainscreen.home.Adapter.StatusAdapter
 import android.util.DisplayMetrics
 import android.util.Log
+import com.example.marcadechoferes.Extra.Language
+import com.example.marcadechoferes.Extra.TinyDB
 
 
 @AndroidEntryPoint
@@ -47,19 +50,23 @@ class HomeFragment : Fragment(),OnclickItem {
     lateinit var searchView: SearchView
     val viewModel: HomeViewModel by viewModels()
     lateinit var mainViewModel: MainViewModel
+    lateinit var tinyDB: TinyDB
+    var mainContext : Context? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
 
+        val language= Language()
+
+        language.setLanguage((activity as MainActivity).baseContext)
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
 
         val viewBinding = binding.root
         initViews()
-        viewModel.dammyData()
         vehiclePopupWindow()
         searchVehicle()
         statusShow()
@@ -70,6 +77,8 @@ class HomeFragment : Fragment(),OnclickItem {
     }
 
     fun initViews() {
+        var context = (activity as MainActivity).context
+        mainContext= context
         binding.statusListBtn.visibility=View.GONE
         binding.apply {
             initialState?.setVisibility(View.VISIBLE)
@@ -80,7 +89,8 @@ class HomeFragment : Fragment(),OnclickItem {
         )
         sharedElementEnterTransition = animation
 
-        var context = (activity as MainActivity).context
+
+        tinyDB = TinyDB(context)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         viewModel.viewsForHomeFragment(context, binding)
         viewModel.Breakbar()
@@ -190,39 +200,32 @@ class HomeFragment : Fragment(),OnclickItem {
     }
 
     fun statusShow() {
-
-        viewModel.statusRV()
         statusAdapter = StatusAdapter(viewModel.statusArrayList,this)
         statusRecyclerView.adapter = statusAdapter
 
     }
 
-
-
-
     override fun vehicleSelected(position: Int) {
+        println("position of holder $position")
+        var Position=position.plus(1)
+        tinyDB.putInt("vehicle",Position)
         alertDialog.dismiss()
-       var text= viewModel.searchedArrayList[position]
-        println("selected text $text")
-        binding.apply {
-            vehicleListBtn.setBackgroundResource(R.drawable.bg_selectedvehicleback)
-            iconCar.setBackgroundResource(R.drawable.ic_white_car)
-            vehicleNameSelected.setTextColor(Color.WHITE)
-            vehicleNameSelected.text = text
-            Arrow.visibility = View.GONE
-            dots.visibility=View.VISIBLE
-           statusListBtn.visibility=View.VISIBLE
-
-           initialState?.setVisibility(View.GONE)
-           secondState?.setVisibility(View.VISIBLE)
-        }
+        viewModel.selectVehicle(position)
     }
+
+
+
 
     override fun statusSelection(position: Int) {
        dialog.dismiss()
-        var text= viewModel.statusArrayList[position]
-        binding.statusSelected.text = text
+        var Position=position.plus(1)
+        tinyDB.putInt("state",Position)
+        viewModel.selectState(position)
+        viewModel.hitStateAPI(position)
+
     }
+
+
 
 
 

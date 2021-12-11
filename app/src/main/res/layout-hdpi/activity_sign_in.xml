@@ -168,31 +168,29 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:background="@drawable/button_gradient"
             android:fontFamily="@font/open_sans_regular"
-            android:text="Inicia sesión"
+            android:text="@string/sign_in"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/_18sdp" />
 
 
         <LinearLayout
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/sign_in_btn"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_20sdp"
             android:gravity="bottom"
-            android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/_20sdp">
+            android:orientation="horizontal">
 
             <TextView
-                android:gravity="center"
-                android:textColor="@color/Privacy_policy_text_color"
-                android:fontFamily="@font/open_sans_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/open_sans_regular"
+                android:gravity="center"
                 android:text="Al iniciar sesión, usted acepta nuestra Política de privacidad y Términos.  "
+                android:textColor="@color/Privacy_policy_text_color"
                 android:textSize="@dimen/_9sdp" />
-
-
 
 
         </LinearLayout>

@@ -70,6 +70,7 @@
                     android:transitionName="large_date">
 
                     <TextView
+                        android:id="@+id/day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/open_sans_semibold"
@@ -81,6 +82,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
@@ -142,11 +144,16 @@
                     android:textSize="@dimen/_10sdp" />
 
                 <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <RelativeLayout
 
                     android:id="@+id/EmailLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_toStartOf="@id/editName"
+                    android:layout_marginEnd="@dimen/_8sdp"
                     android:background="@drawable/item_popup_btn_bg"
                     android:paddingStart="@dimen/_15sdp"
 
@@ -166,6 +173,24 @@
                         android:textSize="@dimen/_12sdp" />
 
                 </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/editName"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/item_editbutton">
+
+                        <ImageView
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/ic_edit"
+
+                            />
+                    </RelativeLayout>
+                </RelativeLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -181,30 +206,53 @@
                     android:text="@string/father_name"
                     android:textColor="@color/auth_hint_color"
                     android:textSize="@dimen/_10sdp" />
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_toStartOf="@id/editSurname"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:background="@drawable/item_popup_btn_bg"
+        android:paddingStart="@dimen/_15sdp"
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:background="@drawable/item_popup_btn_bg"
-                    android:paddingStart="@dimen/_15sdp"
+        android:paddingEnd="@dimen/_15sdp">
 
-                    android:paddingEnd="@dimen/_15sdp">
+        <TextView
+            android:id="@+id/FatherName"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:background="@color/white"
+            android:fontFamily="@font/open_sans_regular"
+            android:text="Àlvarez"
+            android:textColor="@color/Privacy_policy_text_color"
+            android:textSize="@dimen/_12sdp" />
 
-                    <TextView
-                        android:id="@+id/FatherName"
-                        android:layout_width="@dimen/_200sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:layout_marginEnd="@dimen/_5sdp"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:background="@color/white"
-                        android:fontFamily="@font/open_sans_regular"
-                        android:text="Àlvarez"
-                        android:textColor="@color/Privacy_policy_text_color"
-                        android:textSize="@dimen/_12sdp" />
+    </RelativeLayout>
 
-                </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/editSurname"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/item_editbutton">
+
+        <ImageView
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_edit"
+
+            />
+    </RelativeLayout>
+</RelativeLayout>
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -263,7 +311,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                  >
 
                     <RelativeLayout
                         android:layout_width="match_parent"
