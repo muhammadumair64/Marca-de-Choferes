@@ -141,6 +141,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     }
 
                 } catch (e: ResponseException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     println("logout Failed $e")
                 }
                 catch (e: ApiException) {
@@ -193,6 +194,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     }
 
                 } catch (e: ResponseException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     println("logout Failed $e")
                 }
                 catch (e: ApiException) {

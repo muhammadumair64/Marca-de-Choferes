@@ -24,7 +24,6 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.TinyDB
@@ -46,7 +45,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import kotlin.math.roundToInt
+import kotlin.concurrent.schedule
 
 
 @HiltViewModel
@@ -68,7 +67,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     var DefaultBreakTime = 0
     var WorkTimeToSend = 0
     var BreakTimeToSend = 0
-
+    var overTime =false
 
     //activity
 
@@ -82,7 +81,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun viewsForHomeFragment(context: Context, binding: FragmentHomeBinding) {
         activityContext = context
         dataBinding = binding
-
         tinyDB = TinyDB(context)
         getProfile()
         setMaxMini()
@@ -91,8 +89,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         checkInitial()
         setDay()
         DefaultWork = tinyDB.getInt("defaultWork")
+        println("total Work Given $DefaultWork")
+        MyApplication.TotalTime=DefaultWork
         DefaultBreakTime = tinyDB.getInt("defaultBreak")
+       MyApplication.TotalBreak=DefaultBreakTime
         var DefaultTOShow = DefaultWork * 60
+
         binding.maxTimer.text = getTimeStringFromDouble(DefaultTOShow)
         val sdf = SimpleDateFormat("dd MMM")
         val currentDate = sdf.format(Date())
@@ -127,6 +129,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
         }
+        Timer().schedule(200) {
+            forgroundCheck()
+        }
 
 
     }
@@ -135,6 +140,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun Workbar() {
         dataBinding!!.bar.apply {
             var default = tinyDB.getInt("defaultWork")
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
             default = default * 60
             var maxTime = default
             progressMax = maxTime.toFloat()
@@ -149,6 +155,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 //            setProgressWithAnimation(50f, 1000) // =1s
             var default = tinyDB.getInt("defaultBreak")
+
             default = default * 60
             var maxBreakTime = default
 
@@ -171,9 +178,11 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         var intent = (activityContext as MainActivity)
 
         dataBinding?.secondState?.setOnClickListener {
+            MyApplication.check=0
             buttonSecondState()
         }
         dataBinding?.TakeBreak?.setOnClickListener {
+            MyApplication.check=0
             buttonTakeBreak()
             intent.stopTimer()
             intent.startTimerBreak()
@@ -181,6 +190,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             hitActivityAPI(1, BreakTimeToSend)
         }
         dataBinding?.EndDay?.setOnClickListener {
+            MyApplication.check=0
             buttonEndDay()
             intent.stopTimer()
             intent.stopTimerBreak()
@@ -188,6 +198,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             hitActivityAPI(3, WorkTimeToSend)
         }
         dataBinding?.initialState?.setOnClickListener {
+            MyApplication.check=0
             buttonInitailStaet()
             tinyDB.putString("selectedState", "initialState")
         }
@@ -213,6 +224,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         tinyDB.putInt("state", 0)
         dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+        dataBinding?.breakBar?.progress=0f
+        dataBinding?.bar?.progress=0f
         dataBinding?.StateActive?.setVisibility(View.GONE)
         dataBinding?.vehicleListBtn?.isClickable = true
         dataBinding?.spacer?.setVisibility(View.VISIBLE)
@@ -237,8 +250,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun buttonTakeBreak() {
+        if(overTime==true){
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
+        }else{
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+        }
 
-        dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
 
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
         workTimerLargeToSmall()
@@ -273,7 +290,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun goToSecondState() {
 
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
-        dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+        if(overTime==true){
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
+        }else{
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+        }
+
         breakTimerLargeToSmall()
         workTimerSmallToLarge()
         dataBinding?.secondState?.setVisibility(View.GONE)
@@ -284,7 +306,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun goToActivState() {
-        dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+
+        if(overTime==true){
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
+        }else{
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+        }
         dataBinding?.secondState?.setVisibility(View.GONE)
         dataBinding?.StateActive?.setVisibility(View.VISIBLE)
         dataBinding?.vehicleListBtn?.isClickable = false
@@ -411,26 +438,35 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun workTimerupdater(time: Int, binding: FragmentHomeBinding?) {
         print("${time.toDouble()}")
 
-        binding!!.bar.progress = time.toFloat()
+        var default = MyApplication.TotalTime * 60
 
-        var default = DefaultWork * 60
+        println("default work in timer $DefaultWork")
         WorkTimeToSend = time
         if (time == default) {
-            var intent = (activityContext as MainActivity)
             binding!!.bar.progress = 0F
+        }else if (time > default){
+            println("overTime started ")
+            overTime = true
+            binding!!.bar.progressBarColor= Color.parseColor("#169DFD")
+            var newOvertimer= time-default
+            binding!!.bar.progress = newOvertimer.toFloat()
+        } else
+        {
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+           overTime =false
+            binding!!.bar.progress = time.toFloat()
         }
     }
 
-    fun breakTimerupdater(time: Int, binding: FragmentHomeBinding?) {
+    fun breakTimerupdater(time: Int, binding: FragmentHomeBinding?, mainActivity: MainActivity) {
         print("${time.toDouble()}")
 
         binding!!.breakBar.progress = time.toFloat()
 
-        var default = DefaultBreakTime * 60
+        var default = MyApplication.TotalBreak * 60
         BreakTimeToSend = time
         if (time == default) {
-            var intent = (activityContext as MainActivity)
-            intent.stopTimerBreak()
+            mainActivity.stopTimerBreak()
         }
 
     }
@@ -630,6 +666,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             secondState?.setVisibility(View.VISIBLE)
         }
 
+        forgroundCheck()
+
     }
 
     fun selectVehicleByLocalDB(position: Int) {
@@ -696,6 +734,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     }
 
                 } catch (e: ResponseException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     println("ErrorResponse")
                 } catch (e: ApiException) {
                     e.printStackTrace()
@@ -770,6 +809,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     }
 
                 } catch (e: ResponseException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     println("ErrorResponse")
                 } catch (e: ApiException) {
                     e.printStackTrace()
@@ -823,9 +863,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         if (dataBinding?.StateActive?.isVisible == true) {
             dataBinding?.vehicleListBtn?.isClickable = false
         }
-
-
-
     }
 
     private fun getTimeStringFromDouble(time: Int): String {
@@ -849,5 +886,21 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         val dayOfTheWeek = sdf.format(d)
         dataBinding?.day?.text = "$dayOfTheWeek"
     }
+
+    fun forgroundCheck(){
+        viewModelScope.launch {
+            withContext(Dispatchers.Main){
+
+                if (MyApplication.check==200){
+                    dataBinding!!.initialState!!.visibility=View.GONE
+                    dataBinding!!.StateActive!!.visibility=View.GONE
+                    dataBinding!!.secondState.visibility=View.VISIBLE
+                }
+            }
+        }
+
+
+    }
+
 
 }

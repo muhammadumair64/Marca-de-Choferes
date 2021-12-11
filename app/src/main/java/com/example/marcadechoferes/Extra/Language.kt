@@ -19,7 +19,7 @@ class Language {
             langInitial = "en"
         }
         else{
-            langInitial = "po"
+            langInitial = "pt"
         }
         val languageToLoad =langInitial // your language
         val locale = Locale(languageToLoad)

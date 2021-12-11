@@ -173,6 +173,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     }
 
                 } catch (e: ResponseException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     println("ErrorResponse")
 
                 } catch (e: ApiException) {
@@ -219,6 +220,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     }
 
                 } catch (e: ResponseException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     println("ErrorResponse")
                 } catch (e: ApiException) {
                     e.printStackTrace()

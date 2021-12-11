@@ -2,13 +2,10 @@ package com.example.marcadechoferes.mainscreen
 
 import android.Manifest
 import android.content.BroadcastReceiver
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -27,30 +24,16 @@ import com.example.marcadechoferes.mainscreen.home.viewmodel.HomeViewModel
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import kotlinx.coroutines.launch
-import android.content.pm.ActivityInfo
-
-import android.content.pm.PackageManager
-
-import android.content.pm.PackageInfo
-import android.location.GpsStatus
 
 import android.location.LocationManager
 
 import android.content.IntentSender
-import android.content.IntentSender.SendIntentException
 
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationServices
 
-import com.google.android.gms.location.LocationSettingsResponse
-import com.google.android.gms.location.LocationSettingsStatusCodes
-
-import androidx.annotation.NonNull
 import com.google.android.gms.common.api.*
-
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 
 
 @AndroidEntryPoint
@@ -180,7 +163,7 @@ class MainActivity : AppCompatActivity() {
         val resultIntBreak = time.roundToInt()
 
         lifecycleScope.launch {
-            viewModel.breakTimerupdater(time.roundToInt(), dataBinding)
+            viewModel.breakTimerupdater(time.roundToInt(), dataBinding,this@MainActivity)
         }
         println("$resultIntBreak")
         val hours = resultIntBreak % 86400 / 3600

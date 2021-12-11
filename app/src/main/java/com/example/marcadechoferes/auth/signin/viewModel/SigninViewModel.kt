@@ -120,7 +120,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
         var diskTotal: String? =iTotalSpace
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
-        var osVersion: String? = "10"
+        var osVersion: String? = getAndroidVersion()
         var appVersion: String? = "1.1.0"
         var appBuild: String? =  Build.ID
         var platform: String? = "Android"
@@ -304,6 +304,12 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                 || Build.MANUFACTURER.contains("Genymotion")
                 || Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
                 || "google_sdk" == Build.PRODUCT)
+    }
+
+    fun getAndroidVersion(): String? {
+        val release = Build.VERSION.RELEASE
+        val sdkVersion = Build.VERSION.SDK_INT
+        return "Android SDK: $sdkVersion ($release)"
     }
 
 }

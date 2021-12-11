@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.BuildConfig
+
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.createpassword.CreateNewPasswordScreen
 import com.example.marcadechoferes.auth.otp.OTP_Activity
@@ -177,7 +178,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
         var diskTotal: String? = iTotalSpace
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
-        var osVersion: String? = "10"
+        var osVersion: String? = getAndroidVersion()
         var appVersion: String? = "1.1.0"
         var appBuild: String? = Build.ID
         var platform: String? = "Android"
@@ -234,6 +235,11 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                 } catch (e: ResponseException) {
                     tinyDB.putString("User", "")
                     val response = convertErrorBody(e.response)
+                    withContext(Dispatchers.Main){
+                        (activityContext as OTP_Activity).finish()
+                        var intent = Intent(activityContext, OTP_Activity::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    }
                     println("ErrorResponse $response")
                 } catch (e: ApiException) {
                     e.printStackTrace()
@@ -316,7 +322,10 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
 
                     }
 
-                } catch (e: ApiException) {
+                } catch (e: ResponseException) {
+                    withContext(Dispatchers.Main){
+
+                    }
                     e.printStackTrace()
                 } catch (e: ApiException) {
                     e.printStackTrace()
@@ -346,6 +355,12 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                 || Build.MANUFACTURER.contains("Genymotion")
                 || Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
                 || "google_sdk" == Build.PRODUCT)
+    }
+
+    fun getAndroidVersion(): String? {
+        val release = Build.VERSION.RELEASE
+        val sdkVersion = Build.VERSION.SDK_INT
+        return "Android SDK: $sdkVersion ($release)"
     }
 
 

@@ -10,6 +10,7 @@ import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
 import com.example.marcadechoferes.mainscreen.MainActivity
+import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.splashscreen.SplashScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,6 +58,8 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
                         tinyDB.putString("language", Language.toString())
                         tinyDB.putBoolean("notify",notify)
+                        tinyDB.putInt("againCome",200)
+                        MyApplication.check=200
                         Timer().schedule(1500) {
                             var intent = Intent(activityContext, MainActivity::class.java)
                             ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
