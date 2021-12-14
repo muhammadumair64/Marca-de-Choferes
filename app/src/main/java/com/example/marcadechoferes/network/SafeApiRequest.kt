@@ -1,11 +1,7 @@
 package com.example.marcadechoferes.network
 
-import android.app.Application
-import android.media.session.MediaSession
-import androidx.compose.ui.platform.LocalContext
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.myApplication.MyApplication
-import dagger.hilt.android.internal.Contexts.getApplication
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Response

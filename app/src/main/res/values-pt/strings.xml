@@ -21,7 +21,7 @@
     <string name="Defult_time">Trabalho Padrão</string>
     <string name="Work_Time">Trabalho feito</string>
     <string name="break_time">Tempo de descanso</string>
-    <string name="over_time">Ao longo do tempo</string>
+    <string name="over_time">horas extras</string>
     <string name="start_Timer">Começar</string>
     <string name="search_here">Pesquise o veículo aqui ...</string>
     <string name="take_break">Dar um tempo</string>
@@ -46,4 +46,7 @@
     <string name="english">English</string>
     <string name="firstname">First Name</string>
     <string name="confirm">confirme</string>
+    <string name="POR">POR</string>
+    <string name="ENG">ENG</string>
+    <string name="ESP">ESP</string>
 </resources>

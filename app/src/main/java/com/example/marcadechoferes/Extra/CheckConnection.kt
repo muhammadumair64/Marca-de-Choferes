@@ -4,8 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import androidx.core.content.ContextCompat.getSystemService
-import com.example.marcadechoferes.myApplication.MyApplication
 
 class CheckConnection {
 

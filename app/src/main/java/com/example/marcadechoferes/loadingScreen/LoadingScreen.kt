@@ -10,7 +10,6 @@ import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.mainscreen.MainActivity
 import com.example.marcadechoferes.myApplication.MyApplication
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
 class LoadingScreen : AppCompatActivity(){

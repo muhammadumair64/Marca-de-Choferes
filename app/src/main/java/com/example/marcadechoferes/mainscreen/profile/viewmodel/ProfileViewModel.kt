@@ -1,13 +1,11 @@
 package com.example.marcadechoferes.mainscreen.profile.viewmodel
 
-import android.R.attr
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.TinyDB
@@ -26,7 +24,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import android.graphics.Bitmap
 
-import android.R.attr.bitmap
 import android.app.AlertDialog
 import android.widget.Toast
 import com.example.marcadechoferes.myApplication.MyApplication
@@ -35,7 +32,6 @@ import com.example.marcadechoferes.network.NoInternetException
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.concurrent.schedule
 
 
 @HiltViewModel

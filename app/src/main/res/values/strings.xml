@@ -46,4 +46,7 @@
     <string name="english">Inglés</string>
     <string name="firstname">primer nombre</string>
     <string name="confirm">confirmar</string>
+    <string name="POR">POR</string>
+    <string name="ENG">ENG</string>
+    <string name="ESP">ESP</string>
 </resources>

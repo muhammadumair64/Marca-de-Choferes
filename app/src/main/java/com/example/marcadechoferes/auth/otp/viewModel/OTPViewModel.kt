@@ -14,7 +14,6 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.BuildConfig
@@ -23,10 +22,8 @@ import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.createpassword.CreateNewPasswordScreen
 import com.example.marcadechoferes.auth.otp.OTP_Activity
 import com.example.marcadechoferes.auth.repository.AuthRepository
-import com.example.marcadechoferes.auth.signin.SignInActivity
 import com.example.marcadechoferes.databinding.ActivityOtpBinding
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
-import com.example.marcadechoferes.mainscreen.MainActivity
 import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
 import com.example.marcadechoferes.network.NoInternetException
@@ -40,9 +37,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.Reader
-import java.util.*
 import javax.inject.Inject
-import kotlin.concurrent.schedule
 
 @HiltViewModel
 class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {

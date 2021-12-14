@@ -1,5 +1,6 @@
 package com.example.marcadechoferes.mainscreen.configuration.viewModel
 
+
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -10,10 +11,8 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.R
-import com.example.marcadechoferes.auth.signin.SignInActivity
 import com.example.marcadechoferes.databinding.FragmentConfigurationBinding
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
 import com.example.marcadechoferes.mainscreen.MainActivity
@@ -79,26 +78,22 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-            selectedLanguageUplaod(0, alterDialog)
-            dataBinding?.languageName?.text = " (ESP)"
             tinyDB.putString("language", "0")
+            selectedLanguageUplaod(0, alterDialog)
         }
         language1.setOnClickListener {
             language1Selected()
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-            selectedLanguageUplaod(1, alterDialog)
-            dataBinding?.languageName?.text = " (ENG)"
             tinyDB.putString("language", "1")
-        }
+            selectedLanguageUplaod(1, alterDialog)        }
 
         language2.setOnClickListener {
             language2Selected()
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-            selectedLanguageUplaod(2, alterDialog)
-            dataBinding?.languageName?.text = " (POR)"
             tinyDB.putString("language", "2")
+            selectedLanguageUplaod(2, alterDialog)
         }
 
 
@@ -119,6 +114,8 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
 
     fun selectedLanguageUplaod(language: Int, alterDialog: AlertDialog) {
+
+
         var Token = tinyDB.getString("Cookie")
         viewModelScope.launch {
 
@@ -130,16 +127,30 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     println("SuccessResponse $response")
 
                     if (response != null) {
-                        tinyDB.putBoolean("reload",true)
-                            withContext(Dispatchers.Main){
-                                (MyApplication.loadingContext as LoadingScreen).finish()
-                            }
+                        tinyDB.putBoolean("reload", true)
+                        withContext(Dispatchers.Main) {
+                            (MyApplication.loadingContext as LoadingScreen).finish()
+                        }
 
                         alterDialog.dismiss()
+                        withContext(Dispatchers.Main) {
+                            if (language == 0) {
 
+                                dataBinding!!.languageNameInitails.text = "ESP"
+                                (activityContext as MainActivity).restartActivity()
+                            } else if (language == 1) {
+                                if(dataBinding!=null){
+                                    println("English Selected")                                }
+                                var eng ="ENG"
+                                dataBinding!!.languageNameInitails.text = "$eng"
+                                (activityContext as MainActivity).restartActivity()
 
+                            } else {
+                                dataBinding!!.languageNameInitails.text = " (POR)"
+                                (activityContext as MainActivity).restartActivity()
+                            }
+                        }
                     }
-
                 } catch (e: ResponseException) {
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     println("logout Failed $e")

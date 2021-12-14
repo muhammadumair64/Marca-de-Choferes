@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -140,6 +139,9 @@ val profileViewModel :ProfileViewModel by viewModels()
         binding.editName.setOnClickListener {
             alertDialog.setView(contactPopupView)
             title.text= getResources().getString(R.string.firstname)
+            var name = binding.TitleName.text
+            println("showable name is $name")
+            changedName.setText("$name", TextView.BufferType.EDITABLE);
             alertDialog.show()
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
             val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
@@ -150,6 +152,9 @@ val profileViewModel :ProfileViewModel by viewModels()
             option=2
             alertDialog.setView(contactPopupView)
             title.text=getResources().getString(R.string.father_name)
+            var name = binding.FatherName.text
+            println("showable name is $name")
+            changedName.setText("$name", TextView.BufferType.EDITABLE);
             alertDialog.show()
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
             val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
@@ -165,7 +170,7 @@ val profileViewModel :ProfileViewModel by viewModels()
         }
 
         confirmbtn.setOnClickListener {
-              var nameChanges =changedName.text
+            var nameChanges =changedName.text
             if((nameChanges.length >= 3)) {
                 var fatherName= binding.FatherName.text
                 var Name=binding.TitleName.text

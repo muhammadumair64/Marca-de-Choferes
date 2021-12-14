@@ -1,7 +1,6 @@
 package com.example.marcadechoferes.localDataBase
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.marcadechoferes.network.signinResponse.*

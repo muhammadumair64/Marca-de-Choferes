@@ -3,16 +3,13 @@ package com.example.marcadechoferes.mainscreen.configuration
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -50,6 +47,7 @@ class ConfigurationFragment : Fragment() {
             inflater, R.layout.fragment_configuration, container, false
         )
         tinyDB = TinyDB(context)
+        setLangText()
         tinyDB.putBoolean("reload",false)
         var viewBinding = binding.root
         initViews()
@@ -115,6 +113,26 @@ class ConfigurationFragment : Fragment() {
             findNavController().popBackStack(id!!, true)
             findNavController().navigate(id)
         }
+    }
+
+
+    fun setLangText(){
+        var language = tinyDB.getString("language")
+        if (language == "0") {
+
+            binding.languageNameInitails.text = " (ESP)"
+
+        } else if (language == "1") {
+            var eng =" (ENG)"
+            binding.languageNameInitails.text = "$eng"
+
+
+        } else {
+           binding.languageNameInitails.text = " (POR)"
+
+        }
+
+
     }
 
 }

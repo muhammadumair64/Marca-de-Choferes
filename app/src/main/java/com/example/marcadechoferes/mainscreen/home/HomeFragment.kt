@@ -3,9 +3,7 @@ package com.example.marcadechoferes.mainscreen.home
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.transition.TransitionInflater
 import androidx.fragment.app.Fragment
@@ -29,8 +27,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.marcadechoferes.mainscreen.viewModel.MainViewModel
 import com.example.marcadechoferes.mainscreen.home.Adapter.SearchAdapter
 import com.example.marcadechoferes.mainscreen.home.Adapter.StatusAdapter
-import android.util.DisplayMetrics
-import android.util.Log
 import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.Extra.TinyDB
 

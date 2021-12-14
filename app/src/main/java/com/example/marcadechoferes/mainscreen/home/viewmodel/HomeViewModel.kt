@@ -23,8 +23,6 @@ import android.util.Base64
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
-
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.repository.AuthRepository
@@ -44,6 +42,7 @@ import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import kotlin.concurrent.schedule
 
@@ -87,6 +86,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         getVehicle()
         getState()
         checkInitial()
+        setPreviousWork()
         setDay()
         DefaultWork = tinyDB.getInt("defaultWork")
         println("total Work Given $DefaultWork")
@@ -224,8 +224,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         tinyDB.putInt("state", 0)
         dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
-        dataBinding?.breakBar?.progress=0f
-        dataBinding?.bar?.progress=0f
+//        dataBinding?.breakBar?.progress=0f
+//        dataBinding?.bar?.progress=0f
         dataBinding?.StateActive?.setVisibility(View.GONE)
         dataBinding?.vehicleListBtn?.isClickable = true
         dataBinding?.spacer?.setVisibility(View.VISIBLE)
@@ -238,8 +238,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         dataBinding?.Arrow?.setVisibility(View.VISIBLE)
         dataBinding?.dots?.visibility = View.GONE
         (activityContext as MainActivity).time = 0.0
-        dataBinding?.workTimer?.text = "00:00"
-        dataBinding?.TimerBreak?.text = "00:00"
+//        dataBinding?.workTimer?.text = "00:00"
+//        dataBinding?.TimerBreak?.text = "00:00"
         dataBinding?.statusSelected?.text = "Selección estado"
         dataBinding?.statusListBtn?.visibility = View.GONE
         dataBinding?.vehicleNameSelected?.setTypeface(
@@ -273,7 +273,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     fun buttonSecondState() {
         var intent = (activityContext as MainActivity)
-        if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso") {
+        if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso"||dataBinding?.secondState?.text == "Fim do intervalo") {
             goToSecondState()
             intent.stopTimerBreak()
             intent.startTimer()
@@ -413,8 +413,11 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
                 var profile = authRepository.getProfile()
                 dataBinding?.apply {
-                    Name.text = profile.name
-                    surname.text = profile.surname
+
+                    var userName = profile.name
+                    Name.text = userName!!.split(" ").toTypedArray()[0]
+                    var fatherName = profile.surname
+                    surname.text =fatherName!!.split(" ").toTypedArray()[0]
                 }
                 println("user personal data $profile")
             }
@@ -634,7 +637,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                         val addresses = geocoder.getFromLocation(latitude, longitude, 1)
                         var location = addresses[0].featureName.toString()
                         println("City Name is $location")
-//                        Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
+//               Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
 
                         println("Current Location $longitude and $latitude")
                         var geoPosition = GeoPosition(latitude, longitude)
@@ -824,6 +827,16 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                         ).show()
                     }
                 }
+                catch (e:SocketTimeoutException){
+
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            activityContext,
+                            "Check Your Internet Connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
         }
 
@@ -900,6 +913,23 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
 
 
+    }
+
+
+
+
+    fun setPreviousWork(){
+        var intent = (activityContext as MainActivity)
+        intent.startTimer()
+        intent.startTimerBreak()
+        var workTime=tinyDB.getInt("lasttimework")
+        var breakTime=tinyDB.getInt("lasttimebreak")
+        dataBinding?.bar?.progress= workTime.toFloat()
+        dataBinding?.breakBar?.progress=breakTime.toFloat()
+        dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+        dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+        intent.stopTimerBreak()
+        intent.stopTimer()
     }
 
 

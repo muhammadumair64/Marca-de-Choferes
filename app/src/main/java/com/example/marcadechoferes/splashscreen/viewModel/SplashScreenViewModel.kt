@@ -3,20 +3,23 @@ package com.example.marcadechoferes.splashscreen.viewModel
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.repository.AuthRepository
-import com.example.marcadechoferes.loadingScreen.LoadingScreen
 import com.example.marcadechoferes.mainscreen.MainActivity
 import com.example.marcadechoferes.myApplication.MyApplication
+import com.example.marcadechoferes.network.ApiException
+import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.splashscreen.SplashScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.SocketTimeoutException
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
@@ -33,8 +36,6 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
 
     fun syncdata(){
-        var intent = Intent(activityContext, LoadingScreen::class.java)
-        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
         var Token=tinyDB.getString("Cookie")
         viewModelScope.launch {
 
@@ -71,6 +72,29 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     }
                 } catch (e: ResponseException) {
                     println("ErrorResponse")
+                }
+                catch (e: ApiException) {
+                    e.printStackTrace()
+                } catch (e: NoInternetException) {
+                    println("position 2")
+                    e.printStackTrace()
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            activityContext,
+                            "Check Your Internet Connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                catch (e: SocketTimeoutException){
+
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            activityContext,
+                            "Check Your Internet Connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }

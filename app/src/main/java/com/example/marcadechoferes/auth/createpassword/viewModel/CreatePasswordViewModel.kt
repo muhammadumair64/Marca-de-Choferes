@@ -1,6 +1,5 @@
 package com.example.marcadechoferes.auth.createpassword.viewModel
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,7 +7,6 @@ import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,8 +14,6 @@ import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.createpassword.CreateNewPasswordScreen
-import com.example.marcadechoferes.auth.forgotPassword.ForgotPasswordActivity
-import com.example.marcadechoferes.auth.otp.OTP_Activity
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.databinding.ActivityCreateNewPasswordScreenBinding
 import com.example.marcadechoferes.mainscreen.MainActivity
@@ -109,6 +105,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
                     if(response!=null) {
                         var intent= Intent(activityContext, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                         ContextCompat.startActivity(activityContext!!,intent, Bundle.EMPTY)
                     }
 

@@ -10,9 +10,6 @@ import androidx.databinding.DataBindingUtil
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.createpassword.viewModel.CreatePasswordViewModel
 import com.example.marcadechoferes.databinding.ActivityCreateNewPasswordScreenBinding
-import android.app.Activity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.marcadechoferes.Extra.Language
 import dagger.hilt.android.AndroidEntryPoint
 

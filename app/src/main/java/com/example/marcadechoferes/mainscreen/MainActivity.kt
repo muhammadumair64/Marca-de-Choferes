@@ -19,8 +19,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
-
-import com.example.marcadechoferes.mainscreen.home.viewmodel.HomeViewModel
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import kotlinx.coroutines.launch
@@ -34,6 +32,7 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.common.api.*
+import java.util.*
 
 
 @AndroidEntryPoint
@@ -177,9 +176,28 @@ class MainActivity : AppCompatActivity() {
         String.format("%02d:%02d", hour, min)
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+        Log.d("CDA", "onBackPressed Called")
+        val setIntent = Intent(Intent.ACTION_MAIN)
+        setIntent.addCategory(Intent.CATEGORY_HOME)
+        setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(setIntent)
     }
+
+
+
+//    override fun onBackPressed() {
+//
+////        super.onBackPressed()
+////
+////        var intent = Intent(this, MainActivity::class.java)
+////        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+////        finish()
+//        onUserLeaveHint()
+//    }
+//
+//    override fun onUserLeaveHint() {
+//        super.onUserLeaveHint()
+//    }
 
     fun getWidth() {
         val displayMetrics = resources.displayMetrics
@@ -255,5 +273,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+
+    fun restartActivity() {
+        val intent = intent
+        finish()
+        startActivity(intent)
     }
 }

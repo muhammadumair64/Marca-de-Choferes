@@ -129,11 +129,11 @@
                 android:textSize="@dimen/_13sdp" />
 
             <TextView
-                android:id="@+id/language_name"
+                android:id="@+id/languageNameInitails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/language"
-                android:text=" (ESP)"
+                android:text = " (ESP)"
                 android:textColor="@color/auth_hint_color"
                 android:textSize="@dimen/_13sdp"
 

@@ -1,14 +1,11 @@
 package com.example.marcadechoferes.auth.forgotPassword
 
-import android.app.ActionBar
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.R

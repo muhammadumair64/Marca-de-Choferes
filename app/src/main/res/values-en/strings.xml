@@ -32,7 +32,7 @@
     <string name="calender">Day</string>
     <string name="select_status_popup_window">Select Status</string>
     <string name="profile">Profile</string>
-    <string name="name">Your Name</string>
+    <string name="name">First Name</string>
     <string name="father_name">Surname</string>
     <string name="log_out">Log out</string>
     <string name="push_notification">Push Notifications</string>
@@ -46,4 +46,7 @@
     <string name="english">English</string>
     <string name="firstname">First Name</string>
     <string name="confirm">Confirm</string>
+    <string name="POR">POR</string>
+    <string name="ENG">ENG</string>
+    <string name="ESP">ESP</string>
 </resources>
