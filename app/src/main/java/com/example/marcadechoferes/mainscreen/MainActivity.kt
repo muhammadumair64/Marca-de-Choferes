@@ -26,7 +26,9 @@ import kotlinx.coroutines.launch
 import android.location.LocationManager
 
 import android.content.IntentSender
+import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.mainscreen.home.viewmodel.HomeViewModel
+import com.example.marcadechoferes.myApplication.MyApplication
 
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationSettingsRequest
@@ -57,6 +59,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val language= Language()
+        language.setLanguage(baseContext)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         serviceIntent = Intent(applicationContext, TimerService::class.java)
         registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
@@ -281,5 +285,10 @@ class MainActivity : AppCompatActivity() {
         val intent = intent
         finish()
         startActivity(intent)
+    }
+
+    fun navSelection(){
+        binding.menu.setItemSelected(R.id.User, true)
+
     }
 }

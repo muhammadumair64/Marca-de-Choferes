@@ -36,6 +36,7 @@ class SplashScreen : AppCompatActivity() {
         viewModel.viewsOfActivity(this)
         tinyDB = TinyDB(this)
         var checker = tinyDB.getString("User")
+        println("Current User is : $checker")
         if (checker?.length!! >= 3) {
             var intent = Intent(this, LoadingScreen::class.java)
             viewModel.syncdata()

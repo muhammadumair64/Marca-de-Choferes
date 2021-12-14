@@ -10,7 +10,7 @@ data class Profile(
 
     val avatar: String?,
     val language: Int?,
-    val name: String?,
+    val name: String="Muhammad Waleed",
     val notify: Boolean?,
-    val surname: String?
+    val surname: String = "Amir"
 )

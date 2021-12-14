@@ -61,8 +61,6 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
                 var intent = Intent(context, CreateNewPasswordScreen::class.java)
                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                (context as MainActivity).finish()
-
             }
 
 

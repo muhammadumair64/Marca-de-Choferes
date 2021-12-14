@@ -10,6 +10,7 @@ import android.os.StatFs
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
@@ -45,7 +46,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
     lateinit var tinyDB: TinyDB
     fun viewsForOTPScreen(context: Context, binding: ActivityOtpBinding) {
         activityContext = context
-        tinyDB = TinyDB(MyApplication.appContext)
+        tinyDB = TinyDB(context)
 
         binding.edt1.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -211,15 +212,18 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                             Token
                         )
 
-                    println("SuccessResponse $response")
+                    println("SuccessResponse OTP $response")
 
-                    if (response != null) {
-                        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
-                        tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-                        tinyDB.putInt("defaultWork", response.work!!.workingHours)
-                        tinyDB.putInt("defaultBreak", response.work.workBreak)
-                        tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
+                    if (response != null ) {
                         authRepository.InsertSigninData(response)
+                        Log.d("workinghour","${response.lastVar?.lastWorkedHoursTotal}")
+                        tinyDB.putInt("lasttimework", response.lastVar?.lastWorkedHoursTotal ?: 0)
+                        tinyDB.putInt("lasttimebreak", response.lastVar?.lastWorkBreakTotal ?: 0)
+                        tinyDB.putInt("defaultWork", response.work?.workingHours ?: 0)
+                        tinyDB.putInt("defaultBreak", response.work?.workBreak ?: 0)
+                        tinyDB.putInt("lastVehicleid", response.lastVar?.lastIdVehicle?.id ?: 0)
+                        tinyDB.putString("User",userName)
+
                         val Language = response.profile?.language
                         val notify: Boolean = response.profile?.notify!!
                         tinyDB.putString("language", Language.toString())
@@ -249,6 +253,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         ).show()
                     }
                 }
+
             }
         }
     }

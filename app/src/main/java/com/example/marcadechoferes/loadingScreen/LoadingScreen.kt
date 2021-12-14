@@ -52,6 +52,11 @@ class LoadingScreen : AppCompatActivity(){
         finish()
     }
 
+    override fun onBackPressed() {
+
+        println("backPressed")
+    }
+
 
 
 

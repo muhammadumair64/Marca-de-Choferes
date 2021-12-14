@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/password_toggle"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:paddingTop="@dimen/_10sdp"
             android:fontFamily="@font/open_sans_regular"
             android:text="¿Ha olvidado su contraseña?"
             android:textColor="@color/Forgot_password_Option_Color"

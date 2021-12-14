@@ -35,16 +35,20 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
         activityContext=context
         tinyDB= TinyDB(MyApplication.appContext)
        Token = tinyDB.getString("Cookie").toString()
+
         binding.backButton.setOnClickListener {
 
-            (context as Activity).finish()
+            (context as CreateNewPasswordScreen).finish()
         }
+
         binding.showPassBtn.setOnClickListener {
             if (binding.editPassword.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
                 binding.editPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance())
+                 binding.editPassword.setSelection(binding.editPassword.getText().length);
                 binding.showPassBtn.setImageResource(R.drawable.hide_password)
             } else {
                 binding.editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance())
+                binding.editPassword.setSelection(binding.editPassword.getText().length)
                 binding.showPassBtn.setImageResource(R.drawable.ic_icon_visibility)
             }
         }
@@ -53,9 +57,11 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
             if (binding.repeatPassword.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
                 binding.repeatPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance())
+                binding.repeatPassword.setSelection(binding.repeatPassword.getText().length)
                 binding.showRepeatPassBtn.setImageResource(R.drawable.hide_password)
             } else {
                 binding.repeatPassword.setTransformationMethod(PasswordTransformationMethod.getInstance())
+                binding.repeatPassword.setSelection(binding.repeatPassword.getText().length)
                 binding.showRepeatPassBtn.setImageResource(R.drawable.ic_icon_visibility)
             }
 
@@ -65,18 +71,24 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
         binding.apply {
             var password = editPassword.text
             var repeatPassword = repeatPassword.text
+            println("passwords here $password   $repeatPassword")
+           if(password.trim()==repeatPassword.trim()){
+    if (editPassword.text.length>=4){
+        var passsword = editPassword.text
+        CreateNewPassword(passsword.toString())
+        var intent= Intent(context, LoadingScreen::class.java)
+        ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+        (context as CreateNewPasswordScreen).closeKeyboard()
 
-                if (editPassword.text.length>=4){
-                    var passsword = editPassword.text
-                    CreateNewPassword(passsword.toString())
-                    var intent= Intent(context, LoadingScreen::class.java)
-                    ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                    (context as CreateNewPasswordScreen).closeKeyboard()
 
+    }else{
+        Toast.makeText(activityContext, "Too Short Password", Toast.LENGTH_SHORT).show()
+    }
+}else{
+    Toast.makeText(activityContext, "Password not match", Toast.LENGTH_SHORT).show()
 
-                }else{
-                    Toast.makeText(activityContext, "Too Short Password", Toast.LENGTH_SHORT).show()
-                }
+}
+
 
 
 

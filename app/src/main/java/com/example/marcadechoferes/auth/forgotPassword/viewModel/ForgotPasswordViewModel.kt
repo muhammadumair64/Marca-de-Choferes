@@ -38,18 +38,18 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                 val emailCheck: String = binding.email.text.toString()
                  val validater= emailCheck.isValidEmail()
 
-                if(validater==true){
+            if(emailCheck.isEmpty()){
+            Toast.makeText(activityContext, "Enter Email", Toast.LENGTH_SHORT).show()
+                    }
+            else {
+                if (validater == true) {
                     userforgotPassword(emailCheck)
-                    var intent= Intent(activityContext, LoadingScreen::class.java)
-                    startActivity(activityContext!!,intent, Bundle.EMPTY)
-
-
-                }else{
+                    var intent = Intent(activityContext, LoadingScreen::class.java)
+                    startActivity(activityContext!!, intent, Bundle.EMPTY)
+                } else {
                     Toast.makeText(activityContext, "Invalid Email", Toast.LENGTH_SHORT).show()
-
                 }
-
-
+            }
 
         }
         binding.backButton.setOnClickListener {

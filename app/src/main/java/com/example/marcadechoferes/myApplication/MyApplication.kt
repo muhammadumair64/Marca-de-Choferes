@@ -14,14 +14,16 @@ class MyApplication:Application() {
         MyApplication.check=0
         MyApplication.TotalTime=0
         MyApplication.TotalBreak=0
+        MyApplication.navBarSelection=0
     }
 
     companion object {
 
         lateinit  var appContext: Context
-lateinit var loadingContext:Context
+        lateinit var loadingContext:Context
         var check by Delegates.notNull<Int>()
         var TotalTime  by Delegates.notNull<Int>()
+        var navBarSelection by Delegates.notNull<Int>()
         var TotalBreak by Delegates.notNull<Int>()
     }
 }

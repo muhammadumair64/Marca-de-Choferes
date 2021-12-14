@@ -63,7 +63,7 @@ val profileViewModel :ProfileViewModel by viewModels()
 
     fun initViews(){
         var context = (activity as MainActivity).context
-
+        (activity as MainActivity).binding.menu.setItemSelected(R.id.User,true)
         profileViewModel.viewsForFragment(context,binding)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)

@@ -55,7 +55,6 @@ class HomeFragment : Fragment(),OnclickItem {
         // Inflate the layout for this fragment
 
         val language= Language()
-
         language.setLanguage((activity as MainActivity).baseContext)
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
@@ -120,6 +119,11 @@ class HomeFragment : Fragment(),OnclickItem {
 
             }
         )
+
+        binding.profileImage.setOnClickListener {
+        mainViewModel.navigationLiveData.postValue("2")
+        }
+
 
 
     }

@@ -93,7 +93,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         println("total Work Given $DefaultWork")
         MyApplication.TotalTime=DefaultWork
         DefaultBreakTime = tinyDB.getInt("defaultBreak")
-       MyApplication.TotalBreak=DefaultBreakTime
+        MyApplication.TotalBreak=DefaultBreakTime
         var DefaultTOShow = DefaultWork * 60
 
         binding.maxTimer.text = getTimeStringFromDouble(DefaultTOShow)
@@ -108,7 +108,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         when (Choice) {
 
             "initialState" -> {
-                buttonInitailStaet()
+                buttonInitailState()
             }
             "goToActiveState" -> {
                 goToActivState()
@@ -200,14 +200,14 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
         dataBinding?.initialState?.setOnClickListener {
             MyApplication.check=0
-            buttonInitailStaet()
+            buttonInitailState()
             tinyDB.putString("selectedState", "initialState")
         }
 
 
     }
 
-    fun buttonInitailStaet() {
+    fun buttonInitailState() {
         (activityContext as MainActivity).time = 0.0
 //            intent.startTimer()
 //            dataBinding?.spacer?.setVisibility(View.VISIBLE)
@@ -915,9 +915,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     }
-
-
-
 
     fun setPreviousWork(){
         var intent = (activityContext as MainActivity)

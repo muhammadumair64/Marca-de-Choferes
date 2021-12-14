@@ -54,9 +54,11 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
             showPassBtn.setOnClickListener {
                 if (editPassword.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
                     editPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance())
+                    editPassword.setSelection(editPassword.getText().length);
                     showPassBtn.setImageResource(R.drawable.hide_password)
                 } else {
                     editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance())
+                       editPassword.setSelection(editPassword.getText().length);
                     showPassBtn.setImageResource(R.drawable.ic_icon_visibility)
                 }
 
@@ -74,21 +76,27 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                 val passwordCheck= editPassword.text.toString()
                 val validater= emailCheck.isValidEmail()
 
-                if(validater==true && passwordCheck.length>=4){
+                if(emailCheck.isEmpty()){
+                    Toast.makeText(activityContext, "Enter Email", Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    if(validater==true && passwordCheck.length>=4){
 
-                    signinAuth(emailCheck,passwordCheck)
+                        signinAuth(emailCheck,passwordCheck)
                         var intent = Intent(activityContext,LoadingScreen::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
+                    }else if(validater==false){
+                        Toast.makeText(activityContext, "Invalid Email", Toast.LENGTH_SHORT).show()
 
+                    }
+                    else{
+                        Toast.makeText(activityContext, "Invalid password", Toast.LENGTH_SHORT).show()
 
-                }else if(validater==false){
-                    Toast.makeText(activityContext, "Invalid Email", Toast.LENGTH_SHORT).show()
-
-                }else{
-                    Toast.makeText(activityContext, "Invalid password", Toast.LENGTH_SHORT).show()
-
+                    }
                 }
+
+
 
             }
 
