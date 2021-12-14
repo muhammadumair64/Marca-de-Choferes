@@ -23,6 +23,7 @@ import android.util.Base64
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.repository.AuthRepository
