@@ -41,7 +41,6 @@ class CreateNewPasswordScreen : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
           println("function start")
 
     }

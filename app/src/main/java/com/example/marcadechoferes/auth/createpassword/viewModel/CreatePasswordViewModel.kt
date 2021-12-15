@@ -26,15 +26,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
 @HiltViewModel
-class CreatePasswordViewModel @Inject constructor(val authRepository: AuthRepository):ViewModel() {
-    var activityContext:Context? = null
+class CreatePasswordViewModel @Inject constructor(val authRepository: AuthRepository) :
+    ViewModel() {
+    var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
-    var Token=""
-    fun viewsForCreatePassword(context: Context,binding: ActivityCreateNewPasswordScreenBinding){
-        activityContext=context
-        tinyDB= TinyDB(MyApplication.appContext)
-       Token = tinyDB.getString("Cookie").toString()
+    var Token = ""
+    fun viewsForCreatePassword(context: Context, binding: ActivityCreateNewPasswordScreenBinding) {
+        activityContext = context
+        tinyDB = TinyDB(MyApplication.appContext)
+        Token = tinyDB.getString("Cookie").toString()
 
         binding.backButton.setOnClickListener {
 
@@ -44,7 +46,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
         binding.showPassBtn.setOnClickListener {
             if (binding.editPassword.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
                 binding.editPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance())
-                 binding.editPassword.setSelection(binding.editPassword.getText().length);
+                binding.editPassword.setSelection(binding.editPassword.getText().length);
                 binding.showPassBtn.setImageResource(R.drawable.hide_password)
             } else {
                 binding.editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance())
@@ -67,75 +69,74 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
         }
 
-    binding.SubmitBtn.setOnClickListener {
-        binding.apply {
-            var password = editPassword.text
-            var repeatPassword = repeatPassword.text
-            println("passwords here $password   $repeatPassword")
-           if(password.trim()==repeatPassword.trim()){
-    if (editPassword.text.length>=4){
-        var passsword = editPassword.text
-        CreateNewPassword(passsword.toString())
-        var intent= Intent(context, LoadingScreen::class.java)
-        ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-        (context as CreateNewPasswordScreen).closeKeyboard()
+        binding.SubmitBtn.setOnClickListener {
+            binding.apply {
+                var password = editPassword.text
+                var repeatPassword = repeatPassword.text
+                println("passwords here $password   $repeatPassword")
+                if (password.trim() == repeatPassword.trim()) {
+                    if (editPassword.text.length >= 4) {
+                        var passsword = editPassword.text
+                        CreateNewPassword(passsword.toString())
+                        var intent = Intent(context, LoadingScreen::class.java)
+                        ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+                        (context as CreateNewPasswordScreen).closeKeyboard()
 
 
-    }else{
-        Toast.makeText(activityContext, "Too Short Password", Toast.LENGTH_SHORT).show()
-    }
-}else{
-    Toast.makeText(activityContext, "Password not match", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(activityContext, "Too Short Password", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                } else {
+                    Toast.makeText(activityContext, "Password not match", Toast.LENGTH_SHORT).show()
 
-}
+                }
 
 
+            }
 
 
         }
 
 
-
-
     }
 
 
-    }
-
-
-    fun CreateNewPassword(password:String){
+    fun CreateNewPassword(password: String) {
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
 
                 try {
 
-                    val response =authRepository.CreateNewPasswordPassword(password,Token)
+                    val response = authRepository.CreateNewPasswordPassword(password, Token)
 
                     println("SuccessResponse $response")
 
 
-                    if(response!=null) {
-                        var intent= Intent(activityContext, MainActivity::class.java)
+                    if (response != null) {
+                        var intent = Intent(activityContext, MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        ContextCompat.startActivity(activityContext!!,intent, Bundle.EMPTY)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                     }
 
                 } catch (e: ResponseException) {
                     (activityContext as CreateNewPasswordScreen).finish()
                     println("ErrorResponse")
-                    var intent= Intent(activityContext,CreateNewPasswordScreen::class.java)
-                    ContextCompat.startActivity(activityContext!!,intent, Bundle.EMPTY)
+                    var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
-                }
-                catch (e: ApiException) {
+                } catch (e: ApiException) {
                     e.printStackTrace()
-                }
-                catch (e: NoInternetException) {
+                } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-                    withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            activityContext,
+                            "Check Your Internet Connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

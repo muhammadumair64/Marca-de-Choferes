@@ -11,13 +11,15 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.databinding.ItemVehiclelistBinding
 import com.example.marcadechoferes.mainscreen.home.OnclickItem
+import com.example.marcadechoferes.myApplication.MyApplication
 
 class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClicked:OnclickItem):
     RecyclerView.Adapter<SearchAdapter.searchViewHolder>(), Filterable {
-
+    lateinit var tinyDB: TinyDB
     var allVehicleArrayList:ArrayList<String> = ArrayList()
     var charactersLength=0
     init {
@@ -35,7 +37,7 @@ class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClic
             )
         )
     override fun onBindViewHolder(holder: searchViewHolder, position: Int) {
-
+        tinyDB= TinyDB(MyApplication.appContext)
         holder.adapterViewBindingAdapter.searchedText.text = vehicleSearchArrayList[position]
         var searchText=holder.adapterViewBindingAdapter.searchedText.text.toString()
         val spannable: Spannable = SpannableString(searchText)
@@ -44,7 +46,12 @@ class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClic
         holder.adapterViewBindingAdapter.searchedText.text=spannable
         holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.parseColor("#C6C6C6"))
         holder.adapterViewBindingAdapter.check.setBackgroundResource(R.drawable.ic_check_circle)
-
+        var selected = tinyDB.getInt("vehicle")
+    selected=selected.minus(1)
+    if(selected==position){
+        holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.BLACK)
+        holder.adapterViewBindingAdapter.check.setBackgroundResource(R.drawable.ic_blue_check)
+    }
         holder.adapterViewBindingAdapter.vehicle.setOnClickListener {
             onItemClicked.vehicleSelected(position)
             holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.BLACK)

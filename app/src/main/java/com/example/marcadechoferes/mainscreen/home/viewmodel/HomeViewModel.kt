@@ -746,6 +746,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                         Toast.makeText(
                             activityContext,
                             "Check Your Internet Connection",
@@ -753,7 +754,16 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                         ).show()
                     }
                 }
-            }
+                catch (e:SocketTimeoutException){
+
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            activityContext,
+                            "Check Your Internet Connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }            }
         }
 
 
@@ -813,7 +823,13 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     }
 
                 } catch (e: ResponseException) {
-                    (MyApplication.loadingContext as LoadingScreen).finish()
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            activityContext,
+                            "Failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     println("ErrorResponse")
                 } catch (e: ApiException) {
                     e.printStackTrace()

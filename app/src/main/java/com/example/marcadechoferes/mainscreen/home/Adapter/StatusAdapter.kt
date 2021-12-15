@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.databinding.ItemStatusListBinding
 import com.example.marcadechoferes.mainscreen.home.OnclickItem
+import com.example.marcadechoferes.myApplication.MyApplication
 
 class StatusAdapter (var statusArrayList: ArrayList<String>, val onclickItem: OnclickItem):
     RecyclerView.Adapter<StatusAdapter.StatusViewHolder>(){
 
-
+      lateinit var tinyDB: TinyDB
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,11 +29,20 @@ class StatusAdapter (var statusArrayList: ArrayList<String>, val onclickItem: On
     )
 
     override fun onBindViewHolder(holder: StatusAdapter.StatusViewHolder, position: Int) {
+        tinyDB= TinyDB(MyApplication.appContext)
         holder.statusBinding.searchedText.text = statusArrayList[position]
         holder.statusBinding.searchedText.setTextColor(Color.parseColor("#C6C6C6"))
         holder.statusBinding.close.setBackgroundResource(R.drawable.ic_check_circle)
         holder.statusBinding.searchedText.setTextColor(Color.parseColor("#C6C6C6"))
         holder.statusBinding.close.setBackgroundResource(R.drawable.ic_check_circle)
+
+       var selected=tinyDB.getInt("state")
+         selected = selected.minus(1)
+        if(selected==position){
+            holder.statusBinding.searchedText.setTextColor(Color.BLACK)
+            holder.statusBinding.close.setBackgroundResource(R.drawable.ic_blue_check)
+        }
+
 
         holder.statusBinding.status.setOnClickListener {
 
