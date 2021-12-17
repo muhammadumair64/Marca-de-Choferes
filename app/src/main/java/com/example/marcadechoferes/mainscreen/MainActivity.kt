@@ -444,10 +444,13 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDestroy() {
+
         var languageCheck = MyApplication.checkForLanguageChange
 //        languageCheck=tinyDB.getInt("languageCheck")
 //        Log.d("checkLanguageValue", languageCheck.toString())
         if(languageCheck != 200){
+            stopService(Intent(this,TimerService::class.java))
+            stopService(Intent(this,BreakTimerService::class.java))
             var check =tinyDB.getInt("ActivityCheck")
             var TimeForUplaod=0
             when(check){

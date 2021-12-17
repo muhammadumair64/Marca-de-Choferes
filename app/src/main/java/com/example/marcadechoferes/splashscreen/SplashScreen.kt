@@ -35,8 +35,13 @@ class SplashScreen : AppCompatActivity() {
     lateinit var binding: ActivitySplashScreenBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var temp = isMyServiceRunning(UploadRemaingDataService::class.java)
-        Log.d("check service ",temp.toString())
+//        var temp = isMyServiceRunning(UploadRemaingDataService::class.java)
+//        Log.d("check service ",temp.toString())
+//        var intent=Intent(this,UploadRemaingDataService::class.java)
+//        stopService(intent)
+//        temp = isMyServiceRunning(UploadRemaingDataService::class.java)
+//        Log.d("check service ",temp.toString())
+
         val language = Language()
         language.setLanguage(baseContext)
         viewModel.viewsOfActivity(this)
