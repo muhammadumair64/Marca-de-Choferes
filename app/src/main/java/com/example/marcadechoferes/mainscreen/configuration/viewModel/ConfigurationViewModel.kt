@@ -117,7 +117,9 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
 
         var Token = tinyDB.getString("Cookie")
+      MyApplication.checkForLanguageChange=200
         viewModelScope.launch {
+
 
             withContext(Dispatchers.IO) {
                 try {

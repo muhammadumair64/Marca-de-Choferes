@@ -80,6 +80,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
             withContext(Dispatchers.IO) {
                 try {
+                    MyApplication.checkForLanguageChange=200
                     val name = tinyDB.getString("User")
                     val response =
                         authRepository.logoutUser(name!!)

@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.marcadechoferes.mainscreen.viewModel.MainViewModel
@@ -136,25 +137,36 @@ class HomeFragment : Fragment(),OnclickItem {
         alertDialog = dailogBuilder.create()
         dialog = statusDailogBuilder.create()
         binding.vehicleListBtn.setOnClickListener {
-            searchAdapter.notifyDataSetChanged()
-            alertDialog.setView(contactPopupView)
-            alertDialog.show()
+            if(binding.StateActive.isVisible ){
 
-            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-            val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-            alertDialog.getWindow()?.setLayout(width,height);
-            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
+            else if(binding.secondState.text == "End Break" ||binding.secondState.text == "Fin del descanso"||binding.secondState.text == "Fim do intervalo")
+            {
 
+            } else{
+                searchAdapter.notifyDataSetChanged()
+                alertDialog.setView(contactPopupView)
+                alertDialog.show()
+
+                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+                alertDialog.getWindow()?.setLayout(width,height);
+                alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
         }
 
         binding.statusListBtn.setOnClickListener {
-            statusAdapter.notifyDataSetChanged()
-            dialog.setView(statusPopupView)
-            dialog.show()
-            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-            val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
-            dialog.getWindow()?.setLayout(width,height);
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            if (binding.secondState.text == "End Break" ||binding.secondState.text == "Fin del descanso"||binding.secondState.text == "Fim do intervalo"){
+
+            }else{
+                statusAdapter.notifyDataSetChanged()
+                dialog.setView(statusPopupView)
+                dialog.show()
+                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
+                dialog.getWindow()?.setLayout(width,height);
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
         }
         statusRecyclerView = statusPopupView.findViewById(R.id.status_RV)
         searchView = contactPopupView.findViewById<SearchView>(R.id.searchText)
@@ -179,7 +191,7 @@ class HomeFragment : Fragment(),OnclickItem {
         val id: Int = searchView.getContext().getResources()
             .getIdentifier("android:id/search_src_text", null, null)
         val textView = searchView.findViewById(id) as TextView
-        textView.hint = "Buscar vehículo aquí ..."
+        textView.hint = getString(R.string.search_here)
         textView.textSize=20f
         textView.typeface = typeface
 

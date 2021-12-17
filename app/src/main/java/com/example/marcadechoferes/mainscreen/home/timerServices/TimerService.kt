@@ -18,9 +18,9 @@ class TimerService : Service()
     {
         tinyDB = TinyDB(MyApplication.appContext)
         var workTime=tinyDB.getInt("lasttimework")
-        val time = intent.getDoubleExtra(TIME_EXTRA, workTime.toDouble())
+        val time = intent.getDoubleExtra(TIME_EXTRA,workTime.toDouble())
         timer.scheduleAtFixedRate(TimeTask(time), 0, 1000)
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
     override fun onDestroy()

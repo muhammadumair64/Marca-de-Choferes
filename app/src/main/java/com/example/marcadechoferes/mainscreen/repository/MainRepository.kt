@@ -4,6 +4,7 @@ import com.example.marcadechoferes.localDataBase.LocalDataBase
 import com.example.marcadechoferes.network.SafeApiRequest
 import com.example.marcadechoferes.network.logoutResponse.MassageResponse
 import com.example.marcadechoferes.network.retrofitInterfaces.RetrofitInterface
+import com.example.marcadechoferes.network.signinResponse.Notify
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -17,8 +18,8 @@ class MainRepository @Inject constructor(
     }
 
 
-    suspend fun updateNotification(notify:Boolean,Token: String): MassageResponse {
-
+    suspend fun updateNotification(notification:Boolean,Token: String): MassageResponse {
+     var notify =Notify(notification)
         return apiRequest { retrofitInterface.updateNotification(notify,Token)}
     }
 

@@ -72,6 +72,7 @@
 
         <service android:name="com.example.marcadechoferes.mainscreen.home.timerServices.TimerService" />
         <service android:name="com.example.marcadechoferes.mainscreen.home.timerServices.BreakTimerService" />
+        <service android:name=".mainscreen.home.timerServices.UploadRemaingDataService"/>
     </application>
 
 </manifest>

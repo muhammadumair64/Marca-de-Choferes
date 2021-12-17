@@ -104,10 +104,9 @@ interface RetrofitInterface {
     ): Response<MassageResponse>
 
 
-    @FormUrlEncoded
     @POST("profile/update/notify")
     suspend fun updateNotification(
-        @Field("notify") notify: Boolean,
+        @Body  notify: Notify,
         @Header("Cookie") sessionIdAndToken: String
     ): Response<MassageResponse>
 

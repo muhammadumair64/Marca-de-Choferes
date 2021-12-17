@@ -1,6 +1,7 @@
 package com.example.marcadechoferes.mainscreen
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -26,15 +27,31 @@ import kotlinx.coroutines.launch
 import android.location.LocationManager
 
 import android.content.IntentSender
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.marcadechoferes.Extra.Language
+import com.example.marcadechoferes.Extra.TinyDB
+import com.example.marcadechoferes.Extra.UpdateActivityDataClass
+import com.example.marcadechoferes.auth.repository.AuthRepository
+import com.example.marcadechoferes.loadingScreen.LoadingScreen
+import com.example.marcadechoferes.mainscreen.home.timerServices.UploadRemaingDataService
 import com.example.marcadechoferes.mainscreen.home.viewmodel.HomeViewModel
 import com.example.marcadechoferes.myApplication.MyApplication
+import com.example.marcadechoferes.network.ApiException
+import com.example.marcadechoferes.network.GeoPosition
+import com.example.marcadechoferes.network.NoInternetException
+import com.example.marcadechoferes.network.ResponseException
+import com.example.marcadechoferes.network.signinResponse.Vehicle
 
 import com.google.android.gms.location.*
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.common.api.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.net.SocketTimeoutException
 import java.util.*
 
 
@@ -44,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val LOCATION_SETTING_REQUEST = 999
     }
+
     val mainViewModel: MainViewModel by viewModels()
     var context: Context = this
     var timerStarted = false
@@ -56,7 +74,11 @@ class MainActivity : AppCompatActivity() {
     private var timeBreak = 0.0
     var dataBinding: FragmentHomeBinding? = null
     val viewModel: HomeViewModel by viewModels()
-
+    lateinit var tinyDB: TinyDB
+    lateinit var action : ()->Unit
+     var WorkTime = 0
+     var BreakTime = 0
+     var authRepository:AuthRepository? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val language= Language()
@@ -64,12 +86,13 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         serviceIntent = Intent(applicationContext, TimerService::class.java)
         registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
-
         serviceIntentB = Intent(applicationContext, BreakTimerService::class.java)
         registerReceiver(updateTimeBreak, IntentFilter(BreakTimerService.TIMER_UPDATED_B))
         binding.menu.setItemSelected(R.id.home, true)
+        tinyDB= TinyDB(this)
+        setTimer()
         getWidth()
-        initPermission()
+        initPermission(){nullFunction()}
         NavBar()
 
 
@@ -126,8 +149,9 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.workTimerupdater(time.roundToInt(), dataBinding)
         }
-
+            Log.d("Timer ","$resultInt")
         println(" $resultInt")
+        WorkTime=resultInt
         val hours = resultInt % 86400 / 3600
         val minutes = resultInt % 86400 % 3600 / 60
         val seconds = resultInt % 86400 % 3600 % 60
@@ -170,6 +194,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.breakTimerupdater(time.roundToInt(), dataBinding,this@MainActivity)
         }
         println("$resultIntBreak")
+        BreakTime=resultIntBreak
         val hours = resultIntBreak % 86400 / 3600
         val minutes = resultIntBreak % 86400 % 3600 / 60
         val seconds = resultIntBreak % 86400 % 3600 % 60
@@ -181,11 +206,12 @@ class MainActivity : AppCompatActivity() {
         String.format("%02d:%02d", hour, min)
 
     override fun onBackPressed() {
-        Log.d("CDA", "onBackPressed Called")
-        val setIntent = Intent(Intent.ACTION_MAIN)
-        setIntent.addCategory(Intent.CATEGORY_HOME)
-        setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(setIntent)
+//        Log.d("CDA", "onBackPressed Called")
+//        val setIntent = Intent(Intent.ACTION_MAIN)
+//        setIntent.addCategory(Intent.CATEGORY_HOME)
+//        setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//        startActivity(setIntent)
+        finish()
     }
 
 
@@ -214,7 +240,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    fun initPermission() {
+    fun initPermission(action:()->Unit) {
 
         val permissions =
             arrayOf(
@@ -230,7 +256,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onGranted() {
                     // hideIcon()
                     //startService(locationServiceIntent)
-                 CheckGpsStatus()
+                 CheckGpsStatus(action)
 
 
                 }
@@ -239,19 +265,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun CheckGpsStatus() {
+    fun CheckGpsStatus(action: () -> Unit){
         var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
         assert(locationManager != null)
         var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        if (GpsStatus == true) {
+        if (GpsStatus) {
+
 
         } else {
-            showEnableLocationSetting()
+            showEnableLocationSetting(action)
+
         }
     }
 
 
-    fun showEnableLocationSetting() {
+    fun showEnableLocationSetting(action: () -> Unit) {
+
       this.let {
             val locationRequest = LocationRequest.create()
             locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -261,12 +290,14 @@ class MainActivity : AppCompatActivity() {
 
             val task = LocationServices.getSettingsClient(it)
                 .checkLocationSettings(builder.build())
+                this.action = action
+            task.addOnCompleteListener {
+            }
 
             task.addOnSuccessListener { response ->
+                Log.d("isSuccess GPS PRO","nvnf ${checkGPS()}")
                 val states = response.locationSettingsStates
-                if (states.isLocationPresent) {
-                    //Do something
-                }
+
             }
             task.addOnFailureListener { e ->
                 if (e is ResolvableApiException) {
@@ -287,8 +318,168 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun navSelection(){
-        binding.menu.setItemSelected(R.id.User, true)
+    fun setTimer(){
+        var workTime=tinyDB.getInt("lasttimework")
+        println("Timer is running $workTime")
+        time= workTime.toDouble()
+
+
+
+        var breakTime=tinyDB.getInt("lasttimebreak")
+        timeBreak=breakTime.toDouble()
+    }
+   fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
+
+    fun nullFunction(){
+
+    }
+
+
+    fun checkGPS():Boolean{
+        var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+        assert(locationManager != null)
+        var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        return GpsStatus
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode==999 && resultCode== RESULT_OK) {
+            Log.d("isSuccess GPS PRO","nvnf ${checkGPS()}")
+                      action()
+        }
+    }
+
+    fun updateActivity(
+        datetime: String?,
+        totalTime: Int?,
+        activity: Int?,
+        geoPosition: GeoPosition?,
+        vehicle: Vehicle?,
+        authRepository: AuthRepository
+    ) {
+        if(activity==2){
+            if (totalTime != null) {
+                tinyDB.putInt("lasttimebreak", totalTime)
+            }
+        }
+        this.authRepository=authRepository
+        tinyDB.putInt("ActivityCheck",activity!!)
+         var obj = UpdateActivityDataClass(datetime,totalTime,activity,geoPosition,vehicle)
+
+      tinyDB.putObject(
+    "upadteActivity",obj)
+        var Token = tinyDB.getString("Cookie")
+        lifecycleScope.launch {
+
+            withContext(Dispatchers.IO) {
+
+                try {
+
+                    val response = authRepository.updateActivity(
+                        datetime,
+                        totalTime,
+                        activity,
+                        geoPosition,
+                        vehicle,
+                        Token!!
+                    )
+                    println("SuccessResponse $response")
+
+
+                    if (response != null) {
+                        withContext(Dispatchers.Main) {
+                            (MyApplication.loadingContext as LoadingScreen).finish()
+                        }
+                    }
+
+                } catch (e: ResponseException) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            context,
+                            "Failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        (MyApplication.loadingContext as LoadingScreen).finish()
+                    }
+                    println("ErrorResponse")
+                } catch (e: ApiException) {
+                    e.printStackTrace()
+                } catch (e: NoInternetException) {
+                    println("position 2")
+                    e.printStackTrace()
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            context,
+                            "Check Your Internet Connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                catch (e: SocketTimeoutException){
+
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            context,
+                            "Check Your Internet Connection",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
+
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onDestroy() {
+        var languageCheck = MyApplication.checkForLanguageChange
+//        languageCheck=tinyDB.getInt("languageCheck")
+//        Log.d("checkLanguageValue", languageCheck.toString())
+        if(languageCheck != 200){
+            var check =tinyDB.getInt("ActivityCheck")
+            var TimeForUplaod=0
+            when(check){
+                0->{
+                    TimeForUplaod=WorkTime
+
+                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,0,authRepository!!,this))
+                }
+                1->{
+                    TimeForUplaod=BreakTime
+
+                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,1,authRepository!!,this))
+                }
+                2->{
+                    TimeForUplaod=WorkTime
+
+                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,0,authRepository!!,this))
+                }
+                3->{
+
+                }
+
+            }
+        }
+        else{
+            MyApplication.checkForLanguageChange = 0
+        }
+        super.onDestroy()
+    }
+
+    override fun onPause() {
+        super.onPause()
 
     }
 }

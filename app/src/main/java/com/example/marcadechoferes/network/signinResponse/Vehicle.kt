@@ -8,7 +8,7 @@ import com.example.marcadechoferes.network.GeoPosition
 data class Vehicle(
     @PrimaryKey(autoGenerate = true)
     var roomDBId: Int =0,
-      val id: Int,
+    val id: Int,
     val description: String,
     val plateNumber: String
 )

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import androidx.core.content.ContextCompat.startActivity
+
+
+
 
 @HiltViewModel
 class CreatePasswordViewModel @Inject constructor(val authRepository: AuthRepository) :
@@ -115,9 +120,11 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
 
                     if (response != null) {
-                        var intent = Intent(activityContext, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                        Log.d("stack clear ","Stack IS Cleared")
+                        withContext(Dispatchers.Main){
+                            (activityContext as CreateNewPasswordScreen).moveToNext()
+                        }
+
                     }
 
                 } catch (e: ResponseException) {

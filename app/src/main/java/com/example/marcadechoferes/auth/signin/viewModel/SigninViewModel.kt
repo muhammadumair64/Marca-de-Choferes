@@ -9,6 +9,7 @@ import android.os.StatFs
 import android.provider.Settings
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -48,7 +49,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
 
     fun viewsOfActivitySignin(context: Context, binding: ActivitySignInBinding) {
-        tinyDB= TinyDB(MyApplication.appContext)
+        tinyDB= TinyDB(context)
         activityContext = context
         binding.apply {
             showPassBtn.setOnClickListener {
@@ -167,12 +168,15 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                     println("SuccessResponse $response")
                     authRepository.InsertSigninData(response)
                     if(response!=null) {
-                        tinyDB.putInt("defaultWork",response.work!!.workingHours)
-                       tinyDB.putInt("defaultBreak",response.work.workBreak)
-                        tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
                         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
                         tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+                        tinyDB.putInt("defaultWork",response.work!!.workingHours)
+                        tinyDB.putInt("defaultBreak",response.work.workBreak)
+                        tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
                         tinyDB.putString("User",userName)
+                        MyApplication.check=200
+                      var temp=  tinyDB.getString("User")
+                        Log.d("total time ","tem $temp")
                         val Language =response.profile?.language
                         val notify:Boolean =response.profile?.notify!!
                         tinyDB.putString("language", Language.toString())

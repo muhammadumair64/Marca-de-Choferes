@@ -1,16 +1,19 @@
 package com.example.marcadechoferes.auth.createpassword
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.createpassword.viewModel.CreatePasswordViewModel
 import com.example.marcadechoferes.databinding.ActivityCreateNewPasswordScreenBinding
 import com.example.marcadechoferes.Extra.Language
+import com.example.marcadechoferes.mainscreen.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -57,6 +60,13 @@ class CreateNewPasswordScreen : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+    }
+
+    fun moveToNext(){
+        var intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finishAffinity()
     }
 
 

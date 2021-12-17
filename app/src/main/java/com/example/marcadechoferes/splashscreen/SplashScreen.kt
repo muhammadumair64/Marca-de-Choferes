@@ -1,11 +1,13 @@
 package com.example.marcadechoferes.splashscreen
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -16,9 +18,11 @@ import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.signin.SignInActivity
 import com.example.marcadechoferes.databinding.ActivitySplashScreenBinding
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
+import com.example.marcadechoferes.mainscreen.home.timerServices.UploadRemaingDataService
 import com.example.marcadechoferes.splashscreen.viewModel.SplashScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -31,6 +35,8 @@ class SplashScreen : AppCompatActivity() {
     lateinit var binding: ActivitySplashScreenBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var temp = isMyServiceRunning(UploadRemaingDataService::class.java)
+        Log.d("check service ",temp.toString())
         val language = Language()
         language.setLanguage(baseContext)
         viewModel.viewsOfActivity(this)
@@ -106,6 +112,14 @@ class SplashScreen : AppCompatActivity() {
 
         return isConnected
     }
-
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
 
 }

@@ -11,23 +11,31 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 import android.animation.ValueAnimator
+import android.app.ActivityManager
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
 import android.location.Geocoder
+import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Base64
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
+import com.example.marcadechoferes.mainscreen.home.timerServices.BreakTimerService
+import com.example.marcadechoferes.mainscreen.home.timerServices.TimerService
 import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
 import com.example.marcadechoferes.network.GeoPosition
@@ -63,10 +71,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     var progressBar = 0
     var latitude = 0.0
     var longitude = 0.0
-    var DefaultWork = 0
-    var DefaultBreakTime = 0
-    var WorkTimeToSend = 0
-    var BreakTimeToSend = 0
     var overTime =false
 
     //activity
@@ -89,14 +93,16 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         checkInitial()
         setPreviousWork()
         setDay()
-        DefaultWork = tinyDB.getInt("defaultWork")
-        println("total Work Given $DefaultWork")
-        MyApplication.TotalTime=DefaultWork
-        DefaultBreakTime = tinyDB.getInt("defaultBreak")
-        MyApplication.TotalBreak=DefaultBreakTime
-        var DefaultTOShow = DefaultWork * 60
 
-        binding.maxTimer.text = getTimeStringFromDouble(DefaultTOShow)
+        MyApplication.TotalTime=tinyDB.getInt("defaultWork")
+
+        println("total Work Given ")
+        MyApplication.TotalBreak= tinyDB.getInt("defaultBreak")
+
+        var DefaultTOShow = MyApplication.TotalTime * 60
+        var time =getTimeStringFromDouble(DefaultTOShow)
+        println("time is thie $time")
+        binding.maxTimer.text = time
         val sdf = SimpleDateFormat("dd MMM")
         val currentDate = sdf.format(Date())
         System.out.println(" C DATE is  " + currentDate)
@@ -175,37 +181,87 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     }
 
-    fun timers() {
-        var intent = (activityContext as MainActivity)
+        fun timers() {
+
 
         dataBinding?.secondState?.setOnClickListener {
-            MyApplication.check=0
-            buttonSecondState()
+
+            if (checkGPS(activityContext!!)) {
+               secondStateAction()
+            } else {
+                (activityContext as MainActivity).initPermission(){secondStateAction()}
+            }
+
         }
         dataBinding?.TakeBreak?.setOnClickListener {
-            MyApplication.check=0
-            buttonTakeBreak()
-            intent.stopTimer()
-            intent.startTimerBreak()
-            tinyDB.putString("selectedState", "takeBreak")
-            hitActivityAPI(1, BreakTimeToSend)
+
+            if (checkGPS(activityContext!!)) {
+             takeBreakAction()
+            } else {
+                (activityContext as MainActivity).initPermission(){takeBreakAction()}
+            }
+
         }
         dataBinding?.EndDay?.setOnClickListener {
-            MyApplication.check=0
-            buttonEndDay()
-            intent.stopTimer()
-            intent.stopTimerBreak()
-            tinyDB.putString("selectedState", "endDay")
-            hitActivityAPI(3, WorkTimeToSend)
+            if (checkGPS(activityContext!!)) {
+        endDayAction()
+            } else {
+                (activityContext as MainActivity).initPermission(){endDayAction()}
+            }
+
+
+
         }
         dataBinding?.initialState?.setOnClickListener {
-            MyApplication.check=0
-            buttonInitailState()
-            tinyDB.putString("selectedState", "initialState")
+            if (checkGPS(activityContext!!)) {
+              initialStateAction()
+            } else {
+                (activityContext as MainActivity).initPermission(){initialStateAction()}
+            }
         }
 
 
     }
+       fun secondStateAction(){
+        MyApplication.check = 0
+        buttonSecondState()
+    }
+
+       fun takeBreakAction(){
+        var intent = (activityContext as MainActivity)
+        MyApplication.check=0
+        buttonTakeBreak()
+        intent.stopTimer()
+        intent.startTimerBreak()
+        tinyDB.putString("selectedState", "takeBreak")
+        hitActivityAPI(1, MyApplication.BreakToSend)
+    }
+
+       fun endDayAction(){
+        var intent = (activityContext as MainActivity)
+        MyApplication.check=300
+        buttonEndDay()
+        intent.stopTimer()
+        intent.stopTimerBreak()
+        tinyDB.putString("selectedState", "endDay")
+        hitActivityAPI(3, MyApplication.TimeToSend)
+    }
+
+       fun initialStateAction(){
+         MyApplication.check=0
+         buttonInitailState()
+         tinyDB.putString("selectedState", "initialState")
+     }
+
+
+
+
+
+
+
+
+
+
 
     fun buttonInitailState() {
         (activityContext as MainActivity).time = 0.0
@@ -221,8 +277,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun buttonEndDay() {
-        tinyDB.putInt("vehicle", 0)
-        tinyDB.putInt("state", 0)
+        var language= tinyDB.getString("language")
         dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
 //        dataBinding?.breakBar?.progress=0f
@@ -235,18 +290,35 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         dataBinding?.vehicleListBtn?.setBackgroundResource(R.drawable.item_popup_btn_bg)
         dataBinding?.iconCar?.setBackgroundResource(R.drawable.ic_icon_awesome_car_alt)
         dataBinding?.vehicleNameSelected?.setTextColor(Color.parseColor("#000000"))
-        dataBinding?.vehicleNameSelected?.text = "Vehículo"
+
         dataBinding?.Arrow?.setVisibility(View.VISIBLE)
         dataBinding?.dots?.visibility = View.GONE
-        (activityContext as MainActivity).time = 0.0
-//        dataBinding?.workTimer?.text = "00:00"
+//        (activityContext as MainActivity).time = 0.0
+////        dataBinding?.workTimer?.text = "00:00"
 //        dataBinding?.TimerBreak?.text = "00:00"
-        dataBinding?.statusSelected?.text = "Selección estado"
+
         dataBinding?.statusListBtn?.visibility = View.GONE
         dataBinding?.vehicleNameSelected?.setTypeface(
             dataBinding?.vehicleNameSelected?.getTypeface(),
             Typeface.NORMAL
         )
+        if (language=="0"){
+            dataBinding?.secondState?.text = "Empezar"
+            dataBinding?.vehicleNameSelected?.text = "Vehículo"
+            dataBinding?.statusSelected?.text = "Selección estado"
+        }else if(language=="1"){
+            dataBinding?.vehicleNameSelected?.text = "Vehicle"
+            dataBinding?.statusSelected?.text = "Status Select"
+            dataBinding?.secondState?.text = "Start"
+        }
+        else{
+            dataBinding?.vehicleNameSelected?.text = "Veículo"
+            dataBinding?.statusSelected?.text = "Seleção de estado"
+            dataBinding?.secondState?.text = "Começar"
+        }
+
+
+//        dataBinding?.secondState?.text = getApplication(MyApplication.appContext).resources.getString(R.string.start_Timer)
 
     }
 
@@ -265,8 +337,20 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         dataBinding?.StateActive?.setVisibility(View.GONE)
         dataBinding?.vehicleListBtn?.isClickable = true
         dataBinding?.spacer?.setVisibility(View.VISIBLE)
-        dataBinding?.secondState?.text =
-            getApplication(MyApplication.appContext).resources.getString(R.string.end_break)
+
+
+        var language= tinyDB.getString("language")
+        if (language=="0"){
+            dataBinding?.secondState?.text = "Fin del descanso"
+
+        }else if(language=="1"){
+
+            dataBinding?.secondState?.text = "End Break"
+        }
+        else{
+            dataBinding?.secondState?.text = "Fim do intervalo"
+        }
+//        dataBinding?.secondState?.text = getApplication(MyApplication.appContext).resources.getString(R.string.end_break)
         dataBinding?.secondState?.setVisibility(View.VISIBLE)
 
 
@@ -278,12 +362,14 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             goToSecondState()
             intent.stopTimerBreak()
             intent.startTimer()
-            hitActivityAPI(2, WorkTimeToSend)
+            Log.d("break timer","${MyApplication.BreakToSend}")
+            hitActivityAPI(2,MyApplication.BreakToSend)
+
         } else {
 
             intent.startTimer()
             goToActivState()
-            hitActivityAPI(0, WorkTimeToSend)
+            hitActivityAPI(0,MyApplication.TimeToSend)
 
         }
     }
@@ -438,14 +524,11 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     }
 
-
     fun workTimerupdater(time: Int, binding: FragmentHomeBinding?) {
         print("${time.toDouble()}")
 
         var default = MyApplication.TotalTime * 60
-
-        println("default work in timer $DefaultWork")
-        WorkTimeToSend = time
+        MyApplication.TimeToSend = time
         if (time == default) {
             binding!!.bar.progress = 0F
         }else if (time > default){
@@ -464,11 +547,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     fun breakTimerupdater(time: Int, binding: FragmentHomeBinding?, mainActivity: MainActivity) {
         print("${time.toDouble()}")
-
+        MyApplication.BreakToSend = time
         binding!!.breakBar.progress = time.toFloat()
 
         var default = MyApplication.TotalBreak * 60
-        BreakTimeToSend = time
         if (time == default) {
             mainActivity.stopTimerBreak()
         }
@@ -495,13 +577,19 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     vehicleArrayListforUpload.add(item)
                 }
 
-                withContext(Dispatchers.Main) {
-                    var vehicle = tinyDB.getInt("vehicle")
-                    if (vehicle != 0) {
-                        vehicle = vehicle.minus(1)
-                        selectVehicleByLocalDB(vehicle)
+
+                if(MyApplication.check!=300){
+                    withContext(Dispatchers.Main) {
+                        var vehicle = tinyDB.getInt("vehicle")
+                        if (vehicle != 0) {
+                            vehicle = vehicle.minus(1)
+                            selectVehicleByLocalDB(vehicle)
+                        }
                     }
+                }else{
+                    dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
                 }
+
 
 
             }
@@ -656,6 +744,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun selectVehicle(position: Int) {
+        MyApplication.check=0
         var text = searchedArrayList[position]
         println("selected text $text")
         dataBinding!!.apply {
@@ -786,79 +875,90 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                 var vehicle = vehicleArrayListforUpload[vehiclePosition]
                 var status = statusArrayListforUpload[position]
                 println("status is $status")
-                updateState("$currentDate", WorkTimeToSend, status, geoPosition, vehicle)
+                updateState("$currentDate", MyApplication.TimeToSend, status, geoPosition, vehicle)
             }
         }
     }
 
 
-    fun updateActivity(
-        datetime: String?,
-        totalTime: Int?,
-        activity: Int?,
-        geoPosition: GeoPosition?,
-        vehicle: Vehicle?
-    ) {
-
-        var Token = tinyDB.getString("Cookie")
-        viewModelScope.launch {
-
-            withContext(Dispatchers.IO) {
-
-                try {
-
-                    val response = authRepository.updateActivity(
-                        datetime,
-                        totalTime,
-                        activity,
-                        geoPosition,
-                        vehicle,
-                        Token!!
-                    )
-                    println("SuccessResponse $response")
-
-
-                    if (response != null) {
-
-                    }
-
-                } catch (e: ResponseException) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            "Failed",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    println("ErrorResponse")
-                } catch (e: ApiException) {
-                    e.printStackTrace()
-                } catch (e: NoInternetException) {
-                    println("position 2")
-                    e.printStackTrace()
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            "Check Your Internet Connection",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-                catch (e:SocketTimeoutException){
-
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            "Check Your Internet Connection",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }
-        }
-
-
-    }
+//    fun updateActivity(
+//        datetime: String?,
+//        totalTime: Int?,
+//        activity: Int?,
+//        geoPosition: GeoPosition?,
+//        vehicle: Vehicle?
+//            ) {
+//       if(activity==2){
+//    if (totalTime != null) {
+//        tinyDB.putInt("lasttimebreak", totalTime)
+//       }
+//              }
+//        var intent = Intent(activityContext, LoadingScreen::class.java)
+//        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+//
+//
+//        var Token = tinyDB.getString("Cookie")
+//        viewModelScope.launch {
+//
+//            withContext(Dispatchers.IO) {
+//
+//                try {
+//
+//                    val response = authRepository.updateActivity(
+//                        datetime,
+//                        totalTime,
+//                        activity,
+//                        geoPosition,
+//                        vehicle,
+//                        Token!!
+//                    )
+//                    println("SuccessResponse $response")
+//
+//
+//                    if (response != null) {
+//                        withContext(Dispatchers.Main) {
+//                            (MyApplication.loadingContext as LoadingScreen).finish()
+//                        }
+//                    }
+//
+//                } catch (e: ResponseException) {
+//                    withContext(Dispatchers.Main) {
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Failed",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                        (MyApplication.loadingContext as LoadingScreen).finish()
+//                    }
+//                    println("ErrorResponse")
+//                } catch (e: ApiException) {
+//                    e.printStackTrace()
+//                } catch (e: NoInternetException) {
+//                    println("position 2")
+//                    e.printStackTrace()
+//                    withContext(Dispatchers.Main) {
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Check Your Internet Connection",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//                catch (e:SocketTimeoutException){
+//
+//                    withContext(Dispatchers.Main) {
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Check Your Internet Connection",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//    }
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
 
@@ -876,8 +976,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 var vehiclePosition = tinyDB.getInt("vehicle")
+                      vehiclePosition=vehiclePosition.minus(1)
+                Log.d("position of Vehicle ","$vehiclePosition")
                 var vehicle = vehicleArrayListforUpload[vehiclePosition]
-                updateActivity("$currentDate", totalTime, activity, geoPosition, vehicle)
+                (activityContext as MainActivity).updateActivity("$currentDate", totalTime, activity, geoPosition, vehicle,authRepository)
             }
         }
     }
@@ -934,17 +1036,61 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     fun setPreviousWork(){
         var intent = (activityContext as MainActivity)
-        intent.startTimer()
+        if(MyApplication.check==200){
+            intent.startTimer()
+            intent.startTimerBreak()
+            var workTime=tinyDB.getInt("lasttimework")
+            var breakTime=tinyDB.getInt("lasttimebreak")
+            dataBinding?.bar?.progress= workTime.toFloat()
+            dataBinding?.breakBar?.progress=breakTime.toFloat()
+            dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+            intent.stopTimerBreak()
+            intent.stopTimer()
+        }
+    else{
+       if(intent.isMyServiceRunning(TimerService::class.java)){
         intent.startTimerBreak()
-        var workTime=tinyDB.getInt("lasttimework")
-        var breakTime=tinyDB.getInt("lasttimebreak")
-        dataBinding?.bar?.progress= workTime.toFloat()
-        dataBinding?.breakBar?.progress=breakTime.toFloat()
-        dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
-        dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
         intent.stopTimerBreak()
-        intent.stopTimer()
+
+
+    }else if(intent.isMyServiceRunning(BreakTimerService::class.java)) {
+            intent.startTimer()
+           intent.stopTimer()
+    } else if(MyApplication.check==300){
+           intent.startTimer()
+           intent.startTimerBreak()
+           var workTime=tinyDB.getInt("lasttimework")
+           var breakTime=tinyDB.getInt("lasttimebreak")
+           dataBinding?.bar?.progress= workTime.toFloat()
+           dataBinding?.breakBar?.progress=breakTime.toFloat()
+           dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+           intent.stopTimerBreak()
+           intent.stopTimer()
+//           buttonEndDay()
+           Timer().schedule(200) {
+              barColor()
+           }
+
+       }
+}
     }
 
+
+    fun checkGPS(context: Context):Boolean{
+        var locationManager = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
+        assert(locationManager != null)
+        var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        return GpsStatus
+    }
+
+    fun barColor(){
+        viewModelScope.launch {
+            withContext(Dispatchers.Main){
+                dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+            }
+
+        }
+    }
 
 }

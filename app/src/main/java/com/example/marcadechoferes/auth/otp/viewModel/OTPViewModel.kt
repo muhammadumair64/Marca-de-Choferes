@@ -223,7 +223,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         tinyDB.putInt("defaultBreak", response.work?.workBreak ?: 0)
                         tinyDB.putInt("lastVehicleid", response.lastVar?.lastIdVehicle?.id ?: 0)
                         tinyDB.putString("User",userName)
-
+                        MyApplication.check=200
                         val Language = response.profile?.language
                         val notify: Boolean = response.profile?.notify!!
                         tinyDB.putString("language", Language.toString())
