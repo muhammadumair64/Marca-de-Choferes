@@ -25,6 +25,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.mainscreen.viewModel.MainViewModel
 import com.example.marcadechoferes.mainscreen.home.Adapter.SearchAdapter
 import com.example.marcadechoferes.mainscreen.home.Adapter.StatusAdapter
@@ -76,6 +77,7 @@ class HomeFragment : Fragment(),OnclickItem {
         var context = (activity as MainActivity).context
         mainContext= context
         binding.statusListBtn.visibility=View.GONE
+        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor,binding.secondState)
         binding.apply {
             initialState?.setVisibility(View.VISIBLE)
             secondState?.setVisibility(View.GONE)

@@ -3,36 +3,38 @@ package com.example.marcadechoferes.splashscreen
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.util.Base64
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.example.marcadechoferes.Extra.BaseClass
+import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.signin.SignInActivity
 import com.example.marcadechoferes.databinding.ActivitySplashScreenBinding
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
-import com.example.marcadechoferes.mainscreen.home.timerServices.UploadRemaingDataService
 import com.example.marcadechoferes.splashscreen.viewModel.SplashScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.concurrent.schedule
 
+
 @AndroidEntryPoint
-class SplashScreen : AppCompatActivity() {
+class SplashScreen : BaseClass() {
     val viewModel: SplashScreenViewModel by viewModels()
     lateinit var tinyDB: TinyDB
     lateinit var binding: ActivitySplashScreenBinding
+    var background =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        var temp = isMyServiceRunning(UploadRemaingDataService::class.java)
@@ -47,6 +49,10 @@ class SplashScreen : AppCompatActivity() {
         viewModel.viewsOfActivity(this)
         tinyDB = TinyDB(this)
         var checker = tinyDB.getString("User")
+        background= tinyDB.getString("SplashBG").toString()
+        if(background!=""){
+            base64ToBitmap(background)
+        }
         println("Current User is : $checker")
         if (checker?.length!! >= 3) {
             var intent = Intent(this, LoadingScreen::class.java)
@@ -82,6 +88,7 @@ class SplashScreen : AppCompatActivity() {
                 finish()
             }
         }
+        setGrad(K.primaryColor, K.secondrayColor,binding.startButton)
 
 
     }
@@ -126,5 +133,15 @@ class SplashScreen : AppCompatActivity() {
         }
         return false
     }
+
+    fun base64ToBitmap(base64: String) {
+        val imageBytes = Base64.decode(base64, 0)
+        val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+         binding.background.setImageBitmap(image)
+    }
+
+
+
+
 
 }

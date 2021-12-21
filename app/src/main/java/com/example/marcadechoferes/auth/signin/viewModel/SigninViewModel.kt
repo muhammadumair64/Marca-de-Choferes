@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.BuildConfig
+import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.forgotPassword.ForgotPasswordActivity
@@ -130,7 +131,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "5"
+        var appVersion: String? = "9"
         var appBuild: String? =  Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -173,6 +174,14 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         tinyDB.putInt("defaultWork",response.work!!.workingHours)
                         tinyDB.putInt("defaultBreak",response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
+                        tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
+                        tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
+
+                        if(response.colors.primary.isNotEmpty()){
+                            K.primaryColor=response.colors.primary ?: "#7A59FC"
+                            K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                        }
+
                         tinyDB.putString("User",userName)
                         MyApplication.check=200
                       var temp=  tinyDB.getString("User")

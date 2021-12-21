@@ -31,6 +31,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
+import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
@@ -93,6 +94,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         checkInitial()
         setPreviousWork()
         setDay()
+        (context as MainActivity).initRepo(authRepository)
+        binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
+
+
 
         MyApplication.TotalTime=tinyDB.getInt("defaultWork")
 
@@ -108,9 +113,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         System.out.println(" C DATE is  " + currentDate)
 
         binding.date.text = "$currentDate"
-
-        dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+fadeColor()
+ 
         var Choice = tinyDB.getString("selectedState")
+
         when (Choice) {
 
             "initialState" -> {
@@ -137,7 +143,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         }
         Timer().schedule(200) {
-            forgroundCheck()
+            viewModelScope.launch {
+                withContext(Dispatchers.Main){
+                    forgroundCheck()
+                }
+            }
+
         }
 
 
@@ -147,7 +158,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun Workbar() {
         dataBinding!!.bar.apply {
             var default = tinyDB.getInt("defaultWork")
-            dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
             default = default * 60
             var maxTime = default
             progressMax = maxTime.toFloat()
@@ -278,7 +289,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     fun buttonEndDay() {
         var language= tinyDB.getString("language")
-        dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+   fadeColor()
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
 //        dataBinding?.breakBar?.progress=0f
 //        dataBinding?.bar?.progress=0f
@@ -326,7 +337,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         if(overTime==true){
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
         }else{
-            dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+       fadeColor()
         }
 
 
@@ -366,8 +377,14 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             hitActivityAPI(2,MyApplication.BreakToSend)
 
         } else {
-
-            intent.startTimer()
+            tinyDB.putInt("lasttimebreak",0)
+            tinyDB.putInt("lasttimework",0)
+            intent.time=0.0
+            Timer().schedule(200) {
+                intent.startTimer()
+                intent.startTimerBreak()
+                intent.stopTimerBreak()
+            }
             goToActivState()
             hitActivityAPI(0,MyApplication.TimeToSend)
 
@@ -380,7 +397,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         if(overTime==true){
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
         }else{
-            dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
         }
 
         breakTimerLargeToSmall()
@@ -397,7 +414,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         if(overTime==true){
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
         }else{
-            dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
         }
         dataBinding?.secondState?.setVisibility(View.GONE)
         dataBinding?.StateActive?.setVisibility(View.VISIBLE)
@@ -539,7 +556,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             binding!!.bar.progress = newOvertimer.toFloat()
         } else
         {
-            dataBinding?.bar?.progressBarColor = Color.parseColor("#7A59FC")
+            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
            overTime =false
             binding!!.bar.progress = time.toFloat()
         }
@@ -559,7 +576,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     fun getVehicle() {
-        viewModelScope.launch {
+            viewModelScope.launch {
             withContext(Dispatchers.IO) {
 
                 var vehicles = authRepository.getVehicle()
@@ -587,7 +604,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                         }
                     }
                 }else{
-                    dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+               fadeColor()
                 }
 
 
@@ -598,7 +615,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
 
-    fun getState() {
+               fun getState() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
 
@@ -682,8 +699,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         // uploadLocation()
         println("Current Location $longitude and $latitude")
     }
-
-
     fun getLocationForState(context: Context) {
         println("location call")
         var locationRequest = LocationRequest()
@@ -718,7 +733,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
                     LocationServices.getFusedLocationProviderClient(context)
                         .removeLocationUpdates(this)
-                    if (p0 != null && p0.locations.size > 0) {
+                        if (p0 != null && p0.locations.size > 0) {
                         longitude = p0.locations[0].longitude
                         latitude = p0.locations[0].latitude
 
@@ -726,7 +741,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                         val addresses = geocoder.getFromLocation(latitude, longitude, 1)
                         var location = addresses[0].featureName.toString()
                         println("City Name is $location")
-//               Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
+//                      Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
 
                         println("Current Location $longitude and $latitude")
                         var geoPosition = GeoPosition(latitude, longitude)
@@ -1020,16 +1035,17 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun forgroundCheck(){
-        viewModelScope.launch {
-            withContext(Dispatchers.Main){
-
-                if (MyApplication.check==200){
-                    dataBinding!!.initialState!!.visibility=View.GONE
-                    dataBinding!!.StateActive!!.visibility=View.GONE
-                    dataBinding!!.secondState.visibility=View.VISIBLE
-                }
-            }
-        }
+        TimerStart()
+//        viewModelScope.launch {
+//            withContext(Dispatchers.Main){
+//
+//                if (MyApplication.check==200){
+//                    dataBinding!!.initialState!!.visibility=View.GONE
+//                    dataBinding!!.StateActive!!.visibility=View.GONE
+//                    dataBinding!!.secondState.visibility=View.VISIBLE
+//                }
+//            }
+//        }
 
 
     }
@@ -1043,7 +1059,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             var breakTime=tinyDB.getInt("lasttimebreak")
             dataBinding?.bar?.progress= workTime.toFloat()
             dataBinding?.breakBar?.progress=breakTime.toFloat()
-            dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+       fadeColor()
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
             intent.stopTimerBreak()
             intent.stopTimer()
@@ -1055,8 +1071,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     }else if(intent.isMyServiceRunning(BreakTimerService::class.java)) {
-            intent.startTimer()
-           intent.stopTimer()
+             intent.startTimer()
+             intent.stopTimer()
     } else if(MyApplication.check==300){
            intent.startTimer()
            intent.startTimerBreak()
@@ -1073,6 +1089,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
            }
 
        }
+
 }
     }
 
@@ -1087,10 +1104,39 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun barColor(){
         viewModelScope.launch {
             withContext(Dispatchers.Main){
-                dataBinding?.bar?.progressBarColor = Color.parseColor("#C1B1FF")
+     fadeColor()
             }
 
         }
     }
 
+    fun TimerStart(){
+        var ref = (activityContext as MainActivity)
+        var timerServiceCheck = ref.isMyServiceRunning(TimerService::class.java)
+        var breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
+
+
+        if(dataBinding?.StateActive?.isVisible == true && timerServiceCheck==false)
+        {
+            ref.startTimer()
+            }
+        else if(dataBinding?.secondState!!.isVisible == true && breakTimerService==false){
+            if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso"||dataBinding?.secondState?.text == "Fim do intervalo"){
+                ref.startTimerBreak()
+                dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
+               fadeColor()
+            }
+
+        }
+
+    }
+
+    fun fadeColor(){
+        var color =K.primaryColor.substringAfter("#")
+        color="#99$color"
+        dataBinding?.bar?.progressBarColor = Color.parseColor(color)
+        Log.d("FadeColor ","$color")
+
+    }
+    
 }

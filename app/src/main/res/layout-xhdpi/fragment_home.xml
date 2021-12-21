@@ -251,11 +251,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_5sdp">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardColor"
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_14sdp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_workdone"
+                            app:cardCornerRadius="@dimen/_4sdp"
+                            android:elevation="0dp"
+                            android:translationZ="0dp"
+                            app:cardElevation="0dp"
+                            android:shadowColor="@color/white"
 
                             />
 

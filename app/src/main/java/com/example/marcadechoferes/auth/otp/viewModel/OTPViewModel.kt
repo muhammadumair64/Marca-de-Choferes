@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.BuildConfig
+import com.example.marcadechoferes.Extra.K
 
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.createpassword.CreateNewPasswordScreen
@@ -175,7 +176,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "5"
+        var appVersion: String? = "9"
         var appBuild: String? = Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -222,6 +223,12 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         tinyDB.putInt("defaultWork", response.work?.workingHours ?: 0)
                         tinyDB.putInt("defaultBreak", response.work?.workBreak ?: 0)
                         tinyDB.putInt("lastVehicleid", response.lastVar?.lastIdVehicle?.id ?: 0)
+                        tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
+                        tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
+                        if(response.colors.primary.isNotEmpty()){
+                            K.primaryColor=response.colors.primary ?: "#7A59FC"
+                            K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                        }
                         tinyDB.putString("User",userName)
                         MyApplication.check=200
                         val Language = response.profile?.language

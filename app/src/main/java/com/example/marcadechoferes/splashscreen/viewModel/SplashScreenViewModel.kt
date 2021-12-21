@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.mainscreen.MainActivity
@@ -58,6 +59,15 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         tinyDB.putInt("defaultBreak",response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
                         tinyDB.putString("language", Language.toString())
+                        tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
+                        tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
+
+                        if(response.colors.primary.isNotEmpty()){
+                            K.primaryColor=response.colors.primary ?: "#7A59FC"
+                            K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                        }
+
+
                         tinyDB.putBoolean("notify",notify)
                         tinyDB.putInt("againCome",200)
                         MyApplication.check=200

@@ -7,6 +7,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import com.example.marcadechoferes.Extra.BaseClass
+import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.forgotPassword.viewModel.ForgotPasswordViewModel
@@ -14,7 +16,7 @@ import com.example.marcadechoferes.databinding.ActivityForgotPasswordBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ForgotPasswordActivity : AppCompatActivity() {
+class ForgotPasswordActivity :BaseClass() {
     lateinit var binding:ActivityForgotPasswordBinding
     val context:Context=this
     val forgotPasswordViewModel:ForgotPasswordViewModel by viewModels()
@@ -28,6 +30,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     fun initViews(){
         forgotPasswordViewModel.viewsForForgotPasswordActivity(context,binding)
+        setGrad(K.primaryColor, K.secondrayColor,binding.SubmitButton)
         showSoftKeyboard(binding.email)
 
     }
