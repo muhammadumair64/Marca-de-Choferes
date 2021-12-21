@@ -10,7 +10,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.example.marcadechoferes.R
 import com.example.marcadechoferes.databinding.ActivityMainBinding
 import com.example.marcadechoferes.databinding.FragmentHomeBinding
 import com.example.marcadechoferes.mainscreen.home.timerServices.BreakTimerService
@@ -28,11 +27,14 @@ import android.location.LocationManager
 
 import android.content.IntentSender
 import android.os.Build
+import android.text.Editable
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.example.marcadechoferes.Extra.Language
-import com.example.marcadechoferes.Extra.TinyDB
-import com.example.marcadechoferes.Extra.UpdateActivityDataClass
+import com.example.marcadechoferes.Extra.*
+import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
 import com.example.marcadechoferes.mainscreen.home.timerServices.UploadRemaingDataService
@@ -44,19 +46,22 @@ import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.network.signinResponse.Vehicle
 
-import com.google.android.gms.location.*
+
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.common.api.*
+import com.google.android.gms.location.LocationRequest
+import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.SocketTimeoutException
 import java.util.*
 
 
+
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseClass(){
 
     companion object {
         const val LOCATION_SETTING_REQUEST = 999
@@ -93,13 +98,92 @@ class MainActivity : AppCompatActivity() {
         setTimer()
         getWidth()
         initPermission(){nullFunction()}
+        invalidateOptionsMenu()
         NavBar()
 
 
     }
 
 
+//    private fun styleMenuButton() {
+//        // Find the menu item you want to style
+//        val view1: View = findViewById(R.id.home)
+//        val view2: View = findViewById(R.id.User)
+//        val view3: View = findViewById(R.id.Settings)
+//
+//        // Cast to a TextView instance if the menu item was found
+//        if (view1 != null && view1 is TextView) {
+//            (view1 as TextView).setBackgroundColor(Color.parseColor("#000000")) // Make text colour blue
+//            (view1 as TextView).setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f) // Increase font size
+//        }
+//    }
+//
+//    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+//        val result = super.onPrepareOptionsMenu(menu)
+//
+//
+//        styleMenuButton()
+//        return result
+//    }
+
+//
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        val inflater = menuInflater
+//        inflater.inflate(R.menu.navigationbar_menu, menu)
+//        layoutInflater.setFactory(object : LayoutInflater.Factory {
+//            fun onCreateView(
+//                name: String, context: Context?,
+//                attrs: AttributeSet?
+//            ): View? {
+//                if (name.equals(
+//                        "com.android.internal.view.menu.IconMenuItemView",
+//                        ignoreCase = true
+//                    )
+//                ) {
+//                    try {
+//                        val f = layoutInflater
+//                        val view = f.createView(name, null, attrs)
+//                        Handler().post(Runnable { // set the background drawable
+//                            view.setBackgroundResource(R.drawable.my_ac_menu_background)
+//
+//                            // set the text color
+//                            (view as TextView).setTextColor(Color.WHITE)
+//                        })
+//                        return view
+//                    } catch (e: InflateException) {
+//                    } catch (e: ClassNotFoundException) {
+//                    }
+//                }
+//                return null
+//            }
+//
+//            override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+//                TODO("Not yet implemented")
+//            }
+//        })
+//        return super.onCreateOptionsMenu(menu)
+//    }
+
+
+
+
+
+
+
+
+
+
+
     fun NavBar() {
+//      binding.menu.setOnCreateContextMenuListener { menu, v, menuInfo ->
+//
+//          ChipNavigationBar
+//
+//         }
+      //Log.d("NAV_BAR","${binding.menu}")
+
+        ChipNavigationBar(this,)
+
         binding.menu.setOnItemSelectedListener {
 
             when (it) {
@@ -481,8 +565,9 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    override fun onPause() {
-        super.onPause()
+    fun initRepo(authRepository: AuthRepository){
 
+        this.authRepository = authRepository
     }
+
 }

@@ -1,8 +1,11 @@
 package com.example.marcadechoferes.loadingScreen
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
+import android.widget.ImageView
 import com.example.marcadechoferes.R
 import androidx.activity.viewModels
 import com.example.marcadechoferes.Extra.Language
@@ -15,19 +18,26 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoadingScreen : AppCompatActivity(){
     val loadingViewModel: loadingViewModel by viewModels()
     lateinit var tinyDB: TinyDB
+    var imageFromServer=""
+    lateinit var  imageBackground:ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val language= Language()
         language.setLanguage(baseContext)
         setContentView(R.layout.activity_loading_screen)
         tinyDB= TinyDB(this)
+       imageFromServer= tinyDB.getString("loadingBG").toString()
+        if(imageFromServer!=""){
+            Base64ToBitmap(imageFromServer)
+        }
+
         initView()
     }
 
    fun initView(){
 
        MyApplication.loadingContext = this
-
+         imageBackground=findViewById(R.id.loadingBackground)
 
 
 //       extra.liveData.observeForever(Observer {
@@ -55,6 +65,12 @@ class LoadingScreen : AppCompatActivity(){
     override fun onBackPressed() {
 
         println("backPressed")
+    }
+
+    fun Base64ToBitmap(base64: String) {
+        val imageBytes = Base64.decode(base64, 0)
+        val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        imageBackground.setImageBitmap(image)
     }
 
 

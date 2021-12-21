@@ -9,6 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.example.marcadechoferes.Extra.BaseClass
+import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.createpassword.viewModel.CreatePasswordViewModel
 import com.example.marcadechoferes.databinding.ActivityCreateNewPasswordScreenBinding
@@ -17,7 +19,7 @@ import com.example.marcadechoferes.mainscreen.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CreateNewPasswordScreen : AppCompatActivity() {
+class CreateNewPasswordScreen : BaseClass() {
     lateinit var binding: ActivityCreateNewPasswordScreenBinding
     val context: Context = this
     lateinit var imm:InputMethodManager
@@ -32,6 +34,7 @@ class CreateNewPasswordScreen : AppCompatActivity() {
     }
 
     fun initView() {
+        setGrad(K.primaryColor, K.secondrayColor,binding.SubmitBtn)
         createPasswordViewModel.viewsForCreatePassword(context, binding)
          showSoftKeyboard(binding.editPassword)
     }

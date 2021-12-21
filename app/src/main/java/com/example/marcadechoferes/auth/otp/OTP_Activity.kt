@@ -7,6 +7,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import com.example.marcadechoferes.Extra.BaseClass
+import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.otp.viewModel.OTPViewModel
@@ -14,7 +16,7 @@ import com.example.marcadechoferes.databinding.ActivityOtpBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OTP_Activity : AppCompatActivity() {
+class OTP_Activity : BaseClass(){
     val otpViewModel:OTPViewModel by viewModels()
     val context:Context=this
     lateinit var binding:ActivityOtpBinding
@@ -27,6 +29,7 @@ class OTP_Activity : AppCompatActivity() {
     }
 
     fun initViews(){
+        setGrad(K.primaryColor, K.secondrayColor,binding.SubmitButton)
         otpViewModel.viewsForOTPScreen(context,binding)
         showSoftKeyboard(binding.edt1)
     }
