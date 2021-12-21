@@ -50,7 +50,7 @@ class SplashScreen : BaseClass() {
         tinyDB = TinyDB(this)
         var checker = tinyDB.getString("User")
         background= tinyDB.getString("SplashBG").toString()
-        if(background!=""){
+        if(background.isNotEmpty() && !background.contains(".png")){
             base64ToBitmap(background)
         }
         println("Current User is : $checker")

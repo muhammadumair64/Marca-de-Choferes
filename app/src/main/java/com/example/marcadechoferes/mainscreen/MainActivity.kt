@@ -26,13 +26,16 @@ import kotlinx.coroutines.launch
 import android.location.LocationManager
 
 import android.content.IntentSender
+import android.graphics.Color
 import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.view.get
 import com.example.marcadechoferes.Extra.*
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.repository.AuthRepository
@@ -98,7 +101,7 @@ class MainActivity : BaseClass(){
         setTimer()
         getWidth()
         initPermission(){nullFunction()}
-        invalidateOptionsMenu()
+       // invalidateOptionsMenu()
         NavBar()
 
 
@@ -120,49 +123,24 @@ class MainActivity : BaseClass(){
 //
 //    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 //        val result = super.onPrepareOptionsMenu(menu)
-//
-//
-//        styleMenuButton()
+//          Log.d("NAV_BAR","IN MENU");
+//      (menu!!.get(0) as com.ismaeldivita.chipnavigation.model.MenuItem).backgroundColor = Color.parseColor("#000000")
 //        return result
 //    }
 
 //
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        val inflater = menuInflater
-//        inflater.inflate(R.menu.navigationbar_menu, menu)
-//        layoutInflater.setFactory(object : LayoutInflater.Factory {
-//            fun onCreateView(
-//                name: String, context: Context?,
-//                attrs: AttributeSet?
-//            ): View? {
-//                if (name.equals(
-//                        "com.android.internal.view.menu.IconMenuItemView",
-//                        ignoreCase = true
-//                    )
-//                ) {
-//                    try {
-//                        val f = layoutInflater
-//                        val view = f.createView(name, null, attrs)
-//                        Handler().post(Runnable { // set the background drawable
-//                            view.setBackgroundResource(R.drawable.my_ac_menu_background)
-//
-//                            // set the text color
-//                            (view as TextView).setTextColor(Color.WHITE)
-//                        })
-//                        return view
-//                    } catch (e: InflateException) {
-//                    } catch (e: ClassNotFoundException) {
-//                    }
-//                }
-//                return null
-//            }
-//
-//            override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-//                TODO("Not yet implemented")
-//            }
-//        })
-//        return super.onCreateOptionsMenu(menu)
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.navigationbar_menu, menu)
+        layoutInflater.setFactory(object : LayoutInflater.Factory {
+            override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+                Log.d("NAV_BAR","Called")
+                ( menu!!.getItem(R.id.home) as com.ismaeldivita.chipnavigation.model.MenuItem).backgroundColor = Color.parseColor("#000000")
+                    return null
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
+    }
 
 
 
@@ -175,20 +153,17 @@ class MainActivity : BaseClass(){
 
 
     fun NavBar() {
-//      binding.menu.setOnCreateContextMenuListener { menu, v, menuInfo ->
-//
-//          ChipNavigationBar
-//
-//         }
-      //Log.d("NAV_BAR","${binding.menu}")
 
-        ChipNavigationBar(this,)
-
+        binding.menu.setMenuResource(R.menu.navigationbar_menu,Color.parseColor(K.primaryColor))
+        binding.menu.setItemSelected(R.id.home, true)
         binding.menu.setOnItemSelectedListener {
 
             when (it) {
                 R.id.home -> {
                     mainViewModel.updateValueTo1()
+//                    binding.menu.setMenuResource(R.menu.navigationbar_menu)
+
+
 
                 }
                 R.id.User -> {
