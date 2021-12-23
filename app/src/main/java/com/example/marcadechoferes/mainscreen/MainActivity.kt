@@ -30,6 +30,7 @@ import android.graphics.Color
 import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -60,6 +61,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.SocketTimeoutException
 import java.util.*
+import com.example.marcadechoferes.Extra.OnHomePressedListener
+
+import com.example.marcadechoferes.Extra.HomeWatcher
+
+
+
 
 
 
@@ -103,32 +110,10 @@ class MainActivity : BaseClass(){
         initPermission(){nullFunction()}
        // invalidateOptionsMenu()
         NavBar()
-
+        homepress()
 
     }
 
-
-//    private fun styleMenuButton() {
-//        // Find the menu item you want to style
-//        val view1: View = findViewById(R.id.home)
-//        val view2: View = findViewById(R.id.User)
-//        val view3: View = findViewById(R.id.Settings)
-//
-//        // Cast to a TextView instance if the menu item was found
-//        if (view1 != null && view1 is TextView) {
-//            (view1 as TextView).setBackgroundColor(Color.parseColor("#000000")) // Make text colour blue
-//            (view1 as TextView).setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f) // Increase font size
-//        }
-//    }
-//
-//    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-//        val result = super.onPrepareOptionsMenu(menu)
-//          Log.d("NAV_BAR","IN MENU");
-//      (menu!!.get(0) as com.ismaeldivita.chipnavigation.model.MenuItem).backgroundColor = Color.parseColor("#000000")
-//        return result
-//    }
-
-//
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.navigationbar_menu, menu)
@@ -272,6 +257,14 @@ class MainActivity : BaseClass(){
 //        startActivity(setIntent)
         finish()
     }
+
+//    override fun onUserLeaveHint() {
+////        Toast.makeText(applicationContext, "Home Button is Pressed", Toast.LENGTH_SHORT).show()
+//        finish()
+//        super.onUserLeaveHint()
+//    }
+
+
 
 
 
@@ -507,6 +500,8 @@ class MainActivity : BaseClass(){
         var languageCheck = MyApplication.checkForLanguageChange
 //        languageCheck=tinyDB.getInt("languageCheck")
 //        Log.d("checkLanguageValue", languageCheck.toString())
+
+        tinyDB.putInt("lasttimebreak", BreakTime)
         if(languageCheck != 200){
             stopService(Intent(this,TimerService::class.java))
             stopService(Intent(this,BreakTimerService::class.java))
@@ -543,6 +538,24 @@ class MainActivity : BaseClass(){
     fun initRepo(authRepository: AuthRepository){
 
         this.authRepository = authRepository
+    }
+
+
+    fun homepress(){
+        val mHomeWatcher = HomeWatcher(this)
+        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+            override fun onHomePressed() {
+                // do something here...
+               // Toast.makeText(this@MainActivity, "Home is pressed", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+            override fun onHomeLongPressed() {
+
+                finish()
+            }
+        })
+        mHomeWatcher.startWatch()
     }
 
 }

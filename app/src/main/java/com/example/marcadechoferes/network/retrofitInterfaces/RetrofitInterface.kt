@@ -3,6 +3,8 @@ package com.example.marcadechoferes.network.retrofitInterfaces
 import com.example.marcadechoferes.network.createNewPasswordResponse.CreateNewPasswordResponse
 import com.example.marcadechoferes.network.forgotPasswordResponse.ForgotPasswordResponse
 import com.example.marcadechoferes.network.getAvatarResponse.GetAvatarResponse
+import com.example.marcadechoferes.network.loadingResponse.LoadingResponse
+import com.example.marcadechoferes.network.loadingResponse.SplashResponse
 import com.example.marcadechoferes.network.logoutResponse.MassageResponse
 import com.example.marcadechoferes.network.signinResponse.*
 import retrofit2.Response
@@ -140,5 +142,16 @@ interface RetrofitInterface {
         @Body wrapVehicle: WrapVehicle,
         @Header("Cookie") sessionIdAndToken: String
     ): Response<MassageResponse>
+
+    @POST("config/get/loadingscreen")
+    suspend fun  getLoadingScreen(
+        @Header("Cookie") sessionIdAndToken: String
+    ):Response<LoadingResponse>
+
+    @POST("config/get/splashscreen")
+    suspend fun  getSplashScreen(
+    ):Response<SplashResponse>
+
+
 
 }

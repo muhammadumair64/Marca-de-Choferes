@@ -131,7 +131,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "9"
+        var appVersion: String? = "12"
         var appBuild: String? =  Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -174,8 +174,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         tinyDB.putInt("defaultWork",response.work!!.workingHours)
                         tinyDB.putInt("defaultBreak",response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
-                        tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
-                        tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
+
 
                         if(response.colors.primary.isNotEmpty()){
                             K.primaryColor=response.colors.primary ?: "#7A59FC"
@@ -194,7 +193,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         Timer().schedule(1000) {
 
                             Token = tinyDB.getString("Cookie").toString()
-                                  getAvatar()
+                                 getLoadingScreenImage()
                         }
 
 
@@ -269,6 +268,50 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
     }
 
 
+    fun getLoadingScreenImage(){
+
+        viewModelScope.launch {
+
+            withContext(Dispatchers.IO) {
+
+                try {
+
+                    val response = authRepository.getLoadingScreen(Token)
+
+                    println("SuccessResponse $response")
+
+
+
+                    if(response!=null) {
+                        tinyDB.putString("loadingBG",response.loadingScreen ?: "")
+                        getAvatar()
+                    }
+
+                }
+                catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+                catch (e: NoInternetException) {
+                    println("position 2")
+                    e.printStackTrace()
+
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch (e: ResponseException) {
+                    println("ErrorResponse")
+
+
+                }
+            }
+        }
+
+
+    }
+
+
+
     fun getAvatar(){
         viewModelScope.launch {
 
@@ -316,6 +359,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
 
     }
+
+
     fun isEmulator(): Boolean {
         return (Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")

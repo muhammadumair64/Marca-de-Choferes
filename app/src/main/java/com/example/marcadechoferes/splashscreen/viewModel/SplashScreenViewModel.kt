@@ -3,6 +3,7 @@ package com.example.marcadechoferes.splashscreen.viewModel
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
@@ -15,12 +16,14 @@ import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
 import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
+import com.example.marcadechoferes.network.signinResponse.SigninResponse
 import com.example.marcadechoferes.splashscreen.SplashScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.SocketTimeoutException
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
@@ -53,8 +56,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                             authRepository.InsertSigninData(response)
                         val Language =response.profile?.language
                         val notify:Boolean =response.profile?.notify!!
-                        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
-                        tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+                       getPreviousTime(response)
                         tinyDB.putInt("defaultWork",response.work!!.workingHours)
                         tinyDB.putInt("defaultBreak",response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
@@ -108,5 +110,71 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 }
             }
         }
+    }
+
+
+
+    fun getSplashScreen(){
+
+        viewModelScope.launch {
+
+            withContext(Dispatchers.IO) {
+
+                try {
+
+                    val response = authRepository.getSplashScreen()
+
+                    println("SuccessResponse $response")
+
+
+
+                    if(response!=null) {
+                        var image = response.splashScreen
+                        tinyDB.putString("SplashBG",response.splashScreen ?: "")
+                        withContext(Dispatchers.Main){
+                            (activityContext as SplashScreen).base64ToBitmap(image)
+                        }
+
+
+                    }
+
+                }
+                catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+                catch (e: NoInternetException) {
+                    println("position 2")
+                    e.printStackTrace()
+
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch (e: ResponseException) {
+                    println("ErrorResponse")
+
+
+                }
+            }
+        }
+
+
+    }
+
+
+    private fun getPreviousTime(response: SigninResponse) {
+        val sdf = SimpleDateFormat("yyyy-M-dd")
+        val currentDate = sdf.format(Date())
+        var workDate = tinyDB.getString("ActivityDate")
+        if(workDate!!.isNotEmpty()){
+            workDate = workDate!!.split(":").toTypedArray()[0]
+            Log.d("workDate","date is $workDate")
+        }
+
+        if(workDate!=currentDate){
+            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+        }
+        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+
     }
 }

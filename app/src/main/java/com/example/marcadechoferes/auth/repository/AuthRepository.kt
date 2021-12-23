@@ -7,6 +7,8 @@ import com.example.marcadechoferes.network.SafeApiRequest
 import com.example.marcadechoferes.network.createNewPasswordResponse.CreateNewPasswordResponse
 import com.example.marcadechoferes.network.forgotPasswordResponse.ForgotPasswordResponse
 import com.example.marcadechoferes.network.getAvatarResponse.GetAvatarResponse
+import com.example.marcadechoferes.network.loadingResponse.LoadingResponse
+import com.example.marcadechoferes.network.loadingResponse.SplashResponse
 import com.example.marcadechoferes.network.logoutResponse.MassageResponse
 import com.example.marcadechoferes.network.retrofitInterfaces.RetrofitInterface
 import com.example.marcadechoferes.network.signinResponse.*
@@ -259,6 +261,19 @@ class AuthRepository @Inject constructor(
     {
         val wrapVehicle = WrapVehicle(datetime,totalTime,activity,geoPosition,vehicle)
         return apiRequest { retrofitInterface.updateActivity(wrapVehicle,sessionIdAndToken)}
+    }
+
+
+
+    suspend fun getLoadingScreen(Token: String):LoadingResponse{
+
+        return apiRequest { retrofitInterface.getLoadingScreen(Token)}
+    }
+
+
+    suspend fun getSplashScreen():SplashResponse{
+
+        return apiRequest { retrofitInterface.getSplashScreen()}
     }
 
 }

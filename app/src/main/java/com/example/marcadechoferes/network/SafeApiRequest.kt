@@ -20,8 +20,8 @@ abstract class SafeApiRequest {
 
         when {
             response.isSuccessful -> {
-                if(Token=="") {
-                    val Cookielist = response.headers().values("Set-Cookie")
+                val Cookielist = response.headers().values("Set-Cookie")
+                if(Token=="" && Cookielist.isNotEmpty() ) {
                     val jsessionid = Cookielist[0].split(";").toTypedArray()[0]
                     val separator = jsessionid.split("=").toTypedArray()[0]
                     println("Headers $jsessionid")

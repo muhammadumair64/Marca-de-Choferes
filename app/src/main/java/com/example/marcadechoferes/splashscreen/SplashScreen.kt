@@ -35,6 +35,7 @@ class SplashScreen : BaseClass() {
     lateinit var tinyDB: TinyDB
     lateinit var binding: ActivitySplashScreenBinding
     var background =""
+    var spleshCheck = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        var temp = isMyServiceRunning(UploadRemaingDataService::class.java)
@@ -49,15 +50,21 @@ class SplashScreen : BaseClass() {
         viewModel.viewsOfActivity(this)
         tinyDB = TinyDB(this)
         var checker = tinyDB.getString("User")
-        background= tinyDB.getString("SplashBG").toString()
-        if(background.isNotEmpty() && !background.contains(".png")){
-            base64ToBitmap(background)
-        }
+
+//        background= tinyDB.getString("SplashBG").toString()
+//        if(background.isNotEmpty() && !background.contains(".png")){
+//            base64ToBitmap(background)
+//        }
+
         println("Current User is : $checker")
         if (checker?.length!! >= 3) {
+            spleshCheck=false
             var intent = Intent(this, LoadingScreen::class.java)
             viewModel.syncdata()
             startActivity(intent)
+        }else{
+
+
         }
         var context = this
         Timer().schedule(200) {
@@ -76,6 +83,9 @@ class SplashScreen : BaseClass() {
     }
 
     fun initViews() {
+        if(spleshCheck){
+            viewModel.getSplashScreen()
+        }
         var checker = tinyDB.getString("User")
         println("checker $checker")
         binding.startButton.setOnClickListener {

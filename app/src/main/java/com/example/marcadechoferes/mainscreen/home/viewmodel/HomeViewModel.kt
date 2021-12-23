@@ -11,8 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 import android.animation.ValueAnimator
-import android.app.ActivityManager
-import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
@@ -28,7 +26,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.K
@@ -48,7 +45,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import dagger.hilt.android.internal.Contexts.getApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -113,7 +109,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         System.out.println(" C DATE is  " + currentDate)
 
         binding.date.text = "$currentDate"
-fadeColor()
+        fadeColor()
  
         var Choice = tinyDB.getString("selectedState")
 
@@ -377,9 +373,7 @@ fadeColor()
             hitActivityAPI(2,MyApplication.BreakToSend)
 
         } else {
-            tinyDB.putInt("lasttimebreak",0)
-            tinyDB.putInt("lasttimework",0)
-            intent.time=0.0
+             startDaySetter(intent)
             Timer().schedule(200) {
                 intent.startTimer()
                 intent.startTimerBreak()
@@ -575,7 +569,7 @@ fadeColor()
     }
 
 
-    fun getVehicle() {
+               fun getVehicle() {
             viewModelScope.launch {
             withContext(Dispatchers.IO) {
 
@@ -987,6 +981,7 @@ fadeColor()
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
         val sdf = SimpleDateFormat("yyyy-M-dd:hh:mm:ss")
         val currentDate = sdf.format(Date())
+        tinyDB.putString("ActivityDate",currentDate)
         System.out.println(" C DATE is  " + currentDate)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -1137,6 +1132,26 @@ fadeColor()
         dataBinding?.bar?.progressBarColor = Color.parseColor(color)
         Log.d("FadeColor ","$color")
 
+    }
+
+
+
+
+    fun startDaySetter(intent: MainActivity) {
+        val sdf = SimpleDateFormat("yyyy-M-dd")
+        val currentDate = sdf.format(Date())
+        var workDate = tinyDB.getString("ActivityDate")
+        if(workDate!!.isNotEmpty()){
+            workDate = workDate!!.split(":").toTypedArray()[0]
+            Log.d("workDate","date is $workDate")
+            Log.d("workDatecurrent","current Date $currentDate")
+        }
+
+        if(workDate!= currentDate){
+           tinyDB.putInt("lasttimebreak",0)
+           tinyDB.putInt("lasttimework",0)
+           intent.time=0.0
+       }
     }
     
 }

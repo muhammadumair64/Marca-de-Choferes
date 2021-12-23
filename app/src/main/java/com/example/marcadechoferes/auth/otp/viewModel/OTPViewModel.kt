@@ -176,7 +176,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "9"
+        var appVersion: String? = "12"
         var appBuild: String? = Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -235,7 +235,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         val notify: Boolean = response.profile?.notify!!
                         tinyDB.putString("language", Language.toString())
                         tinyDB.putBoolean("notify", notify)
-                        getAvatar()
+                       getLoadingScreenImage()
 
                     }
                 } catch (e: ResponseException) {
@@ -299,6 +299,51 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
         if (suffix != null) resultBuffer.append(suffix)
 
         return resultBuffer.toString()
+
+
+    }
+
+
+
+
+    fun getLoadingScreenImage(){
+        var Token = tinyDB.getString("Cookie").toString()
+        viewModelScope.launch {
+
+            withContext(Dispatchers.IO) {
+
+                try {
+
+                    val response = authRepository.getLoadingScreen(Token)
+
+                    println("SuccessResponse $response")
+
+
+
+                    if(response!=null) {
+                        tinyDB.putString("loadingBG",response.loadingScreen ?: "")
+                        getAvatar()
+                    }
+
+                }
+                catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+                catch (e: NoInternetException) {
+                    println("position 2")
+                    e.printStackTrace()
+
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch (e: ResponseException) {
+                    println("ErrorResponse")
+
+
+                }
+            }
+        }
 
 
     }

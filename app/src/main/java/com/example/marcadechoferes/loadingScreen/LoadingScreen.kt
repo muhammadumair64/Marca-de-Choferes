@@ -26,12 +26,13 @@ class LoadingScreen : AppCompatActivity(){
         language.setLanguage(baseContext)
         setContentView(R.layout.activity_loading_screen)
         tinyDB= TinyDB(this)
+        initView()
        imageFromServer= tinyDB.getString("loadingBG").toString()
-        if(imageFromServer!=""){
+        if(imageFromServer.isNotEmpty()){
             Base64ToBitmap(imageFromServer)
         }
 
-        initView()
+
     }
 
    fun initView(){
