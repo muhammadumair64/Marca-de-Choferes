@@ -123,7 +123,14 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
             }
             "goTosecondState" -> {
-                goToSecondState()
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main){
+                        checkByServer()
+//                        goToSecondState()
+
+                    }
+
+                }
 
 
             }
@@ -149,6 +156,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     }
+
+
 
 
     fun Workbar() {
@@ -1153,5 +1162,26 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
            intent.time=0.0
        }
     }
-    
+
+
+    private fun checkByServer() {
+   var check = tinyDB.getInt("selectedStateByServer")
+        if(check==1){
+            var language= tinyDB.getString("language")
+                 if (language=="0"){
+                  dataBinding?.secondState?.text = "Fin del descanso"
+
+            }else if(language=="1"){
+
+                   dataBinding?.secondState?.text = "End Break"
+            }
+            else{
+                    dataBinding?.secondState?.text = "Fim do intervalo"
+            }
+
+          buttonTakeBreak()
+        }
+    }
+
+
 }

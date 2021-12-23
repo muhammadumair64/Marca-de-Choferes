@@ -235,7 +235,8 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         val notify: Boolean = response.profile?.notify!!
                         tinyDB.putString("language", Language.toString())
                         tinyDB.putBoolean("notify", notify)
-                       getLoadingScreenImage()
+                        checkStateByServer(response)
+                        getLoadingScreenImage()
 
                     }
                 } catch (e: ResponseException) {
@@ -415,5 +416,28 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
         return "Android SDK: $sdkVersion ($release)"
     }
 
+    private fun checkStateByServer(response: SigninResponse) {
+        var check = response.lastVar!!.lastActivity
+        tinyDB.putInt("selectedStateByServer", check!!)
+        when(check){
+            0->{
+                tinyDB.putString("selectedState","goToActiveState")
+
+            }
+            1->{
+                tinyDB.putString("selectedState","goTosecondState")
+            }
+            2->{
+                tinyDB.putString("selectedState","goToActiveState")
+
+            }
+            3->{
+                tinyDB.putString("selectedState","endDay")
+            }
+        }
+
+
+
+    }
 
 }

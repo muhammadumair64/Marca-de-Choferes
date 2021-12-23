@@ -68,11 +68,11 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                             K.primaryColor=response.colors.primary ?: "#7A59FC"
                             K.secondrayColor = response.colors.secondary ?: "#653FFB"
                         }
-
-
+                        checkStateByServer(response)
                         tinyDB.putBoolean("notify",notify)
                         tinyDB.putInt("againCome",200)
                         MyApplication.check=200
+
                         Timer().schedule(1500) {
                             var intent = Intent(activityContext, MainActivity::class.java)
                             ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
@@ -111,7 +111,6 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
             }
         }
     }
-
 
 
     fun getSplashScreen(){
@@ -175,6 +174,32 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
             tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
         }
         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+
+    }
+
+
+    private fun checkStateByServer(response: SigninResponse) {
+     var check = response.lastVar!!.lastActivity
+        tinyDB.putInt("selectedStateByServer", check!!)
+        Log.d("checkByServer","check $check")
+      when(check){
+          0->{
+              tinyDB.putString("selectedState","goToActiveState")
+
+          }
+          1->{
+              tinyDB.putString("selectedState","goTosecondState")
+          }
+          2->{
+              tinyDB.putString("selectedState","goToActiveState")
+
+          }
+          3->{
+              tinyDB.putString("selectedState","endDay")
+          }
+      }
+
+
 
     }
 }
