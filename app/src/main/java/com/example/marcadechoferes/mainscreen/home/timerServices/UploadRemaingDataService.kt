@@ -23,6 +23,12 @@ import com.example.marcadechoferes.network.ResponseException
 import kotlinx.coroutines.*
 import java.net.SocketTimeoutException
 
+import android.graphics.BitmapFactory
+
+import android.app.PendingIntent
+import android.content.res.Resources
+
+
 class UploadRemaingDataService: Service() {
     companion object{
 
@@ -119,22 +125,50 @@ class UploadRemaingDataService: Service() {
     }
 
     private fun startForeground() {
-        val channelId =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                createNotificationChannel("my_service", "My Background Service")
-            } else {
-                // If earlier version channel ID is not used
-                // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
-                ""
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            val channelId =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    createNotificationChannel("my_service", "My Background Service")
+                } else {
+                    // If earlier version channel ID is not used
+                    // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
+                    ""
+                }
+
+            val notificationBuilder = NotificationCompat.Builder(this, channelId )
+            val notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.mipmap.app_icon)
+                .setPriority(PRIORITY_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build()
+            startForeground(101, notification)
+        }else{
+            val currentapiVersion = Build.VERSION.SDK_INT
+            if (currentapiVersion >= 16) {
+                val context: Context = this
+                val notificationIntent = Intent(context, UploadRemaingDataService::class.java)
+                val contentIntent = PendingIntent.getService(
+                    context,
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+                val nm = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                val res: Resources = context.resources
+                val builder = Notification.Builder(context)
+                builder.setContentIntent(contentIntent)
+                    .setSmallIcon(R.mipmap.app_icon)
+                    .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.app_icon))
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .setContentTitle(res.getString(R.string.app_name))
+                val n = builder.build()
+                nm.notify(7, n)
             }
 
-        val notificationBuilder = NotificationCompat.Builder(this, channelId )
-        val notification = notificationBuilder.setOngoing(true)
-            .setSmallIcon(R.mipmap.app_icon)
-            .setPriority(PRIORITY_MIN)
-            .setCategory(Notification.CATEGORY_SERVICE)
-            .build()
-        startForeground(101, notification)
+
+        }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
