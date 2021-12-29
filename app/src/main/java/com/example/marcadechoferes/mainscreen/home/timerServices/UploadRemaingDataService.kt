@@ -26,28 +26,47 @@ import java.net.SocketTimeoutException
 import android.graphics.BitmapFactory
 
 import android.app.PendingIntent
+import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.location.Geocoder
+import android.os.Looper
+import androidx.core.app.ActivityCompat
+import com.example.marcadechoferes.network.GeoPosition
+import com.example.marcadechoferes.network.signinResponse.Vehicle
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-class UploadRemaingDataService: Service() {
-    companion object{
+class UploadRemaingDataService : Service() {
+    companion object {
 
-       var time :Int =0
-       var activity=0
-       lateinit var authRepository: AuthRepository
-       var activityContext:Context?=null
+        var time: Int = 0
+        var activity = 0
+        lateinit var authRepository: AuthRepository
+        var activityContext: Context? = null
         var apiJob = Job()
 
-    fun getStartIntent(totalTime:Int,activity:Int,authRepository: AuthRepository,context: Context):Intent{
-        time=totalTime
-        this.activity= activity
-        this.authRepository = authRepository
-        activityContext=context
-        val intent = Intent(context, UploadRemaingDataService::class.java)
-        return intent
-    }
+
+        fun getStartIntent(
+            totalTime: Int,
+            activity: Int,
+            authRepository: AuthRepository,
+            context: Context
+        ): Intent {
+            time = totalTime
+            this.activity = activity
+            this.authRepository = authRepository
+            activityContext = context
+            val intent = Intent(context, UploadRemaingDataService::class.java)
+            return intent
+        }
 
     }
+
     lateinit var tinyDB: TinyDB
 
 
@@ -58,11 +77,8 @@ class UploadRemaingDataService: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         tinyDB = TinyDB(MyApplication.appContext)
-        CoroutineScope(apiJob).launch{
-
-          var obj =  tinyDB.getObject("upadteActivity",UpdateActivityDataClass::class.java)
-
-            updateActivity(obj, authRepository, activityContext!!)
+        CoroutineScope(apiJob).launch {
+            updateActivity(authRepository, activityContext!!)
         }
         return START_NOT_STICKY
     }
@@ -79,7 +95,7 @@ class UploadRemaingDataService: Service() {
     }
 
     fun updateActivity(
-        obj:UpdateActivityDataClass, authRepository:AuthRepository, context:Context
+        authRepository: AuthRepository, context: Context
     ) {
         val childJob = Job(apiJob)
 
@@ -87,21 +103,27 @@ class UploadRemaingDataService: Service() {
 
             withContext(Dispatchers.IO) {
 
+                var vehicle = tinyDB.getObject("VehicleForBackgroundPush",Vehicle::class.java)
+                var geoPosition= tinyDB.getObject("GeoPosition",GeoPosition::class.java)
+                val sdf = SimpleDateFormat("yyyy-M-dd:hh:mm:ss")
+                val currentDate = sdf.format(Date())
+
+
                 try {
                     var Token = tinyDB.getString("Cookie")
                     val response = authRepository.updateActivity(
-                        obj.datetime,
+                         currentDate,
                         time,
                         activity,
-                        obj.geoPosition,
-                        obj.vehicle,
+                         geoPosition,
+                         vehicle,
                         Token!!
                     )
                     println("SuccessResponse $response")
 
 
                     if (response != null) {
-                             stopSelf()
+                        stopSelf()
                     }
 
                 } catch (e: ResponseException) {
@@ -114,8 +136,7 @@ class UploadRemaingDataService: Service() {
                     stopSelf()
                     println("position 2")
                     e.printStackTrace()
-                }
-                catch (e: SocketTimeoutException){
+                } catch (e: SocketTimeoutException) {
                     stopSelf()
                 }
             }
@@ -124,8 +145,11 @@ class UploadRemaingDataService: Service() {
 
     }
 
+
+
+
     private fun startForeground() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     createNotificationChannel("my_service", "My Background Service")
@@ -135,14 +159,14 @@ class UploadRemaingDataService: Service() {
                     ""
                 }
 
-            val notificationBuilder = NotificationCompat.Builder(this, channelId )
+            val notificationBuilder = NotificationCompat.Builder(this, channelId)
             val notification = notificationBuilder.setOngoing(true)
                 .setSmallIcon(R.mipmap.app_icon)
                 .setPriority(PRIORITY_MIN)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build()
             startForeground(101, notification)
-        }else{
+        } else {
             val currentapiVersion = Build.VERSION.SDK_INT
             if (currentapiVersion >= 16) {
                 val context: Context = this
@@ -172,9 +196,11 @@ class UploadRemaingDataService: Service() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(channelId: String, channelName: String): String{
-        val chan = NotificationChannel(channelId,
-            channelName, NotificationManager.IMPORTANCE_NONE)
+    private fun createNotificationChannel(channelId: String, channelName: String): String {
+        val chan = NotificationChannel(
+            channelId,
+            channelName, NotificationManager.IMPORTANCE_NONE
+        )
         chan.lightColor = Color.BLUE
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

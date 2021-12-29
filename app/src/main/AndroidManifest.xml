@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission  android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <application
         android:name=".myApplication.MyApplication"
@@ -22,11 +23,15 @@
             android:name=".loadingScreen.LoadingScreen"
             android:exported="true"
             android:noHistory="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="false"
+            ></activity>
         <activity
             android:name=".splashscreen.SplashScreen"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="false"
+            >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,13 +59,27 @@
         <activity
             android:name=".mainscreen.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:alwaysRetainTaskState="true"
+            ></activity>
 
-        <service android:name=".mainscreen.home.timerServices.TimerService" />
-        <service android:name=".mainscreen.home.timerServices.BreakTimerService" />
+        <service android:name=".mainscreen.home.timerServices.TimerService"
+                  android:stopWithTask="false"
+                  android:exported="true"
+            />
+        <service android:name=".mainscreen.home.timerServices.BreakTimerService"
+                 android:stopWithTask="false"
+                 android:exported="false"
+                 android:enabled="true"
+            />
         <service
             android:name=".mainscreen.home.timerServices.UploadRemaingDataService"
             android:exported="true" />
+
+        <service
+            android:name=".mainscreen.home.timerServices.WatcherService"
+            android:stopWithTask="false"
+             />
     </application>
 
 </manifest>

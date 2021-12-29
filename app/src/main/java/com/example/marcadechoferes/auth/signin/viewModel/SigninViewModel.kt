@@ -131,7 +131,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "12"
+        var appVersion: String? = "14"
         var appBuild: String? =  Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -377,6 +377,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
         val sdkVersion = Build.VERSION.SDK_INT
         return "Android SDK: $sdkVersion ($release)"
     }
+
     private fun checkStateByServer(response: SigninResponse) {
         var check = response.lastVar!!.lastActivity
         tinyDB.putInt("selectedStateByServer", check!!)

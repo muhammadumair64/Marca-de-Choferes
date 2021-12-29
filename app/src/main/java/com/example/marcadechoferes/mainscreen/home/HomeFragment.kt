@@ -236,6 +236,7 @@ class HomeFragment : Fragment(),OnclickItem {
         tinyDB.putInt("state",Position)
         viewModel.selectState(position)
         viewModel.hitStateAPI(position)
+        (activity as MainActivity).getLocation(requireContext())
 
     }
 

@@ -19,7 +19,7 @@ class BreakTimerService : Service()
         var workTime=tinyDB.getInt("lasttimebreak")
         val time = intent.getDoubleExtra(TIME_EXTRA_B, workTime.toDouble())
         timer.scheduleAtFixedRate(TimeTask(time), 0, 1000)
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onDestroy()

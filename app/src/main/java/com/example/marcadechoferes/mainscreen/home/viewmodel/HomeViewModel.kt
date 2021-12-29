@@ -764,6 +764,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun selectVehicle(position: Int) {
         MyApplication.check=0
         var text = searchedArrayList[position]
+        var vehicle = vehicleArrayListforUpload[position]
+        tinyDB.putObject("VehicleForBackgroundPush",vehicle)
         println("selected text $text")
         dataBinding!!.apply {
             vehicleListBtn.setBackgroundResource(R.drawable.bg_selectedvehicleback)
@@ -784,6 +786,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun selectVehicleByLocalDB(position: Int) {
         var text = searchedArrayList[position]
         println("selected text $text")
+
+        var vehicle = vehicleArrayListforUpload[position]
+        tinyDB.putObject("VehicleForBackgroundPush",vehicle)
+
         dataBinding!!.apply {
             vehicleListBtn.setBackgroundResource(R.drawable.bg_selectedvehicleback)
             iconCar.setBackgroundResource(R.drawable.ic_white_car)

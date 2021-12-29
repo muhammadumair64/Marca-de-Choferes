@@ -3,6 +3,7 @@ package com.example.marcadechoferes.mainscreen.home.timerServices
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.myApplication.MyApplication
 import java.util.*
@@ -46,5 +47,6 @@ class TimerService : Service()
         const val TIMER_UPDATED = "timerUpdated"
         const val TIME_EXTRA = "timeExtra"
     }
+
 
 }

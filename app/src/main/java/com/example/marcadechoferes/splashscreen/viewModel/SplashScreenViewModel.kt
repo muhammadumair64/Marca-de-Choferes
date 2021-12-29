@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.TinyDB
+import com.example.marcadechoferes.Extra.UpdateActivityDataClass
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.mainscreen.MainActivity
 import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
+import com.example.marcadechoferes.network.GeoPosition
 import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.network.signinResponse.SigninResponse
@@ -32,6 +34,9 @@ import kotlin.concurrent.schedule
 class SplashScreenViewModel @Inject constructor(val authRepository: AuthRepository):ViewModel(){
       var activityContext:Context?=null
     lateinit var tinyDB: TinyDB
+    val sdf = SimpleDateFormat("yyyy-M-dd")
+    val currentDate = sdf.format(Date())
+    var check= 0
     fun viewsOfActivity(context: Context){
         activityContext = context
         tinyDB = TinyDB(context)
@@ -57,6 +62,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         val Language =response.profile?.language
                         val notify:Boolean =response.profile?.notify!!
                        getPreviousTime(response)
+//                        setObj(response)
                         tinyDB.putInt("defaultWork",response.work!!.workingHours)
                         tinyDB.putInt("defaultBreak",response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
@@ -162,24 +168,42 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
 
     private fun getPreviousTime(response: SigninResponse) {
-        val sdf = SimpleDateFormat("yyyy-M-dd")
-        val currentDate = sdf.format(Date())
-        var workDate = tinyDB.getString("ActivityDate")
+
+//        var workDate = tinyDB.getString("ActivityDate")
+        var workDate = response.lastVar!!.lastWorkedHoursDateIni
         if(workDate!!.isNotEmpty()){
-            workDate = workDate!!.split(":").toTypedArray()[0]
-            Log.d("workDate","date is $workDate")
+            workDate = workDate!!.split("T").toTypedArray()[0]
+            Log.d("workDate Is","date is $workDate")
         }
 
-        if(workDate!=currentDate){
+        if(workDate != currentDate){
+            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+        }else if(workDate == currentDate && response.lastVar!!.lastActivity !=0)
+        {
             tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
         }
+
+
+
         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
 
     }
 
 
     private fun checkStateByServer(response: SigninResponse) {
-     var check = response.lastVar!!.lastActivity
+        var workDate = response.lastVar!!.lastWorkedHoursDateIni
+        if(workDate!!.isNotEmpty()){
+            workDate = workDate!!.split("T").toTypedArray()[0]
+            Log.d("workDate Is","date is $workDate")
+        }
+        if(workDate != currentDate){
+            check = 3
+        }else
+        {
+            check = response.lastVar!!.lastActivity!!
+        }
+
+
         tinyDB.putInt("selectedStateByServer", check!!)
         Log.d("checkByServer","check $check")
       when(check){
@@ -202,4 +226,22 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
 
     }
+
+
+
+
+//    fun setObj(response: SigninResponse) {
+//
+//        var datetime =
+//        var totalTime = 0
+//        var activity= response.lastVar!!.lastActivity
+//        var geoPosition = GeoPosition(response.lastVar!!.lastStateLatitud,response.lastVar.lastStateLongitud)
+//        var vehicle =
+//
+//        var obj = UpdateActivityDataClass(datetime,totalTime,activity,geoPosition,vehicle)
+//
+//        tinyDB.putObject(
+//            "upadteActivity",obj)
+//
+//    }
 }

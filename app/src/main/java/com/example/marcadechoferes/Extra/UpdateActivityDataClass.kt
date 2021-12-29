@@ -5,8 +5,8 @@ import com.example.marcadechoferes.network.GeoPosition
 import com.example.marcadechoferes.network.signinResponse.Vehicle
 
 data class UpdateActivityDataClass(var datetime: String?,
-                                   var  totalTime: Int?,
-                                   var activity: Int?,
-                                   var  geoPosition: GeoPosition?,
-                                   var vehicle: Vehicle?
+                                    var  totalTime: Int?,
+                                    var activity: Int?,
+                                    var  geoPosition: GeoPosition?,
+                                     var vehicle: Vehicle?
 )

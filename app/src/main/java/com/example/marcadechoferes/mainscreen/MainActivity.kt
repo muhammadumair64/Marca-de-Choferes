@@ -26,8 +26,12 @@ import kotlinx.coroutines.launch
 import android.location.LocationManager
 
 import android.content.IntentSender
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Geocoder
+import android.net.Uri
 import android.os.Build
+import android.os.Looper
 import android.text.Editable
 import android.util.AttributeSet
 import android.view.KeyEvent
@@ -36,6 +40,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.view.get
 import com.example.marcadechoferes.Extra.*
 import com.example.marcadechoferes.R
@@ -51,11 +56,7 @@ import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.network.signinResponse.Vehicle
 
 
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.common.api.*
-import com.google.android.gms.location.LocationRequest
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -64,10 +65,10 @@ import java.util.*
 import com.example.marcadechoferes.Extra.OnHomePressedListener
 
 import com.example.marcadechoferes.Extra.HomeWatcher
-
-
-
-
+import com.example.marcadechoferes.mainscreen.home.timerServices.WatcherService
+import com.google.android.gms.location.*
+import android.os.PowerManager
+import android.provider.Settings
 
 
 @AndroidEntryPoint
@@ -94,6 +95,9 @@ class MainActivity : BaseClass(){
      var WorkTime = 0
      var BreakTime = 0
      var authRepository:AuthRepository? = null
+    var latitude=0.0
+    var longitude =0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val language= Language()
@@ -105,13 +109,23 @@ class MainActivity : BaseClass(){
         registerReceiver(updateTimeBreak, IntentFilter(BreakTimerService.TIMER_UPDATED_B))
         binding.menu.setItemSelected(R.id.home, true)
         tinyDB= TinyDB(this)
+        initView()
         setTimer()
         getWidth()
         initPermission(){nullFunction()}
        // invalidateOptionsMenu()
+//        batteryOptimizing()
         NavBar()
-        homepress()
 
+//        homepress()
+
+    }
+
+
+
+    fun initView(){
+//        var intent=Intent(this,WatcherService::class.java)
+//        startService(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -126,9 +140,6 @@ class MainActivity : BaseClass(){
         })
         return super.onCreateOptionsMenu(menu)
     }
-
-
-
 
 
 
@@ -250,12 +261,12 @@ class MainActivity : BaseClass(){
         String.format("%02d:%02d", hour, min)
 
     override fun onBackPressed() {
-//        Log.d("CDA", "onBackPressed Called")
-//        val setIntent = Intent(Intent.ACTION_MAIN)
-//        setIntent.addCategory(Intent.CATEGORY_HOME)
-//        setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//        startActivity(setIntent)
-        finish()
+        Log.d("CDA", "onBackPressed Called")
+        val setIntent = Intent(Intent.ACTION_MAIN)
+        setIntent.addCategory(Intent.CATEGORY_HOME)
+        setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(setIntent)
+//        finish()
     }
 
 //    override fun onUserLeaveHint() {
@@ -322,11 +333,10 @@ class MainActivity : BaseClass(){
         assert(locationManager != null)
         var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (GpsStatus) {
-
+          getLocation(this)
 
         } else {
             showEnableLocationSetting(action)
-
         }
     }
 
@@ -408,6 +418,7 @@ class MainActivity : BaseClass(){
         if (requestCode==999 && resultCode== RESULT_OK) {
             Log.d("isSuccess GPS PRO","nvnf ${checkGPS()}")
                       action()
+                      getLocation(this)
         }
     }
 
@@ -428,8 +439,10 @@ class MainActivity : BaseClass(){
         tinyDB.putInt("ActivityCheck",activity!!)
          var obj = UpdateActivityDataClass(datetime,totalTime,activity,geoPosition,vehicle)
 
-      tinyDB.putObject(
-    "upadteActivity",obj)
+        tinyDB.putObject("upadteActivity",obj)
+        tinyDB.putObject("GeoPosition",geoPosition)
+
+
         var Token = tinyDB.getString("Cookie")
         lifecycleScope.launch {
 
@@ -501,11 +514,17 @@ class MainActivity : BaseClass(){
 //        languageCheck=tinyDB.getInt("languageCheck")
 //        Log.d("checkLanguageValue", languageCheck.toString())
 
+
+
         tinyDB.putInt("lasttimebreak", BreakTime)
         if(languageCheck != 200){
             stopService(Intent(this,TimerService::class.java))
             stopService(Intent(this,BreakTimerService::class.java))
             var check =tinyDB.getInt("ActivityCheck")
+
+            if(isMyServiceRunning(BreakTimerService::class.java)){
+                check = 1
+            }
             var TimeForUplaod=0
             when(check){
                 0->{
@@ -540,22 +559,99 @@ class MainActivity : BaseClass(){
         this.authRepository = authRepository
     }
 
+//
+//    fun homepress(){
+//        val mHomeWatcher = HomeWatcher(this)
+//        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+//            override fun onHomePressed() {
+//                // do something here...
+//               // Toast.makeText(this@MainActivity, "Home is pressed", Toast.LENGTH_SHORT).show()
+////                finish()
+//            }
+//
+//            override fun onHomeLongPressed() {
+//
+////                finish()
+//            }
+//        })
+//        mHomeWatcher.startWatch()
+//    }
 
-    fun homepress(){
-        val mHomeWatcher = HomeWatcher(this)
-        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
-            override fun onHomePressed() {
-                // do something here...
-               // Toast.makeText(this@MainActivity, "Home is pressed", Toast.LENGTH_SHORT).show()
-                finish()
-            }
+    fun getLocation(context: Context) {
+        println("location call")
+        var locationRequest = LocationRequest()
+        locationRequest.interval = 10000
+        locationRequest.fastestInterval = 3000
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
-            override fun onHomeLongPressed() {
 
-                finish()
-            }
-        })
-        mHomeWatcher.startWatch()
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+        }
+
+
+        LocationServices.getFusedLocationProviderClient(context)
+            .requestLocationUpdates(locationRequest, object : LocationCallback() {
+                override fun onLocationResult(p0: LocationResult?) {
+                    super.onLocationResult(p0)
+
+                    LocationServices.getFusedLocationProviderClient(context)
+                        .removeLocationUpdates(this)
+                    if (p0 != null && p0.locations.size > 0) {
+                        longitude = p0.locations[0].longitude
+                        latitude = p0.locations[0].latitude
+
+                        val geocoder = Geocoder(context, Locale.getDefault())
+                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+                        var location = addresses[0].featureName.toString()
+                        println("City Name is $location")
+//                        Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
+
+                        println("Current Location $longitude and $latitude")
+                        var geoPosition = GeoPosition(latitude, longitude)
+                        tinyDB.putObject("GeoPosition",geoPosition)
+
+
+                    }
+                }
+
+
+            }, Looper.getMainLooper())
+
+        // uploadLocation()
+        println("Current Location $longitude and $latitude")
     }
+
+
+
+
+
+    fun batteryOptimizing(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val intent = Intent()
+            val packageName = packageName
+            val pm = getSystemService(POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+        }
+    }
+
 
 }
