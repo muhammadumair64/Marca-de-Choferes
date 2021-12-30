@@ -9,6 +9,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Base64
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -84,14 +85,26 @@ class SplashScreen : BaseClass() {
 
     fun initViews() {
         if(spleshCheck){
-            viewModel.getSplashScreen()
+            if (netCheck()){
+                viewModel.getSplashScreen()
+            }
+        else{
+                Toast.makeText(this, "Check Your Connection", Toast.LENGTH_SHORT).show()
+
+            }
         }
         var checker = tinyDB.getString("User")
         println("checker $checker")
         binding.startButton.setOnClickListener {
 
             if (checker?.length!! >= 3) {
-                viewModel.syncdata()
+                if(netCheck()){
+                    viewModel.syncdata()
+                }
+                else{
+                    Toast.makeText(this, "Check Your Connection", Toast.LENGTH_SHORT).show()
+                }
+
             } else {
                 var intent = Intent(this, SignInActivity::class.java)
                 startActivity(intent)

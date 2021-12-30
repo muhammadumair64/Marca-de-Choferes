@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
+import com.example.marcadechoferes.Extra.CheckConnection
 import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.MyBroadastReceivers
 import com.example.marcadechoferes.Extra.TinyDB
@@ -886,7 +887,13 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     fun hitStateAPI(position: Int) {
         positionForState = position
-        getLocationForState(activityContext!!)
+
+        if(CheckConnection.netCheck(activityContext!!)){
+            getLocationForState(activityContext!!)
+        }else{
+            Toast.makeText(activityContext, "Check Your Connection", Toast.LENGTH_SHORT).show()
+        }
+
 
     }
 
@@ -990,7 +997,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         totalTimeForActivty = totalTime!!
         selectedActivty = activity
-        getLocation(activityContext!!)
+        if(CheckConnection.netCheck(activityContext!!)){
+            getLocation(activityContext!!)
+        }else{
+            Toast.makeText(activityContext, "Check Your Connection", Toast.LENGTH_SHORT).show()
+        }
+
 
     }
 
