@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission  android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <application
@@ -80,6 +82,15 @@
             android:name=".mainscreen.home.timerServices.WatcherService"
             android:stopWithTask="false"
              />
+
+        <service android:name=".Extra.MyJobScheduler"
+                 android:permission="android.permission.BIND_JOB_SERVICE"></service>
+
+        <receiver android:name=".Extra.MyBroadastReceivers"  android:enabled="true" android:exported="true">
+            <intent-filter >
+                <action android:name="android.intent.action.TIME_TICK"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

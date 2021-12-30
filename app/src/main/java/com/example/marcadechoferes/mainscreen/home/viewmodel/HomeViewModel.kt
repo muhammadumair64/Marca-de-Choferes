@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.K
+import com.example.marcadechoferes.Extra.MyBroadastReceivers
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
@@ -91,6 +92,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         setPreviousWork()
         setDay()
         (context as MainActivity).initRepo(authRepository)
+        MyBroadastReceivers.authRepository = authRepository
         binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
 
 
@@ -380,7 +382,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             intent.startTimer()
             Log.d("break timer","${MyApplication.BreakToSend}")
             hitActivityAPI(2,MyApplication.BreakToSend)
-
+            dataBinding!!.statusListBtn.isClickable= true
         } else {
              startDaySetter(intent)
             Timer().schedule(200) {
@@ -1114,7 +1116,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun barColor(){
         viewModelScope.launch {
             withContext(Dispatchers.Main){
-     fadeColor()
+                     fadeColor()
             }
 
         }
@@ -1130,7 +1132,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         {
             ref.startTimer()
             }
-        else if(dataBinding?.secondState!!.isVisible == true && breakTimerService==false){
+            else if(dataBinding?.secondState!!.isVisible == true && breakTimerService==false){
             if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso"||dataBinding?.secondState?.text == "Fim do intervalo"){
                 ref.startTimerBreak()
                 dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
@@ -1138,6 +1140,15 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             }
 
         }
+
+        if(timerServiceCheck){
+            goToActivState()
+        }
+        if(breakTimerService){
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
+            fadeColor()
+        }
+
 
     }
 
@@ -1148,9 +1159,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         Log.d("FadeColor ","$color")
 
     }
-
-
-
 
     fun startDaySetter(intent: MainActivity) {
         val sdf = SimpleDateFormat("yyyy-M-dd")
@@ -1168,7 +1176,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
            intent.time=0.0
        }
     }
-
 
     private fun checkByServer() {
    var check = tinyDB.getInt("selectedStateByServer")

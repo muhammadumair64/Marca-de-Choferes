@@ -160,6 +160,16 @@ class HomeFragment : Fragment(),OnclickItem {
         binding.statusListBtn.setOnClickListener {
             if (binding.secondState.text == "End Break" ||binding.secondState.text == "Fin del descanso"||binding.secondState.text == "Fim do intervalo"){
 
+                if(binding.secondState.visibility==View.GONE){
+                    statusAdapter.notifyDataSetChanged()
+                    dialog.setView(statusPopupView)
+                    dialog.show()
+                    val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                    val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
+                    dialog.getWindow()?.setLayout(width,height);
+                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                }
+
             }else{
                 statusAdapter.notifyDataSetChanged()
                 dialog.setView(statusPopupView)

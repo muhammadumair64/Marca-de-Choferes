@@ -362,8 +362,8 @@
                         android:layout_marginStart="@dimen/_5sdp"
 
                         android:text="@string/vehicle"
-                        android:textSize="@dimen/_10sdp"
-                        android:textColor="@color/Privacy_policy_text_color" />
+                        android:textColor="@color/Privacy_policy_text_color"
+                        android:textSize="@dimen/_10sdp" />
 
                     <TextView
                         android:id="@+id/dots"

@@ -2,13 +2,13 @@ package com.example.marcadechoferes.mainscreen
 
 import android.Manifest
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.marcadechoferes.databinding.ActivityMainBinding
 import com.example.marcadechoferes.databinding.FragmentHomeBinding
@@ -32,16 +32,13 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.os.Looper
-import android.text.Editable
 import android.util.AttributeSet
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.view.get
 import com.example.marcadechoferes.Extra.*
 import com.example.marcadechoferes.R
 import com.example.marcadechoferes.auth.repository.AuthRepository
@@ -57,7 +54,6 @@ import com.example.marcadechoferes.network.signinResponse.Vehicle
 
 
 import com.google.android.gms.common.api.*
-import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.SocketTimeoutException
@@ -65,10 +61,18 @@ import java.util.*
 import com.example.marcadechoferes.Extra.OnHomePressedListener
 
 import com.example.marcadechoferes.Extra.HomeWatcher
-import com.example.marcadechoferes.mainscreen.home.timerServices.WatcherService
 import com.google.android.gms.location.*
 import android.os.PowerManager
 import android.provider.Settings
+import java.text.SimpleDateFormat
+import android.app.job.JobInfo
+
+import android.content.ComponentName
+
+import android.app.job.JobScheduler
+
+
+
 
 
 @AndroidEntryPoint
@@ -77,7 +81,7 @@ class MainActivity : BaseClass(){
     companion object {
         const val LOCATION_SETTING_REQUEST = 999
     }
-
+    val receiver = MyBroadastReceivers()
     val mainViewModel: MainViewModel by viewModels()
     var context: Context = this
     var timerStarted = false
@@ -98,32 +102,38 @@ class MainActivity : BaseClass(){
     var latitude=0.0
     var longitude =0.0
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val language= Language()
         language.setLanguage(baseContext)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        tinyDB= TinyDB(this)
+//        K.timeDifference(tinyDB)
+
         serviceIntent = Intent(applicationContext, TimerService::class.java)
         registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
         serviceIntentB = Intent(applicationContext, BreakTimerService::class.java)
         registerReceiver(updateTimeBreak, IntentFilter(BreakTimerService.TIMER_UPDATED_B))
         binding.menu.setItemSelected(R.id.home, true)
-        tinyDB= TinyDB(this)
+
         initView()
         setTimer()
         getWidth()
         initPermission(){nullFunction()}
+
        // invalidateOptionsMenu()
 //        batteryOptimizing()
         NavBar()
 
-//        homepress()
-
+        homepress()
     }
 
 
 
     fun initView(){
+        MyApplication.backPressCheck =200
 //        var intent=Intent(this,WatcherService::class.java)
 //        startService(intent)
     }
@@ -179,10 +189,13 @@ class MainActivity : BaseClass(){
     }
 
     fun startTimer() {
-        println("work timer start")
-        serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
-        startService(serviceIntent)
-        timerStarted = true
+        if(!isMyServiceRunning(TimerService::class.java)){
+            println("work timer start")
+            serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
+            startService(serviceIntent)
+            timerStarted = true
+        }
+
     }
 
     fun stopTimer() {
@@ -223,10 +236,14 @@ class MainActivity : BaseClass(){
 
 
     fun startTimerBreak() {
-        println("breakTimer Start")
-        serviceIntent.putExtra(BreakTimerService.TIME_EXTRA_B, timeBreak)
-        startService(serviceIntentB)
-        timerStarted = true
+        if(!isMyServiceRunning(BreakTimerService::class.java))
+        {
+            println("breakTimer Start")
+            serviceIntent.putExtra(BreakTimerService.TIME_EXTRA_B, timeBreak)
+            startService(serviceIntentB)
+            timerStarted = true
+        }
+
     }
 
     fun stopTimerBreak() {
@@ -260,14 +277,7 @@ class MainActivity : BaseClass(){
     private fun makeTimeStringBreak(hour: Int, min: Int, sec: Int): String =
         String.format("%02d:%02d", hour, min)
 
-    override fun onBackPressed() {
-        Log.d("CDA", "onBackPressed Called")
-        val setIntent = Intent(Intent.ACTION_MAIN)
-        setIntent.addCategory(Intent.CATEGORY_HOME)
-        setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(setIntent)
-//        finish()
-    }
+
 
 //    override fun onUserLeaveHint() {
 ////        Toast.makeText(applicationContext, "Home Button is Pressed", Toast.LENGTH_SHORT).show()
@@ -303,30 +313,31 @@ class MainActivity : BaseClass(){
 
 
 
-    fun initPermission(action:()->Unit) {
-
-        val permissions =
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        Permissions.check(
-            this /*context*/,
-            permissions,
-            null /*rationale*/,
-            null /*options*/,
-            object : PermissionHandler() {
-                override fun onGranted() {
-                    // hideIcon()
-                    //startService(locationServiceIntent)
-                 CheckGpsStatus(action)
-
-
-                }
-            })
-
-
-    }
+//    fun initPermission(action:()->Unit) {
+//
+//        val permissions =
+//            arrayOf(
+//                Manifest.permission.ACCESS_FINE_LOCATION,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            )
+//        Permissions.check(
+//            this /*context*/,
+//            permissions,
+//            null /*rationale*/,
+//            null /*options*/,
+//            object : PermissionHandler() {
+//                override fun onGranted() {
+//                    // hideIcon()
+//                    //startService(locationServiceIntent)
+//                    requestBackgroundPermission()
+//                 CheckGpsStatus(action)
+//
+//
+//                }
+//            })
+//
+//
+//    }
 
     fun CheckGpsStatus(action: () -> Unit){
         var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -384,9 +395,6 @@ class MainActivity : BaseClass(){
         var workTime=tinyDB.getInt("lasttimework")
         println("Timer is running $workTime")
         time= workTime.toDouble()
-
-
-
         var breakTime=tinyDB.getInt("lasttimebreak")
         timeBreak=breakTime.toDouble()
     }
@@ -510,47 +518,47 @@ class MainActivity : BaseClass(){
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDestroy() {
 
-        var languageCheck = MyApplication.checkForLanguageChange
-//        languageCheck=tinyDB.getInt("languageCheck")
-//        Log.d("checkLanguageValue", languageCheck.toString())
-
-
-
-        tinyDB.putInt("lasttimebreak", BreakTime)
-        if(languageCheck != 200){
-            stopService(Intent(this,TimerService::class.java))
-            stopService(Intent(this,BreakTimerService::class.java))
-            var check =tinyDB.getInt("ActivityCheck")
-
-            if(isMyServiceRunning(BreakTimerService::class.java)){
-                check = 1
-            }
-            var TimeForUplaod=0
-            when(check){
-                0->{
-                    TimeForUplaod=WorkTime
-
-                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,0,authRepository!!,this))
-                }
-                1->{
-                    TimeForUplaod=BreakTime
-
-                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,1,authRepository!!,this))
-                }
-                2->{
-                    TimeForUplaod=WorkTime
-
-                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,0,authRepository!!,this))
-                }
-                3->{
-
-                }
-
-            }
-        }
-        else{
-            MyApplication.checkForLanguageChange = 0
-        }
+//        var languageCheck = MyApplication.checkForLanguageChange
+////        languageCheck=tinyDB.getInt("languageCheck")
+////        Log.d("checkLanguageValue", languageCheck.toString())
+//
+//
+//
+//        tinyDB.putInt("lasttimebreak", BreakTime)
+//        if(languageCheck != 200){
+//            stopService(Intent(this,TimerService::class.java))
+//            stopService(Intent(this,BreakTimerService::class.java))
+//            var check =tinyDB.getInt("ActivityCheck")
+//
+//            if(isMyServiceRunning(BreakTimerService::class.java)){
+//                check = 1
+//            }
+//            var TimeForUplaod=0
+//            when(check){
+//                0->{
+//                    TimeForUplaod=WorkTime
+//
+//                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,0,authRepository!!,this))
+//                }
+//                1->{
+//                    TimeForUplaod=BreakTime
+//
+//                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,1,authRepository!!,this))
+//                }
+//                2->{
+//                    TimeForUplaod=WorkTime
+//
+//                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,0,authRepository!!,this))
+//                }
+//                3->{
+//
+//                }
+//
+//            }
+//        }
+//        else{
+//            MyApplication.checkForLanguageChange = 0
+//        }
         super.onDestroy()
     }
 
@@ -559,23 +567,42 @@ class MainActivity : BaseClass(){
         this.authRepository = authRepository
     }
 
-//
-//    fun homepress(){
-//        val mHomeWatcher = HomeWatcher(this)
-//        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
-//            override fun onHomePressed() {
-//                // do something here...
-//               // Toast.makeText(this@MainActivity, "Home is pressed", Toast.LENGTH_SHORT).show()
-////                finish()
-//            }
-//
-//            override fun onHomeLongPressed() {
-//
-////                finish()
-//            }
-//        })
-//        mHomeWatcher.startWatch()
-//    }
+
+    fun homepress(){
+        val mHomeWatcher = HomeWatcher(this)
+        mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
+            override fun onHomePressed() {
+                MyApplication.checkForResume=200
+                performSomeActionOnBackPress()
+                // do something here...
+//                Toast.makeText(this@MainActivity, "Home is pressed", Toast.LENGTH_SHORT).show()
+//                finish()
+            }
+
+            override fun onHomeLongPressed() {
+                MyApplication.checkForResume=200
+                performSomeActionOnBackPress()
+
+//                finish()
+            }
+        })
+        mHomeWatcher.startWatch()
+    }
+
+    override fun onBackPressed() {
+        MyApplication.checkForResume=200
+        performSomeActionOnBackPress()
+
+
+        Log.d("CDA", "onBackPressed Called")
+        val setIntent = Intent(Intent.ACTION_MAIN)
+        setIntent.addCategory(Intent.CATEGORY_HOME)
+        setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(setIntent)
+//        finish()
+    }
+
+
 
     fun getLocation(context: Context) {
         println("location call")
@@ -635,11 +662,6 @@ class MainActivity : BaseClass(){
         // uploadLocation()
         println("Current Location $longitude and $latitude")
     }
-
-
-
-
-
     fun batteryOptimizing(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val intent = Intent()
@@ -652,6 +674,151 @@ class MainActivity : BaseClass(){
             }
         }
     }
+
+
+    fun performSomeActionOnBackPress(){
+
+
+        if( MyApplication.backPressCheck==200){
+
+
+
+
+            var timerService = isMyServiceRunning(TimerService::class.java)
+            var breakService = isMyServiceRunning(BreakTimerService::class.java)
+            if(timerService){
+                registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+                tinyDB.putString("checkTimer","workTime")
+                MyBroadastReceivers.time = WorkTime
+                performTask()
+            }else if(breakService){
+                registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+                tinyDB.putString("checkTimer","breakTime")
+                MyBroadastReceivers.time = BreakTime
+                MyBroadastReceivers.activiy=1
+                performTask()
+            }
+
+
+        }
+
+    }
+
+
+    fun performTask(){
+        tinyDB.putInt("lasttimework",WorkTime)
+        tinyDB.putInt("lasttimebreak",BreakTime)
+        stopService(Intent(this,TimerService::class.java))
+        stopService(Intent(this,BreakTimerService::class.java))
+        val sdf = SimpleDateFormat("HH:mm:ss")
+        val currentDate = sdf.format(Date())
+        tinyDB.putString("goBackTime",currentDate)
+        MyApplication.backPressCheck=0
+    }
+
+
+    override fun onResume() {
+
+        if(MyApplication.checkForResume==200){
+            unregisterReceiver(receiver)
+            K.timeDifference(tinyDB,this)
+            MyApplication.checkForResume = 0
+        }
+        super.onResume()
+    }
+
+
+//    @RequiresApi(Build.VERSION_CODES.N)
+//    private fun scheduleJobFirebaseToRoomDataUpdate() {
+//        val jobScheduler = applicationContext
+//            .getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+//        val componentName = ComponentName(
+//            this,
+//            MyJobScheduler::class.java
+//        )
+//        val jobInfo = JobInfo.Builder(123, componentName)
+//            .setMinimumLatency(10000)
+//            .setRequiredNetworkType(
+//                 JobInfo.NETWORK_TYPE_NOT_ROAMING
+//            )
+//            .setPersisted(true)
+//        var result= jobScheduler.schedule(jobInfo.build())
+//        if(result==JobScheduler.RESULT_SUCCESS){
+//            Toast.makeText(this, "Job Start", Toast.LENGTH_SHORT).show()
+//        }
+//
+//    }
+
+
+    fun initPermission(action:()->Unit) {
+
+        val permissions =
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        Permissions.check(
+            this /*context*/,
+            permissions,
+            null /*rationale*/,
+            null /*options*/,
+            object : PermissionHandler() {
+                @RequiresApi(Build.VERSION_CODES.Q)
+                override fun onGranted() {
+                    // hideIcon()
+                    //startService(locationServiceIntent)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                        requestBackgroundPermission()
+                    }
+                    CheckGpsStatus(action)
+
+
+                }
+            })
+
+
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun requestBackgroundPermission() {
+        var check = true
+        val backPermList = arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        Permissions.check(
+            this /*context*/,
+            backPermList,
+            null /*rationale*/,
+            null /*options*/,
+            object : PermissionHandler() {
+                override fun onGranted() {
+                    // hideIcon()
+                    //startService(locationServiceIntent)
+                    check=false
+                }
+            })
+
+
+        if(check){
+            AlertDialog.Builder(this)
+                .setTitle("Background location permission")
+                .setMessage("Allow location permission to get location updates in background")
+                .setPositiveButton("Allow") { _, _ ->
+
+                    requestPermissions(
+                        backPermList,
+                        LOCATION_SETTING_REQUEST
+                    )
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }
+
+    }
+
+
 
 
 }
