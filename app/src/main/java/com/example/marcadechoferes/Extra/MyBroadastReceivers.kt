@@ -45,8 +45,12 @@ class MyBroadastReceivers : BroadcastReceiver() {
         if(test==3){
    CoroutineScope(job).launch {
     withContext(Dispatchers.IO){
-                    getLocation(arg0!!)
-                    time += 120
+
+
+        if(CheckConnection.netCheck(arg0!!)){
+            getLocation(arg0!!)
+        }
+        time += 120
                     Log.d("MyTickerReceiver","Received")
                     test = 1
     }
