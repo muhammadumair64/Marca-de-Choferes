@@ -35,6 +35,9 @@ import androidx.core.content.ContextCompat.startActivity
 @HiltViewModel
 class CreatePasswordViewModel @Inject constructor(val authRepository: AuthRepository) :
     ViewModel() {
+    var TAG1=""
+
+    var TAG2=""
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     var Token = ""
@@ -42,6 +45,21 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
         activityContext = context
         tinyDB = TinyDB(MyApplication.appContext)
         Token = tinyDB.getString("Cookie").toString()
+
+        var language= tinyDB.getString("language")
+        if (language=="0"){
+            TAG1 ="Contraseña demasiado corta"
+            TAG2 = "La contraseña no coincide"
+
+        }else if(language=="1"){
+
+           TAG1= "Too Short Password"
+            TAG2 ="Password not Match"
+        }
+        else{
+             TAG1="Senha muito curta"
+            TAG2="A senha não coincide"
+        }
 
         binding.backButton.setOnClickListener {
 
@@ -76,10 +94,10 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
         binding.SubmitBtn.setOnClickListener {
             binding.apply {
-                var password = editPassword.text
-                var repeatPassword = repeatPassword.text
+                var password:String = editPassword.text.toString()
+                var repeatPassword:String = repeatPassword.text.toString()
                 println("passwords here $password   $repeatPassword")
-                if (password.trim() == repeatPassword.trim()) {
+                if (password.equals(repeatPassword)) {
                     if (editPassword.text.length >= 4) {
                         var passsword = editPassword.text
                         CreateNewPassword(passsword.toString())
@@ -89,11 +107,11 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
 
                     } else {
-                        Toast.makeText(activityContext, "Too Short Password", Toast.LENGTH_SHORT)
+                        Toast.makeText(activityContext, TAG1, Toast.LENGTH_SHORT)
                             .show()
                     }
                 } else {
-                    Toast.makeText(activityContext, "Password not match", Toast.LENGTH_SHORT).show()
+                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
 
                 }
 

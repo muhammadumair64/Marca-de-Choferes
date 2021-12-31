@@ -31,4 +31,8 @@ class WatcherService: Service()  {
         super.onTaskRemoved(rootIntent)
         println("Watch service is stopped")
     }
+
+
+
+
 }

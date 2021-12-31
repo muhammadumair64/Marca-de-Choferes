@@ -81,6 +81,8 @@ class MainActivity : BaseClass(){
     companion object {
         const val LOCATION_SETTING_REQUEST = 999
     }
+    var TAG1=""
+    var TAG2=""
     val receiver = MyBroadastReceivers()
     val mainViewModel: MainViewModel by viewModels()
     var context: Context = this
@@ -111,7 +113,7 @@ class MainActivity : BaseClass(){
 
         tinyDB= TinyDB(this)
 //        K.timeDifference(tinyDB)
-
+        tagsForToast()
         serviceIntent = Intent(applicationContext, TimerService::class.java)
         registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
         serviceIntentB = Intent(applicationContext, BreakTimerService::class.java)
@@ -344,7 +346,8 @@ class MainActivity : BaseClass(){
         assert(locationManager != null)
         var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (GpsStatus) {
-          getLocation(this)
+            action()
+            getLocation(this)
 
         } else {
             showEnableLocationSetting(action)
@@ -479,7 +482,7 @@ class MainActivity : BaseClass(){
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             context,
-                            "Failed",
+                            TAG1,
                             Toast.LENGTH_SHORT
                         ).show()
                         (MyApplication.loadingContext as LoadingScreen).finish()
@@ -493,7 +496,7 @@ class MainActivity : BaseClass(){
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             context,
-                            "Check Your Internet Connection",
+                            TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -705,6 +708,7 @@ class MainActivity : BaseClass(){
     }
 
 
+
     fun performTask(){
         tinyDB.putInt("lasttimework",WorkTime)
         tinyDB.putInt("lasttimebreak",BreakTime)
@@ -714,6 +718,9 @@ class MainActivity : BaseClass(){
         val currentDate = sdf.format(Date())
         tinyDB.putString("goBackTime",currentDate)
         MyApplication.backPressCheck=0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            hitWhenleaveScreen()
+        }
     }
 
 
@@ -818,6 +825,75 @@ class MainActivity : BaseClass(){
 
     }
 
+
+    fun tagsForToast(){
+        var language= tinyDB.getString("language")
+        if (language=="0"){
+            TAG1 ="Fallida"
+            TAG2 = "Comprueba tu conexión a Internet"
+
+        }else if(language=="1"){
+
+            TAG1= "Failed"
+            TAG2 ="Check Your Internet Connection"
+        }
+        else{
+            TAG1="Fracassada"
+            TAG2="Verifique a sua conexão com a internet"
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun hitWhenleaveScreen() {
+        var check = tinyDB.getInt("ActivityCheck")
+
+        if (isMyServiceRunning(BreakTimerService::class.java)) {
+            check = 1
+        }
+        var TimeForUplaod = 0
+        when (check) {
+            0 -> {
+                TimeForUplaod = WorkTime
+
+                context.startForegroundService(
+                    UploadRemaingDataService.getStartIntent(
+                        TimeForUplaod,
+                        0,
+                        authRepository!!,
+                        this
+                    )
+                )
+            }
+            1 -> {
+                TimeForUplaod = BreakTime
+
+                context.startForegroundService(
+                    UploadRemaingDataService.getStartIntent(
+                        TimeForUplaod,
+                        1,
+                        authRepository!!,
+                        this
+                    )
+                )
+            }
+            2 -> {
+                TimeForUplaod = WorkTime
+
+                context.startForegroundService(
+                    UploadRemaingDataService.getStartIntent(
+                        TimeForUplaod,
+                        0,
+                        authRepository!!,
+                        this
+                    )
+                )
+            }
+            3 -> {
+
+            }
+        }
+    }
 
 
 

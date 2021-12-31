@@ -10,15 +10,18 @@ class Language {
     var langInitial = "es"
     fun setLanguage(context: Context){
         tinyDB= TinyDB(MyApplication.appContext)
-      var language= tinyDB.getString("language")
-        if (language=="0"){
+              var language= tinyDB.getString("language")
+            if (language=="0"){
             langInitial = "es"
 
         }else if(language=="1"){
 
             langInitial = "en"
         }
-        else{
+        else if(language==""){
+                langInitial = "es"
+            }
+            else {
             langInitial = "pt"
         }
         val languageToLoad =langInitial // your language

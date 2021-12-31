@@ -37,9 +37,11 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
     val sdf = SimpleDateFormat("yyyy-M-dd")
     val currentDate = sdf.format(Date())
     var check= 0
+    var TAG2 = ""
     fun viewsOfActivity(context: Context){
         activityContext = context
         tinyDB = TinyDB(context)
+        tagsForToast()
 
     }
 
@@ -69,6 +71,8 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         tinyDB.putString("language", Language.toString())
                         tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
                         tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
+                        var state=response.lastVar.lastState!!
+                        tinyDB.putInt("state", state+1)
 
                         if(response.colors.primary.isNotEmpty()){
                             K.primaryColor=response.colors.primary ?: "#7A59FC"
@@ -99,7 +103,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             activityContext,
-                            "Check Your Internet Connection",
+                            TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -109,7 +113,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             activityContext,
-                            "Check Your Internet Connection",
+                            TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -224,6 +228,23 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
       }
 
 
+
+    }
+
+    fun tagsForToast(){
+        var language= tinyDB.getString("language")
+        if (language=="0"){
+
+            TAG2 = "Comprueba tu conexión a Internet"
+
+        }else if(language=="1"){
+
+
+            TAG2 ="Check Your Internet Connection"
+        }
+        else{
+            TAG2="Verifique a sua conexão com a internet"
+        }
 
     }
 

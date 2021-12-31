@@ -174,6 +174,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         tinyDB.putInt("defaultWork",response.work!!.workingHours)
                         tinyDB.putInt("defaultBreak",response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
+                        tinyDB.putInt("state",response.lastVar.lastState!!)
+
 
 
                         if(response.colors.primary.isNotEmpty()){
@@ -183,7 +185,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
                         tinyDB.putString("User",userName)
                         MyApplication.check=200
-                      var temp=  tinyDB.getString("User")
+                        var temp=  tinyDB.getString("User")
                         Log.d("total time ","tem $temp")
                         val Language =response.profile?.language
                         val notify:Boolean =response.profile?.notify!!
@@ -193,7 +195,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         Timer().schedule(1000) {
 
                             Token = tinyDB.getString("Cookie").toString()
-                                 getLoadingScreenImage()
+                                // getLoadingScreenImage()
+                                   getAvatar()
                         }
 
 
@@ -204,7 +207,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
                     withContext(Dispatchers.Main){
                         (activityContext as SignInActivity).finish()
-                        Toast.makeText(activityContext, "Login Failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, "Error de inicio de sesion", Toast.LENGTH_SHORT).show()
                         var intent = Intent(activityContext, SignInActivity::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
@@ -218,7 +221,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -280,11 +283,10 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
                     println("SuccessResponse $response")
 
-
+                          getAvatar()
 
                     if(response!=null) {
                         tinyDB.putString("loadingBG",response.loadingScreen ?: "")
-                        getAvatar()
                     }
 
                 }
@@ -296,7 +298,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                     e.printStackTrace()
 
                     withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
                 catch (e: ResponseException) {
@@ -346,7 +348,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                      e.printStackTrace()
 
                   withContext(Dispatchers.Main){
-                      Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                      Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                   }
                      }
                 catch (e: ResponseException) {

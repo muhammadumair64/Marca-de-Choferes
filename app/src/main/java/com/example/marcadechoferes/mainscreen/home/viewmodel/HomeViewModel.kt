@@ -206,7 +206,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         dataBinding?.secondState?.setOnClickListener {
 
             if (checkGPS(activityContext!!)) {
-               secondStateAction()
+                (activityContext as MainActivity).initPermission(){secondStateAction()}
             } else {
                 (activityContext as MainActivity).initPermission(){secondStateAction()}
             }
@@ -215,7 +215,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         dataBinding?.TakeBreak?.setOnClickListener {
 
             if (checkGPS(activityContext!!)) {
-             takeBreakAction()
+                (activityContext as MainActivity).initPermission(){takeBreakAction()}
             } else {
                 (activityContext as MainActivity).initPermission(){takeBreakAction()}
             }
@@ -223,7 +223,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
         dataBinding?.EndDay?.setOnClickListener {
             if (checkGPS(activityContext!!)) {
-        endDayAction()
+                (activityContext as MainActivity).initPermission(){endDayAction()}
             } else {
                 (activityContext as MainActivity).initPermission(){endDayAction()}
             }
@@ -233,7 +233,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
         dataBinding?.initialState?.setOnClickListener {
             if (checkGPS(activityContext!!)) {
-              initialStateAction()
+                (activityContext as MainActivity).initPermission(){initialStateAction()}
             } else {
                 (activityContext as MainActivity).initPermission(){initialStateAction()}
             }
@@ -241,6 +241,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     }
+
+
        fun secondStateAction(){
         MyApplication.check = 0
         buttonSecondState()
@@ -635,6 +637,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                 withContext(Dispatchers.Main) {
                     var state = tinyDB.getInt("state")
                     if (state != 0) {
+                        dataBinding!!.secondState.isClickable=true
                         state = state.minus(1)
                         selectState(state)
                     }
@@ -784,6 +787,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         forgroundCheck()
 
+        dataBinding!!.secondState.isClickable=false
+
     }
 
     fun selectVehicleByLocalDB(position: Int) {
@@ -809,10 +814,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             }
 
         }
+          dataBinding!!.secondState.isClickable=false
 
     }
 
     fun selectState(position: Int) {
+        dataBinding!!.secondState.isClickable=true
         var text = statusArrayList[position]
         dataBinding!!.statusSelected.text = text
     }
@@ -865,7 +872,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                         (MyApplication.loadingContext as LoadingScreen).finish()
                         Toast.makeText(
                             activityContext,
-                            "Check Your Internet Connection",
+                            (activityContext as MainActivity).TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
