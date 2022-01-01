@@ -418,7 +418,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun goToActivState() {
-
+       Log.d("isMYControlComeHere","yes")
         if(overTime==true){
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
         }else{
@@ -428,6 +428,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         dataBinding?.StateActive?.setVisibility(View.VISIBLE)
         dataBinding?.vehicleListBtn?.isClickable = false
         dataBinding?.spacer?.setVisibility(View.GONE)
+        dataBinding!!.statusListBtn.visibility = View.VISIBLE
         tinyDB.putString("selectedState", "goToActiveState")
     }
 
@@ -637,7 +638,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                 withContext(Dispatchers.Main) {
                     var state = tinyDB.getInt("state")
                     if (state != 0) {
-                        dataBinding!!.secondState.isClickable=true
+//                        dataBinding!!.secondState.isClickable=true
                         state = state.minus(1)
                         selectState(state)
                     }
@@ -780,15 +781,15 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             vehicleNameSelected.text = text
             Arrow.visibility = View.GONE
             dots.visibility = View.VISIBLE
-            statusListBtn.visibility = View.VISIBLE
+           statusListBtn.visibility = View.VISIBLE
             initialState?.setVisibility(View.GONE)
             secondState?.setVisibility(View.VISIBLE)
         }
 
         forgroundCheck()
 
-        dataBinding!!.secondState.isClickable=false
-
+//        dataBinding!!.secondState.isClickable=false
+//        getState()
     }
 
     fun selectVehicleByLocalDB(position: Int) {
@@ -814,8 +815,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             }
 
         }
-          dataBinding!!.secondState.isClickable=false
 
+//          dataBinding!!.secondState.isClickable=false
+//           getState()
     }
 
     fun selectState(position: Int) {
@@ -905,7 +907,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun uploadState(position: Int, geoPosition: GeoPosition?) {
-        val sdf = SimpleDateFormat("yyyy-M-dd:hh:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
         val currentDate = sdf.format(Date())
         System.out.println(" C DATE is  " + currentDate)
 
@@ -1015,7 +1017,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
-        val sdf = SimpleDateFormat("yyyy-M-dd:hh:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
         val currentDate = sdf.format(Date())
         tinyDB.putString("ActivityDate",currentDate)
         System.out.println(" C DATE is  " + currentDate)
@@ -1162,10 +1164,18 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         if(timerServiceCheck){
             goToActivState()
-        }
-        if(breakTimerService){
+            dataBinding!!.statusListBtn.visibility  = View.VISIBLE
+        } else if(breakTimerService){
+            dataBinding!!.statusListBtn.visibility  = View.VISIBLE
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
             fadeColor()
+        } else {
+            if(dataBinding!!.secondState.isVisible){
+                if (dataBinding?.secondState?.text != "End Break" && dataBinding?.secondState?.text != "Fin del descanso" && dataBinding?.secondState?.text != "Fim do intervalo"){
+                    dataBinding!!.statusListBtn.visibility = View.GONE
+                }
+            }
+
         }
 
 
@@ -1180,7 +1190,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun startDaySetter(intent: MainActivity) {
-        val sdf = SimpleDateFormat("yyyy-M-dd")
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
         val currentDate = sdf.format(Date())
         var workDate = tinyDB.getString("ActivityDate")
         if(workDate!!.isNotEmpty()){
@@ -1214,6 +1224,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
           buttonTakeBreak()
         }
     }
+
+
 
 
 }

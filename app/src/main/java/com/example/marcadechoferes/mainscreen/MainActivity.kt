@@ -136,6 +136,7 @@ class MainActivity : BaseClass(){
 
     fun initView(){
         MyApplication.backPressCheck =200
+        MyApplication.checkForResume=0
 //        var intent=Intent(this,WatcherService::class.java)
 //        startService(intent)
     }
@@ -710,6 +711,7 @@ class MainActivity : BaseClass(){
 
 
     fun performTask(){
+        MyBroadastReceivers.receivers = receiver
         tinyDB.putInt("lasttimework",WorkTime)
         tinyDB.putInt("lasttimebreak",BreakTime)
         stopService(Intent(this,TimerService::class.java))
@@ -725,7 +727,7 @@ class MainActivity : BaseClass(){
 
 
     override fun onResume() {
-
+       Log.d("check_ON_RESUME","${MyApplication.checkForResume}")
         if(MyApplication.checkForResume==200){
             unregisterReceiver(receiver)
             K.timeDifference(tinyDB,this)

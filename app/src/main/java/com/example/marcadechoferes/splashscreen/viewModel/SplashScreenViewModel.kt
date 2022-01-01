@@ -34,7 +34,7 @@ import kotlin.concurrent.schedule
 class SplashScreenViewModel @Inject constructor(val authRepository: AuthRepository):ViewModel(){
       var activityContext:Context?=null
     lateinit var tinyDB: TinyDB
-    val sdf = SimpleDateFormat("yyyy-M-dd")
+    val sdf = SimpleDateFormat("yyyy-MM-dd")
     val currentDate = sdf.format(Date())
     var check= 0
     var TAG2 = ""
@@ -71,8 +71,13 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         tinyDB.putString("language", Language.toString())
                         tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
                         tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
-                        var state=response.lastVar.lastState!!
-                        tinyDB.putInt("state", state+1)
+
+                        if(response.lastVar.lastActivity != 3){
+                            var state=response.lastVar.lastState!!
+                            tinyDB.putInt("state", state+1)
+                        }else{
+                            tinyDB.putInt("state", 1)
+                        }
 
                         if(response.colors.primary.isNotEmpty()){
                             K.primaryColor=response.colors.primary ?: "#7A59FC"
@@ -200,6 +205,8 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
             workDate = workDate!!.split("T").toTypedArray()[0]
             Log.d("workDate Is","date is $workDate")
         }
+        Log.d("Dates is ","$currentDate")
+
         if(workDate != currentDate){
             check = 3
         }else

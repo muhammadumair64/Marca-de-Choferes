@@ -1,5 +1,6 @@
 package com.example.marcadechoferes.Extra
 
+import android.app.ActivityManager
 import android.widget.Toast
 
 import android.content.Intent
@@ -29,6 +30,7 @@ import kotlinx.coroutines.*
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.log
 
 
 class MyBroadastReceivers : BroadcastReceiver() {
@@ -38,6 +40,7 @@ class MyBroadastReceivers : BroadcastReceiver() {
     var longitude=0.0
 
     companion object{
+        lateinit var receivers:MyBroadastReceivers
         var activiy =0
          var time = 0
         lateinit var authRepository: AuthRepository
@@ -46,27 +49,29 @@ class MyBroadastReceivers : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(arg0: Context?, arg1: Intent?) {
         Log.d("MyTickerReceiver","$test")
-        if(test==1 || test==0){
+        if(test==2 || test==0){
 
            CoroutineScope(Job()).launch(Dispatchers.IO) {
-//               getLocation(arg0!!)
-//         delay(1000)
-//         updateActivity(authRepository,arg0!!)
+               getLocation(arg0!!)
+         delay(1000)
+         updateActivity(authRepository,arg0!!)
 
-             arg0!!.startForegroundService(
-                   UploadRemaingDataService.getStartIntent(
-                       200,
-                       0,
-                       authRepository!!,
-                       arg0
-                   )
-               )
-
+//             arg0!!.startForegroundService(
+//                   UploadRemaingDataService.getStartIntent(
+//                       200,
+//                       0,
+//                       authRepository!!,
+//                       arg0
+//                   )
+//               )
 
 
          time += 120
          Log.d("MyTickerReceiver","Received")
          test = 1
+
+              isAppRunning(arg0,"com.example.marcadechoferes")
+
 
  }
 
@@ -80,113 +85,132 @@ class MyBroadastReceivers : BroadcastReceiver() {
     }
 
 
-//    suspend fun updateActivity(
-//        authRepository: AuthRepository, context: Context
-//    ) {
-//    CoroutineScope(Job()).launch(Dispatchers.IO) {
-//
-//
-//    var vehicle = tinyDB.getObject("VehicleForBackgroundPush", Vehicle::class.java)
-//    var geoPosition = tinyDB.getObject("GeoPosition", GeoPosition::class.java)
-//    val sdf = SimpleDateFormat("yyyy-M-dd:hh:mm:ss")
-//    val currentDate = sdf.format(Date())
-//
-//
-//    try {
-//        val Token = tinyDB.getString("Cookie")
-//        val response = authRepository.updateActivity(
-//            currentDate,
-//            time,
-//            activiy,
-//            geoPosition,
-//            vehicle,
-//            Token!!
-//        )
-//        println("SuccessResponse $response")
-//
-//
-//        if (response != null) {
-//
-//        }
-//
-//    } catch (e: ResponseException) {
-//
-//        println("ErrorResponse")
-//    } catch (e: ApiException) {
-//
-//        e.printStackTrace()
-//    } catch (e: NoInternetException) {
-//
-//        println("position 2")
-//        e.printStackTrace()
-//    } catch (e: SocketTimeoutException) {
-//
-//    }
-//
-//}
-//
-//
-//    }
-//
-//
-//
-//   suspend fun getLocation(context: Context) {
-//        println("location call")
-//        var locationRequest = LocationRequest()
-//        locationRequest.interval = 10000
-//        locationRequest.fastestInterval = 3000
-//        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-//
-//
-//        if (ActivityCompat.checkSelfPermission(
-//                context,
-//                android.Manifest.permission.ACCESS_FINE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-//                context,
-//                android.Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//
-//        }
-//
-//
-//        LocationServices.getFusedLocationProviderClient(context)
-//            .requestLocationUpdates(locationRequest, object : LocationCallback() {
-//                override  fun onLocationResult(p0: LocationResult?) {
-//                    super.onLocationResult(p0)
-//
-//                    LocationServices.getFusedLocationProviderClient(context)
-//                        .removeLocationUpdates(this)
-//                    if (p0 != null && p0.locations.size > 0) {
-//                        longitude = p0.locations[0].longitude
-//                        latitude = p0.locations[0].latitude
-//
-//                        val geocoder = Geocoder(context, Locale.getDefault())
-//                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-//                        var location = addresses[0].featureName.toString()
-//                        println("City Name is $location")
-////                        Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
-//
-//                        println("Current Location $longitude and $latitude")
-//                        var geoPosition = GeoPosition(latitude, longitude)
-//                        tinyDB.putObject("GeoPosition",geoPosition)
-//
-//                    }
-//                }
-//
-//
-//            }, Looper.getMainLooper())
-//
-//        // uploadLocation()
-//        println("Current Location $longitude and $latitude")
-//
-//
-//   }
+    fun isAppRunning(context: Context, packageName: String) {
+        var check = true
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val procInfos = activityManager.runningAppProcesses
+        if (procInfos != null) {
+            for (processInfo in procInfos) {
+                Log.d("pacckageName","${processInfo.processName}")
+                if (processInfo.processName == packageName) {
+                    check = false
+                }
+            }
+        }
+        if(check){
+            context.unregisterReceiver(receivers)
+            Log.d("mylogic is working","==MAtch!!")
+        }
+    }
+
+
+    suspend fun updateActivity(
+        authRepository: AuthRepository, context: Context
+    ) {
+    CoroutineScope(Job()).launch(Dispatchers.IO) {
+
+
+    var vehicle = tinyDB.getObject("VehicleForBackgroundPush", Vehicle::class.java)
+    var geoPosition = tinyDB.getObject("GeoPosition", GeoPosition::class.java)
+    val sdf = SimpleDateFormat("yyyy-M-dd:hh:mm:ss")
+    val currentDate = sdf.format(Date())
+
+
+    try {
+        val Token = tinyDB.getString("Cookie")
+        val response = authRepository.updateActivity(
+            currentDate,
+            time,
+            activiy,
+            geoPosition,
+            vehicle,
+            Token!!
+        )
+        println("SuccessResponse $response")
+
+
+        if (response != null) {
+
+        }
+
+    } catch (e: ResponseException) {
+
+        println("ErrorResponse")
+    } catch (e: ApiException) {
+
+        e.printStackTrace()
+    } catch (e: NoInternetException) {
+
+        println("position 2")
+        e.printStackTrace()
+    } catch (e: SocketTimeoutException) {
+
+    }
+
+}
+
+
+    }
+
+
+
+   suspend fun getLocation(context: Context) {
+        println("location call")
+        var locationRequest = LocationRequest()
+        locationRequest.interval = 10000
+        locationRequest.fastestInterval = 3000
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+        }
+
+
+        LocationServices.getFusedLocationProviderClient(context)
+            .requestLocationUpdates(locationRequest, object : LocationCallback() {
+                override  fun onLocationResult(p0: LocationResult?) {
+                    super.onLocationResult(p0)
+
+                    LocationServices.getFusedLocationProviderClient(context)
+                        .removeLocationUpdates(this)
+                    if (p0 != null && p0.locations.size > 0) {
+                        longitude = p0.locations[0].longitude
+                        latitude = p0.locations[0].latitude
+
+                        val geocoder = Geocoder(context, Locale.getDefault())
+                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+                        var location = addresses[0].featureName.toString()
+                        println("City Name is $location")
+//                        Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
+
+                        println("Current Location $longitude and $latitude")
+                        var geoPosition = GeoPosition(latitude, longitude)
+                        tinyDB.putObject("GeoPosition",geoPosition)
+
+                    }
+                }
+
+
+            }, Looper.getMainLooper())
+
+        // uploadLocation()
+        println("Current Location $longitude and $latitude")
+
+
+   }
 }

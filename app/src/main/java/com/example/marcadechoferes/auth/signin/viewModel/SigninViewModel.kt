@@ -174,7 +174,10 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         tinyDB.putInt("defaultWork",response.work!!.workingHours)
                         tinyDB.putInt("defaultBreak",response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
-                        tinyDB.putInt("state",response.lastVar.lastState!!)
+                        if(response.lastVar.lastActivity != 3){
+                            var state=response.lastVar.lastState!!
+                            tinyDB.putInt("state", state+1)
+                        }
 
 
 
@@ -195,8 +198,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         Timer().schedule(1000) {
 
                             Token = tinyDB.getString("Cookie").toString()
-                                // getLoadingScreenImage()
-                                   getAvatar()
+                                 getLoadingScreenImage()
+//                                   getAvatar()
                         }
 
 

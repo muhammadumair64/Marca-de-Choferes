@@ -225,6 +225,12 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         tinyDB.putInt("lastVehicleid", response.lastVar?.lastIdVehicle?.id ?: 0)
                         tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
                         tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
+
+                        if(response.lastVar!!.lastActivity != 3){
+                            var state=response.lastVar.lastState!!
+                            tinyDB.putInt("state", state+1)
+                        }
+
                         if(response.colors.primary.isNotEmpty()){
                             K.primaryColor=response.colors.primary ?: "#7A59FC"
                             K.secondrayColor = response.colors.secondary ?: "#653FFB"
