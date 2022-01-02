@@ -507,7 +507,7 @@ class MainActivity : BaseClass(){
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             context,
-                            "Check Your Internet Connection",
+                               TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
                     }

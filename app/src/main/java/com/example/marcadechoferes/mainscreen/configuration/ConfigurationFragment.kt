@@ -59,7 +59,7 @@ class ConfigurationFragment : Fragment() {
     fun initViews() {
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-
+        (activity as MainActivity).binding.menu.setItemSelected(R.id.Settings,true)
         mainViewModel.navigationLiveData.observe(viewLifecycleOwner, Observer {
             if (it == "1") {
                 findNavController().navigate(

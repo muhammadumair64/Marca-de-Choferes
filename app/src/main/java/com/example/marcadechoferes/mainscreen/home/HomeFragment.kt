@@ -31,6 +31,7 @@ import com.example.marcadechoferes.mainscreen.home.Adapter.SearchAdapter
 import com.example.marcadechoferes.mainscreen.home.Adapter.StatusAdapter
 import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.Extra.TinyDB
+import com.example.marcadechoferes.myApplication.MyApplication
 
 
 @AndroidEntryPoint
@@ -57,6 +58,7 @@ class HomeFragment : Fragment(),OnclickItem {
         // Inflate the layout for this fragment
 
         val language= Language()
+//        checkLanguage()
         language.setLanguage((activity as MainActivity).baseContext)
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
@@ -251,6 +253,15 @@ class HomeFragment : Fragment(),OnclickItem {
     }
 
 
+
+     fun checkLanguage(){
+         if(MyApplication.checkForLanguageChange==200){
+             MyApplication.checkForLanguageChange = 0
+             mainViewModel.navigationLiveData.postValue("3")
+    }
+
+
+}
 
 
 

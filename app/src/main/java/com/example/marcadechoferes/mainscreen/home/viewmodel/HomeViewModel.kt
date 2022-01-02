@@ -71,6 +71,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     var latitude = 0.0
     var longitude = 0.0
     var overTime =false
+    var TAG2=""
 
     //activity
 
@@ -92,6 +93,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         checkInitial()
         setPreviousWork()
         setDay()
+        tagsForToast()
         (context as MainActivity).initRepo(authRepository)
         MyBroadastReceivers.authRepository = authRepository
         binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
@@ -884,7 +886,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             activityContext,
-                            "Check Your Internet Connection",
+                            TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -900,7 +902,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         if(CheckConnection.netCheck(activityContext!!)){
             getLocationForState(activityContext!!)
         }else{
-            Toast.makeText(activityContext, "Check Your Connection", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
         }
 
 
@@ -1225,6 +1227,22 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
     }
 
+    fun tagsForToast(){
+        var language= tinyDB.getString("language")
+        if (language=="0"){
+            TAG2 = "Comprueba tu conexión a Internet"
+
+        }else if(language=="1"){
+
+
+            TAG2 ="Check Your Internet Connection"
+        }
+        else{
+
+            TAG2="Verifique a sua conexão com a internet"
+        }
+
+    }
 
 
 

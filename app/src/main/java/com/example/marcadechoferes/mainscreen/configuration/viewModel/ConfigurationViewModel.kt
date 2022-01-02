@@ -45,7 +45,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
     lateinit var image0: ImageView
     lateinit var image1: ImageView
     lateinit var image2: ImageView
-
+      var TAG2=""
     fun viewsForConfigurationFragment(
         context: Context,
         binding: FragmentConfigurationBinding,
@@ -55,6 +55,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
         activityContext = context
         dataBinding = binding
         tinyDB = TinyDB(context)
+        tagsForToast()
        val notify=tinyDB.getBoolean("notify")
         dataBinding!!.switchBtn.isChecked=notify
         language0 = contactPopupView.findViewById(R.id.spanish)
@@ -164,7 +165,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -189,17 +190,17 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
                             (MyApplication.loadingContext as LoadingScreen).finish()
                             if (notify == true) {
-                                Toast.makeText(
-                                    activityContext,
-                                    "Push Notification ON",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+//                                Toast.makeText(
+//                                    activityContext,
+//                                    "Push Notification ON",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
                             } else {
-                                Toast.makeText(
-                                    activityContext,
-                                    "Push Notification OFF",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+//                                Toast.makeText(
+//                                    activityContext,
+//                                    "Push Notification OFF",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
                             }
                         }
 
@@ -269,5 +270,23 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
         }
 
     }
+    fun tagsForToast(){
+        var language= tinyDB.getString("language")
+        if (language=="0"){
+
+            TAG2 = "Comprueba tu conexión a Internet"
+
+        }else if(language=="1"){
+
+
+            TAG2 ="Check Your Internet Connection"
+        }
+        else{
+
+            TAG2="Verifique a sua conexão com a internet"
+        }
+
+    }
+
 
 }
