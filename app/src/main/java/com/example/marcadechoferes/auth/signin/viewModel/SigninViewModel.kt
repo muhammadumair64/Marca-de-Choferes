@@ -195,13 +195,9 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         tinyDB.putString("language", Language.toString())
                         tinyDB.putBoolean("notify",notify)
                         checkStateByServer(response)
-                        Timer().schedule(1000) {
-
-                            Token = tinyDB.getString("Cookie").toString()
-                                 getLoadingScreenImage()
-//                                   getAvatar()
-                        }
-
+                        Token = tinyDB.getString("Cookie").toString()
+                        Log.d("LoadingImage","Before")
+                        getLoadingScreenImage()
 
                     }
                 } catch (e: ResponseException) {
@@ -274,31 +270,31 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
     }
 
 
-    fun getLoadingScreenImage(){
-
-        viewModelScope.launch {
-
-            withContext(Dispatchers.IO) {
+    suspend fun getLoadingScreenImage(){
+        Log.d("LoadingImage","IN API")
 
                 try {
-
                     val response = authRepository.getLoadingScreen(Token)
+                    if(response!=null) {
+                        Log.d("LoadingImage","We got the string ${response.loadingScreen}")
+                        tinyDB.putString("loadingBG",response.loadingScreen ?: "")
+                    }else{
+                        Log.d("LoadingImage","The response is null")
+                    }
 
                     println("SuccessResponse $response")
+                    getAvatar()
 
-                          getAvatar()
-
-                    if(response!=null) {
-                        tinyDB.putString("loadingBG",response.loadingScreen ?: "")
-                    }
 
                 }
                 catch (e: ApiException) {
                     e.printStackTrace()
+                    Log.d("LoadingImage","API EXCEPTION ${e.localizedMessage}")
                 }
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+                    Log.d("LoadingImage","No Internet EXCEPTION ${e.localizedMessage}")
 
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
@@ -306,11 +302,11 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                 }
                 catch (e: ResponseException) {
                     println("ErrorResponse")
-
+                    Log.d("LoadingImage","Response Exception ${e.localizedMessage}")
 
                 }
-            }
-        }
+
+
 
 
     }
