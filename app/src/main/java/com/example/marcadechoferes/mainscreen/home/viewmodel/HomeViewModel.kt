@@ -1201,11 +1201,16 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             Log.d("workDatecurrent","current Date $currentDate")
         }
 
-        if(workDate!= currentDate){
+//        if(workDate!= currentDate){
+//           tinyDB.putInt("lasttimebreak",0)
+//           tinyDB.putInt("lasttimework",0)
+//           intent.time=0.0
+//       }
+
            tinyDB.putInt("lasttimebreak",0)
            tinyDB.putInt("lasttimework",0)
            intent.time=0.0
-       }
+
     }
 
     private fun checkByServer() {

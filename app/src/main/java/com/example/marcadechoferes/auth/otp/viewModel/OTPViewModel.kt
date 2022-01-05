@@ -39,6 +39,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.Reader
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,7 +50,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
     fun viewsForOTPScreen(context: Context, binding: ActivityOtpBinding) {
         activityContext = context
         tinyDB = TinyDB(context)
-
+        putSomeData()
         binding.edt1.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -140,7 +142,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                 var otp =
                     "${binding.edt1.text}${binding.edt2.text}${binding.edt3.text}${binding.edt4.text}".trim()
                 println("otp is ${otp.toInt()}")
-                var user = tinyDB.getString("User")
+                var user = tinyDB.getString("UserOTP")
                 otpAuth(user!!, otp.toInt())
                 var intent = Intent(activityContext, LoadingScreen::class.java)
                 ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
@@ -176,7 +178,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "15"
+        var appVersion: String? = "17"
         var appBuild: String? = Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -195,6 +197,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
             withContext(Dispatchers.IO) {
                 try {
                     var Token = tinyDB.getString("Cookie").toString()
+                    Log.d("UserName","$name")
                     val response =
                         authRepository.otp(
                             otp, name, idApp!!,
@@ -216,6 +219,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                     println("SuccessResponse OTP $response")
 
                     if (response != null ) {
+                        tinyDB.putString("User",name)
                         authRepository.InsertSigninData(response)
                         Log.d("workinghour","${response.lastVar?.lastWorkedHoursTotal}")
                         tinyDB.putInt("lasttimework", response.lastVar?.lastWorkedHoursTotal ?: 0)
@@ -444,6 +448,12 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
 
 
 
+    }
+
+    fun putSomeData(){
+        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
+        val currentDate = sdf.format(Date())
+        tinyDB.putString("OTPtime","$currentDate")
     }
 
 }

@@ -88,6 +88,9 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     println("SuccessResponse $response")
 
                     if (response != null) {
+                        (activityContext as MainActivity).stopTimer()
+                        (activityContext as MainActivity).stopTimerBreak()
+
                         authRepository.clearData()
                         tinyDB.clear()
                         var intent = Intent(activityContext, SignInActivity::class.java)

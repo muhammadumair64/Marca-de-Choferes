@@ -72,7 +72,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
 
                     if(response!=null) {
-                        tinyDB.putString("User",name)
+                        tinyDB.putString("UserOTP",name)
                         var intent= Intent(activityContext, OTP_Activity::class.java)
                         startActivity(activityContext!!,intent, Bundle.EMPTY)
                     }

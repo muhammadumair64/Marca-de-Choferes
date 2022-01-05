@@ -98,14 +98,16 @@ class MyModule {
             val sslContext = SSLContext.getInstance("SSL")
             sslContext.init(null, arrayOf<TrustManager>(trustManager), null)
 
-//                 .addInterceptor(networkConnectionInterceptor)
+
+//                .addInterceptor(okHttpLoggingInterceptor)
+
 
             val sslSocketFactory = sslContext.socketFactory
             OkHttpClient.Builder()
-                .addInterceptor(okHttpLoggingInterceptor)
+                .addInterceptor(networkConnectionInterceptor)
                 .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(40, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(50, TimeUnit.SECONDS)
+                .writeTimeout(1, TimeUnit.MINUTES)
                 .sslSocketFactory(sslSocketFactory,trustManager)
                 .hostnameVerifier(HostnameVerifier { hostname, session -> true })
                 .build()

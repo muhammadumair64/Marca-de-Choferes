@@ -691,12 +691,12 @@ class MainActivity : BaseClass(){
             var timerService = isMyServiceRunning(TimerService::class.java)
             var breakService = isMyServiceRunning(BreakTimerService::class.java)
             if(timerService){
-                registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+              this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
                 tinyDB.putString("checkTimer","workTime")
                 MyBroadastReceivers.time = WorkTime
                 performTask()
             }else if(breakService){
-                registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+               this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
                 tinyDB.putString("checkTimer","breakTime")
                 MyBroadastReceivers.time = BreakTime
                 MyBroadastReceivers.activiy=1

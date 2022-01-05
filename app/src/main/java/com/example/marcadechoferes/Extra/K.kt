@@ -7,6 +7,7 @@ import com.example.marcadechoferes.myApplication.MyApplication
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.schedule
+import kotlin.math.min
 
 class K {
     companion object {

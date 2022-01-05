@@ -18,6 +18,7 @@ import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.R
+import com.example.marcadechoferes.auth.otp.OTP_Activity
 import com.example.marcadechoferes.auth.signin.SignInActivity
 import com.example.marcadechoferes.databinding.ActivitySplashScreenBinding
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
@@ -26,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -65,6 +67,7 @@ class SplashScreen : BaseClass() {
             startActivity(intent)
         }else{
 
+            otpTimeCheck()
 
         }
         var context = this
@@ -163,7 +166,35 @@ class SplashScreen : BaseClass() {
          binding.background.setImageBitmap(image)
     }
 
+    fun otpTimeCheck()
+    {
+        var time =tinyDB.getString("OTPtime")
+        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
+        val currentDate = sdf.format(Date())
+        var date = currentDate.split(":").toTypedArray()[0]
+        var otpDate = time!!.split(":").toTypedArray()[0]
+        if(date.equals(otpDate)){
+            var hour = currentDate.split(":").toTypedArray()[1]
+            var otphour = time.split(":").toTypedArray()[1]
+            if(hour.equals(otphour)){
+                var mints = currentDate.split(":").toTypedArray()[2]
+                var otpMints= time.split(":").toTypedArray()[2]
+                var check= mints.toInt()
+                var checkOtp = otpMints.toInt()
+                println("..... $check .......$checkOtp")
+                var temp = check-checkOtp
+                if(temp<=3){
+                    var intent = Intent(this, OTP_Activity::class.java)
+                    startActivity(intent)
+                }
 
+
+
+            }
+
+        }
+
+    }
 
 
 

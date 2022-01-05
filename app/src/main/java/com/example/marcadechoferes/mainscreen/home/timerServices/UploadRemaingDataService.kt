@@ -105,7 +105,7 @@ class UploadRemaingDataService : Service() {
 
                 var vehicle = tinyDB.getObject("VehicleForBackgroundPush",Vehicle::class.java)
                 var geoPosition= tinyDB.getObject("GeoPosition",GeoPosition::class.java)
-                val sdf = SimpleDateFormat("yyyy-M-dd:hh:mm:ss")
+                val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
                 val currentDate = sdf.format(Date())
 
 
