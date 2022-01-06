@@ -10,13 +10,19 @@ import com.example.marcadechoferes.R
 import androidx.activity.viewModels
 import com.example.marcadechoferes.Extra.Language
 import com.example.marcadechoferes.Extra.TinyDB
+import com.example.marcadechoferes.auth.otp.interfaces.onEndLoadingCallbacks
 import com.example.marcadechoferes.mainscreen.MainActivity
 import com.example.marcadechoferes.myApplication.MyApplication
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoadingScreen : AppCompatActivity(){
+class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
     val loadingViewModel: loadingViewModel by viewModels()
+    companion object
+    {
+         var onEndLoadingCallbacks : onEndLoadingCallbacks? = null
+    }
+
     lateinit var tinyDB: TinyDB
     var imageFromServer=""
     lateinit var  imageBackground:ImageView
@@ -25,6 +31,7 @@ class LoadingScreen : AppCompatActivity(){
         val language= Language()
         language.setLanguage(baseContext)
         setContentView(R.layout.activity_loading_screen)
+        onEndLoadingCallbacks  = this
         tinyDB= TinyDB(this)
         initView()
          imageFromServer= tinyDB.getString("loadingBG").toString()
@@ -74,7 +81,9 @@ class LoadingScreen : AppCompatActivity(){
         imageBackground.setImageBitmap(image)
     }
 
-
+    override fun endLoading() {
+        finish()
+    }
 
 
 }

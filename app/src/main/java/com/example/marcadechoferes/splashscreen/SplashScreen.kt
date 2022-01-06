@@ -173,32 +173,35 @@ class SplashScreen : BaseClass() {
     fun otpTimeCheck()
     {
         var time =tinyDB.getString("OTPtime")
-        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
-        val currentDate = sdf.format(Date())
-        var date = currentDate.split(":").toTypedArray()[0]
-        var otpDate = time!!.split(":").toTypedArray()[0]
-        if(date.equals(otpDate)){
-            var hour = currentDate.split(":").toTypedArray()[1]
-            var otphour = time.split(":").toTypedArray()[1]
-            if(hour.equals(otphour)){
-                var mints = currentDate.split(":").toTypedArray()[2]
-                var otpMints= time.split(":").toTypedArray()[2]
-                var check= mints.toInt()
-                var checkOtp = otpMints.toInt()
-                println("..... $check .......$checkOtp")
-                var temp = check-checkOtp
-                if(temp<=3){
-                    var intent = Intent(this, OTP_Activity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    this.finish()
+        if(time != null){
+            val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
+            val currentDate = sdf.format(Date())
+            var date = currentDate.split(":").toTypedArray()[0]
+            var otpDate = time!!.split(":").toTypedArray()[0]
+            if(date.equals(otpDate)){
+                var hour = currentDate.split(":").toTypedArray()[1]
+                var otphour = time.split(":").toTypedArray()[1]
+                if(hour.equals(otphour)){
+                    var mints = currentDate.split(":").toTypedArray()[2]
+                    var otpMints= time.split(":").toTypedArray()[2]
+                    var check= mints.toInt()
+                    var checkOtp = otpMints.toInt()
+                    println("..... $check .......$checkOtp")
+                    var temp = check-checkOtp
+                    if(temp<=2){
+                        var intent = Intent(this, OTP_Activity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intent.putExtra(K.splashToOtp,true)
+                        startActivity(intent)
+                        this.finish()
+                    }
+
                 }
 
-
-
             }
-
         }
+
+
 
     }
 

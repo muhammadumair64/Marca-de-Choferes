@@ -692,18 +692,32 @@ class MainActivity : BaseClass(){
             var timerService = isMyServiceRunning(TimerService::class.java)
             var breakService = isMyServiceRunning(BreakTimerService::class.java)
             if(timerService){
-                MyApplication.checkForResume = 200
-              this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
-                tinyDB.putString("checkTimer","workTime")
-                MyBroadastReceivers.time = WorkTime
-                performTask()
+                try {
+
+                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+                    MyApplication.checkForResume = 200
+                    tinyDB.putString("checkTimer","workTime")
+                    MyBroadastReceivers.time = WorkTime
+                    performTask()
+                }catch (e  : Exception){
+                    MyApplication.checkForResume = 100
+                    Log.d("MyBroadCast","Error ${e.localizedMessage}")
+                }
+
+
             }else if(breakService){
-                MyApplication.checkForResume = 200
-               this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
-                tinyDB.putString("checkTimer","breakTime")
-                MyBroadastReceivers.time = BreakTime
-                MyBroadastReceivers.activiy=1
-                performTask()
+                try{
+                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+                    MyApplication.checkForResume = 200
+                    tinyDB.putString("checkTimer","breakTime")
+                    MyBroadastReceivers.time = BreakTime
+                    MyBroadastReceivers.activiy=1
+                    performTask()
+                }catch (e: Exception){
+                    MyApplication.checkForResume = 100
+                    Log.d("MyBroadCast","Error ${e.localizedMessage}")
+                }
+
             }
 
 
@@ -734,9 +748,16 @@ class MainActivity : BaseClass(){
        Log.d("check_ON_RESUME","${MyApplication.checkForResume}")
         if(MyApplication.checkForResume==200){
 
-            unregisterReceiver(receiver)
-            K.timeDifference(tinyDB,this)
-            MyApplication.checkForResume = 0
+            try {
+                unregisterReceiver(receiver)
+                K.timeDifference(tinyDB,this)
+                MyApplication.checkForResume = 0
+            }catch (e : Exception){
+                MyApplication.checkForResume = 0
+                Log.d("MyBroadCast","Error ${e.localizedMessage}")
+            }
+
+
         }
         super.onResume()
     }

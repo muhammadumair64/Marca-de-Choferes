@@ -31,6 +31,7 @@ import com.example.marcadechoferes.network.ApiException
 import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.network.signinResponse.SigninResponse
+import com.example.marcadechoferes.splashscreen.SplashScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,6 +48,7 @@ import javax.inject.Inject
 class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
+     var fromSplash :Boolean? = null;
     fun viewsForOTPScreen(context: Context, binding: ActivityOtpBinding) {
         activityContext = context
         tinyDB = TinyDB(context)
@@ -152,7 +154,12 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
 
         //Back button
         binding.backButton.setOnClickListener {
-            (context as Activity).finish()
+            if(fromSplash != null){
+                fromSplashToOtp()
+            }else{
+                (context as Activity).finish()
+            }
+
         }
 
     }
@@ -253,9 +260,15 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                     tinyDB.putString("User", "")
                     val response = convertErrorBody(e.response)
                     withContext(Dispatchers.Main){
-                        (activityContext as OTP_Activity).finish()
-                        var intent = Intent(activityContext, OTP_Activity::class.java)
-                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+//                        (activityContext as OTP_Activity).finish()
+//                        var intent = Intent(activityContext, OTP_Activity::class.java)
+//                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                        Toast.makeText(
+                            activityContext,
+                            "OTP no válida",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     println("ErrorResponse $response")
                 } catch (e: ApiException) {
@@ -266,7 +279,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             activityContext,
-                            "Check Your Internet Connection",
+                            "verifica tu conexión de red",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -274,6 +287,22 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
 
             }
         }
+    }
+
+
+
+    fun fromSplashToOtp(){
+        if(fromSplash!!){
+             // time reset
+            tinyDB.clear();
+            val intent  =  Intent(activityContext,SplashScreen::class.java)
+            (activityContext as OTP_Activity).startActivity(intent)
+            (activityContext as OTP_Activity).finish()
+
+        }else{
+            (activityContext as Activity).finish()
+        }
+
     }
 
     fun convertErrorBody(responseString: Reader?): SigninResponse {

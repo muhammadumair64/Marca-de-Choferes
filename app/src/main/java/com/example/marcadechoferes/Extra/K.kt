@@ -14,6 +14,8 @@ class K {
         var primaryColor = "#7A59FC"
         var secondrayColor = "#653FFB"
 
+        const val splashToOtp = "splashToOtp"
+
         fun timeDifference(tinyDB: TinyDB, context: Context) {
 
             var lastTimetoGo = tinyDB.getString("goBackTime")
