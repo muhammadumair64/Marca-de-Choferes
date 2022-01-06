@@ -70,9 +70,7 @@ import android.app.job.JobInfo
 import android.content.ComponentName
 
 import android.app.job.JobScheduler
-
-
-
+import java.lang.Exception
 
 
 @AndroidEntryPoint
@@ -576,7 +574,7 @@ class MainActivity : BaseClass(){
         val mHomeWatcher = HomeWatcher(this)
         mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
             override fun onHomePressed() {
-                MyApplication.checkForResume=200
+//                MyApplication.checkForResume=200
                 performSomeActionOnBackPress()
                 // do something here...
 //                Toast.makeText(this@MainActivity, "Home is pressed", Toast.LENGTH_SHORT).show()
@@ -584,7 +582,7 @@ class MainActivity : BaseClass(){
             }
 
             override fun onHomeLongPressed() {
-                MyApplication.checkForResume=200
+                //MyApplication.checkForResume=200
                 performSomeActionOnBackPress()
 
 //                finish()
@@ -594,7 +592,7 @@ class MainActivity : BaseClass(){
     }
 
     override fun onBackPressed() {
-        MyApplication.checkForResume=200
+       // MyApplication.checkForResume=200
         performSomeActionOnBackPress()
 
 
@@ -640,24 +638,30 @@ class MainActivity : BaseClass(){
                 override fun onLocationResult(p0: LocationResult?) {
                     super.onLocationResult(p0)
 
-                    LocationServices.getFusedLocationProviderClient(context)
-                        .removeLocationUpdates(this)
-                    if (p0 != null && p0.locations.size > 0) {
-                        longitude = p0.locations[0].longitude
-                        latitude = p0.locations[0].latitude
+                    try{
+                        LocationServices.getFusedLocationProviderClient(context)
+                            .removeLocationUpdates(this)
+                        if (p0 != null && p0.locations.size > 0) {
+                            longitude = p0.locations[0].longitude
+                            latitude = p0.locations[0].latitude
 
-                        val geocoder = Geocoder(context, Locale.getDefault())
-                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-                        var location = addresses[0].featureName.toString()
-                        println("City Name is $location")
+                            val geocoder = Geocoder(context, Locale.getDefault())
+                            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+                            var location = addresses[0].featureName.toString()
+                            println("City Name is $location")
 //                        Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
 
-                        println("Current Location $longitude and $latitude")
-                        var geoPosition = GeoPosition(latitude, longitude)
-                        tinyDB.putObject("GeoPosition",geoPosition)
+                            println("Current Location $longitude and $latitude")
+                            var geoPosition = GeoPosition(latitude, longitude)
+                            tinyDB.putObject("GeoPosition",geoPosition)
 
 
+                        }
+                    }catch (e : Exception){
+                        Log.d("GRCP",e.localizedMessage)
                     }
+
+
                 }
 
 
@@ -685,23 +689,23 @@ class MainActivity : BaseClass(){
 
         if( MyApplication.backPressCheck==200){
 
-
-
-
             var timerService = isMyServiceRunning(TimerService::class.java)
             var breakService = isMyServiceRunning(BreakTimerService::class.java)
             if(timerService){
+                MyApplication.checkForResume = 200
               this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
                 tinyDB.putString("checkTimer","workTime")
                 MyBroadastReceivers.time = WorkTime
                 performTask()
             }else if(breakService){
+                MyApplication.checkForResume = 200
                this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
                 tinyDB.putString("checkTimer","breakTime")
                 MyBroadastReceivers.time = BreakTime
                 MyBroadastReceivers.activiy=1
                 performTask()
             }
+
 
 
         }
@@ -729,6 +733,7 @@ class MainActivity : BaseClass(){
     override fun onResume() {
        Log.d("check_ON_RESUME","${MyApplication.checkForResume}")
         if(MyApplication.checkForResume==200){
+
             unregisterReceiver(receiver)
             K.timeDifference(tinyDB,this)
             MyApplication.checkForResume = 0

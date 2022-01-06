@@ -60,16 +60,20 @@ class SplashScreen : BaseClass() {
 //        }
 
         println("Current User is : $checker")
-        if (checker?.length!! >= 3) {
-            spleshCheck=false
-            var intent = Intent(this, LoadingScreen::class.java)
-            viewModel.syncdata()
-            startActivity(intent)
-        }else{
-
-            otpTimeCheck()
-
+        if(checker != null){
+            if (checker.isNotEmpty()) {
+                spleshCheck=false
+                var intent = Intent(this, LoadingScreen::class.java)
+                viewModel.syncdata()
+                startActivity(intent)
+            }else{
+                otpTimeCheck()
+            }
         }
+        else{
+            otpTimeCheck()
+        }
+
         var context = this
         Timer().schedule(200) {
             lifecycleScope.launch {

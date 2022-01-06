@@ -1,7 +1,6 @@
 package com.example.marcadechoferes.Extra
 
 import android.app.ActivityManager
-import android.widget.Toast
 
 import android.content.Intent
 
@@ -30,7 +29,6 @@ import kotlinx.coroutines.*
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.log
 
 
 class MyBroadastReceivers : BroadcastReceiver() {
@@ -49,7 +47,7 @@ class MyBroadastReceivers : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(arg0: Context?, arg1: Intent?) {
         Log.d("MyTickerReceiver", "$test")
-        if (test == 1 || test == 0) {
+        if ( test > 0) {
 
             time += 60
             Log.d("MyTickerReceiver", "Received")
@@ -87,22 +85,24 @@ class MyBroadastReceivers : BroadcastReceiver() {
 
 
     fun isAppRunning(context: Context, packageName: String) {
-        var check = true
+        var shouldUnregisterReciever = true
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val procInfos = activityManager.runningAppProcesses
+
         if (procInfos != null) {
             for (processInfo in procInfos) {
-                Log.d("pacckageName", "${processInfo.processName}")
+                Log.d("pacckageName", processInfo.processName + "My name is $packageName" )
                 if (processInfo.processName == packageName) {
-                    check = false
+                    shouldUnregisterReciever = false
+                    break;
                 }
             }
         }
-        if (check) {
+
+
+        if (shouldUnregisterReciever) {
             context.unregisterReceiver(receivers)
             Log.d("mylogic is working", "==MAtch!!")
-        }else{
-
         }
 
     }

@@ -27,7 +27,7 @@ class LoadingScreen : AppCompatActivity(){
         setContentView(R.layout.activity_loading_screen)
         tinyDB= TinyDB(this)
         initView()
-       imageFromServer= tinyDB.getString("loadingBG").toString()
+         imageFromServer= tinyDB.getString("loadingBG").toString()
         if(imageFromServer.isNotEmpty()){
             Base64ToBitmap(imageFromServer)
         }
