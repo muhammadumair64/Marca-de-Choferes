@@ -23,6 +23,8 @@ import com.example.marcadechoferes.network.ResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @HiltViewModel
@@ -72,6 +74,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
 
                     if(response!=null) {
+                        putSomeDataForOTPCheck()
                         tinyDB.putString("UserOTP",name)
                         var intent= Intent(activityContext, OTP_Activity::class.java)
                         startActivity(activityContext!!,intent, Bundle.EMPTY)
@@ -103,6 +106,10 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
     fun String.isValidEmail(): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
-
+    fun putSomeDataForOTPCheck(){
+        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
+        val currentDate = sdf.format(Date())
+        tinyDB.putString("OTPtime","$currentDate")
+    }
 
 }

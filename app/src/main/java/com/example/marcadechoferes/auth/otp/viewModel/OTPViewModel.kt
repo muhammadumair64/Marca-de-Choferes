@@ -50,7 +50,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
     fun viewsForOTPScreen(context: Context, binding: ActivityOtpBinding) {
         activityContext = context
         tinyDB = TinyDB(context)
-        putSomeData()
+
         binding.edt1.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -450,10 +450,6 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
 
     }
 
-    fun putSomeData(){
-        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
-        val currentDate = sdf.format(Date())
-        tinyDB.putString("OTPtime","$currentDate")
-    }
+
 
 }
