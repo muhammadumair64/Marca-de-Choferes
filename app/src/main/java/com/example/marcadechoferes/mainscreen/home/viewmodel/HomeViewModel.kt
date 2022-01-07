@@ -1020,7 +1020,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         if(CheckConnection.netCheck(activityContext!!)){
             getLocation(activityContext!!)
         }else{
-            Toast.makeText(activityContext, "Check Your Connection", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
         }
 
 
