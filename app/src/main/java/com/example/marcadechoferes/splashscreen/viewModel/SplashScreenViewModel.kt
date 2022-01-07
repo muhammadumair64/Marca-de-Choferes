@@ -12,6 +12,7 @@ import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.TinyDB
 import com.example.marcadechoferes.Extra.UpdateActivityDataClass
 import com.example.marcadechoferes.auth.repository.AuthRepository
+import com.example.marcadechoferes.loadingScreen.LoadingScreen
 import com.example.marcadechoferes.mainscreen.MainActivity
 import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
@@ -24,6 +25,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -112,6 +114,10 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    Timer().schedule(5000) {
+                        Log.d("connection Exception","connection lost")
+                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    }
                 }
                 catch (e: SocketTimeoutException){
 
@@ -122,6 +128,21 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                }
+                catch(e: SocketException){
+                    Log.d("connection Exception","Connect Not Available")
+                    Timer().schedule(5000) {
+                        Log.d("connection Exception","connection lost")
+                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    }
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            activityContext,
+                            TAG2,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
                 }
             }
         }
@@ -159,15 +180,13 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-
                     withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
-                catch (e: ResponseException) {
-                    println("ErrorResponse")
-
-
+                catch(e: SocketException){
+                    Log.d("connection Exception","Connect Not Available")
+                        LoadingScreen.onEndLoadingCallbacks!!.endLoading()
                 }
             }
         }

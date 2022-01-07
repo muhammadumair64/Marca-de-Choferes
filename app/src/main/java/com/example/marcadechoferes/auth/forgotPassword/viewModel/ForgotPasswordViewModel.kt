@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
@@ -23,6 +24,7 @@ import com.example.marcadechoferes.network.ResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.SocketException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -85,7 +87,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     println("ErrorResponse")
                     var intent= Intent(activityContext, ForgotPasswordActivity::class.java)
                     startActivity(activityContext!!,intent, Bundle.EMPTY)
-                    Toast.makeText(activityContext, "Failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activityContext, "Fallida", Toast.LENGTH_SHORT).show()
                 }
                 catch (e: ApiException) {
                     e.printStackTrace()
@@ -94,10 +96,17 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
+
                 }
-            }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
+                }            }
         }
 
 

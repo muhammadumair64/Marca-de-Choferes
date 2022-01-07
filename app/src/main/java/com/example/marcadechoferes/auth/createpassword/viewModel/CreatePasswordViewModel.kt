@@ -28,8 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import androidx.core.content.ContextCompat.startActivity
-
-
+import java.net.SocketException
 
 
 @HiltViewModel
@@ -159,9 +158,16 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             activityContext,
-                            "Check Your Internet Connection",
+                            "Comprueba tu conexión a Internet",
                             Toast.LENGTH_SHORT
                         ).show()
+                    }
+                }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

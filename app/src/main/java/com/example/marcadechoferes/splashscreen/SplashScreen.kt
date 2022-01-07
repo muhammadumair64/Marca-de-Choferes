@@ -22,6 +22,7 @@ import com.example.marcadechoferes.auth.otp.OTP_Activity
 import com.example.marcadechoferes.auth.signin.SignInActivity
 import com.example.marcadechoferes.databinding.ActivitySplashScreenBinding
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
+import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.splashscreen.viewModel.SplashScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -64,8 +65,9 @@ class SplashScreen : BaseClass() {
             if (checker.isNotEmpty()) {
                 spleshCheck=false
                 var intent = Intent(this, LoadingScreen::class.java)
-                viewModel.syncdata()
                 startActivity(intent)
+                 viewModel.syncdata()
+
             }else{
                 otpTimeCheck()
             }
@@ -96,8 +98,7 @@ class SplashScreen : BaseClass() {
                 viewModel.getSplashScreen()
             }
         else{
-                Toast.makeText(this, "Check Your Connection", Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(this, "Verifique su conexión", Toast.LENGTH_SHORT).show()
             }
         }
         var checker = tinyDB.getString("User")
@@ -106,10 +107,12 @@ class SplashScreen : BaseClass() {
 
             if (checker?.length!! >= 3) {
                 if(netCheck()){
+                    var intent = Intent(this, LoadingScreen::class.java)
+                    startActivity(intent)
                     viewModel.syncdata()
                 }
                 else{
-                    Toast.makeText(this, "Check Your Connection", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Verifique su conexión", Toast.LENGTH_SHORT).show()
                 }
 
             } else {

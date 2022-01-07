@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.Reader
+import java.net.SocketException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -284,6 +285,13 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         ).show()
                     }
                 }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
             }
         }
@@ -374,13 +382,19 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                     e.printStackTrace()
 
                     withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
                 catch (e: ResponseException) {
                     println("ErrorResponse")
 
-
+                }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -427,9 +441,16 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             activityContext,
-                            "Check Your Internet Connection",
+                            "Comprueba tu conexión a Internet",
                             Toast.LENGTH_SHORT
                         ).show()
+                    }
+                }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

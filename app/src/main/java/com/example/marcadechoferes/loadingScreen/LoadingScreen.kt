@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
 import android.widget.ImageView
 import com.example.marcadechoferes.R
 import androidx.activity.viewModels
@@ -28,10 +29,11 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
     lateinit var  imageBackground:ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onEndLoadingCallbacks  = this
         val language= Language()
         language.setLanguage(baseContext)
         setContentView(R.layout.activity_loading_screen)
-        onEndLoadingCallbacks  = this
+
         tinyDB= TinyDB(this)
         initView()
          imageFromServer= tinyDB.getString("loadingBG").toString()
@@ -82,6 +84,7 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
     }
 
     override fun endLoading() {
+        Log.d("LoadingScreenFinish","Finish")
         finish()
     }
 

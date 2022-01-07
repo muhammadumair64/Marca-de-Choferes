@@ -25,11 +25,13 @@ import javax.inject.Inject
 import android.graphics.Bitmap
 
 import android.app.AlertDialog
+import android.util.Log
 import android.widget.Toast
 import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
 import com.example.marcadechoferes.network.NoInternetException
 import java.io.ByteArrayOutputStream
+import java.net.SocketException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -40,10 +42,12 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
     lateinit var tinyDB: TinyDB
     lateinit var imageInBitmap:Bitmap
     lateinit var dataBinding: FragmentProfileBinding
+    var TAG2 =""
     fun viewsForFragment(context: Context, binding: FragmentProfileBinding) {
         activityContext = context
         dataBinding = binding
         tinyDB = TinyDB(context)
+        tagsForToast()
         val sdf = SimpleDateFormat("dd MMM")
         val currentDate = sdf.format(Date())
         System.out.println(" C DATE is  "+currentDate)
@@ -181,7 +185,14 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -227,7 +238,14 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
-                        Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -275,6 +293,21 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
         val dayOfTheWeek = sdf.format(d)
         dataBinding?.day?.text="$dayOfTheWeek"
     }
+    fun tagsForToast(){
+        var language= tinyDB.getString("language")
+        if (language=="0"){
+            TAG2 = "Comprueba tu conexión a Internet"
 
+        }else if(language=="1"){
+
+
+            TAG2 ="Check Your Internet Connection"
+        }
+        else{
+
+            TAG2="Verifique a sua conexão com a internet"
+        }
+
+    }
 
 }

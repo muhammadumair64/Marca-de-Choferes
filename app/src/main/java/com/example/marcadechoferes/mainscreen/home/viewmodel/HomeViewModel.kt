@@ -50,6 +50,7 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import kotlin.concurrent.schedule
@@ -890,7 +891,15 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }            }
+                }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
 

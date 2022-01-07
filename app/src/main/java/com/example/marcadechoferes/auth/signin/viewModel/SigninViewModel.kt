@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.Reader
+import java.net.SocketException
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
@@ -223,6 +224,17 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            activityContext,
+                            "Comprueba tu conexión a Internet" ,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
         }
     }
@@ -305,6 +317,13 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                     Log.d("LoadingImage","Response Exception ${e.localizedMessage}")
 
                 }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
 
 
@@ -352,9 +371,15 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                      }
                 catch (e: ResponseException) {
                     println("ErrorResponse")
-
-
                 }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
             }
         }
 

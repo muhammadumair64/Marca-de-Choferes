@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
@@ -25,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.SocketException
 import javax.inject.Inject
 
 
@@ -162,8 +164,16 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     e.printStackTrace()
                 }
                 catch (e: NoInternetException) {
+
                     println("position 2")
                     e.printStackTrace()
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
@@ -217,6 +227,13 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+                }
+                catch(e: SocketException){
+                    LoadingScreen.onEndLoadingCallbacks!!.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -287,6 +304,8 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
         }
 
     }
+
+
 
 
 }

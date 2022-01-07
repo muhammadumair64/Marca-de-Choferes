@@ -71,6 +71,7 @@ import android.content.ComponentName
 
 import android.app.job.JobScheduler
 import java.lang.Exception
+import java.net.SocketException
 
 
 @AndroidEntryPoint
@@ -501,7 +502,6 @@ class MainActivity : BaseClass(){
                     }
                 }
                 catch (e: SocketTimeoutException){
-
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             context,
@@ -509,6 +509,16 @@ class MainActivity : BaseClass(){
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                }
+                catch(e: SocketException){
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            context,
+                            TAG2,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    Log.d("connection Exception","Connect Not Available")
                 }
             }
         }
