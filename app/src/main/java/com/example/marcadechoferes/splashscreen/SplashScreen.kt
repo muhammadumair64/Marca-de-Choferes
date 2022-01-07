@@ -201,8 +201,6 @@ class SplashScreen : BaseClass() {
             }
         }
 
-
-
     }
 
 
