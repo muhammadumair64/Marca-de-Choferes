@@ -208,12 +208,12 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
         if(workDate != currentDate){
             tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-        }else if(workDate == currentDate && response.lastVar!!.lastActivity !=0)
+        }else if(workDate == currentDate && response.lastVar!!.lastActivity != 0)
         {
             tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
         }
 
-
+//
 //        tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
 
