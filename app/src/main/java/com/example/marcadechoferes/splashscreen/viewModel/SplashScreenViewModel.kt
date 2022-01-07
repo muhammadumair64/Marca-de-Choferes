@@ -128,6 +128,8 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                }catch (e: Exception){
+                    println("ErrorResponse ${e.localizedMessage}" )
                 }
                 catch(e: SocketException){
                     Log.d("connection Exception","Connect Not Available")
