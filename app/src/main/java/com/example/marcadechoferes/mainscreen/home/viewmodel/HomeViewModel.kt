@@ -580,7 +580,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         binding!!.breakBar.progress = time.toFloat()
 
         var default = MyApplication.TotalBreak * 60
-        if (time == default) {
+        if (time >= default) {
             mainActivity.stopTimerBreak()
         }
 
@@ -918,8 +918,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun uploadState(position: Int, geoPosition: GeoPosition?) {
-        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
-        val currentDate = sdf.format(Date())
+        val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
+        var currentDate = sdf.format(Date())
+        currentDate= currentDate+"Z"
         System.out.println(" C DATE is  " + currentDate)
 
         viewModelScope.launch {
@@ -1028,9 +1029,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
-        val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
-        val currentDate = sdf.format(Date())
+        val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
+        var currentDate = sdf.format(Date())
         tinyDB.putString("ActivityDate",currentDate)
+        currentDate= currentDate+"Z"
         System.out.println(" C DATE is  " + currentDate)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

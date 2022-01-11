@@ -10,13 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marcadechoferes.Extra.K
 import com.example.marcadechoferes.Extra.TinyDB
-import com.example.marcadechoferes.Extra.UpdateActivityDataClass
 import com.example.marcadechoferes.auth.repository.AuthRepository
 import com.example.marcadechoferes.loadingScreen.LoadingScreen
 import com.example.marcadechoferes.mainscreen.MainActivity
 import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
-import com.example.marcadechoferes.network.GeoPosition
 import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.network.signinResponse.SigninResponse
@@ -33,23 +31,24 @@ import javax.inject.Inject
 import kotlin.concurrent.schedule
 
 @HiltViewModel
-class SplashScreenViewModel @Inject constructor(val authRepository: AuthRepository):ViewModel(){
-      var activityContext:Context?=null
+class SplashScreenViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
+    var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     val sdf = SimpleDateFormat("yyyy-MM-dd")
     val currentDate = sdf.format(Date())
-    var check= 0
+    var check = 0
     var TAG2 = ""
-    fun viewsOfActivity(context: Context){
+    fun viewsOfActivity(context: Context) {
         activityContext = context
         tinyDB = TinyDB(context)
         tagsForToast()
 
+
     }
 
 
-    fun syncdata(){
-        var Token=tinyDB.getString("Cookie")
+    fun syncdata() {
+        var Token = tinyDB.getString("Cookie")
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
@@ -59,36 +58,36 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
                     println("SuccessResponse $response")
 
-                    if(response!=null) {
-                              authRepository.clearData()
+                    if (response != null) {
+                        authRepository.clearData()
 
-                            authRepository.InsertSigninData(response)
-                        val Language =response.profile?.language
-                        val notify:Boolean =response.profile?.notify!!
-                       getPreviousTime(response)
+                        authRepository.InsertSigninData(response)
+                        val Language = response.profile?.language
+                        val notify: Boolean = response.profile?.notify!!
+                        getPreviousTime(response)
 //                        setObj(response)
-                        tinyDB.putInt("defaultWork",response.work!!.workingHours)
-                        tinyDB.putInt("defaultBreak",response.work.workBreak)
+                        tinyDB.putInt("defaultWork", response.work!!.workingHours)
+                        tinyDB.putInt("defaultBreak", response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
                         tinyDB.putString("language", Language.toString())
-                        tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
-                        tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
+                        tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
+                        tinyDB.putString("SplashBG", response.images.splashScreen ?: "")
 
-                        if(response.lastVar.lastActivity != 3){
-                            var state=response.lastVar.lastState!!
-                            tinyDB.putInt("state", state+1)
-                        }else{
+                        if (response.lastVar.lastActivity != 3) {
+                            var state = response.lastVar.lastState!!
+                            tinyDB.putInt("state", state + 1)
+                        } else {
                             tinyDB.putInt("state", 1)
                         }
 
-                        if(response.colors.primary.isNotEmpty()){
-                            K.primaryColor=response.colors.primary ?: "#7A59FC"
+                        if (response.colors.primary.isNotEmpty()) {
+                            K.primaryColor = response.colors.primary ?: "#7A59FC"
                             K.secondrayColor = response.colors.secondary ?: "#653FFB"
                         }
                         checkStateByServer(response)
-                        tinyDB.putBoolean("notify",notify)
-                        tinyDB.putInt("againCome",200)
-                        MyApplication.check=200
+                        tinyDB.putBoolean("notify", notify)
+                        tinyDB.putInt("againCome", 200)
+                        MyApplication.check = 200
 
                         Timer().schedule(1500) {
                             var intent = Intent(activityContext, MainActivity::class.java)
@@ -101,8 +100,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     }
                 } catch (e: ResponseException) {
                     println("ErrorResponse")
-                }
-                catch (e: ApiException) {
+                } catch (e: ApiException) {
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
                     println("position 2")
@@ -115,11 +113,10 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         ).show()
                     }
                     Timer().schedule(5000) {
-                        Log.d("connection Exception","connection lost")
+                        Log.d("connection Exception", "connection lost")
                         LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     }
-                }
-                catch (e: SocketTimeoutException){
+                } catch (e: SocketTimeoutException) {
 
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
@@ -128,13 +125,12 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }catch (e: Exception){
-                    println("ErrorResponse ${e.localizedMessage}" )
-                }
-                catch(e: SocketException){
-                    Log.d("connection Exception","Connect Not Available")
+                } catch (e: Exception) {
+                    println("ErrorResponse ${e.localizedMessage}")
+                } catch (e: SocketException) {
+                    Log.d("connection Exception", "Connect Not Available")
                     Timer().schedule(5000) {
-                        Log.d("connection Exception","connection lost")
+                        Log.d("connection Exception", "connection lost")
                         LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     }
                     withContext(Dispatchers.Main) {
@@ -151,7 +147,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
     }
 
 
-    fun getSplashScreen(){
+    fun getSplashScreen() {
 
         viewModelScope.launch {
 
@@ -165,30 +161,27 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
 
 
-                    if(response!=null) {
+                    if (response != null) {
                         var image = response.splashScreen
-                        tinyDB.putString("SplashBG",response.splashScreen ?: "")
-                        withContext(Dispatchers.Main){
+                        tinyDB.putString("SplashBG", response.splashScreen ?: "")
+                        withContext(Dispatchers.Main) {
                             (activityContext as SplashScreen).base64ToBitmap(image)
                         }
 
 
                     }
 
-                }
-                catch (e: ApiException) {
+                } catch (e: ApiException) {
                     e.printStackTrace()
-                }
-                catch (e: NoInternetException) {
+                } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
-                }
-                catch(e: SocketException){
-                    Log.d("connection Exception","Connect Not Available")
-                        LoadingScreen.onEndLoadingCallbacks!!.endLoading()
+                } catch (e: SocketException) {
+                    Log.d("connection Exception", "Connect Not Available")
+                    LoadingScreen.onEndLoadingCallbacks!!.endLoading()
                 }
             }
         }
@@ -200,83 +193,115 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
     private fun getPreviousTime(response: SigninResponse) {
 
 //        var workDate = tinyDB.getString("ActivityDate")
-        var workDate = response.lastVar!!.lastWorkedHoursDateIni
-        if(workDate!!.isNotEmpty()){
-            workDate = workDate!!.split("T").toTypedArray()[0]
-            Log.d("workDate Is","date is $workDate")
-        }
-
-        if(workDate != currentDate){
-            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-        }else if(workDate == currentDate && response.lastVar!!.lastActivity != 0)
-        {
-            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-        }
+//        var workDate = response.lastVar!!.lastWorkedHoursDateIni
+//        if(workDate!!.isNotEmpty()){
+//            workDate = workDate!!.split("T").toTypedArray()[0]
+//            Log.d("workDate Is","date is $workDate")
+//        }
+////        if(workDate != currentDate){
+//            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+//        }else if(workDate == currentDate && response.lastVar!!.lastActivity != 0)
+//        {
+//            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+//        }
 
 //
-//        tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+        tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+
+        when (response.lastVar.lastActivity) {
+            0 -> {
+                tinyDB.putString("checkTimer", "workTime")
+                var workDate = response.lastVar!!.lastWorkedHoursDateIni
+                if (workDate!!.isNotEmpty()) {
+                    workDate = workDate!!.split(".").toTypedArray()[0]
+                    workDate = workDate!!.split("T").toTypedArray()[1]
+                    Log.d("TimeOfLastWork", "date is $workDate")
+                }
+                tinyDB.putString("goBackTime", workDate)
+                K.timeDifference(tinyDB, activityContext!!, false,response.work!!.workBreak)
+            }
+            1 -> {
+                tinyDB.putString("checkTimer", "breakTime")
+                var breakDate = response.lastVar!!.lastWorkBreakDateIni
+                if (breakDate!!.isNotEmpty()) {
+                    breakDate = breakDate!!.split(".").toTypedArray()[0]
+                    breakDate = breakDate!!.split("T").toTypedArray()[1]
+                    Log.d("workDate Is", "date is $breakDate")
+                }
+                tinyDB.putString("goBackTime", breakDate)
+                tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
+                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+            }
+            2 -> {
+                tinyDB.putString("checkTimer", "workTime")
+                var workDate = response.lastVar!!.lastWorkedHoursDateIni
+                if (workDate!!.isNotEmpty()) {
+                    workDate = workDate!!.split(".").toTypedArray()[0]
+                    workDate = workDate!!.split("T").toTypedArray()[1]
+                    Log.d("workDate Is", "date is $workDate")
+                }
+                tinyDB.putString("goBackTime", workDate)
+                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+            }
+        }
+
 
     }
 
 
     private fun checkStateByServer(response: SigninResponse) {
         var workDate = response.lastVar!!.lastWorkedHoursDateIni
-        if(workDate!!.isNotEmpty()){
+        if (workDate!!.isNotEmpty()) {
             workDate = workDate!!.split("T").toTypedArray()[0]
-            Log.d("workDate Is","date is $workDate")
+            Log.d("workDate Is", "date is $workDate")
         }
-        Log.d("Dates is ","$currentDate")
+        Log.d("Dates is ", "$currentDate")
 
-        if(workDate != currentDate){
+        if (workDate != currentDate) {
             check = 3
-        }else
-        {
+        } else {
             check = response.lastVar!!.lastActivity!!
         }
 
 
         tinyDB.putInt("selectedStateByServer", check!!)
-        Log.d("checkByServer","check $check")
-      when(check){
-          0->{
-              tinyDB.putString("selectedState","goToActiveState")
+        Log.d("checkByServer", "check $check")
+        when (check) {
+            0 -> {
+                tinyDB.putString("selectedState", "goToActiveState")
 
-          }
-          1->{
-              tinyDB.putString("selectedState","goTosecondState")
-          }
-          2->{
-              tinyDB.putString("selectedState","goToActiveState")
+            }
+            1 -> {
+                tinyDB.putString("selectedState", "goTosecondState")
+            }
+            2 -> {
+                tinyDB.putString("selectedState", "goToActiveState")
 
-          }
-          3->{
-              tinyDB.putString("selectedState","endDay")
-          }
-      }
-
+            }
+            3 -> {
+                tinyDB.putString("selectedState", "endDay")
+            }
+        }
 
 
     }
 
-    fun tagsForToast(){
-        var language= tinyDB.getString("language")
-        if (language=="0"){
+    fun tagsForToast() {
+        var language = tinyDB.getString("language")
+        if (language == "0") {
 
             TAG2 = "Comprueba tu conexión a Internet"
 
-        }else if(language=="1"){
+        } else if (language == "1") {
 
 
-            TAG2 ="Check Your Internet Connection"
-        }
-        else{
-            TAG2="Verifique a sua conexão com a internet"
+            TAG2 = "Check Your Internet Connection"
+        } else {
+            TAG2 = "Verifique a sua conexão com a internet"
         }
 
     }
-
-
 
 
 //    fun setObj(response: SigninResponse) {
@@ -293,7 +318,6 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 //            "upadteActivity",obj)
 //
 //    }
-
 
 
 }

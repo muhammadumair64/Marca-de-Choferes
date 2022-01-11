@@ -132,7 +132,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "17"
+        var appVersion: String? = "18"
         var appBuild: String? =  Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -198,6 +198,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         checkStateByServer(response)
                         Token = tinyDB.getString("Cookie").toString()
                         Log.d("LoadingImage","Before")
+                        getPreviousTime(response)
                         getLoadingScreenImage()
 
                     }
@@ -424,6 +425,65 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
             }
         }
 
+
+
+    }
+
+    private fun getPreviousTime(response: SigninResponse) {
+
+//        var workDate = tinyDB.getString("ActivityDate")
+//        var workDate = response.lastVar!!.lastWorkedHoursDateIni
+//        if(workDate!!.isNotEmpty()){
+//            workDate = workDate!!.split("T").toTypedArray()[0]
+//            Log.d("workDate Is","date is $workDate")
+//        }
+////        if(workDate != currentDate){
+//            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+//        }else if(workDate == currentDate && response.lastVar!!.lastActivity != 0)
+//        {
+//            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+//        }
+
+//
+        tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+
+        when (response.lastVar.lastActivity) {
+            0 -> {
+                tinyDB.putString("checkTimer", "workTime")
+                var workDate = response.lastVar!!.lastWorkedHoursDateIni
+                if (workDate!!.isNotEmpty()) {
+                    workDate = workDate!!.split(".").toTypedArray()[0]
+                    workDate = workDate!!.split("T").toTypedArray()[1]
+                    Log.d("TimeOfLastWork", "date is $workDate")
+                }
+                tinyDB.putString("goBackTime", workDate)
+                K.timeDifference(tinyDB, activityContext!!, false,response.work!!.workBreak)
+            }
+            1 -> {
+                tinyDB.putString("checkTimer", "breakTime")
+                var breakDate = response.lastVar!!.lastWorkBreakDateIni
+                if (breakDate!!.isNotEmpty()) {
+                    breakDate = breakDate!!.split(".").toTypedArray()[0]
+                    breakDate = breakDate!!.split("T").toTypedArray()[1]
+                    Log.d("workDate Is", "date is $breakDate")
+                }
+                tinyDB.putString("goBackTime", breakDate)
+                tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
+                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+            }
+            2 -> {
+                tinyDB.putString("checkTimer", "workTime")
+                var workDate = response.lastVar!!.lastWorkedHoursDateIni
+                if (workDate!!.isNotEmpty()) {
+                    workDate = workDate!!.split(".").toTypedArray()[0]
+                    workDate = workDate!!.split("T").toTypedArray()[1]
+                    Log.d("workDate Is", "date is $workDate")
+                }
+                tinyDB.putString("goBackTime", workDate)
+                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+            }
+        }
 
 
     }

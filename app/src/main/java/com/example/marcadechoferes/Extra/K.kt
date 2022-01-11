@@ -7,7 +7,6 @@ import com.example.marcadechoferes.myApplication.MyApplication
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.schedule
-import kotlin.math.min
 
 class K {
     companion object {
@@ -16,7 +15,7 @@ class K {
 
         const val splashToOtp = "splashToOtp"
 
-        fun timeDifference(tinyDB: TinyDB, context: Context) {
+        fun timeDifference(tinyDB: TinyDB, context: Context, resumeCheck: Boolean, workBreak: Int) {
 
             var lastTimetoGo = tinyDB.getString("goBackTime")
 
@@ -58,27 +57,52 @@ class K {
 
             //check which time is need to set
 
-            var intent= (context as MainActivity)
+
 
             var checkTimer = tinyDB.getString("checkTimer")
             if(checkTimer=="workTime"){
-                var previoustime=tinyDB.getInt("lasttimework")
-                var newTime = previoustime+finalTimeDiff
-                tinyDB.putInt("lasttimework",newTime.toInt())
-                intent.setTimer()
+                if(resumeCheck==true){
+                    var previoustime=tinyDB.getInt("lasttimework")
+                    var newTime = previoustime+finalTimeDiff
+                    tinyDB.putInt("lasttimework",newTime.toInt())
+                    var intent= (context as MainActivity)
+                    intent.setTimer()
                 Timer().schedule(200) {
                     intent.startTimer()
                 }
+                }else{
+                    tinyDB.putInt("lasttimework",finalTimeDiff.toInt())
+                }
+//
 
             }
             else if(checkTimer=="breakTime"){
-                var previoustime=tinyDB.getInt("lasttimebreak")
-                var newTime = previoustime+finalTimeDiff
-                tinyDB.putInt("lasttimebreak",newTime.toInt())
-                intent.setTimer()
-                Timer().schedule(200) {
-                    intent.startTimerBreak()
+                if(resumeCheck==true){
+                    var previoustime=tinyDB.getInt("lasttimebreak")
+                    var newTime = previoustime+finalTimeDiff
+                    var defaultBreak=workBreak * 60
+                    if(newTime > defaultBreak){
+                        newTime = defaultBreak.toLong()
+                    }
+                    tinyDB.putInt("lasttimebreak",newTime.toInt())
+                    var intent= (context as MainActivity)
+                    intent.setTimer()
+                    Timer().schedule(200) {
+                        intent.startTimerBreak()
+                    }
+                }else{
+                 var serverBreak=tinyDB.getInt("ServerBreakTime")
+                    finalTimeDiff= finalTimeDiff+serverBreak
+                    var defaultBreak=workBreak * 60
+                    if(finalTimeDiff > defaultBreak){
+                        finalTimeDiff = defaultBreak.toLong()
+                    }
+                    tinyDB.putInt("lasttimebreak", finalTimeDiff.toInt())
                 }
+//                intent.setTimer()
+//                Timer().schedule(200) {
+//                    intent.startTimerBreak()
+//                }
 
             }
 

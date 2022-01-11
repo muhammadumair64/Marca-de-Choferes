@@ -65,11 +65,7 @@ import com.google.android.gms.location.*
 import android.os.PowerManager
 import android.provider.Settings
 import java.text.SimpleDateFormat
-import android.app.job.JobInfo
 
-import android.content.ComponentName
-
-import android.app.job.JobScheduler
 import java.lang.Exception
 import java.net.SocketException
 
@@ -704,7 +700,7 @@ class MainActivity : BaseClass(){
             if(timerService){
                 try {
 
-                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+//                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
                     MyApplication.checkForResume = 200
                     tinyDB.putString("checkTimer","workTime")
                     MyBroadastReceivers.time = WorkTime
@@ -717,7 +713,7 @@ class MainActivity : BaseClass(){
 
             }else if(breakService){
                 try{
-                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+//                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
                     MyApplication.checkForResume = 200
                     tinyDB.putString("checkTimer","breakTime")
                     MyBroadastReceivers.time = BreakTime
@@ -749,7 +745,7 @@ class MainActivity : BaseClass(){
         tinyDB.putString("goBackTime",currentDate)
         MyApplication.backPressCheck=0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            hitWhenleaveScreen()
+//            hitWhenleaveScreen()
         }
     }
 
@@ -759,8 +755,8 @@ class MainActivity : BaseClass(){
         if(MyApplication.checkForResume==200){
 
             try {
-                unregisterReceiver(receiver)
-                K.timeDifference(tinyDB,this)
+//                unregisterReceiver(receiver)
+                K.timeDifference(tinyDB, this, true,MyApplication.TotalBreak )
                 MyApplication.checkForResume = 0
             }catch (e : Exception){
                 MyApplication.checkForResume = 0
