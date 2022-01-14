@@ -115,8 +115,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         System.out.println(" C DATE is  " + currentDate)
 
         binding.date.text = "$currentDate"
-        fadeColor()
- 
+        dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
         var Choice = tinyDB.getString("selectedState")
 
         when (Choice) {
@@ -159,6 +158,15 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             }
 
         }
+        Timer().schedule(300) {
+
+
+                    checkBreakBaColor()
+
+
+        }
+
+
 
 
     }
@@ -255,7 +263,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         var intent = (activityContext as MainActivity)
         MyApplication.check=0
         buttonTakeBreak()
-        intent.stopTimer()
+//        intent.stopTimer()
         intent.startTimerBreak()
         tinyDB.putString("selectedState", "takeBreak")
         hitActivityAPI(1, MyApplication.BreakToSend)
@@ -309,34 +317,34 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         dataBinding?.StateActive?.setVisibility(View.GONE)
         dataBinding?.vehicleListBtn?.isClickable = true
         dataBinding?.spacer?.setVisibility(View.VISIBLE)
-        dataBinding?.secondState?.setVisibility(View.GONE)
-        dataBinding?.initialState?.setVisibility(View.VISIBLE)
-        dataBinding?.vehicleListBtn?.setBackgroundResource(R.drawable.item_popup_btn_bg)
-        dataBinding?.iconCar?.setBackgroundResource(R.drawable.ic_icon_awesome_car_alt)
-        dataBinding?.vehicleNameSelected?.setTextColor(Color.parseColor("#000000"))
+        dataBinding?.secondState?.setVisibility(View.VISIBLE)
+//        dataBinding?.initialState?.setVisibility(View.VISIBLE)
+//        dataBinding?.vehicleListBtn?.setBackgroundResource(R.drawable.item_popup_btn_bg)
+//        dataBinding?.iconCar?.setBackgroundResource(R.drawable.ic_icon_awesome_car_alt)
+//        dataBinding?.vehicleNameSelected?.setTextColor(Color.parseColor("#000000"))
 
-        dataBinding?.Arrow?.setVisibility(View.VISIBLE)
-        dataBinding?.dots?.visibility = View.GONE
+//        dataBinding?.Arrow?.setVisibility(View.VISIBLE)
+//        dataBinding?.dots?.visibility = View.GONE
 //        (activityContext as MainActivity).time = 0.0
 ////        dataBinding?.workTimer?.text = "00:00"
 //        dataBinding?.TimerBreak?.text = "00:00"
 
         dataBinding?.statusListBtn?.visibility = View.GONE
-        dataBinding?.vehicleNameSelected?.setTypeface(
-            dataBinding?.vehicleNameSelected?.getTypeface(),
-            Typeface.NORMAL
-        )
+//        dataBinding?.vehicleNameSelected?.setTypeface(
+//            dataBinding?.vehicleNameSelected?.getTypeface(),
+//            Typeface.NORMAL
+//        )
         if (language=="0"){
             dataBinding?.secondState?.text = "Empezar"
-            dataBinding?.vehicleNameSelected?.text = "Vehículo"
+//            dataBinding?.vehicleNameSelected?.text = "Vehículo"
             dataBinding?.statusSelected?.text = "Selección estado"
         }else if(language=="1"){
-            dataBinding?.vehicleNameSelected?.text = "Vehicle"
+//            dataBinding?.vehicleNameSelected?.text = "Vehicle"
             dataBinding?.statusSelected?.text = "Status Select"
             dataBinding?.secondState?.text = "Start"
         }
         else{
-            dataBinding?.vehicleNameSelected?.text = "Veículo"
+//            dataBinding?.vehicleNameSelected?.text = "Veículo"
             dataBinding?.statusSelected?.text = "Seleção de estado"
             dataBinding?.secondState?.text = "Começar"
         }
@@ -357,7 +365,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
         workTimerLargeToSmall()
         breakTimerSmallToLarge()
-
+        dataBinding!!.statusListBtn.visibility  = View.GONE
         dataBinding?.StateActive?.setVisibility(View.GONE)
         dataBinding?.vehicleListBtn?.isClickable = true
         dataBinding?.spacer?.setVisibility(View.VISIBLE)
@@ -385,11 +393,15 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso"||dataBinding?.secondState?.text == "Fim do intervalo") {
             goToSecondState()
             intent.stopTimerBreak()
-            intent.startTimer()
+            dataBinding!!.statusListBtn.visibility  = View.VISIBLE
+//            intent.startTimer()
             Log.d("break timer","${MyApplication.BreakToSend}")
             hitActivityAPI(2,MyApplication.BreakToSend)
             dataBinding!!.statusListBtn.isClickable= true
         } else {
+            var time = 0
+            var overtime =getTimeStringFromDouble(time)
+            dataBinding!!.overTime!!.text = overtime
              startDaySetter(intent)
             Timer().schedule(200) {
                 intent.startTimer()
@@ -566,6 +578,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             binding!!.bar.progressBarColor= Color.parseColor("#169DFD")
             var newOvertimer= time-default
             binding!!.bar.progress = newOvertimer.toFloat()
+            var overtime =getTimeStringFromDouble(newOvertimer)
+            println("time is thie $time")
+            binding.overTime!!.text = overtime
+
         } else
         {
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
@@ -580,6 +596,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         binding!!.breakBar.progress = time.toFloat()
 
         var default = MyApplication.TotalBreak * 60
+
+
         if (time >= default) {
             mainActivity.stopTimerBreak()
         }
@@ -607,18 +625,25 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                 }
 
 
-                if(MyApplication.check!=300){
-                    withContext(Dispatchers.Main) {
+//                if(MyApplication.check!=300){
+//                    withContext(Dispatchers.Main) {
+//                        var vehicle = tinyDB.getInt("vehicle")
+//                        if (vehicle != 0) {
+//                            vehicle = vehicle.minus(1)
+//                            selectVehicleByLocalDB(vehicle)
+//                        }
+//                    }
+//                }else{
+//               fadeColor()
+//                }
+
+                withContext(Dispatchers.Main) {
                         var vehicle = tinyDB.getInt("vehicle")
                         if (vehicle != 0) {
                             vehicle = vehicle.minus(1)
                             selectVehicleByLocalDB(vehicle)
                         }
                     }
-                }else{
-               fadeColor()
-                }
-
 
 
             }
@@ -809,7 +834,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             vehicleNameSelected.text = text
             Arrow.visibility = View.GONE
             dots.visibility = View.VISIBLE
-            statusListBtn.visibility = View.VISIBLE
+//            statusListBtn.visibility = View.VISIBLE
             if (initialState.isVisible) {
                 initialState.visibility = View.GONE
             }
@@ -1096,49 +1121,37 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     }
 
-    fun setPreviousWork(){
+    fun setPreviousWork() {
         var intent = (activityContext as MainActivity)
-        if(MyApplication.check==200){
+        if (MyApplication.check == 200) {
             intent.startTimer()
             intent.startTimerBreak()
-            var workTime=tinyDB.getInt("lasttimework")
-            var breakTime=tinyDB.getInt("lasttimebreak")
-            dataBinding?.bar?.progress= workTime.toFloat()
-            dataBinding?.breakBar?.progress=breakTime.toFloat()
-       fadeColor()
+            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+            var workTime = tinyDB.getInt("lasttimework")
+            var breakTime = tinyDB.getInt("lasttimebreak")
+            dataBinding?.bar?.progress = workTime.toFloat()
+            dataBinding?.breakBar?.progress = breakTime.toFloat()
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
             intent.stopTimerBreak()
             intent.stopTimer()
-        }
-    else{
-       if(intent.isMyServiceRunning(TimerService::class.java)){
-        intent.startTimerBreak()
-        intent.stopTimerBreak()
-
-
-    }else if(intent.isMyServiceRunning(BreakTimerService::class.java)) {
-             intent.startTimer()
-             intent.stopTimer()
-    } else if(MyApplication.check==300){
-           intent.startTimer()
-           intent.startTimerBreak()
-           var workTime=tinyDB.getInt("lasttimework")
-           var breakTime=tinyDB.getInt("lasttimebreak")
-           dataBinding?.bar?.progress= workTime.toFloat()
-           dataBinding?.breakBar?.progress=breakTime.toFloat()
-           dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
-           intent.stopTimerBreak()
-           intent.stopTimer()
+        } else if (MyApplication.check == 300) {
+            intent.startTimer()
+            intent.startTimerBreak()
+            var workTime = tinyDB.getInt("lasttimework")
+            var breakTime = tinyDB.getInt("lasttimebreak")
+            dataBinding?.bar?.progress = workTime.toFloat()
+            dataBinding?.breakBar?.progress = breakTime.toFloat()
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+            intent.stopTimerBreak()
+            intent.stopTimer()
 //           buttonEndDay()
-           Timer().schedule(200) {
-              barColor()
-           }
+            Timer().schedule(200) {
+                barColor()
+            }
 
-       }
+        }
 
-}
     }
-
 
     fun checkGPS(context: Context):Boolean{
         var locationManager = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
@@ -1169,17 +1182,21 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             else if(dataBinding?.secondState!!.isVisible == true && breakTimerService==false){
             if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso"||dataBinding?.secondState?.text == "Fim do intervalo"){
                 ref.startTimerBreak()
+                ref.startTimer()
                 dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
                fadeColor()
             }
 
         }
 
-        if(timerServiceCheck){
-            goToActivState()
+
+
+        if(timerServiceCheck && breakTimerService==false){
+
+                goToActivState()
             dataBinding!!.statusListBtn.visibility  = View.VISIBLE
         } else if(breakTimerService){
-            dataBinding!!.statusListBtn.visibility  = View.VISIBLE
+            dataBinding!!.statusListBtn.visibility  = View.GONE
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
             fadeColor()
         } else {
@@ -1260,6 +1277,32 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     }
 
+    fun checkBreakBaColor(){
+        var ref = (activityContext as MainActivity)
+        var timerServiceCheck = ref.isMyServiceRunning(TimerService::class.java)
+        var breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
+        if(breakTimerService){
+//            fadeColor()
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
+        }
+        else if(timerServiceCheck==false){
+//            fadeColor()
+        }else{
 
+        }
+
+
+
+        if(timerServiceCheck== true && breakTimerService == false){
+            ref.startTimerBreak()
+            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+            Timer().schedule(100) {
+                ref.stopTimerBreak()
+            }
+
+        }
+
+
+    }
 
 }

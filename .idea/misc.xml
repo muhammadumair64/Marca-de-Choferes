@@ -15,6 +15,7 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/ic_icon_feather_calendar.xml" value="0.15230263157894736" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/ic_icon_feather_user.xml" value="0.150814332247557" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/ic_icon_material_edit.xml" value="0.1607638888888889" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/ic_layer1.xml" value="0.18425925925925926" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/ic_separator.xml" value="0.1" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/ic_switch_boarder.xml" value="0.13472222222222222" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/ic_thumb.xml" value="0.150814332247557" />
@@ -40,7 +41,7 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-hdpi/activity_sign_in.xml" value="0.2905263157894737" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-hdpi/activity_splash_screen.xml" value="0.18098958333333334" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-hdpi/fragment_configuration.xml" value="0.32526475037821484" />
-        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-hdpi/fragment_home.xml" value="0.18059299191374664" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-hdpi/fragment_home.xml" value="0.21" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-hdpi/fragment_profile.xml" value="0.33" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-mdpi/acticity_otp.xml" value="0.54" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-mdpi/activity_create_new_password_screen.xml" value="0.54" />

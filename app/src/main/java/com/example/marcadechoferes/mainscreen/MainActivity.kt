@@ -691,44 +691,46 @@ class MainActivity : BaseClass(){
 
 
     fun performSomeActionOnBackPress(){
+        stopService(Intent(this,TimerService::class.java))
+        stopService(Intent(this,BreakTimerService::class.java))
+        finish()
 
-
-        if( MyApplication.backPressCheck==200){
-
-            var timerService = isMyServiceRunning(TimerService::class.java)
-            var breakService = isMyServiceRunning(BreakTimerService::class.java)
-            if(timerService){
-                try {
-
-//                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
-                    MyApplication.checkForResume = 200
-                    tinyDB.putString("checkTimer","workTime")
-                    MyBroadastReceivers.time = WorkTime
-                    performTask()
-                }catch (e  : Exception){
-                    MyApplication.checkForResume = 100
-                    Log.d("MyBroadCast","Error ${e.localizedMessage}")
-                }
-
-
-            }else if(breakService){
-                try{
-//                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
-                    MyApplication.checkForResume = 200
-                    tinyDB.putString("checkTimer","breakTime")
-                    MyBroadastReceivers.time = BreakTime
-                    MyBroadastReceivers.activiy=1
-                    performTask()
-                }catch (e: Exception){
-                    MyApplication.checkForResume = 100
-                    Log.d("MyBroadCast","Error ${e.localizedMessage}")
-                }
-
-            }
-
-
-
-        }
+//        if( MyApplication.backPressCheck==200){
+//
+//            var timerService = isMyServiceRunning(TimerService::class.java)
+//            var breakService = isMyServiceRunning(BreakTimerService::class.java)
+//            if(timerService && breakService == false){
+//                try {
+//
+////                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+//                    MyApplication.checkForResume = 200
+//                    tinyDB.putString("checkTimer","workTime")
+//                    MyBroadastReceivers.time = WorkTime
+//                    performTask()
+//                }catch (e  : Exception){
+//                    MyApplication.checkForResume = 100
+//                    Log.d("MyBroadCast","Error ${e.localizedMessage}")
+//                }
+//
+//
+//            }else if(breakService){
+//                try{
+////                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
+//                    MyApplication.checkForResume = 200
+//                    tinyDB.putString("checkTimer","breakTime")
+//                    MyBroadastReceivers.time = BreakTime
+//                    MyBroadastReceivers.activiy=1
+//                    performTask()
+//                }catch (e: Exception){
+//                    MyApplication.checkForResume = 100
+//                    Log.d("MyBroadCast","Error ${e.localizedMessage}")
+//                }
+//
+//            }
+//
+//
+//
+//        }
 
     }
 

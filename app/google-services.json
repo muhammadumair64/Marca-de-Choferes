@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "877849016415",
+    "project_id": "marca-choferes",
+    "storage_bucket": "marca-choferes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:877849016415:android:3d3f71360ade91920783ea",
+        "android_client_info": {
+          "package_name": "com.logicasur.appchoferes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "877849016415-1sebercuugi11514c1i2rb481b8h1ae1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZkl1GDKfbt33Xa9MmhqE3ExCHgPWLavw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "877849016415-1sebercuugi11514c1i2rb481b8h1ae1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
