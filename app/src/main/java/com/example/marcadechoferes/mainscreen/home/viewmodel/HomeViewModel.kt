@@ -83,6 +83,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     // state
 
     var positionForState = 0
+
+
+    var maxBreakBarValue = 0
+
     fun viewsForHomeFragment(context: Context, binding: FragmentHomeBinding) {
         activityContext = context
         dataBinding = binding
@@ -105,6 +109,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         println("total Work Given ")
         MyApplication.TotalBreak= tinyDB.getInt("defaultBreak")
+
+
+
 
         var DefaultTOShow = MyApplication.TotalTime * 60
         var time =getTimeStringFromDouble(DefaultTOShow)
@@ -275,6 +282,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         buttonEndDay()
         intent.stopTimer()
         intent.stopTimerBreak()
+           var max = MyApplication.TotalBreak * 60
+           tinyDB.putInt("MaxBreakBar", max)
         tinyDB.putString("selectedState", "endDay")
         hitActivityAPI(3, MyApplication.TimeToSend)
     }
@@ -590,17 +599,37 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
     }
 
-    fun breakTimerupdater(time: Int, binding: FragmentHomeBinding?, mainActivity: MainActivity) {
+    fun breakTimerupdater(
+        time: Int,
+        binding: FragmentHomeBinding?,
+        mainActivity: MainActivity,
+        tinyDB: TinyDB
+    ) {
         print("${time.toDouble()}")
         MyApplication.BreakToSend = time
         binding!!.breakBar.progress = time.toFloat()
 
         var default = MyApplication.TotalBreak * 60
-
+        maxBreakBarValue= tinyDB.getInt("MaxBreakBar")
+        binding.breakBar.progressMax = maxBreakBarValue.toFloat()
+        println("value of max $maxBreakBarValue")
+        if ( time > maxBreakBarValue){
+            var max = maxBreakBarValue + (MyApplication.TotalBreak * 60)
+            tinyDB.putInt("MaxBreakBar",max)
+        }
 
         if (time >= default) {
-            mainActivity.stopTimerBreak()
+            binding.breakBar.progressMax = maxBreakBarValue.toFloat()
+           binding.breakBar.progressBarColor=Color.parseColor("#FFA023")
+
         }
+
+
+    }
+
+
+    fun breakBarMaxSetter(){
+
 
     }
 
@@ -1286,7 +1315,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
         }
         else if(timerServiceCheck==false){
-//            fadeColor()
+            fadeColor()
         }else{
 
         }

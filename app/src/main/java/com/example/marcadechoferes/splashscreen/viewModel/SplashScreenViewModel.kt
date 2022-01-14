@@ -72,6 +72,9 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         tinyDB.putString("language", Language.toString())
                         tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
                         tinyDB.putString("SplashBG", response.images.splashScreen ?: "")
+                        var max = response.work.workBreak * 60
+                        println("Max Value from Server $max")
+                        tinyDB.putInt("MaxBreakBar",max)
 
                         if (response.lastVar.lastActivity != 3) {
                             var state = response.lastVar.lastState!!

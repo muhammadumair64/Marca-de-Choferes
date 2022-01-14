@@ -93,10 +93,10 @@ class K {
                 }else{
                  var serverBreak=tinyDB.getInt("ServerBreakTime")
                     finalTimeDiff= finalTimeDiff+serverBreak
-                    var defaultBreak=workBreak * 60
-                    if(finalTimeDiff > defaultBreak){
-                        finalTimeDiff = defaultBreak.toLong()
-                    }
+//                    var defaultBreak=workBreak * 60
+//                    if(finalTimeDiff > defaultBreak){
+//                        finalTimeDiff = defaultBreak.toLong()
+//                    }
                     tinyDB.putInt("lasttimebreak", finalTimeDiff.toInt())
                 }
 //                intent.setTimer()

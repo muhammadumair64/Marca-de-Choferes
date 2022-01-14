@@ -261,7 +261,7 @@ class MainActivity : BaseClass(){
         val resultIntBreak = time.roundToInt()
 
         lifecycleScope.launch {
-            viewModel.breakTimerupdater(time.roundToInt(), dataBinding,this@MainActivity)
+            viewModel.breakTimerupdater(time.roundToInt(), dataBinding,this@MainActivity,tinyDB)
         }
         println("$resultIntBreak")
         BreakTime=resultIntBreak

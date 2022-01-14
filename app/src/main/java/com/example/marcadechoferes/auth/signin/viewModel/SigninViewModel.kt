@@ -175,6 +175,9 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                         tinyDB.putInt("defaultWork",response.work!!.workingHours)
                         tinyDB.putInt("defaultBreak",response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
+                        var max = response.work.workBreak * 60
+                        println("Max Value from Server $max")
+                        tinyDB.putInt("MaxBreakBar",max)
                         if(response.lastVar.lastActivity != 3){
                             var state=response.lastVar.lastState!!
                             tinyDB.putInt("state", state+1)
