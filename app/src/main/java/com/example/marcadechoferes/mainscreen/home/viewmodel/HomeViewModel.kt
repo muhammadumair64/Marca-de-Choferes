@@ -86,6 +86,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     var maxBreakBarValue = 0
+    var maxWorkBarValue = 0
 
     fun viewsForHomeFragment(context: Context, binding: FragmentHomeBinding) {
         activityContext = context
@@ -284,6 +285,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         intent.stopTimerBreak()
            var max = MyApplication.TotalBreak * 60
            tinyDB.putInt("MaxBreakBar", max)
+
+           var maxWork = MyApplication.TotalTime * 60
+           tinyDB.putInt("MaxBar",maxWork)
         tinyDB.putString("selectedState", "endDay")
         hitActivityAPI(3, MyApplication.TimeToSend)
     }
@@ -574,11 +578,23 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     }
 
-    fun workTimerupdater(time: Int, binding: FragmentHomeBinding?) {
+    fun workTimerupdater(time: Int, binding: FragmentHomeBinding?, tinyDB: TinyDB) {
         print("${time.toDouble()}")
 
         var default = MyApplication.TotalTime * 60
         MyApplication.TimeToSend = time
+
+
+        maxWorkBarValue= tinyDB.getInt("MaxBar")
+        binding!!.bar.progressMax =maxWorkBarValue.toFloat()
+        println("value of max ${maxWorkBarValue}BarValue")
+        if (time > maxWorkBarValue){
+            var max = maxWorkBarValue + (MyApplication.TotalTime * 60)
+            tinyDB.putInt("MaxBar",max)
+        }
+
+
+
         if (time == default) {
             binding!!.bar.progress = 0F
         }else if (time > default){
@@ -602,7 +618,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun breakTimerupdater(
         time: Int,
         binding: FragmentHomeBinding?,
-        mainActivity: MainActivity,
         tinyDB: TinyDB
     ) {
         print("${time.toDouble()}")
@@ -628,10 +643,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
 
-    fun breakBarMaxSetter(){
 
-
-    }
 
 
                fun getVehicle() {
@@ -1315,9 +1327,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
         }
         else if(timerServiceCheck==false){
-            fadeColor()
-        }else{
-
+//            fadeColor()
         }
 
 
@@ -1330,6 +1340,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             }
 
         }
+
+ if(dataBinding!!.secondState.isVisible){
+     fadeColor()
+ }
 
 
     }

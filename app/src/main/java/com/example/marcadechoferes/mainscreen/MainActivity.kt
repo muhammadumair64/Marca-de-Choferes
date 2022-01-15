@@ -213,7 +213,7 @@ class MainActivity : BaseClass(){
 
         val resultInt = time.roundToInt()
         lifecycleScope.launch {
-            viewModel.workTimerupdater(time.roundToInt(), dataBinding)
+            viewModel.workTimerupdater(time.roundToInt(), dataBinding,tinyDB)
         }
             Log.d("Timer ","$resultInt")
         println(" $resultInt")
@@ -261,7 +261,7 @@ class MainActivity : BaseClass(){
         val resultIntBreak = time.roundToInt()
 
         lifecycleScope.launch {
-            viewModel.breakTimerupdater(time.roundToInt(), dataBinding,this@MainActivity,tinyDB)
+            viewModel.breakTimerupdater(time.roundToInt(), dataBinding,tinyDB)
         }
         println("$resultIntBreak")
         BreakTime=resultIntBreak

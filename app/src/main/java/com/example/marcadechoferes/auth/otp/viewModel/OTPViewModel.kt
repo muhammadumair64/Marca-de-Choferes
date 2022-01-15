@@ -241,6 +241,10 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         println("Max Value from Server $max")
                         tinyDB.putInt("MaxBreakBar",max)
 
+                        var maxWork = response.work!!.workingHours * 60
+                        println("Max Value from Server $maxWork")
+                        tinyDB.putInt("MaxBar",maxWork)
+
                         if(response.lastVar!!.lastActivity != 3){
                             var state=response.lastVar.lastState!!
                             tinyDB.putInt("state", state+1)
