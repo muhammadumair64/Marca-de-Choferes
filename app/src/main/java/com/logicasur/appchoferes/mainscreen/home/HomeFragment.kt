@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 import android.widget.*
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.logicasur.appchoferes.Extra.K

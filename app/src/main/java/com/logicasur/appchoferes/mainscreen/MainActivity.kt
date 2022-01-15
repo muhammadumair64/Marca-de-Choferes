@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import com.logicasur.appchoferes.R
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.logicasur.appchoferes.databinding.ActivityMainBinding
