@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.marcadechoferes">
+    package="com.logicasur.appchoferes">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -12,7 +12,7 @@
     <uses-permission  android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <application
-        android:name=".myApplication.MyApplication"
+        android:name="com.logicasur.appchoferes.myApplication.MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
@@ -22,14 +22,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MarcaDeChoferes">
         <activity
-            android:name=".loadingScreen.LoadingScreen"
+            android:name="com.logicasur.appchoferes.loadingScreen.LoadingScreen"
             android:exported="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="false"
             ></activity>
         <activity
-            android:name=".splashscreen.SplashScreen"
+            android:name="com.logicasur.appchoferes.splashscreen.SplashScreen"
             android:exported="true"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="false"
@@ -43,57 +43,57 @@
 
         </activity>
         <activity
-            android:name=".auth.createpassword.CreateNewPasswordScreen"
+            android:name="com.logicasur.appchoferes.auth.createpassword.CreateNewPasswordScreen"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".auth.otp.OTP_Activity"
+            android:name="com.logicasur.appchoferes.auth.otp.OTP_Activity"
             android:exported="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".auth.forgotPassword.ForgotPasswordActivity"
+            android:name="com.logicasur.appchoferes.auth.forgotPassword.ForgotPasswordActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".auth.signin.SignInActivity"
+            android:name="com.logicasur.appchoferes.auth.signin.SignInActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".mainscreen.MainActivity"
+            android:name="com.logicasur.appchoferes.mainscreen.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:alwaysRetainTaskState="true"
             ></activity>
 
-        <service android:name=".mainscreen.home.timerServices.TimerService"
+        <service android:name="com.logicasur.appchoferes.mainscreen.home.timerServices.TimerService"
                   android:stopWithTask="false"
                   android:exported="true"
             />
-        <service android:name=".mainscreen.home.timerServices.BreakTimerService"
+        <service android:name="com.logicasur.appchoferes.mainscreen.home.timerServices.BreakTimerService"
                  android:stopWithTask="false"
                  android:exported="false"
                  android:enabled="true"
             />
         <service
-            android:name=".mainscreen.home.timerServices.UploadRemaingDataService"
+            android:name="com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService"
             android:exported="true" />
 
         <service
-            android:name=".mainscreen.home.timerServices.WatcherService"
+            android:name="com.logicasur.appchoferes.mainscreen.home.timerServices.WatcherService"
             android:stopWithTask="false"
              />
 
-        <service android:name=".Extra.MyJobScheduler"
+        <service android:name="com.logicasur.appchoferes.Extra.MyJobScheduler"
                  android:permission="android.permission.BIND_JOB_SERVICE"></service>
 
-        <receiver android:name=".Extra.MyBroadastReceivers"  android:enabled="false" android:exported="true">
+        <receiver android:name="com.logicasur.appchoferes.Extra.MyBroadastReceivers"  android:enabled="false" android:exported="true">
             <intent-filter >
                 <action android:name="android.intent.action.TIME_TICK"/>
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".utils.MyFirebaseMessagingService"
+            android:name="com.logicasur.appchoferes.utils.MyFirebaseMessagingService"
             android:directBootAware="true"
             android:exported="false">
             <intent-filter>

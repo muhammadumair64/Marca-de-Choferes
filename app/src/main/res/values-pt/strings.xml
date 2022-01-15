@@ -1,13 +1,9 @@
 <resources>
     <string name="app_name">Marca de Choferes</string>
-    <string name="my_text"><u>Privacy Policy and Terms</u></string>
     <string name="start">Iniciar</string>
-    <string name="sign_up_title">Faça login em sua conta</string>
     <string name="email">E-mail</string>
     <string name="password">Senha</string>
-    <string name="forgot_password">Esqueceu sua senha?</string>
     <string name="sign_in">Entrar</string>
-    <string name="privacy_policy">Ao fazer login, você concorda com nossos<u>Política e termos de privacidade.</u></string>
     <string name="Forgot_passwordTitle">Esqueceu a senha?</string>
     <string name="forgot_password_discription">Digite seu e-mail abaixo e enviaremos um e-mail de redefinição.</string>
     <string name="submit">Enviar</string>
@@ -28,7 +24,6 @@
     <string name="end_day">Dia de Fim</string>
     <string name="select_status">Selecionar status</string>
     <string name="vehicle">Veículo </string>
-    <string name="end_break">Fim do intervalo</string>
     <string name="calender">Dia</string>
     <string name="select_status_popup_window">Selecione o status</string>
     <string name="profile">Perfil</string>
@@ -46,7 +41,4 @@
     <string name="english">English</string>
     <string name="firstname">First Name</string>
     <string name="confirm">confirme</string>
-    <string name="POR">POR</string>
-    <string name="ENG">ENG</string>
-    <string name="ESP">ESP</string>
 </resources>

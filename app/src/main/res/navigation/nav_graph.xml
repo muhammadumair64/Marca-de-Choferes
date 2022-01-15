@@ -2,12 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.marcadechoferes.mainscreen.home.HomeFragment"
+        android:name="logicasur.marcadechoferes.mainscreen.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -19,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.marcadechoferes.mainscreen.profile.ProfileFragment"
+        android:name="logicasur.marcadechoferes.mainscreen.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -31,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/configurationFragment"
-        android:name="com.example.marcadechoferes.mainscreen.configuration.ConfigurationFragment"
+        android:name="logicasur.marcadechoferes.mainscreen.configuration.ConfigurationFragment"
         android:label="fragment_configuration"
         tools:layout="@layout/fragment_configuration" >
         <action

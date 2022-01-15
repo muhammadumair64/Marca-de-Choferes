@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.marcadechoferes.auth.signin.viewModel.SigninViewModel" />
+            type="logicasur.marcadechoferes.auth.signin.viewModel.SigninViewModel" />
 
     </data>
 

@@ -1,13 +1,9 @@
 <resources>
     <string name="app_name">Marca de Choferes</string>
-    <string name="my_text"><u>Privacy Policy and Terms</u></string>
     <string name="start">Get Started</string>
-    <string name="sign_up_title">Sign in to your account</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="forgot_password">Forgot your password?</string>
     <string name="sign_in">Sign in</string>
-    <string name="privacy_policy">By signing in you agree to our <u>Privacy Policy and Terms.</u></string>
     <string name="Forgot_passwordTitle">Forgot password?</string>
     <string name="forgot_password_discription">Enter your email below and we will send you a reset email. </string>
     <string name="submit">Submit</string>
@@ -28,7 +24,6 @@
     <string name="end_day">End Day</string>
     <string name="select_status">Status Select</string>
     <string name="vehicle">Vehicle </string>
-    <string name="end_break">End Break</string>
     <string name="calender">Day</string>
     <string name="select_status_popup_window">Select Status</string>
     <string name="profile">Profile</string>
@@ -46,7 +41,4 @@
     <string name="english">English</string>
     <string name="firstname">First Name</string>
     <string name="confirm">Confirm</string>
-    <string name="POR">POR</string>
-    <string name="ENG">ENG</string>
-    <string name="ESP">ESP</string>
 </resources>
