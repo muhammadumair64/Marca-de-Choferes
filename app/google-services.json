@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:993701656105:android:687fabee5ef06852470e38",
+        "mobilesdk_app_id": "1:993701656105:android:7a6941fb1143b5ae470e38",
         "android_client_info": {
-          "package_name": "com.example.marcadechoferes"
+          "package_name": "com.logicasur.appchoferes"
         }
       },
       "oauth_client": [
