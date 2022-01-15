@@ -11,10 +11,11 @@ import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.auth.createpassword.viewModel.CreatePasswordViewModel
 import com.logicasur.appchoferes.Extra.Language
+import com.logicasur.appchoferes.R
+import com.logicasur.appchoferes.databinding.ActivityCreateNewPasswordScreenBinding
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import logicasur.marcadechoferes.R
-import logicasur.marcadechoferes.databinding.ActivityCreateNewPasswordScreenBinding
+
 
 @AndroidEntryPoint
 class CreateNewPasswordScreen : BaseClass() {
