@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "993701656105",
-    "project_id": "marca-de-chofers-testing",
-    "storage_bucket": "marca-de-chofers-testing.appspot.com"
+    "project_number": "877849016415",
+    "project_id": "marca-choferes",
+    "storage_bucket": "marca-choferes.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:993701656105:android:7a6941fb1143b5ae470e38",
+        "mobilesdk_app_id": "1:877849016415:android:3d3f71360ade91920783ea",
         "android_client_info": {
           "package_name": "com.logicasur.appchoferes"
         }
       },
       "oauth_client": [
         {
-          "client_id": "993701656105-ksrhd3qgh64oh0k546rv540nqcq5g1u2.apps.googleusercontent.com",
+          "client_id": "877849016415-1sebercuugi11514c1i2rb481b8h1ae1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDn0P8sTBRzhZxCu25NofemFX_2jxoK5w8"
+          "current_key": "AIzaSyCZkl1GDKfbt33Xa9MmhqE3ExCHgPWLavw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "993701656105-ksrhd3qgh64oh0k546rv540nqcq5g1u2.apps.googleusercontent.com",
+              "client_id": "877849016415-1sebercuugi11514c1i2rb481b8h1ae1.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -622,11 +622,11 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     ) {
         print("${time.toDouble()}")
         MyApplication.BreakToSend = time
-        binding!!.breakBar.progress = time.toFloat()
+
 
         var default = MyApplication.TotalBreak * 60
         maxBreakBarValue= tinyDB.getInt("MaxBreakBar")
-        binding.breakBar.progressMax = maxBreakBarValue.toFloat()
+        binding!!.breakBar.progressMax = maxBreakBarValue.toFloat()
         println("value of max $maxBreakBarValue")
         if ( time > maxBreakBarValue){
             var max = maxBreakBarValue + (MyApplication.TotalBreak * 60)
@@ -634,10 +634,16 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
 
         if (time >= default) {
-            binding.breakBar.progressMax = maxBreakBarValue.toFloat()
-           binding.breakBar.progressBarColor=Color.parseColor("#FFA023")
+            binding!!.breakBar.progressMax = maxBreakBarValue.toFloat()
+           binding!!.breakBar.progressBarColor=Color.parseColor("#FFA023")
+            var newOvertimer= time-default
+            binding!!.breakBar.progress = newOvertimer.toFloat()
 
+        }else{
+            binding!!.breakBar.progress = time.toFloat()
         }
+
+
 
 
     }
