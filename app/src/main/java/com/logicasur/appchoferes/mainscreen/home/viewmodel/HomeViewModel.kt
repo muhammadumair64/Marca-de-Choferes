@@ -323,7 +323,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     fun buttonEndDay() {
         var language= tinyDB.getString("language")
-   fadeColor()
+        fadeColor()
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
 //        dataBinding?.breakBar?.progress=0f
 //        dataBinding?.bar?.progress=0f
@@ -627,6 +627,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         var default = MyApplication.TotalBreak * 60
         maxBreakBarValue= tinyDB.getInt("MaxBreakBar")
         binding!!.breakBar.progressMax = maxBreakBarValue.toFloat()
+
         println("value of max $maxBreakBarValue")
         if ( time > maxBreakBarValue){
             var max = maxBreakBarValue + (MyApplication.TotalBreak * 60)
@@ -640,6 +641,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             binding!!.breakBar.progress = newOvertimer.toFloat()
 
         }else{
+//            binding.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
             binding!!.breakBar.progress = time.toFloat()
         }
 
