@@ -36,18 +36,18 @@ class ProfileFragment : Fragment() {
     lateinit var dailogBuilder: AlertDialog.Builder
     lateinit var alertDialog: AlertDialog
     lateinit var dismiss: ImageView
-    lateinit var title:TextView
-    lateinit var changedName:EditText
+    lateinit var title: TextView
+    lateinit var changedName: EditText
     lateinit var binding: FragmentProfileBinding
-    lateinit var confirmbtn:Button
-val profileViewModel :ProfileViewModel by viewModels()
+    lateinit var confirmbtn: Button
+    val profileViewModel: ProfileViewModel by viewModels()
     lateinit var mainViewModel: MainViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val language= Language()
+        val language = Language()
 
         language.setLanguage((activity as MainActivity).baseContext)
         binding = DataBindingUtil.inflate(
@@ -55,16 +55,16 @@ val profileViewModel :ProfileViewModel by viewModels()
         )
 
 
-        var viewBinding=binding.root
+        var viewBinding = binding.root
         initViews()
         openPopupWindow()
-        return  viewBinding
+        return viewBinding
     }
 
-    fun initViews(){
+    fun initViews() {
         var context = (activity as MainActivity).context
-        (activity as MainActivity).binding.menu.setItemSelected(R.id.User,true)
-        profileViewModel.viewsForFragment(context,binding)
+        (activity as MainActivity).binding.menu.setItemSelected(R.id.User, true)
+        profileViewModel.viewsForFragment(context, binding)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         val animation = TransitionInflater.from(requireContext()).inflateTransition(
@@ -74,21 +74,21 @@ val profileViewModel :ProfileViewModel by viewModels()
 
         mainViewModel.navigationLiveData.observe(viewLifecycleOwner, Observer {
 
-            if(it=="1"){
+            if (it == "1") {
                 val extras = FragmentNavigatorExtras(
                     binding.profileImage to "image_small",
                     binding.namelayout to "small_name_layout",
                     binding.dateLayout to "small_date"
                 )
                 findNavController().navigate(
-                    R.id.action_profileFragment_to_homeFragment,null,null,extras
+                    R.id.action_profileFragment_to_homeFragment, null, null, extras
                 )
 
-            }else if(it=="3"){
+            } else if (it == "3") {
                 findNavController().navigate(
                     R.id.action_profileFragment_to_configurationFragment,
                     null,
-                    null,null
+                    null, null
                 )
 
             }
@@ -97,14 +97,15 @@ val profileViewModel :ProfileViewModel by viewModels()
 
         binding.editProfile.setOnClickListener {
             com.github.dhaval2404.imagepicker.ImagePicker.with(this)
-               //Crop image(Optional), Check Customization for more option
-                .compress(1024)			//Final image size will be less than 1 MB(Optional)
-                .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(
+                    1080,
+                    1080
+                )    //Final image resolution will be less than 1080 x 1080(Optional)
                 .start()
 
         }
-
-
 
 
     }
@@ -114,7 +115,7 @@ val profileViewModel :ProfileViewModel by viewModels()
 
         if (resultCode == Activity.RESULT_OK) {
             //Image Uri will not be null for RESULT_OK
-            var uri : Uri = data?.data!!
+            var uri: Uri = data?.data!!
             val bitmapImage = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
 
             profileViewModel.bitmapToBase64(bitmapImage)
@@ -127,18 +128,19 @@ val profileViewModel :ProfileViewModel by viewModels()
 
     }
 
-    fun openPopupWindow(){
+    fun openPopupWindow() {
         dailogBuilder = AlertDialog.Builder(getContext())
         val contactPopupView: View = layoutInflater.inflate(R.layout.name_change_popup_window, null)
         alertDialog = dailogBuilder.create()
-        title=contactPopupView.findViewById(R.id.popupTitleName)
-        var option=1
+        title = contactPopupView.findViewById(R.id.popupTitleName)
+        var option = 1
         var context = (activity as MainActivity).context
 
 
         binding.editName.setOnClickListener {
+            option = 1
             alertDialog.setView(contactPopupView)
-            title.text= getResources().getString(R.string.firstname)
+            title.text = getResources().getString(R.string.firstname)
             var name = binding.TitleName.text
             println("showable name is $name")
             changedName.setText("$name", TextView.BufferType.EDITABLE);
@@ -149,9 +151,9 @@ val profileViewModel :ProfileViewModel by viewModels()
             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
         binding.editSurname.setOnClickListener {
-            option=2
+            option = 2
             alertDialog.setView(contactPopupView)
-            title.text=getResources().getString(R.string.father_name)
+            title.text = getResources().getString(R.string.father_name)
             var name = binding.FatherName.text
             println("showable name is $name")
             changedName.setText("$name", TextView.BufferType.EDITABLE);
@@ -163,38 +165,36 @@ val profileViewModel :ProfileViewModel by viewModels()
         }
 
         dismiss = contactPopupView.findViewById(R.id.close)
-        confirmbtn=contactPopupView.findViewById(R.id.confirm_btn)
-        changedName=contactPopupView.findViewById(R.id.popup_Name_Field)
+        confirmbtn = contactPopupView.findViewById(R.id.confirm_btn)
+        changedName = contactPopupView.findViewById(R.id.popup_Name_Field)
         dismiss.setOnClickListener {
             alertDialog.dismiss()
         }
 
         confirmbtn.setOnClickListener {
-            var nameChanges =changedName.text
-            if((nameChanges.length >= 3)) {
-                var fatherName= binding.FatherName.text
-                var Name=binding.TitleName.text
-                Log.d("input Parameters","$nameChanges  $fatherName  $Name")
+            var nameChanges = changedName.text
+            if ((nameChanges.length >= 3)) {
+                var fatherName = binding.FatherName.text
+                var Name = binding.TitleName.text
+                Log.d("input Parameters", "$nameChanges  $fatherName  $Name")
                 if (option == 1) {
-                    profileViewModel.updateProfile(nameChanges.toString(),fatherName.toString(),alertDialog)
+                    profileViewModel.updateProfile(
+                        nameChanges.toString(),
+                        fatherName.toString(),
+                        alertDialog
+                    )
                 } else {
-                    profileViewModel.updateProfile(Name.toString(),nameChanges.toString(),alertDialog)
+                    profileViewModel.updateProfile(
+                        Name.toString(),
+                        nameChanges.toString(),
+                        alertDialog
+                    )
                 }
             }
         }
 
 
-
-
-
-
-
-
-
     }
-
-
-
 
 
 }

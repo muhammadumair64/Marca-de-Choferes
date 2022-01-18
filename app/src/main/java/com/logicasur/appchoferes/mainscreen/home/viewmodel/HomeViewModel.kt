@@ -168,8 +168,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
         Timer().schedule(300) {
 
-
+            viewModelScope.launch {
+                withContext(Dispatchers.Main){
                     checkBreakBaColor()
+                }
+            }
+
 
 
         }
@@ -272,8 +276,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         MyApplication.check=0
         buttonTakeBreak()
 //        intent.stopTimer()
-        intent.startTimerBreak()
-        tinyDB.putString("selectedState", "takeBreak")
+
+               intent.startTimerBreak()
+
+           tinyDB.putString("selectedState", "takeBreak")
         hitActivityAPI(1, MyApplication.BreakToSend)
     }
 
@@ -324,13 +330,19 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun buttonEndDay() {
         var language= tinyDB.getString("language")
         fadeColor()
-        dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+        dataBinding!!.apply {
+           breakBar.progressBarColor = Color.parseColor("#FFD6D9")
 //        dataBinding?.breakBar?.progress=0f
 //        dataBinding?.bar?.progress=0f
-        dataBinding?.StateActive?.setVisibility(View.GONE)
-        dataBinding?.vehicleListBtn?.isClickable = true
-        dataBinding?.spacer?.setVisibility(View.VISIBLE)
-        dataBinding?.secondState?.setVisibility(View.VISIBLE)
+         StateActive.setVisibility(View.GONE)
+           vehicleListBtn.isClickable = true
+            spacer?.setVisibility(View.VISIBLE)
+            secondState.setVisibility(View.VISIBLE)
+        }
+
+        
+
+        tinyDB.putInt("state",0)
 //        dataBinding?.initialState?.setVisibility(View.VISIBLE)
 //        dataBinding?.vehicleListBtn?.setBackgroundResource(R.drawable.item_popup_btn_bg)
 //        dataBinding?.iconCar?.setBackgroundResource(R.drawable.ic_icon_awesome_car_alt)
@@ -405,7 +417,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         var intent = (activityContext as MainActivity)
         if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso"||dataBinding?.secondState?.text == "Fim do intervalo") {
             goToSecondState()
-            intent.stopTimerBreak()
+
+                intent.stopTimerBreak()
+
             dataBinding!!.statusListBtn.visibility  = View.VISIBLE
 //            intent.startTimer()
             Log.d("break timer","${MyApplication.BreakToSend}")
@@ -413,6 +427,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             dataBinding!!.statusListBtn.isClickable= true
         } else {
             var time = 0
+            intent.timeBreak= 0.0
+            tinyDB.putInt("lasttimebreak",1)
+            tinyDB.putInt("lasttimework",1)
+            dataBinding?.breakBar?.progress=0f
             var overtime =getTimeStringFromDouble(time)
             dataBinding!!.overTime!!.text = overtime
              startDaySetter(intent)
@@ -421,6 +439,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                 intent.startTimerBreak()
                 intent.stopTimerBreak()
             }
+
             goToActivState()
             hitActivityAPI(0,MyApplication.TimeToSend)
 
@@ -593,8 +612,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             tinyDB.putInt("MaxBar",max)
         }
 
-
-
         if (time == default) {
             binding!!.bar.progress = 0F
         }else if (time > default){
@@ -610,7 +627,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         } else
         {
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
-           overTime =false
+             overTime =false
             binding!!.bar.progress = time.toFloat()
         }
     }
@@ -1240,9 +1257,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
 
-        if(timerServiceCheck && breakTimerService==false){
+        if(timerServiceCheck == true && breakTimerService==false){
 
                 goToActivState()
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
             dataBinding!!.statusListBtn.visibility  = View.VISIBLE
         } else if(breakTimerService){
             dataBinding!!.statusListBtn.visibility  = View.GONE
@@ -1341,6 +1359,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
         if(timerServiceCheck== true && breakTimerService == false){
+            dataBinding!!.statusListBtn.visibility  = View.VISIBLE
             ref.startTimerBreak()
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
             Timer().schedule(100) {

@@ -88,7 +88,7 @@ class MainActivity : BaseClass(){
     var dpWidth: Float? = null
     lateinit var binding: ActivityMainBinding
     lateinit var serviceIntentB: Intent
-    private var timeBreak = 0.0
+    var timeBreak = 0.0
     var dataBinding: FragmentHomeBinding? = null
     val viewModel: HomeViewModel by viewModels()
     lateinit var tinyDB: TinyDB
@@ -198,6 +198,7 @@ class MainActivity : BaseClass(){
 
     fun stopTimer() {
         println("work Timer stop")
+        tinyDB.putInt("lasttimework",time.toInt())
         stopService(serviceIntent)
         timerStarted = false
     }
@@ -246,6 +247,7 @@ class MainActivity : BaseClass(){
 
     fun stopTimerBreak() {
         println("break Timer stop")
+        tinyDB.putInt("lasttimebreak",timeBreak.toInt())
         stopService(serviceIntentB)
         timerStarted = false
     }
@@ -258,8 +260,9 @@ class MainActivity : BaseClass(){
     }
 
     private fun getTimeStringFromDoubleBreak(time: Double): String {
+        val test = time
+         Log.d("checkBreakTimer", test.toString())
         val resultIntBreak = time.roundToInt()
-
         lifecycleScope.launch {
             viewModel.breakTimerupdater(time.roundToInt(), dataBinding,tinyDB)
         }

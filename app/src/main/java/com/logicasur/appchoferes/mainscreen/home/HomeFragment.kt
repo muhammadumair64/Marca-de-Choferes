@@ -35,7 +35,7 @@ import com.logicasur.appchoferes.myApplication.MyApplication
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(),OnclickItem {
+class HomeFragment : Fragment(), OnclickItem {
     lateinit var dismiss: ImageView
     lateinit var searchAdapter: SearchAdapter
     lateinit var statusAdapter: StatusAdapter
@@ -50,14 +50,14 @@ class HomeFragment : Fragment(),OnclickItem {
     val viewModel: HomeViewModel by viewModels()
     lateinit var mainViewModel: MainViewModel
     lateinit var tinyDB: TinyDB
-    var mainContext : Context? = null
+    var mainContext: Context? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
 
-        val language= Language()
+        val language = Language()
 //        checkLanguage()
         language.setLanguage((activity as MainActivity).baseContext)
         binding = DataBindingUtil.inflate(
@@ -77,9 +77,9 @@ class HomeFragment : Fragment(),OnclickItem {
 
     fun initViews() {
         var context = (activity as MainActivity).context
-        mainContext= context
-        binding.statusListBtn.visibility=View.GONE
-        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor,binding.secondState)
+        mainContext = context
+        binding.statusListBtn.visibility = View.GONE
+        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, binding.secondState)
         binding.apply {
             initialState?.setVisibility(View.VISIBLE)
             secondState?.setVisibility(View.GONE)
@@ -126,9 +126,8 @@ class HomeFragment : Fragment(),OnclickItem {
         )
 
         binding.profileImage.setOnClickListener {
-        mainViewModel.navigationLiveData.postValue("2")
+            mainViewModel.navigationLiveData.postValue("2")
         }
-
 
 
     }
@@ -141,44 +140,42 @@ class HomeFragment : Fragment(),OnclickItem {
         alertDialog = dailogBuilder.create()
         dialog = statusDailogBuilder.create()
         binding.vehicleListBtn.setOnClickListener {
-            if(binding.StateActive.isVisible ){
+            if (binding.StateActive.isVisible) {
 
-            }
-            else if(binding.secondState.text == "End Break" ||binding.secondState.text == "Fin del descanso"||binding.secondState.text == "Fim do intervalo")
-            {
+            } else if (binding.secondState.text == "End Break" || binding.secondState.text == "Fin del descanso" || binding.secondState.text == "Fim do intervalo") {
 
-            } else{
+            } else {
                 searchAdapter.notifyDataSetChanged()
                 alertDialog.setView(contactPopupView)
                 alertDialog.show()
 
                 val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
                 val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-                alertDialog.getWindow()?.setLayout(width,height);
+                alertDialog.getWindow()?.setLayout(width, height);
                 alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             }
         }
 
         binding.statusListBtn.setOnClickListener {
-            if (binding.secondState.text == "End Break" ||binding.secondState.text == "Fin del descanso"||binding.secondState.text == "Fim do intervalo"){
+            if (binding.secondState.text == "End Break" || binding.secondState.text == "Fin del descanso" || binding.secondState.text == "Fim do intervalo") {
 
-                if(binding.secondState.visibility==View.GONE){
+                if (binding.secondState.visibility == View.GONE) {
                     statusAdapter.notifyDataSetChanged()
                     dialog.setView(statusPopupView)
                     dialog.show()
                     val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
                     val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
-                    dialog.getWindow()?.setLayout(width,height);
+                    dialog.getWindow()?.setLayout(width, height);
                     dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 }
 
-            }else{
+            } else {
                 statusAdapter.notifyDataSetChanged()
                 dialog.setView(statusPopupView)
                 dialog.show()
                 val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
                 val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
-                dialog.getWindow()?.setLayout(width,height);
+                dialog.getWindow()?.setLayout(width, height);
                 dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             }
         }
@@ -198,7 +195,7 @@ class HomeFragment : Fragment(),OnclickItem {
     fun searchVehicle() {
         var context = (activity as MainActivity).context
 
-        searchAdapter = SearchAdapter(viewModel.searchedArrayList,this)
+        searchAdapter = SearchAdapter(viewModel.searchedArrayList, this)
         recyclerView.adapter = searchAdapter
 
         val typeface = ResourcesCompat.getFont(context, R.font.open_sans_regular)
@@ -206,7 +203,7 @@ class HomeFragment : Fragment(),OnclickItem {
             .getIdentifier("android:id/search_src_text", null, null)
         val textView = searchView.findViewById(id) as TextView
         textView.hint = getString(R.string.search_here)
-        textView.textSize=20f
+        textView.textSize = 20f
         textView.typeface = typeface
 
         searchView.setOnQueryTextListener(object :
@@ -226,26 +223,24 @@ class HomeFragment : Fragment(),OnclickItem {
     }
 
     fun statusShow() {
-        statusAdapter = StatusAdapter(viewModel.statusArrayList,this)
+        statusAdapter = StatusAdapter(viewModel.statusArrayList, this)
         statusRecyclerView.adapter = statusAdapter
 
     }
 
     override fun vehicleSelected(position: Int) {
         println("position of holder $position")
-        var Position=position.plus(1)
-        tinyDB.putInt("vehicle",Position)
+        var Position = position.plus(1)
+        tinyDB.putInt("vehicle", Position)
         alertDialog.dismiss()
         viewModel.selectVehicle(position)
     }
 
 
-
-
     override fun statusSelection(position: Int) {
-       dialog.dismiss()
-        var Position=position.plus(1)
-        tinyDB.putInt("state",Position)
+        dialog.dismiss()
+        var Position = position.plus(1)
+        tinyDB.putInt("state", Position)
         viewModel.selectState(position)
         viewModel.hitStateAPI(position)
         (activity as MainActivity).getLocation(requireContext())
@@ -253,16 +248,14 @@ class HomeFragment : Fragment(),OnclickItem {
     }
 
 
+    fun checkLanguage() {
+        if (MyApplication.checkForLanguageChange == 200) {
+            MyApplication.checkForLanguageChange = 0
+            mainViewModel.navigationLiveData.postValue("3")
+        }
 
-     fun checkLanguage(){
-         if(MyApplication.checkForLanguageChange==200){
-             MyApplication.checkForLanguageChange = 0
-             mainViewModel.navigationLiveData.postValue("3")
+
     }
-
-
-}
-
 
 
 }
