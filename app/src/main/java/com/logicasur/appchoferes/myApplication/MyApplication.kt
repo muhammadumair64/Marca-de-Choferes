@@ -19,6 +19,7 @@ class MyApplication:Application() {
         MyApplication.BreakToSend=0
         MyApplication.checkForLanguageChange=0
         MyApplication.checkForResume=0
+        MyApplication.dayEndCheck = 0
         MyApplication.backPressCheck=0
     }
 
@@ -35,6 +36,7 @@ class MyApplication:Application() {
         var checkForLanguageChange by Delegates.notNull<Int>()
         var checkForResume by Delegates.notNull<Int>()
         var backPressCheck by Delegates.notNull<Int>()
+         var dayEndCheck by Delegates.notNull<Int>()
     }
 
 

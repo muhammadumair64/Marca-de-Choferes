@@ -92,6 +92,7 @@ class SplashScreen : BaseClass() {
     }
 
     fun initViews() {
+         buttonTextSetter()
         if(spleshCheck){
             if (netCheck()){
                 viewModel.getSplashScreen()
@@ -202,6 +203,41 @@ class SplashScreen : BaseClass() {
 
             }
         }
+
+    }
+
+
+
+    fun buttonTextSetter(){
+
+        var checker = tinyDB.getString("User")
+        println("checker $checker")
+        if (checker?.length!! >= 3) {
+            var language= tinyDB.getString("language")
+                  if (language=="0"){
+
+                      binding.startButton.text="Rever"
+
+            }else if(language=="1"){
+
+
+                      binding.startButton.text="Retry"
+            }
+            else{
+
+                      binding.startButton.text="Repetir"
+
+            }
+
+            }
+
+
+
+
+
+
+
+
 
     }
 

@@ -237,7 +237,11 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
             }
             2 -> {
+                MyApplication.dayEndCheck = 100
                getWorkTime(response)
+            }
+            3->{
+              MyApplication.dayEndCheck = 200
             }
         }
 
