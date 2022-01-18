@@ -34,6 +34,7 @@ import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.logicasur.appchoferes.splashscreen.SplashScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.logicasur.appchoferes.utils.MyFirebaseMessagingService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -178,7 +179,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
 
 
         var name = userName
-        var idApp: String? = BuildConfig.APPLICATION_ID
+        var idApp: String? = MyFirebaseMessagingService.getToken(activityContext!!)
         var memUsed: String? = usedSpace
         var diskFree: String? = iAvailableSpace
         var diskTotal: String? = iTotalSpace
@@ -550,6 +551,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                 K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
             }
             2 -> {
+                MyApplication.dayEndCheck = 100
                 tinyDB.putString("checkTimer", "workTime")
                 var workDate = response.lastVar!!.lastWorkedHoursDateIni
                 if (workDate!!.isNotEmpty()) {
@@ -559,6 +561,9 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                 }
                 tinyDB.putString("goBackTime", workDate)
                 K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+            }
+            3->{
+                MyApplication.dayEndCheck = 200
             }
         }
 

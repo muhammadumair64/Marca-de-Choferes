@@ -27,6 +27,7 @@ class SignInActivity : BaseClass() {
     }
 
     fun initViews(){
+
         setGrad(K.primaryColor, K.secondrayColor,binding.signInBtn)
         signinViewModel.viewsOfActivitySignin(context,binding)
     }

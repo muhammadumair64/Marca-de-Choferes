@@ -32,6 +32,7 @@ import com.logicasur.appchoferes.network.ResponseException
 import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.logicasur.appchoferes.utils.MyFirebaseMessagingService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -102,6 +103,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
             }
 
+            getToken()
+
 
         }
     }
@@ -124,7 +127,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
 
         var name = userName
         var password = userPassword
-        var idApp: String? = BuildConfig.APPLICATION_ID
+        var idApp: String? = MyFirebaseMessagingService.getToken(activityContext!!)
         var memUsed: String? = usedSpace
         var diskFree: String? = iAvailableSpace
         var diskTotal: String? =iTotalSpace
@@ -481,6 +484,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                 K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
             }
             2 -> {
+                MyApplication.dayEndCheck = 100
                 tinyDB.putString("checkTimer", "workTime")
                 var workDate = response.lastVar!!.lastWorkedHoursDateIni
                 if (workDate!!.isNotEmpty()) {
@@ -491,8 +495,18 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                 tinyDB.putString("goBackTime", workDate)
                 K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
             }
+            3->{
+                MyApplication.dayEndCheck = 200
+            }
         }
 
+
+    }
+
+
+    fun getToken(){
+        var Token = MyFirebaseMessagingService.getToken(activityContext!!)
+        Log.d("FCM_TOKEN_","$Token")
 
     }
 }

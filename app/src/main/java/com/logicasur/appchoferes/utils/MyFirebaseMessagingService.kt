@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
@@ -18,11 +19,17 @@ class MyFirebaseMessagingService  : FirebaseMessagingService() {
     val TAG = "FirebaseMessagingService"
 
 
-
+companion object{
+    fun getToken(context: Context): String? {
+        return context.getSharedPreferences("_", MODE_PRIVATE).getString("fcm_token", "empty")
+    }
+}
 
 
     override fun onNewToken(p0: String) {
         super.onNewToken(p0)
+        getSharedPreferences("_", MODE_PRIVATE).edit().putString("fcm_token",p0).apply()
+        Log.d("FCM_TOKEN_","$p0")
     }
 
     @SuppressLint("LongLogTag")
@@ -57,6 +64,9 @@ class MyFirebaseMessagingService  : FirebaseMessagingService() {
 
 
     }
+
+
+
 
 
 
