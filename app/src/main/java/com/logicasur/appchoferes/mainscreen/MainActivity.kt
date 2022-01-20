@@ -98,7 +98,7 @@ class MainActivity : BaseClass(){
      var authRepository:AuthRepository? = null
     var latitude=0.0
     var longitude =0.0
-
+    var breakBarProgress = 0
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -264,7 +264,7 @@ class MainActivity : BaseClass(){
          Log.d("checkBreakTimer", test.toString())
         val resultIntBreak = time.roundToInt()
         lifecycleScope.launch {
-            viewModel.breakTimerupdater(time.roundToInt(), dataBinding,tinyDB)
+            viewModel.breakTimerupdater(time.roundToInt(), dataBinding,tinyDB,this@MainActivity)
         }
         println("$resultIntBreak")
         BreakTime=resultIntBreak

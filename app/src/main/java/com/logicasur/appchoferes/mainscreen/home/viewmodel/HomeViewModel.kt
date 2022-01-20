@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
@@ -237,6 +238,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             }
 
         }
+
         dataBinding?.EndDay?.setOnClickListener {
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { endDayAction() }
@@ -325,9 +327,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
             if (overBreakTime) {
-                breakBar.progressBarColor = Color.parseColor("#FFD297")
+                breakBar.progressBarColor = Color.parseColor("#FFD6D9")//chnage light red
             } else {
-                breakBar.progressBarColor = Color.parseColor("#FFD6D9")
+                breakBar.progressBarColor = Color.parseColor("#FFD297")
             }
 
 //        dataBinding?.breakBar?.progress=0f
@@ -385,12 +387,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         var overBreakTime = tinyDB.getBoolean("overBreakTime")
         if (overBreakTime) {
-            dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFA023")
+            dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FF4D4E")
         } else {
             dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFD6D9")
         }
 
-        dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
+        dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFA023") //chnage to orange
         workTimerLargeToSmall()
         breakTimerSmallToLarge()
         dataBinding!!.statusListBtn.visibility = View.GONE
@@ -423,9 +425,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
             var overBreakTime = tinyDB.getBoolean("overBreakTime")
             if (overBreakTime) {
-                dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFD297")
+                dataBinding!!.breakBar.progressBarColor =
+                    Color.parseColor("#FFD6D9") // change to light red
             } else {
-                dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFD6D9")
+                dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFD297")
             }
             intent.stopTimerBreak()
 
@@ -435,7 +438,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             hitActivityAPI(2, MyApplication.BreakToSend)
             dataBinding!!.statusListBtn.isClickable = true
         } else {
-            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD297")
             var time = 0
             MyApplication.dayEndCheck = 0
             intent.timeBreak = 0.0
@@ -450,6 +453,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             Timer().schedule(200) {
                 intent.startTimer()
                 intent.startTimerBreak()
+                Log.d("BREAKTIMERTEST","3")
                 intent.stopTimerBreak()
             }
 
@@ -616,28 +620,11 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         MyApplication.TimeToSend = time
         maxWorkBarValue = tinyDB.getInt("MaxBar")
         Log.d("DAYENDCHECK", "${MyApplication.dayEndCheck}")
-        if (MyApplication.dayEndCheck == 200) {
-            if (time > default) {
-                Log.d("DAYENDCHECK", "here")
-                var maxProgress = time + time
-                binding!!.bar.progressMax = maxProgress.toFloat()
-            } else {
-                binding!!.bar.progressMax = maxWorkBarValue.toFloat()
-            }
-        } else {
-            binding!!.bar.progressMax = maxWorkBarValue.toFloat()
-        }
 
-
-//        setMaxAfterOvertime(maxWorkBarValue,binding)
-        println("value of max ${maxWorkBarValue}BarValue")
-        if (time > maxWorkBarValue) {
-            var max = maxWorkBarValue + (MyApplication.TotalTime * 60)
-            tinyDB.putInt("MaxBar", max)
-        }
 
         if (time == default) {
-            binding!!.bar.progress = 0F
+            tinyDB.putInt("BARPROGRESS", 0)
+            binding!!.bar.progress = 1F
         } else if (time > default) {
             println("overTime started ")
             tinyDB.putBoolean("overTime", true)
@@ -647,13 +634,28 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             } else {
                 binding!!.bar.progressBarColor = Color.parseColor("#169DFD")
             }
+
+            //over time calculation
             var newOvertimer = time - default
-            binding!!.bar.progress = newOvertimer.toFloat()
             var overtime = getTimeStringFromDouble(newOvertimer)
             println("time is thie $time")
             binding.overTime!!.text = overtime
 
+
+            var progress = tinyDB.getInt("BARPROGRESS")
+            if (progress == default) {
+                tinyDB.putInt("BARPROGRESS", 0)
+                binding!!.bar.progress = 1F
+            } else {
+                progress = progress + 1
+                binding!!.bar.progress = progress.toFloat()
+                tinyDB.putInt("BARPROGRESS", progress)
+            }
+
+
         } else {
+            Log.d("BARPROGRESS", "Yes here")
+            tinyDB.putInt("BARPROGRESS", 0)
             tinyDB.putBoolean("overTime", false)
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
             overTimeCheck = false
@@ -665,47 +667,45 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     fun breakTimerupdater(
         time: Int,
         binding: FragmentHomeBinding?,
-        tinyDB: TinyDB
+        tinyDB: TinyDB,
+        context: Context
     ) {
         print("${time.toDouble()}")
         MyApplication.BreakToSend = time
 
-
         var default = MyApplication.TotalBreak * 60
-        maxBreakBarValue = tinyDB.getInt("MaxBreakBar")
+
 
         Log.d("DAYENDCHECK", "${MyApplication.dayEndCheck}")
 
 
-        println("value of max $maxBreakBarValue")
-        if (time > maxBreakBarValue) {
-            var max = maxBreakBarValue + (MyApplication.TotalBreak * 60)
-            tinyDB.putInt("MaxBreakBar", max)
-        }
+
 
         if (time >= default) {
             tinyDB.putBoolean("overBreakTime", true)
-            if (MyApplication.dayEndCheck == 200 || MyApplication.dayEndCheck == 100 ) {
-                Log.d("DAYENDCHECK", "here")
-                var maxProgress = time + time
-                binding!!.breakBar.progressMax = maxProgress.toFloat()
-
+            if (binding!!.StateActive.isVisible) {
+                binding!!.breakBar.progressBarColor =
+                    Color.parseColor("#FFD6D9")//change to light red
             } else {
-                binding!!.breakBar.progressMax = maxBreakBarValue.toFloat()
+                binding!!.breakBar.progressBarColor = Color.parseColor("#FF4D4E")
             }
 
-            if (binding.StateActive.isVisible){
-                binding!!.breakBar.progressBarColor = Color.parseColor("#FFD297")
-            }else{
-                binding!!.breakBar.progressBarColor = Color.parseColor("#FFA023")
+
+            var progress = tinyDB.getInt("BREAKBARPROGRESS")
+            if (progress == default) {
+                tinyDB.putInt("BREAKBARPROGRESS", 0)
+                binding!!.breakBar.progress = 1F
+            } else {
+                progress = progress + 1
+                binding!!.breakBar.progress = progress.toFloat()
+                tinyDB.putInt("BREAKBARPROGRESS", progress)
             }
 
-            var newOvertimer = time - default
-            binding!!.breakBar.progress = newOvertimer.toFloat()
 
         } else {
+            tinyDB.putInt("BREAKBARPROGRESS", 0)
             tinyDB.putBoolean("overBreakTime", false)
-//            binding.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
+            //  binding!!.breakBar?.progressBarColor = Color.parseColor("#FFA023") //change to orange
             binding!!.breakBar.progress = time.toFloat()
         }
 
@@ -1248,7 +1248,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
             intent.stopTimerBreak()
             intent.stopTimer()
-            overtimeBarColor()
+            overtimeBarColor(intent.isMyServiceRunning(BreakTimerService::class.java))
 
         } else if (MyApplication.check == 300) {
             intent.startTimer()
@@ -1298,7 +1298,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
                 ref.startTimerBreak()
                 ref.startTimer()
-                dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
+                dataBinding?.breakBar?.progressBarColor =
+                    Color.parseColor("#FFA023")//change to orange
                 fadeColor()
             }
 
@@ -1313,7 +1314,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             dataBinding!!.statusListBtn.visibility = View.VISIBLE
         } else if (breakTimerService) {
             dataBinding!!.statusListBtn.visibility = View.GONE
-            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFA023")//change to orange
             fadeColor()
         } else {
             if (dataBinding!!.secondState.isVisible) {
@@ -1395,33 +1396,46 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         var ref = (activityContext as MainActivity)
         var timerServiceCheck = ref.isMyServiceRunning(TimerService::class.java)
         var breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
+
         if (breakTimerService) {
 //            fadeColor()
-            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
-        } else if (timerServiceCheck == false) {
-//            fadeColor()
+            dataBinding?.breakBar?.progressBarColor =
+                Color.parseColor("#FFA023")   //change to orange
+        } else {
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD297")
+        }
+
+
+        if (timerServiceCheck == false && breakTimerService == false) {
+
+            dataBinding!!.bar.progress = (MyApplication.TotalTime / 2).toFloat()
+            dataBinding!!.breakBar.progress = (MyApplication.TotalBreak / 2).toFloat()
+
         }
 
 
 
         if (timerServiceCheck == true && breakTimerService == false) {
             dataBinding!!.statusListBtn.visibility = View.VISIBLE
+            Log.d("BREAKTIMERTEST","1")
             ref.startTimerBreak()
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
             Timer().schedule(100) {
+
                 ref.stopTimerBreak()
+                Log.d("BREAKTIMERTEST","2")
             }
 
         }
 
 
-        overtimeBarColor()
+        overtimeBarColor(breakTimerService)
 
 
     }
 
 
-    fun overtimeBarColor() {
+    fun overtimeBarColor(breakTimerService: Boolean) {
         if (dataBinding!!.secondState.isVisible) {
             var overTime = tinyDB.getBoolean("overTime")
             var overTimeBreak = tinyDB.getBoolean("overBreakTime")
@@ -1435,14 +1449,18 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                 viewModelScope.launch {
                     withContext(Dispatchers.Main) {
                         if (overTimeBreak) {
-                            dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFD297")
+                            dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFD6D9") //
+                        } else {
+                            if (breakTimerService == false) {
+                                dataBinding!!.breakBar.progressBarColor =
+                                    Color.parseColor("#FFD297")
+                            }
+
                         }
                     }
                 }
 
             }
-
-
 
 
         }

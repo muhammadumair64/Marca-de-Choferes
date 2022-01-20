@@ -21,6 +21,7 @@ class MyApplication:Application() {
         MyApplication.checkForResume=0
         MyApplication.dayEndCheck = 0
         MyApplication.backPressCheck=0
+        MyApplication.breakBarProgress=0
     }
 
     companion object {
@@ -37,6 +38,7 @@ class MyApplication:Application() {
         var checkForResume by Delegates.notNull<Int>()
         var backPressCheck by Delegates.notNull<Int>()
          var dayEndCheck by Delegates.notNull<Int>()
+        var breakBarProgress by Delegates.notNull<Int>()
     }
 
 
