@@ -16,8 +16,8 @@ android {
         applicationId "com.logicasur.appchoferes"
         minSdk 23
         targetSdk 31
-        versionCode 2
-        versionName "2.0"
+        versionCode 3
+        versionName "3.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -140,6 +140,8 @@ dependencies {
     //fireBase
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
+
 
 }
 

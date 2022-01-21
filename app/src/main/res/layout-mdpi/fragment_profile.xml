@@ -23,8 +23,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/_35sdp"
-                android:background="@drawable/bg_spanish_design">
-
+                android:background="@drawable/profilebg">
+                <ImageView
+                    android:id="@+id/upper_layout_frount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
                 <LinearLayout
                     android:id="@+id/namelayout"
                     android:layout_width="wrap_content"
@@ -107,13 +110,30 @@
                 android:transitionName="image_big" />
 
             <ImageView
-                android:id="@+id/edit_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/profile_image"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/_48sdp"
                 android:src="@drawable/ic_editicon" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/edit_profile"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_alignRight="@id/profile_image"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/_2sdp"
+                android:layout_marginBottom="@dimen/_50sdp"
+                app:cardBackgroundColor="@color/black"
+                app:cardCornerRadius="@dimen/_8sdp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_pen" />
+
+            </androidx.cardview.widget.CardView>
         </RelativeLayout>
 
         <LinearLayout
@@ -171,21 +191,22 @@
                         android:textSize="@dimen/_10sdp" />
 
                 </RelativeLayout>
-    <RelativeLayout
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/editName"
         android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_25sdp"
+        android:layout_height="@dimen/_26sdp"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/item_editbutton">
-
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="@dimen/_4sdp"
+        >
         <ImageView
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:background="@drawable/ic_edit"
-
             />
-    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>
             </LinearLayout>
 
@@ -230,21 +251,22 @@
                             android:textSize="@dimen/_10sdp" />
 
                     </RelativeLayout>
-                    <RelativeLayout
+
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/editSurname"
                         android:layout_width="@dimen/_40sdp"
-                        android:layout_height="@dimen/_25sdp"
+                        android:layout_height="@dimen/_26sdp"
                         android:layout_alignParentEnd="true"
-                        android:background="@drawable/item_editbutton">
-
+                        app:cardBackgroundColor="@color/black"
+                        app:cardCornerRadius="@dimen/_4sdp"
+                        >
                         <ImageView
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
-                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
                             android:background="@drawable/ic_edit"
-
                             />
-                    </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
                 </RelativeLayout>
 
             </LinearLayout>
@@ -333,21 +355,21 @@
 
                     </RelativeLayout>
 
-                    <RelativeLayout
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/edit"
                         android:layout_width="@dimen/_40sdp"
-                        android:layout_height="@dimen/_25sdp"
+                        android:layout_height="@dimen/_26sdp"
                         android:layout_alignParentEnd="true"
-                        android:background="@drawable/item_editbutton">
-
+                        app:cardBackgroundColor="@color/black"
+                        app:cardCornerRadius="@dimen/_4sdp"
+                        >
                         <ImageView
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
-                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
                             android:background="@drawable/ic_edit"
-
                             />
-                    </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
 
                 </RelativeLayout>
             </LinearLayout>

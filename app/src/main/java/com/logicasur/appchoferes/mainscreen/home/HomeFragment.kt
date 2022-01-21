@@ -80,6 +80,8 @@ class HomeFragment : Fragment(), OnclickItem {
         mainContext = context
         binding.statusListBtn.visibility = View.GONE
         (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, binding.secondState)
+        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, binding.TakeBreak)
+        binding.date.setTextColor(Color.parseColor(K.primaryColor))
         binding.apply {
             initialState?.setVisibility(View.VISIBLE)
             secondState?.setVisibility(View.GONE)

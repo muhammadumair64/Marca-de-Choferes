@@ -2,6 +2,7 @@ package com.logicasur.appchoferes.auth.createpassword.viewModel
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.R
@@ -41,7 +43,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
         activityContext = context
         tinyDB = TinyDB(MyApplication.appContext)
         Token = tinyDB.getString("Cookie").toString()
-
+         binding.arrowBack.setBackgroundColor(Color.parseColor(K.primaryColor))
         var language= tinyDB.getString("language")
         if (language=="0"){
             TAG1 ="Contraseña demasiado corta"

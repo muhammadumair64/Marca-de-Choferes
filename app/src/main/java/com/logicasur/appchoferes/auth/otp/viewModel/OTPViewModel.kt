@@ -3,6 +3,7 @@ package com.logicasur.appchoferes.auth.otp.viewModel
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -53,7 +54,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
     fun viewsForOTPScreen(context: Context, binding: ActivityOtpBinding) {
         activityContext = context
         tinyDB = TinyDB(context)
-
+        binding.arrowBack.setBackgroundColor(Color.parseColor(K.primaryColor))
         binding.edt1.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -186,7 +187,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "2"
+        var appVersion: String? = "3"
         var appBuild: String? = Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -250,10 +251,12 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                             tinyDB.putInt("state", state+1)
                         }
 
-                        if(response.colors.primary.isNotEmpty()){
-                            K.primaryColor=response.colors.primary ?: "#7A59FC"
+                        if (response.colors.primary.isNotEmpty()) {
+                            K.primaryColor = response.colors.primary ?: "#7A59FC"
                             K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            tinyDB.putString("primaryColor",K.primaryColor)
                         }
+
                         tinyDB.putString("User",userName)
                         MyApplication.check=200
                         val Language = response.profile?.language

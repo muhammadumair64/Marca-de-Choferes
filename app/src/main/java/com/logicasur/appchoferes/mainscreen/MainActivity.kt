@@ -11,8 +11,6 @@ import android.os.Bundle
 import com.logicasur.appchoferes.R
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import com.logicasur.appchoferes.databinding.ActivityMainBinding
-import com.logicasur.appchoferes.databinding.FragmentHomeBinding
 import com.logicasur.appchoferes.mainscreen.home.timerServices.BreakTimerService
 import com.logicasur.appchoferes.mainscreen.home.timerServices.TimerService
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
@@ -64,6 +62,8 @@ import com.logicasur.appchoferes.Extra.HomeWatcher
 import com.google.android.gms.location.*
 import android.os.PowerManager
 import android.provider.Settings
+import com.logicasur.appchoferes.databinding.ActivityMainBinding
+import com.logicasur.appchoferes.databinding.FragmentHomeBinding
 import java.text.SimpleDateFormat
 
 import java.lang.Exception

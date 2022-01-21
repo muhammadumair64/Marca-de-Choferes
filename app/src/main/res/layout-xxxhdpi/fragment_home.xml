@@ -388,17 +388,17 @@
 
 
                 </LinearLayout>
-
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/status_list_btn"
                     android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_35sdp"
+                    android:layout_height="@dimen/_33sdp"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="@dimen/_48sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
 
                     <TextView
+                        android:layout_centerVertical="true"
                         android:id="@+id/status_selected"
                         android:layout_width="@dimen/_85sdp"
                         android:layout_height="@dimen/_15sdp"
@@ -408,16 +408,32 @@
                         android:text="@string/select_status"
                         android:textColor="@color/Privacy_policy_text_color"
                         android:textSize="@dimen/_10sdp" />
+                    <ImageView
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/arrowdownbg"
+                        android:layout_width="@dimen/_9sdp"
+                        android:layout_height="@dimen/_9sdp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:background="@color/black"
+
+                        />
 
                     <ImageView
-                        android:layout_width="@dimen/_7sdp"
-                        android:layout_height="@dimen/_4sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/arrowdown"
+                        android:layout_width="@dimen/_10sdp"
+                        android:layout_height="@dimen/_10sdp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:background="@drawable/ic_arrow" />
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/arrowdown"
+                        />
 
 
-                </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
 

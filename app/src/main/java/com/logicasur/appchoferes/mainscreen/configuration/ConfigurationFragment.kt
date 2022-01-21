@@ -4,16 +4,17 @@ import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
@@ -22,8 +23,6 @@ import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.configuration.viewModel.ConfigurationViewModel
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
-
 
 
 @AndroidEntryPoint
@@ -52,12 +51,12 @@ class ConfigurationFragment : Fragment() {
         var viewBinding = binding.root
         initViews()
         openPopupWindow()
+   customeColor()
         return viewBinding
 
     }
 
     fun initViews() {
-
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         (activity as MainActivity).binding.menu.setItemSelected(R.id.Settings,true)
         mainViewModel.navigationLiveData.observe(viewLifecycleOwner, Observer {
@@ -134,5 +133,17 @@ class ConfigurationFragment : Fragment() {
 
 
     }
+
+
+    fun customeColor(){
+        binding.upperLayoutBack!!.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.arrowBack1!!.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.arrowBack2!!.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.togglebg!!.setBackgroundColor(Color.parseColor(K.primaryColor))
+    }
+
+
+
+
 
 }

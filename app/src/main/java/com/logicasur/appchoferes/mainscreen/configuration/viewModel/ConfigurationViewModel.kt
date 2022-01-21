@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.FragmentConfigurationBinding
@@ -58,8 +59,17 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
         dataBinding = binding
         tinyDB = TinyDB(context)
         tagsForToast()
+
        val notify=tinyDB.getBoolean("notify")
-        dataBinding!!.switchBtn.isChecked=notify
+        if(notify==true){
+            dataBinding!!.toggleOFF!!.visibility = View.GONE
+            dataBinding!!.toggleON!!.visibility = View.VISIBLE
+        }
+        else{
+            dataBinding!!.toggleOFF!!.visibility = View.VISIBLE
+            dataBinding!!.toggleON!!.visibility = View.GONE
+        }
+//        dataBinding!!.switchBtn.isChecked=notify
         language0 = contactPopupView.findViewById(R.id.spanish)
         language2 = contactPopupView.findViewById(R.id.Portuguese)
         language1 = contactPopupView.findViewById(R.id.English)
@@ -100,17 +110,37 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
         }
 
 
-        dataBinding?.switchBtn?.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-            var intent = Intent(context, LoadingScreen::class.java)
+//        dataBinding?.switchBtn?.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+//            var intent = Intent(context, LoadingScreen::class.java)
+//            ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+//            if (isChecked) {
+//
+//                selectedNotifyStateUplaod(true)
+//            } else {
+//
+//                selectedNotifyStateUplaod(false)
+//            }
+//        })
+
+        dataBinding!!.apply {
+           toggleOFF!!.setOnClickListener {
+               var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-            if (isChecked) {
-
                 selectedNotifyStateUplaod(true)
-            } else {
-
-                selectedNotifyStateUplaod(false)
+               toggleON!!.visibility = View.VISIBLE
+               toggleOFF.visibility = View.GONE
             }
-        })
+
+
+            toggleON!!.setOnClickListener {
+                var intent = Intent(context, LoadingScreen::class.java)
+                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+                selectedNotifyStateUplaod(false)
+                toggleOFF!!.visibility = View.VISIBLE
+                toggleON.visibility = View.GONE
+            }
+        }
+
 
 
     }
@@ -243,35 +273,35 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
     fun language0Selected() {
         text0.setTextColor(Color.BLACK)
-        image0.setBackgroundResource(R.drawable.ic_blue_check)
+        image0.setBackgroundColor(Color.parseColor(K.primaryColor))
 
         text1.setTextColor(Color.parseColor("#C6C6C6"))
-        image1.setBackgroundResource(R.drawable.ic_check_circle)
+        image1.setBackgroundColor(Color.GRAY)
 
         text2.setTextColor(Color.parseColor("#C6C6C6"))
-        image2.setBackgroundResource(R.drawable.ic_check_circle)
+        image2.setBackgroundColor(Color.GRAY)
     }
 
     fun language1Selected() {
         text1.setTextColor(Color.BLACK)
-        image1.setBackgroundResource(R.drawable.ic_blue_check)
+        image1.setBackgroundColor(Color.parseColor(K.primaryColor))
 
         text0.setTextColor(Color.parseColor("#C6C6C6"))
-        image0.setBackgroundResource(R.drawable.ic_check_circle)
+        image0.setBackgroundColor(Color.GRAY)
 
         text2.setTextColor(Color.parseColor("#C6C6C6"))
-        image2.setBackgroundResource(R.drawable.ic_check_circle)
+        image2.setBackgroundColor(Color.GRAY)
     }
 
     fun language2Selected() {
         text2.setTextColor(Color.BLACK)
-        image2.setBackgroundResource(R.drawable.ic_blue_check)
+        image2.setBackgroundColor(Color.parseColor(K.primaryColor))
 
         text1.setTextColor(Color.parseColor("#C6C6C6"))
-        image1.setBackgroundResource(R.drawable.ic_check_circle)
+        image1.setBackgroundColor(Color.GRAY)
 
         text0.setTextColor(Color.parseColor("#C6C6C6"))
-        image0.setBackgroundResource(R.drawable.ic_check_circle)
+        image0.setBackgroundColor(Color.GRAY)
     }
 
     fun selectedLanguage() {

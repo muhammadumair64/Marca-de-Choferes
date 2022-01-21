@@ -27,6 +27,7 @@ import android.graphics.Bitmap
 import android.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
+import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.NoInternetException
@@ -97,6 +98,8 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
                         authRepository.clearData()
                         tinyDB.clear()
+                        K.primaryColor = "#7A59FC"
+                         K.secondrayColor = "#653FFB"
                         var intent = Intent(activityContext, SignInActivity::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                         (activityContext as MainActivity).finish()

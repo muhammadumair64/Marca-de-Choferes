@@ -15,6 +15,15 @@ import com.logicasur.appchoferes.auth.otp.interfaces.onEndLoadingCallbacks
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
 import dagger.hilt.android.AndroidEntryPoint
+import android.graphics.Color
+import android.view.Window
+
+import androidx.core.content.ContextCompat
+
+import android.view.WindowManager
+import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService.Companion.activity
+
 
 @AndroidEntryPoint
 class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
@@ -39,13 +48,15 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
          imageFromServer= tinyDB.getString("loadingBG").toString()
         if(imageFromServer.isNotEmpty()){
             Base64ToBitmap(imageFromServer)
+        }else{
+            Log.d("LOADINGSCRTEST","Empty")
         }
 
 
     }
 
    fun initView(){
-
+setBarColor()
        MyApplication.loadingContext = this
          imageBackground=findViewById(R.id.loadingBackground)
 
@@ -78,6 +89,7 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
     }
 
     fun Base64ToBitmap(base64: String) {
+        Log.d("LOADINGSCRTEST","IN BASE64")
         val imageBytes = Base64.decode(base64, 0)
         val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         imageBackground.setImageBitmap(image)
@@ -88,5 +100,26 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
         finish()
     }
 
+    fun setBarColor(){
+// clear FLAG_TRANSLUCENT_STATUS flag:
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+
+// finally change the color
+
+// finally change the color
+
+        val color = tinyDB.getString("primaryColor")
+        if(color?.isNotEmpty() == true){
+            window.setStatusBarColor(Color.parseColor(color))
+        }
+
+    }
 
 }

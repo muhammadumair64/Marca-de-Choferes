@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -28,6 +29,7 @@ import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.profile.viewmodel.ProfileViewModel
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.logicasur.appchoferes.Extra.K
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -39,7 +41,7 @@ class ProfileFragment : Fragment() {
     lateinit var title: TextView
     lateinit var changedName: EditText
     lateinit var binding: FragmentProfileBinding
-    lateinit var confirmbtn: Button
+    lateinit var confirmbtn: AppCompatButton
     val profileViewModel: ProfileViewModel by viewModels()
     lateinit var mainViewModel: MainViewModel
     override fun onCreateView(
@@ -58,6 +60,7 @@ class ProfileFragment : Fragment() {
         var viewBinding = binding.root
         initViews()
         openPopupWindow()
+        setButtonColor()
         return viewBinding
     }
 
@@ -166,6 +169,7 @@ class ProfileFragment : Fragment() {
 
         dismiss = contactPopupView.findViewById(R.id.close)
         confirmbtn = contactPopupView.findViewById(R.id.confirm_btn)
+        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor,confirmbtn)
         changedName = contactPopupView.findViewById(R.id.popup_Name_Field)
         dismiss.setOnClickListener {
             alertDialog.dismiss()
@@ -194,6 +198,18 @@ class ProfileFragment : Fragment() {
         }
 
 
+
+    }
+
+
+    fun setButtonColor(){
+
+        binding.editSurname.setCardBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.editName.setCardBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.edit.setCardBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.editProfile.setCardBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.upperLayoutFrount!!.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.upperLayoutFrount!!.alpha =0.73F
     }
 
 

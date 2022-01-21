@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.ItemStatusListBinding
@@ -32,22 +33,22 @@ class StatusAdapter (var statusArrayList: ArrayList<String>, val onclickItem: On
         tinyDB= TinyDB(MyApplication.appContext)
         holder.statusBinding.searchedText.text = statusArrayList[position]
         holder.statusBinding.searchedText.setTextColor(Color.parseColor("#C6C6C6"))
-        holder.statusBinding.close.setBackgroundResource(R.drawable.ic_check_circle)
+///     holder.statusBinding.close.setBackgroundResource(R.drawable.ic_check_circle)
         holder.statusBinding.searchedText.setTextColor(Color.parseColor("#C6C6C6"))
-        holder.statusBinding.close.setBackgroundResource(R.drawable.ic_check_circle)
+        holder.statusBinding.closebg.setBackgroundColor(Color.parseColor("#979797"))
 
        var selected=tinyDB.getInt("state")
          selected = selected.minus(1)
         if(selected==position){
             holder.statusBinding.searchedText.setTextColor(Color.BLACK)
-            holder.statusBinding.close.setBackgroundResource(R.drawable.ic_blue_check)
+            holder.statusBinding.closebg.setBackgroundColor(Color.parseColor(K.primaryColor))
         }
 
 
         holder.statusBinding.status.setOnClickListener {
 
             holder.statusBinding.searchedText.setTextColor(Color.BLACK)
-            holder.statusBinding.close.setBackgroundResource(R.drawable.ic_blue_check)
+            holder.statusBinding.closebg.setBackgroundColor(Color.parseColor(K.primaryColor))
             onclickItem.statusSelection(position)
         }
 

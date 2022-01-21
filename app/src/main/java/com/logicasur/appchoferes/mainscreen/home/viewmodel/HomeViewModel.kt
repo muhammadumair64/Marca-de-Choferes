@@ -104,7 +104,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         (context as MainActivity).initRepo(authRepository)
         MyBroadastReceivers.authRepository = authRepository
         binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
-
+        binding.arrowdownbg.setBackgroundColor(Color.parseColor(K.primaryColor))
 
 
         MyApplication.TotalTime = tinyDB.getInt("defaultWork")
@@ -623,7 +623,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
         if (time == default) {
-            tinyDB.putInt("BARPROGRESS", 0)
+//            tinyDB.putInt("BARPROGRESS", 0)
             binding!!.bar.progress = 1F
         } else if (time > default) {
             println("overTime started ")
@@ -642,15 +642,21 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
             binding.overTime!!.text = overtime
 
 
-            var progress = tinyDB.getInt("BARPROGRESS")
-            if (progress == default) {
-                tinyDB.putInt("BARPROGRESS", 0)
-                binding!!.bar.progress = 1F
-            } else {
-                progress = progress + 1
-                binding!!.bar.progress = progress.toFloat()
-                tinyDB.putInt("BARPROGRESS", progress)
-            }
+//            var progress = tinyDB.getInt("BARPROGRESS")
+//            if (progress == default) {
+//                tinyDB.putInt("BARPROGRESS", 0)
+//                binding!!.bar.progress = 1F
+//            } else {
+//                progress = progress + 1
+//                binding!!.bar.progress = progress.toFloat()
+//                tinyDB.putInt("BARPROGRESS", progress)
+//            }
+
+
+            var cycle = time/default
+            var value = cycle.toInt() * default
+            var progress = time-value
+            binding!!.bar.progress = progress.toFloat()
 
 
         } else {
@@ -684,22 +690,28 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         if (time >= default) {
             tinyDB.putBoolean("overBreakTime", true)
             if (binding!!.StateActive.isVisible) {
-                binding!!.breakBar.progressBarColor =
-                    Color.parseColor("#FFD6D9")//change to light red
+                binding!!.breakBar.progressBarColor = Color.parseColor("#FFD6D9")//change to light red
             } else {
                 binding!!.breakBar.progressBarColor = Color.parseColor("#FF4D4E")
             }
 
 
-            var progress = tinyDB.getInt("BREAKBARPROGRESS")
-            if (progress == default) {
-                tinyDB.putInt("BREAKBARPROGRESS", 0)
-                binding!!.breakBar.progress = 1F
-            } else {
-                progress = progress + 1
-                binding!!.breakBar.progress = progress.toFloat()
-                tinyDB.putInt("BREAKBARPROGRESS", progress)
-            }
+//            var progress = tinyDB.getInt("BREAKBARPROGRESS")
+//            if (progress == default) {
+//                tinyDB.putInt("BREAKBARPROGRESS", 0)
+//                binding!!.breakBar.progress = 1F
+//            } else {
+//                progress = progress + 1
+//                binding!!.breakBar.progress = progress.toFloat()
+//                tinyDB.putInt("BREAKBARPROGRESS", progress)
+//            }
+
+
+            var cycle = time/default
+            var value = cycle.toInt() * default
+            var progress = time-value
+            binding!!.breakBar.progress = progress.toFloat()
+
 
 
         } else {
@@ -1049,6 +1061,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     }
 
+
+
     fun uploadState(position: Int, geoPosition: GeoPosition?) {
         val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
         var currentDate = sdf.format(Date())
@@ -1333,7 +1347,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         color = "#99$color"
         dataBinding?.bar?.progressBarColor = Color.parseColor(color)
         Log.d("FadeColor ", "$color")
-
     }
 
     fun startDaySetter(intent: MainActivity) {
@@ -1407,9 +1420,13 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
         if (timerServiceCheck == false && breakTimerService == false) {
+            ref.startTimer()
+            ref.startTimerBreak()
+//            dataBinding!!.bar.progress = (MyApplication.TotalTime / 2).toFloat()
+//            dataBinding!!.breakBar.progress = (MyApplication.TotalBreak / 2).toFloat()
 
-            dataBinding!!.bar.progress = (MyApplication.TotalTime / 2).toFloat()
-            dataBinding!!.breakBar.progress = (MyApplication.TotalBreak / 2).toFloat()
+            ref.stopTimer()
+            ref.stopTimerBreak()
 
         }
 

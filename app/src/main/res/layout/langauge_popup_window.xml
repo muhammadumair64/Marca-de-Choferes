@@ -62,12 +62,20 @@
             android:textSize="@dimen/_14sdp" />
 
         <ImageView
+
             android:id="@+id/image0"
             android:layout_width="@dimen/_14sdp"
             android:layout_height="@dimen/_14sdp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_check_circle" />
+            android:background="@color/colorGrey" />
+        <ImageView
+
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/checkfrount" />
 
     </RelativeLayout>
     <RelativeLayout
@@ -96,7 +104,13 @@
             android:layout_height="@dimen/_14sdp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_check_circle" />
+            android:background="@color/colorGrey" />
+        <ImageView
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/checkfrount" />
 
 
     </RelativeLayout>
@@ -120,13 +134,22 @@
             android:textColor="@color/auth_hint_color"
             android:textSize="@dimen/_14sdp" />
 
+
         <ImageView
+
             android:id="@+id/image1"
             android:layout_width="@dimen/_14sdp"
             android:layout_height="@dimen/_14sdp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_check_circle" />
+            android:background="@color/colorGrey" />
+        <ImageView
+
+            android:layout_width="@dimen/_14sdp"
+            android:layout_height="@dimen/_14sdp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/checkfrount" />
 
 
     </RelativeLayout>

@@ -11,14 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".mainscreen.configuration.ConfigurationFragment">
+        <LinearLayout
+            android:layout_margin="@dimen/_30sdp"
+            android:id="@+id/upper_layout_back"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:background="@color/black"
+            android:orientation="horizontal" />
 
         <LinearLayout
             android:id="@+id/upper_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_210sdp"
-            android:layout_marginTop="@dimen/_30sdp"
-            android:background="@drawable/ic_configurationbackground"
+            android:layout_marginTop="@dimen/_28sdp"
+            android:background="@drawable/img_configbg"
             android:orientation="horizontal" />
+
 
         <RelativeLayout
             android:layout_width="@dimen/_130sdp"
@@ -34,7 +43,7 @@
                 android:background="@null"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/settings" />
+                app:lottie_rawRes="@raw/settingwithgray" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:layout_width="@dimen/_45sdp"
@@ -44,7 +53,7 @@
                 android:background="@null"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/settings" />
+                app:lottie_rawRes="@raw/settingwithgray" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:layout_width="@dimen/_30sdp"
@@ -54,7 +63,7 @@
                 android:background="@null"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_rawRes="@raw/settings" />
+                app:lottie_rawRes="@raw/settingwithgray" />
 
 
         </RelativeLayout>
@@ -96,17 +105,45 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:background="@drawable/ic_separator" />
 
-            <Switch
-                android:id="@+id/switch_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:checked="true"
-                android:padding="@dimen/_10sdp"
-                android:thumb="@drawable/ic_thumb"
-                android:track="@drawable/item_track"
+<!--            <Switch-->
+<!--                android:id="@+id/switch_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:checked="true"-->
+<!--                android:padding="@dimen/_10sdp"-->
+<!--                android:thumb="@drawable/ic_thumb"-->
+<!--                android:track="@drawable/item_track"-->
 
+<!--                />-->
+            <ImageView
+                android:id="@+id/togglebg"
+                android:layout_alignParentRight="true"
+                android:layout_width="@dimen/_33sdp"
+                android:layout_height="@dimen/_22sdp"
+               android:background="@color/black"
+                android:layout_marginRight="@dimen/_1sdp"
                 />
+
+            <ImageView
+                android:id="@+id/toggleON"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/toggleoff" />
+
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/toggleOFF"
+                android:layout_alignParentRight="true"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:src="@drawable/toggleon"
+                android:scaleType="fitXY"
+                />
+
+
 
         </RelativeLayout>
 
@@ -138,14 +175,23 @@
                 android:textSize="@dimen/_13sdp"
 
                 />
-
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/arrowBack1"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+              android:layout_marginRight="@dimen/_2sdp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_forward"
+                android:background="@color/black"
+                />
 
+            <ImageView
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/rightarrowimg"
+                android:scaleType="fitXY"
                 />
 
         </RelativeLayout>
@@ -167,15 +213,27 @@
                 android:textSize="@dimen/_13sdp" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/arrowBack2"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_2sdp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_forward"
+                android:background="@color/black"
+                />
 
+            <ImageView
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/rightarrowimg"
+                android:scaleType="fitXY"
                 />
 
         </RelativeLayout>
+
+
 
 
 

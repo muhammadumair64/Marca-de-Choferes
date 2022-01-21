@@ -70,8 +70,8 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         tinyDB.putInt("defaultBreak", response.work.workBreak)
                         tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
                         tinyDB.putString("language", Language.toString())
-                        tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
-                        tinyDB.putString("SplashBG", response.images.splashScreen ?: "")
+//                        tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
+//                        tinyDB.putString("SplashBG", response.images.splashScreen ?: "")
                         var max = response.work.workBreak * 60
                         println("Max Value from Server $max")
                         tinyDB.putInt("MaxBreakBar",max)
@@ -91,6 +91,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         if (response.colors.primary.isNotEmpty()) {
                             K.primaryColor = response.colors.primary ?: "#7A59FC"
                             K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            tinyDB.putString("primaryColor",K.primaryColor)
                         }
                         checkStateByServer(response)
                         tinyDB.putBoolean("notify", notify)

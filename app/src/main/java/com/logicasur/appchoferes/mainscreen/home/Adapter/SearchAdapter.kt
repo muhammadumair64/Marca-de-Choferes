@@ -11,6 +11,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.ItemVehiclelistBinding
@@ -45,17 +46,17 @@ class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClic
         spannable.setSpan(fcsBlack, 0, charactersLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         holder.adapterViewBindingAdapter.searchedText.text=spannable
         holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.parseColor("#C6C6C6"))
-        holder.adapterViewBindingAdapter.check.setBackgroundResource(R.drawable.ic_check_circle)
+        holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor("#979797"))
         var selected = tinyDB.getInt("vehicle")
     selected=selected.minus(1)
     if(selected==position){
         holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.BLACK)
-        holder.adapterViewBindingAdapter.check.setBackgroundResource(R.drawable.ic_blue_check)
+        holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor(K.primaryColor))
     }
         holder.adapterViewBindingAdapter.vehicle.setOnClickListener {
             onItemClicked.vehicleSelected(position)
             holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.BLACK)
-            holder.adapterViewBindingAdapter.check.setBackgroundResource(R.drawable.ic_blue_check)
+            holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor(K.primaryColor))
             println("holder position $holder")
         }
 
