@@ -865,7 +865,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun getLocationForState(context: Context) {
-        
+
         var intent = Intent(activityContext, LoadingScreen::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 

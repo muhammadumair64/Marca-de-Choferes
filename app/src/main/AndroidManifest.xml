@@ -12,6 +12,7 @@
     <uses-permission  android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
     <application
+        android:largeHeap="true"
         android:name="com.logicasur.appchoferes.myApplication.MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/app_icon"
