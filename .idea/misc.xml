@@ -52,7 +52,7 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-mdpi/activity_splash_screen.xml" value="0.33" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-mdpi/fragment_configuration.xml" value="1.5" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-mdpi/fragment_home.xml" value="0.4" />
-        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-mdpi/fragment_profile.xml" value="1.5" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-mdpi/fragment_profile.xml" value="2.0" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xhdpi/activity_create_new_password_screen.xml" value="0.33" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xhdpi/activity_forgot_password.xml" value="0.3049792531120332" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xhdpi/activity_loading_screen.xml" value="0.225" />
@@ -71,7 +71,7 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxhdpi/activity_splash_screen.xml" value="0.2" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxhdpi/fragment_configuration.xml" value="0.9" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxhdpi/fragment_home.xml" value="0.67" />
-        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxhdpi/fragment_profile.xml" value="0.22" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxhdpi/fragment_profile.xml" value="0.26481481481481484" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxxhdpi/activity_create_new_password_screen.xml" value="0.14210526315789473" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxxhdpi/activity_forgot_password.xml" value="0.18" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout-xxxhdpi/activity_loading_screen.xml" value="0.18947368421052632" />
@@ -91,7 +91,7 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/activity_testing.xml" value="0.14" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_configuration.xml" value="9.0" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_home.xml" value="1.1023622047244095" />
-        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_profile.xml" value="2.0416666666666665" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_profile.xml" value="3.0" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item.xml" value="0.14210526315789473" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item_searchviewbox.xml" value="0.14210526315789473" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item_status_list.xml" value="0.315450643776824" />

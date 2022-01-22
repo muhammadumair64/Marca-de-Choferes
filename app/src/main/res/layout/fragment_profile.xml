@@ -24,10 +24,12 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/_35sdp"
                 android:background="@drawable/profilebg">
+
                 <ImageView
                     android:id="@+id/upper_layout_frount"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
+
                 <LinearLayout
                     android:id="@+id/namelayout"
                     android:layout_width="wrap_content"
@@ -126,13 +128,13 @@
                 android:layout_marginRight="@dimen/_3sdp"
                 android:layout_marginBottom="@dimen/_61sdp"
                 app:cardBackgroundColor="@color/black"
-                app:cardCornerRadius="@dimen/_9sdp" >
+                app:cardCornerRadius="@dimen/_8sdp">
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_pen"
                     android:layout_gravity="center"
-                    />
+                    android:src="@drawable/ic_pen" />
 
             </androidx.cardview.widget.CardView>
 
