@@ -48,6 +48,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService.Companion.activity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -864,6 +865,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun getLocationForState(context: Context) {
+        
+        var intent = Intent(activityContext, LoadingScreen::class.java)
+        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
         println("location call")
         var locationRequest = LocationRequest()
         locationRequest.interval = 10000
@@ -997,8 +1002,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         var Token = tinyDB.getString("Cookie")
 
-        var intent = Intent(activityContext, LoadingScreen::class.java)
-        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
@@ -1061,8 +1064,11 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun hitStateAPI(position: Int) {
+        Log.d("STATETESTING","HIT")
         positionForState = position
-        getLocationForState(activityContext!!)
+        (activityContext as MainActivity).initPermission() {getLocationForState(activityContext!!)}
+
+//        getLocationForState(activityContext!!)
 
 //        if (CheckConnection.netCheck(activityContext!!)) {
 //            getLocationForState(activityContext!!)
