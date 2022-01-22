@@ -4,11 +4,13 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Base64
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
@@ -120,8 +122,17 @@ class SplashScreen : BaseClass() {
                 startActivity(intent)
                 finish()
             }
+
         }
-        setGrad(K.primaryColor, K.secondrayColor,binding.startButton)
+        var firstColor =  tinyDB.getString("primaryColor")
+        var secondColor = tinyDB.getString("secondrayColor")
+        if(firstColor?.isNotEmpty()==true && secondColor?.isNotEmpty() == true){
+            setGrad(firstColor, secondColor,binding.startButton)
+            setBarColor()
+        }else{
+            setGrad(K.primaryColor, K.secondrayColor,binding.startButton)
+        }
+
 
 
     }
@@ -241,6 +252,28 @@ class SplashScreen : BaseClass() {
 
     }
 
+
+    fun setBarColor(){
+// clear FLAG_TRANSLUCENT_STATUS flag:
+
+// clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+
+// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+
+// finally change the color
+
+// finally change the color
+
+        val color = tinyDB.getString("primaryColor")
+        if(color?.isNotEmpty() == true){
+            window.setStatusBarColor(Color.parseColor(color))
+        }
+
+    }
 
 
 }

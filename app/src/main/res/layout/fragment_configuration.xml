@@ -167,20 +167,19 @@
                 android:id="@+id/arrowBack1"
                 android:layout_width="@dimen/_10sdp"
                 android:layout_height="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_2sdp"
+
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@color/black"
                 />
 
             <ImageView
-                android:layout_width="@dimen/_16sdp"
+                android:layout_width="@dimen/_12sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/rightarrowimg"
                 android:scaleType="fitXY"
-                />
+                android:src="@drawable/rightarrowimg" />
 
         </RelativeLayout>
 
@@ -204,20 +203,19 @@
                 android:id="@+id/arrowBack2"
                 android:layout_width="@dimen/_10sdp"
                 android:layout_height="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_2sdp"
+
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@color/black"
                 />
 
             <ImageView
-                android:layout_width="@dimen/_16sdp"
+                android:layout_width="@dimen/_12sdp"
                 android:layout_height="@dimen/_16sdp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/rightarrowimg"
                 android:scaleType="fitXY"
-                />
+                android:src="@drawable/rightarrowimg" />
 
         </RelativeLayout>
 

@@ -92,6 +92,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                             K.primaryColor = response.colors.primary ?: "#7A59FC"
                             K.secondrayColor = response.colors.secondary ?: "#653FFB"
                             tinyDB.putString("primaryColor",K.primaryColor)
+                            tinyDB.putString("secondrayColor",K.secondrayColor)
                         }
                         checkStateByServer(response)
                         tinyDB.putBoolean("notify", notify)

@@ -105,7 +105,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         MyBroadastReceivers.authRepository = authRepository
         binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
         binding.arrowdownbg.setBackgroundColor(Color.parseColor(K.primaryColor))
-
+        binding.arrowbg.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.iconCarbg.setBackgroundColor(Color.parseColor(K.primaryColor))
 
         MyApplication.TotalTime = tinyDB.getInt("defaultWork")
 
@@ -762,6 +763,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     if (vehicle != 0) {
                         vehicle = vehicle.minus(1)
                         selectVehicleByLocalDB(vehicle)
+                    }else{
+
+                        dataBinding!!.initialState.visibility = View.VISIBLE
+                        dataBinding!!.secondState.visibility = View.GONE
                     }
                 }
 
@@ -925,7 +930,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         println("selected text $text")
         dataBinding!!.apply {
             vehicleListBtn.setBackgroundResource(R.drawable.bg_selectedvehicleback)
-            iconCar.setBackgroundResource(R.drawable.ic_white_car)
+           // iconCar.setBackground(ContextCompat.getDrawable(activityContext!!,R.drawable.ic_white_car))
+            iconCar.visibility = View.GONE
+            iconCarbg.visibility = View.GONE
+            iconCarWhite!!.visibility = View.VISIBLE
             vehicleNameSelected.setTextColor(Color.WHITE)
             vehicleNameSelected.text = text
             Arrow.visibility = View.GONE
@@ -950,7 +958,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         dataBinding!!.apply {
             vehicleListBtn.setBackgroundResource(R.drawable.bg_selectedvehicleback)
-            iconCar.setBackgroundResource(R.drawable.ic_white_car)
+//            iconCar.setBackgroundResource(R.drawable.ic_white_car)
+            iconCar.visibility =View.GONE
+            iconCarbg.visibility = View.GONE
+            iconCarWhite!!.visibility = View.VISIBLE
             vehicleNameSelected.setTextColor(Color.WHITE)
             vehicleNameSelected.text = text
             Arrow.visibility = View.GONE
@@ -1051,12 +1062,13 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     fun hitStateAPI(position: Int) {
         positionForState = position
+        getLocationForState(activityContext!!)
 
-        if (CheckConnection.netCheck(activityContext!!)) {
-            getLocationForState(activityContext!!)
-        } else {
-            Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-        }
+//        if (CheckConnection.netCheck(activityContext!!)) {
+//            getLocationForState(activityContext!!)
+//        } else {
+//            Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+//        }
 
 
     }

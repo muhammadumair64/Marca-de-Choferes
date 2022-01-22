@@ -349,13 +349,32 @@
                     android:layout_marginTop="@dimen/_5sdp"
                     android:background="@drawable/item_popup_btn_bg">
 
-                    <ImageView
-                        android:id="@+id/icon_car"
-                        android:layout_width="@dimen/_15sdp"
-                        android:layout_height="@dimen/_12sdp"
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_17sdp"
-                        android:background="@drawable/ic_icon_awesome_car_alt" />
+
+                        >
+                        <ImageView
+                            android:id="@+id/icon_carbg"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_11sdp"
+                            android:background="@color/black" />
+
+                        <ImageView
+                            android:id="@+id/icon_car"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_12sdp"
+                            android:background="@drawable/carfrontwithboarder" />
+                        <TextView
+                            android:id="@+id/icon_car_white"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_12sdp"
+                            android:background="@drawable/ic_white_car"
+                            android:visibility="gone"
+                            />
+                    </RelativeLayout>
 
                     <TextView
 
@@ -377,13 +396,38 @@
                         android:textColor="@color/white"
                         android:visibility="gone" />
 
-                    <ImageView
+                    <RelativeLayout
                         android:id="@+id/Arrow"
-                        android:layout_width="@dimen/_5sdp"
-                        android:layout_height="@dimen/_7sdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_5sdp"
-                        android:background="@drawable/ic_arrow_down" />
+                        >
+
+                        <ImageView
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/arrowbg"
+                            android:layout_width="@dimen/_8sdp"
+                            android:layout_height="@dimen/_11sdp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:background="@color/black"
+
+                            />
+
+                        <ImageView
+
+                            android:layout_width="@dimen/_10sdp"
+                            android:layout_height="@dimen/_13sdp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="@dimen/_11sdp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/rightarrowimg" />
+
+                    </RelativeLayout>
 
 
                 </LinearLayout>
@@ -413,10 +457,10 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:id="@+id/arrowdownbg"
-                        android:layout_width="@dimen/_9sdp"
+                        android:layout_width="@dimen/_11sdp"
                         android:layout_height="@dimen/_9sdp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_11sdp"
                         android:background="@color/black"
 
                         />
@@ -425,10 +469,10 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:id="@+id/arrowdown"
-                        android:layout_width="@dimen/_10sdp"
+                        android:layout_width="@dimen/_13sdp"
                         android:layout_height="@dimen/_10sdp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_11sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/arrowdown"
                         />
