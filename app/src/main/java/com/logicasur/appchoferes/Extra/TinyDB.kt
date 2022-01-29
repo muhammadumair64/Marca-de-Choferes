@@ -18,6 +18,7 @@ import java.lang.Exception
 import java.lang.NullPointerException
 import java.lang.NumberFormatException
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TinyDB(appContext: Context?) {
     private val preferences: SharedPreferences
@@ -414,7 +415,7 @@ class TinyDB(appContext: Context?) {
         putString(key, gson.toJson(obj))
     }
 
-    fun putListObject(key: String?, objArray: ArrayList<Any?>) {
+    fun putListObject(key: String?, objArray: ArrayList<Object>) {
         checkForNullKey(key)
         val gson = Gson()
         val objStrings = ArrayList<String>()

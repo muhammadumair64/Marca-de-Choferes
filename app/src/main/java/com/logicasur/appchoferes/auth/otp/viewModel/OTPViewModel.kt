@@ -187,7 +187,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "3"
+        var appVersion: String? = "5"
         var appBuild: String? = Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -236,7 +236,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         tinyDB.putInt("defaultWork", response.work?.workingHours ?: 0)
                         tinyDB.putInt("defaultBreak", response.work?.workBreak ?: 0)
                         tinyDB.putInt("lastVehicleid", response.lastVar?.lastIdVehicle?.id ?: 0)
-                        tinyDB.putString("loadingBG",response.images.loadinScreen ?: "")
+                        tinyDB.putString("loadingBG",response.images.loadingScreen ?: "")
                         tinyDB.putString("SplashBG",response.images.splashScreen ?: "")
                         var max = response.work!!.workBreak * 60
                         println("Max Value from Server $max")
@@ -254,7 +254,9 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                         if (response.colors.primary.isNotEmpty()) {
                             K.primaryColor = response.colors.primary ?: "#7A59FC"
                             K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            Log.d("COLORCHECKTESTING",response.colors.primary )
                             tinyDB.putString("primaryColor",K.primaryColor)
+                            tinyDB.putString("secondrayColor",K.secondrayColor)
                         }
 
                         tinyDB.putString("User",userName)

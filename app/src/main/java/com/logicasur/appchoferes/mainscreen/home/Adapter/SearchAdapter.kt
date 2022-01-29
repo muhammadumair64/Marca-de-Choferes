@@ -5,6 +5,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -17,8 +18,9 @@ import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.ItemVehiclelistBinding
 import com.logicasur.appchoferes.mainscreen.home.OnclickItem
 import com.logicasur.appchoferes.myApplication.MyApplication
+import com.logicasur.appchoferes.network.signinResponse.Vehicle
 
-class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClicked:OnclickItem):
+class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClicked:OnclickItem,var vehicleList:ArrayList<Vehicle>):
     RecyclerView.Adapter<SearchAdapter.searchViewHolder>(), Filterable {
     lateinit var tinyDB: TinyDB
     var allVehicleArrayList:ArrayList<String> = ArrayList()
@@ -54,6 +56,24 @@ class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClic
         holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor(K.primaryColor))
     }
         holder.adapterViewBindingAdapter.vehicle.setOnClickListener {
+            Log.d("VEHICALTESTING","${holder.adapterViewBindingAdapter.searchedText.text}")
+            var vehicle = holder.adapterViewBindingAdapter.searchedText.text
+            vehicle.trim()
+            var selectedVehicle= vehicleList[position]
+            selectedVehicle.id
+            tinyDB.putInt("lastVehicleid",selectedVehicle.id)
+
+//             var plateNumber = vehicle.split(" - ").toTypedArray()[0]
+//            if(plateNumber.isEmpty()){
+//                var discr= vehicle.split(" - ").toTypedArray()[0]
+//            }
+//            for(item in vehicleList){
+//                if(item.plateNumber == plateNumber){
+//                    Log.d("VEHICALTESTING","${item.id}")
+//                    tinyDB.putInt("lastVehicleid",item.id.toInt())
+//                }
+//            }
+
             onItemClicked.vehicleSelected(position)
             holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.BLACK)
             holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor(K.primaryColor))

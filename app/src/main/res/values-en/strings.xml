@@ -41,4 +41,8 @@
     <string name="english">English</string>
     <string name="firstname">First Name</string>
     <string name="confirm">Confirm</string>
+    <string name="toptext">Network connection unavailable.</string>
+    <string name="subtext">Do you want to proceed without Internet?</string>
+    <string name="proceed">Proceed</string>
+    <string name="cancel">Cancel</string>
 </resources>

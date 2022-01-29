@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.repository.AuthRepository
+import com.logicasur.appchoferes.auth.signin.SignInActivity
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
@@ -42,9 +43,41 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
         activityContext = context
         tinyDB = TinyDB(context)
         tagsForToast()
+        K.authRepository= authRepository
 
 
     }
+
+    fun checkData(){
+        K.checkNet()
+        var myTimer = Timer()
+        myTimer.schedule(object : TimerTask() {
+            override fun run() {
+           var check = tinyDB.getBoolean("SYNC_CHECK")
+                if(check==true){
+                    Log.d("SYNC_CHECK_TESTING","RUN SYNC")
+                    syncdata()
+                    myTimer.cancel()
+                }
+                else{
+                    var check=K.isConnected()
+                    if(check == false){
+                        viewModelScope.launch {
+                            withContext(Dispatchers.Main){
+                                Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+
+                            }
+                        }
+
+                    }
+                }
+            }
+        }, 0, 5000)
+    }
+
+
+
+
 
 
     fun syncdata() {
@@ -91,24 +124,44 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         if (response.colors.primary.isNotEmpty()) {
                             K.primaryColor = response.colors.primary ?: "#7A59FC"
                             K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            Log.d("COLORCHECKTESTING",response.colors.primary )
                             tinyDB.putString("primaryColor",K.primaryColor)
                             tinyDB.putString("secondrayColor",K.secondrayColor)
                         }
+
+                       var color= tinyDB.getString("primaryColor")
+                        Log.d("COLORCHECKTESTING22",color!!)
                         checkStateByServer(response)
                         tinyDB.putBoolean("notify", notify)
                         tinyDB.putInt("againCome", 200)
                         MyApplication.check = 200
+                        Log.d("LOADINGIMAGETESTING","here1")
 
-                        Timer().schedule(1500) {
-                            var intent = Intent(activityContext, MainActivity::class.java)
-                            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                            (activityContext as SplashScreen).finish()
+                        var image = response.images.loadingScreen
+                        println("hello testing $image")
+//                        Log.d("CheckLoading",image)
+                        //changed
+                        val imageCheck=tinyDB.getString("LOADINGIMAGE")
 
+                        if(response.images.loadingScreen!=imageCheck || response.images.loadingScreen ==""){
+                            println("LOADING IMAGE IS HERE ")
+                            tinyDB.putString("LOADINGIMAGE",response.images.loadingScreen)
+                            getLoadingScreenImage()
+
+
+                        }else{
+                            println("LOADING IMAGE IS HERE IN ELSE")
+                            getAvatar()
                         }
+
+                        println("LOADING IMAGE IS HERE NO WHERE")
+
+
 
 
                     }
-                } catch (e: ResponseException) {
+              }
+                catch (e: ResponseException) {
                     println("ErrorResponse")
                 } catch (e: ApiException) {
                     e.printStackTrace()
@@ -124,7 +177,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     }
                     Timer().schedule(5000) {
                         Log.d("connection Exception", "connection lost")
-                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
+//                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     }
                 } catch (e: SocketTimeoutException) {
 
@@ -141,7 +194,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     Log.d("connection Exception", "Connect Not Available")
                     Timer().schedule(5000) {
                         Log.d("connection Exception", "connection lost")
-                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
+//                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     }
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
@@ -154,6 +207,110 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 }
             }
         }
+    }
+
+
+    suspend fun getLoadingScreenImage(){
+        Log.d("LoadingImage","IN API")
+        val Token = tinyDB.getString("Cookie")
+        try {
+            val response = authRepository.getLoadingScreen(Token!!)
+            if(response!=null) {
+                Log.d("LoadingImage","We got the string ${response.loadingScreen}")
+                tinyDB.putString("loadingBG",response.loadingScreen ?: "")
+            }else{
+                Log.d("LoadingImage","The response is null")
+            }
+
+            println("SuccessResponse $response")
+            getAvatar()
+
+
+        }
+        catch (e: ApiException) {
+            e.printStackTrace()
+            Log.d("LoadingImage","API EXCEPTION ${e.localizedMessage}")
+        }
+        catch (e: NoInternetException) {
+            println("position 2")
+            e.printStackTrace()
+            Log.d("LoadingImage","No Internet EXCEPTION ${e.localizedMessage}")
+
+            withContext(Dispatchers.Main){
+                Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+            }
+        }
+        catch (e: ResponseException) {
+            println("ErrorResponse")
+            Log.d("LoadingImage","Response Exception ${e.localizedMessage}")
+
+        }
+        catch(e: SocketException){
+            LoadingScreen.onEndLoadingCallbacks?.endLoading()
+            Log.d("connection Exception","Connect Not Available")
+            withContext(Dispatchers.Main){
+                Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+
+    }
+
+    fun getAvatar(){
+        Log.d("AvtarImage","IN Avtar API")
+        viewModelScope.launch {
+            var Token = tinyDB.getString("Cookie")
+            withContext(Dispatchers.IO) {
+
+                try {
+                    var user=tinyDB.getString("User")
+
+                    val response = authRepository.getUserAvatar(user!!,Token!!)
+
+                    println("SuccessResponse $response")
+
+
+
+                    if(response!=null) {
+
+                        tinyDB.putString("Avatar",response.avatar)
+
+                        var intent = Intent(activityContext,MainActivity::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                        (activityContext as SplashScreen).finish()
+
+
+                    }
+
+                }
+                catch (e: ApiException) {
+                    e.printStackTrace()
+                }
+                catch (e: NoInternetException) {
+                    println("position 2")
+                    e.printStackTrace()
+
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch (e: ResponseException) {
+                    println("ErrorResponse")
+                }
+                catch(e: SocketException){
+//                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception","Connect Not Available")
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
+        }
+
+
     }
 
 
@@ -295,6 +452,10 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 tinyDB.putString("selectedState", "endDay")
             }
         }
+
+
+
+
 
 
     }

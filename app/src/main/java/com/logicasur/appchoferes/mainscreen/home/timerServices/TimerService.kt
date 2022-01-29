@@ -1,18 +1,22 @@
 package com.logicasur.appchoferes.mainscreen.home.timerServices
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import com.logicasur.appchoferes.Extra.TinyDB
+import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
 import java.util.*
 
 class TimerService : Service()
 {
+
     override fun onBind(p0: Intent?): IBinder? = null
 
     private val timer = Timer()
     lateinit var tinyDB: TinyDB
+
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int
     {
@@ -27,6 +31,7 @@ class TimerService : Service()
     {
         println("i am here 012")
         timer.cancel()
+        (MyApplication.activityContext as MainActivity).checkScreen()
         super.onDestroy()
     }
 

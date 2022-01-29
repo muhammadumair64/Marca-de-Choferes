@@ -41,4 +41,8 @@
     <string name="english">English</string>
     <string name="firstname">First Name</string>
     <string name="confirm">confirme</string>
+    <string name="toptext">Conexão de rede indisponível.</string>
+    <string name="subtext">Deseja continuar sem Internet?</string>
+    <string name="proceed">Continuar</string>
+    <string name="cancel">Cancelar</string>
 </resources>

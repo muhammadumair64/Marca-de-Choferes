@@ -1,12 +1,16 @@
 package com.logicasur.appchoferes.mainscreen.profile
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.transition.TransitionInflater
 import android.util.Log
@@ -14,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -30,7 +35,11 @@ import com.logicasur.appchoferes.mainscreen.profile.viewmodel.ProfileViewModel
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.logicasur.appchoferes.Extra.K
+import com.nabinbhandari.android.permissions.PermissionHandler
+import com.nabinbhandari.android.permissions.Permissions
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 @AndroidEntryPoint
@@ -66,7 +75,8 @@ class ProfileFragment : Fragment() {
 
     fun initViews() {
         var context = (activity as MainActivity).context
-        (activity as MainActivity).binding.menu.setItemSelected(R.id.User, true)
+
+
         profileViewModel.viewsForFragment(context, binding)
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
@@ -99,16 +109,49 @@ class ProfileFragment : Fragment() {
 
 
         binding.editProfile.setOnClickListener {
-            com.github.dhaval2404.imagepicker.ImagePicker.with(this)
-                //Crop image(Optional), Check Customization for more option
-                .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                .maxResultSize(
-                    1080,
-                    1080
-                )    //Final image resolution will be less than 1080 x 1080(Optional)
-                .start()
 
+                 initPermission()
         }
+
+
+
+    }
+
+
+    fun startImagePicker(){
+        com.github.dhaval2404.imagepicker.ImagePicker.with(this)
+            //Crop image(Optional), Check Customization for more option
+            .compress(1024)            //Final image size will be less than 1 MB(Optional)
+            .maxResultSize(
+                1080,
+                1080
+            )    //Final image resolution will be less than 1080 x 1080(Optional)
+            .start()
+    }
+    fun initPermission() {
+
+        val permissions =
+            arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        Permissions.check(
+            (activity as MainActivity).context/*context*/,
+            permissions,
+            null /*rationale*/,
+            null /*options*/,
+            object : PermissionHandler() {
+                override fun onGranted() {
+
+                startImagePicker()
+
+
+
+                }
+
+                override fun onDenied(context: Context?, deniedPermissions: ArrayList<String>?) {
+                    super.onDenied(context, deniedPermissions)
+                }
+            })
 
 
     }
@@ -212,5 +255,11 @@ class ProfileFragment : Fragment() {
         binding.upperLayoutFrount!!.alpha =0.73F
     }
 
+    override fun onResume() {
+        super.onResume()
+
+            (activity as MainActivity).binding.menu.setItemSelected(R.id.User, true)
+
+    }
 
 }

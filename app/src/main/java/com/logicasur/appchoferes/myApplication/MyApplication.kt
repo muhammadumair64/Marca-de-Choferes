@@ -11,6 +11,7 @@ class MyApplication:Application() {
         super.onCreate()
         MyApplication.appContext = applicationContext
         MyApplication.loadingContext=applicationContext
+        MyApplication.activityContext=applicationContext
         MyApplication.check=0
         MyApplication.TotalTime=0
         MyApplication.TotalBreak=0
@@ -28,6 +29,7 @@ class MyApplication:Application() {
 
         lateinit  var appContext: Context
         lateinit var loadingContext:Context
+        lateinit var activityContext:Context
         var check by Delegates.notNull<Int>()
         var TotalTime  by Delegates.notNull<Int>()
         var navBarSelection by Delegates.notNull<Int>()

@@ -11,18 +11,23 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 import android.animation.ValueAnimator
-import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Base64
 import android.util.Log
+import android.view.Gravity
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -48,7 +53,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService.Companion.activity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -75,6 +79,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     var longitude = 0.0
     var overTimeCheck = false
     var TAG2 = ""
+
+
+
+
+
+
 
     //activity
 
@@ -223,6 +233,13 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
         dataBinding?.secondState?.setOnClickListener {
+            tinyDB.putBoolean("STATEAPI",false)
+                    if(dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
+                                 tinyDB.putInt("SELECTEDACTIVITY",2)
+                    }else{
+                                  tinyDB.putInt("SELECTEDACTIVITY",0)
+                    }
+
 
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { secondStateAction() }
@@ -232,6 +249,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         }
         dataBinding?.TakeBreak?.setOnClickListener {
+            tinyDB.putBoolean("STATEAPI",false)
+
+           tinyDB.putInt("SELECTEDACTIVITY",1)
+
 
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { takeBreakAction() }
@@ -242,6 +263,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         }
 
         dataBinding?.EndDay?.setOnClickListener {
+            tinyDB.putBoolean("STATEAPI",false)
+            tinyDB.putInt("SELECTEDACTIVITY",3)
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { endDayAction() }
             } else {
@@ -251,6 +274,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
         }
         dataBinding?.initialState?.setOnClickListener {
+            tinyDB.putBoolean("STATEAPI",false)
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { initialStateAction() }
             } else {
@@ -738,11 +762,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                 var lastId = tinyDB.getInt("lastVehicleid")
                 for (item in vehicles) {
                     if (item.id == lastId) {
+                        Log.d("VEHICALTESTING","Vehicle ${item.plateNumber}")
                         position
                         tinyDB.putInt("vehicle", position)
                     }
                     position = position.plus(1)
-                    searchedArrayList.add("${item.plateNumber} ${item.description}")
+                    searchedArrayList.add("${item.plateNumber} - ${item.description}")
                     vehicleArrayListforUpload.add(item)
                 }
 
@@ -1063,9 +1088,13 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     }
 
+
     fun hitStateAPI(position: Int) {
         Log.d("STATETESTING","HIT")
         positionForState = position
+         var status = statusArrayListforUpload[position]
+        tinyDB.putObject("STATE_OBJ",status)
+        tinyDB.putBoolean("STATEAPI",true)
         (activityContext as MainActivity).initPermission() {getLocationForState(activityContext!!)}
 
 //        getLocationForState(activityContext!!)
@@ -1090,7 +1119,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 var vehiclePosition = tinyDB.getInt("vehicle")
-                var vehicle = vehicleArrayListforUpload[vehiclePosition]
+                var vehicle = vehicleArrayListforUpload[vehiclePosition-1]
                 var status = statusArrayListforUpload[position]
                 println("status is $status")
                 updateState("$currentDate", MyApplication.TimeToSend, status, geoPosition, vehicle)
@@ -1179,14 +1208,23 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 //    }
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
+//        tinyDB.putInt("SELECTEDACTIVITY",activity)
+//        tinyDB.putInt("TOTALTIMETOSEND",totalTime!!)
 
-        totalTimeForActivty = totalTime!!
-        selectedActivty = activity
-        if (CheckConnection.netCheck(activityContext!!)) {
-            getLocation(activityContext!!)
-        } else {
-            Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-        }
+       var check= tinyDB.getBoolean("NETCHECK")
+if(check){
+    totalTimeForActivty = totalTime!!
+    selectedActivty = activity
+
+    if (CheckConnection.netCheck(activityContext!!)) {
+        getLocation(activityContext!!)
+    } else {
+        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+    }
+}else{
+    tinyDB.putBoolean("NETCHECK",true)
+}
+
 
 
     }
@@ -1502,5 +1540,26 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
     }
+
+    fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
+        networkAlertDialog.setView(PopupView)
+            networkAlertDialog.show()
+            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+            val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+            networkAlertDialog.getWindow()?.setLayout(width, height);
+            networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val window: Window? = networkAlertDialog.getWindow()
+            val wlp: WindowManager.LayoutParams = window!!.getAttributes()
+            wlp.gravity = Gravity.BOTTOM
+            window.setAttributes(wlp)
+
+    }
+
+
+
+
+
+
+
 
 }

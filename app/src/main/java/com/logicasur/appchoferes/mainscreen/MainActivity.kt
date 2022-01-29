@@ -64,10 +64,12 @@ import android.os.PowerManager
 import android.provider.Settings
 import com.logicasur.appchoferes.databinding.ActivityMainBinding
 import com.logicasur.appchoferes.databinding.FragmentHomeBinding
+import com.logicasur.appchoferes.network.signinResponse.State
 import java.text.SimpleDateFormat
 
 import java.lang.Exception
 import java.net.SocketException
+import kotlin.collections.ArrayList
 
 
 @AndroidEntryPoint
@@ -75,7 +77,9 @@ class MainActivity : BaseClass(){
 
     companion object {
         const val LOCATION_SETTING_REQUEST = 999
+        lateinit var action : ()->Unit
     }
+    var arrayList:ArrayList<UpdateActivityDataClass> = ArrayList()
     var TAG1=""
     var TAG2=""
     val receiver = MyBroadastReceivers()
@@ -92,21 +96,30 @@ class MainActivity : BaseClass(){
     var dataBinding: FragmentHomeBinding? = null
     val viewModel: HomeViewModel by viewModels()
     lateinit var tinyDB: TinyDB
-    lateinit var action : ()->Unit
      var WorkTime = 0
      var BreakTime = 0
      var authRepository:AuthRepository? = null
     var latitude=0.0
     var longitude =0.0
     var breakBarProgress = 0
-    @RequiresApi(Build.VERSION_CODES.Q)
+    lateinit var mgr:PowerManager
+   lateinit var  wakeLock: PowerManager.WakeLock
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val language= Language()
         language.setLanguage(baseContext)
+        MyApplication.activityContext= this
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+         Log.d("AVATARTESTING","IN ON CREATE")
+
 
         tinyDB= TinyDB(this)
+
+        K.primaryColor=tinyDB.getString("primaryColor")!!
+        K.secondrayColor=tinyDB.getString("secondrayColor")!!
+
 //        K.timeDifference(tinyDB)
         tagsForToast()
         serviceIntent = Intent(applicationContext, TimerService::class.java)
@@ -129,7 +142,10 @@ class MainActivity : BaseClass(){
 
 
 
+
     fun initView(){
+       mgr  = context.getSystemService(POWER_SERVICE) as PowerManager
+        wakeLock= mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"MyWake:Lock" )
         MyApplication.backPressCheck =200
         MyApplication.checkForResume=0
 //        var intent=Intent(this,WatcherService::class.java)
@@ -157,6 +173,7 @@ class MainActivity : BaseClass(){
 
 
     fun NavBar() {
+        Log.d("AVATARTESTING","IN NAV BAR ${K.primaryColor}")
 
         binding.menu.setMenuResource(R.menu.navigationbar_menu,Color.parseColor(K.primaryColor))
         binding.menu.setItemSelected(R.id.home, true)
@@ -186,12 +203,16 @@ class MainActivity : BaseClass(){
         }
     }
 
+
+
     fun startTimer() {
         if(!isMyServiceRunning(TimerService::class.java)){
             println("work timer start")
             serviceIntent.putExtra(TimerService.TIME_EXTRA, time)
             startService(serviceIntent)
             timerStarted = true
+            wakeLock.acquire(10*60*1000L /*10 minutes*/)
+
         }
 
     }
@@ -201,6 +222,8 @@ class MainActivity : BaseClass(){
         tinyDB.putInt("lasttimework",time.toInt())
         stopService(serviceIntent)
         timerStarted = false
+
+//        wakeLock.release()
     }
 
     private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
@@ -345,8 +368,27 @@ class MainActivity : BaseClass(){
         assert(locationManager != null)
         var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (GpsStatus) {
-            action()
-            getLocation(this)
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO){
+                    if(K.isConnected()){
+                        withContext(Dispatchers.Main){
+                            action()
+                            getLocation(context)
+                        }
+
+                    }else{
+                        withContext(Dispatchers.Main){
+                            mainViewModel.updatePopupValue()
+                            var check= tinyDB.getBoolean("STATEAPI")
+                            if(check != true){
+                                MainActivity.action = action
+                            }
+                        }
+                    }
+                }
+            }
+
+
 
         } else {
             showEnableLocationSetting(action)
@@ -365,7 +407,14 @@ class MainActivity : BaseClass(){
 
             val task = LocationServices.getSettingsClient(it)
                 .checkLocationSettings(builder.build())
-                this.action = action
+
+          if(K.isConnected()){
+              Log.d("PENDINGAPITESTING","IN GPS POPUP SETTING")
+              MainActivity.action = action
+          }else{
+              Toast.makeText(this, "NET IS NOT AVAILIABLE", Toast.LENGTH_SHORT).show()
+          }
+
             task.addOnCompleteListener {
             }
 
@@ -427,8 +476,28 @@ class MainActivity : BaseClass(){
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode==999 && resultCode== RESULT_OK) {
             Log.d("isSuccess GPS PRO","nvnf ${checkGPS()}")
-                      action()
-                      getLocation(this)
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO){
+                    if(K.isConnected()){
+                        withContext(Dispatchers.Main){
+                            action()
+                            getLocation(context)
+                        }
+
+                    }else{
+                        withContext(Dispatchers.Main){
+                            mainViewModel.updatePopupValue()
+                            var check= tinyDB.getBoolean("STATEAPI")
+                            if(check != true){
+                                MainActivity.action = action
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
         }
     }
 
@@ -440,6 +509,10 @@ class MainActivity : BaseClass(){
         vehicle: Vehicle?,
         authRepository: AuthRepository
     ) {
+        if(activity == 3){
+            var intent = Intent(this, LoadingScreen::class.java)
+            startActivity(intent)
+        }
         if(activity==2){
             if (totalTime != null) {
                 tinyDB.putInt("lasttimebreak", totalTime)
@@ -447,8 +520,8 @@ class MainActivity : BaseClass(){
         }
         this.authRepository=authRepository
         tinyDB.putInt("ActivityCheck",activity!!)
-         var obj = UpdateActivityDataClass(datetime,totalTime,activity,geoPosition,vehicle)
-
+         var obj = UpdateActivityDataClass(datetime,totalTime,activity,geoPosition,vehicle,null)
+        Log.d("PENDINGDATATESTING","DATA IS IN MAIN____ $obj")
         tinyDB.putObject("upadteActivity",obj)
         tinyDB.putObject("GeoPosition",geoPosition)
 
@@ -757,6 +830,7 @@ class MainActivity : BaseClass(){
 
     override fun onResume() {
        Log.d("check_ON_RESUME","${MyApplication.checkForResume}")
+        binding.menu.setMenuResource(R.menu.navigationbar_menu,Color.parseColor(K.primaryColor))
         if(MyApplication.checkForResume==200){
 
             try {
@@ -771,6 +845,14 @@ class MainActivity : BaseClass(){
 
         }
         super.onResume()
+
+        var onScreenCheck= tinyDB.getBoolean("SCREENOFF")
+        if(onScreenCheck){
+            var intent = Intent(this, com.logicasur.appchoferes.splashscreen.SplashScreen::class.java)
+            startActivity(intent)
+            tinyDB.putBoolean("SCREENOFF",false)
+            finish()
+        }
     }
 
 
@@ -816,6 +898,7 @@ class MainActivity : BaseClass(){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
                         requestBackgroundPermission()
                     }
+
                     CheckGpsStatus(action)
 
 
@@ -934,6 +1017,111 @@ class MainActivity : BaseClass(){
         }
     }
 
+
+    fun checkScreen(){
+        Log.d("SCREENOFFCHECK","TRUE")
+        val isScreenOn: Boolean = mgr.isInteractive()
+        if(isScreenOn== false){
+             tinyDB.putBoolean("SCREENOFF",true)
+        }
+    }
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        tinyDB.putInt("lasttimebreak",timeBreak.toInt())
+        tinyDB.putInt("lasttimework",time.toInt())
+        savedInstanceState.putBoolean("MyBoolean", true);
+
+    }
+
+    fun getAPIData(): UpdateActivityDataClass {
+    var vehicle = tinyDB.getObject("VehicleForBackgroundPush",Vehicle::class.java)
+    var geoPosition= tinyDB.getObject("GeoPosition",GeoPosition::class.java)
+    val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
+    var currentDate = sdf.format(Date())
+        currentDate = currentDate + "Z"
+        var activity=tinyDB.getInt("SELECTEDACTIVITY")
+        var time = 0
+    when(activity){
+        0->{
+           time =  WorkTime
+        }
+        1->{
+            time = BreakTime
+        }
+        2->{
+            time =  BreakTime
+        }
+        3->{
+            time =  WorkTime
+        }
+
+    }
+
+
+    var obj = UpdateActivityDataClass(currentDate,time,activity,geoPosition,vehicle,null)
+    return obj
+}
+
+
+    fun getAPIDataForState(): UpdateActivityDataClass {
+        var vehicle = tinyDB.getObject("VehicleForBackgroundPush",Vehicle::class.java)
+        var geoPosition= tinyDB.getObject("GeoPosition",GeoPosition::class.java)
+        val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
+        var currentDate = sdf.format(Date())
+        currentDate = currentDate + "Z"
+        var activity=tinyDB.getInt("SELECTEDACTIVITY")
+        var time = 0
+        when(activity){
+            0->{
+                time =  WorkTime
+            }
+            1->{
+                time = BreakTime
+            }
+            2->{
+                time =  BreakTime
+            }
+            3->{
+                time =  WorkTime
+            }
+
+        }
+        var state = tinyDB.getObject("STATE_OBJ",State::class.java)
+        Log.d("STATE_TESTING","----> $state")
+        var obj = UpdateActivityDataClass(currentDate,time,activity,geoPosition,vehicle,state)
+        return obj
+    }
+
+    fun updatePendingData(checkState: Boolean) {
+        tinyDB.putBoolean("NETCHECK",false)
+
+        if(checkState){
+            var obj = getAPIDataForState()
+            arrayList= tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
+            arrayList.add(obj)
+        }else{
+            var obj = getAPIData()
+            arrayList= tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
+            arrayList.add(obj)
+        }
+
+
+
+        tinyDB.putListObject("PENDINGDATALIST",arrayList as ArrayList<Object>)
+       var check = tinyDB.getBoolean("PENDINGCHECK")
+        if(check== false){
+            K.checkNet()
+
+        }
+        if(checkState == false){
+
+                action()
+
+        }
+
+
+    }
 
 
 }

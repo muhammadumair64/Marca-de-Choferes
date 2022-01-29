@@ -458,12 +458,13 @@
                         android:text="@string/select_status"
                         android:textColor="@color/Privacy_policy_text_color"
                         android:textSize="@dimen/_10sdp" />
+
                     <ImageView
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
                         android:id="@+id/arrowdownbg"
                         android:layout_width="@dimen/_11sdp"
                         android:layout_height="@dimen/_9sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/_11sdp"
                         android:background="@color/black"

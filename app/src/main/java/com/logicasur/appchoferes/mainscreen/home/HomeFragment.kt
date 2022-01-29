@@ -6,10 +6,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -21,8 +19,10 @@ import com.logicasur.appchoferes.mainscreen.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 import android.widget.*
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.logicasur.appchoferes.Extra.K
@@ -41,15 +41,20 @@ class HomeFragment : Fragment(), OnclickItem {
     lateinit var statusAdapter: StatusAdapter
     lateinit var dailogBuilder: AlertDialog.Builder
     lateinit var statusDailogBuilder: AlertDialog.Builder
+    lateinit var networkAlertDialog: AlertDialog
+    lateinit var networkDialogBuilder:AlertDialog.Builder
     lateinit var alertDialog: AlertDialog
     lateinit var dialog: AlertDialog
     lateinit var binding: FragmentHomeBinding
     lateinit var recyclerView: RecyclerView
     lateinit var statusRecyclerView: RecyclerView
     lateinit var searchView: SearchView
+    lateinit var proceed_btn  :AppCompatButton
+    lateinit var cancel_btn: RelativeLayout
     val viewModel: HomeViewModel by viewModels()
     lateinit var mainViewModel: MainViewModel
     lateinit var tinyDB: TinyDB
+    lateinit var fragment : HomeFragment
     var mainContext: Context? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +74,7 @@ class HomeFragment : Fragment(), OnclickItem {
         vehiclePopupWindow()
         searchVehicle()
         statusShow()
+
 
 
         return viewBinding
@@ -94,12 +100,22 @@ class HomeFragment : Fragment(), OnclickItem {
 
         tinyDB = TinyDB(context)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        mainViewModel.valueReset()
         viewModel.viewsForHomeFragment(context, binding)
         viewModel.Breakbar()
         viewModel.Workbar()
         var intent = (activity as MainActivity)
         intent.viewsOfFragment(binding)
         viewModel.timers()
+
+        mainViewModel.popupLiveData.observe(viewLifecycleOwner, Observer {
+            if(it != 0){
+                createPopup()
+            }
+
+        })
+
+
 
         mainViewModel.navigationLiveData.observe(
             viewLifecycleOwner, androidx.lifecycle.Observer {
@@ -110,6 +126,7 @@ class HomeFragment : Fragment(), OnclickItem {
                         binding.namelayout to "large_name_layout",
                         binding.dateLayout to "large_date"
                     )
+
                     findNavController().navigate(
                         R.id.action_homeFragment_to_profileFragment,
                         null,
@@ -197,7 +214,7 @@ class HomeFragment : Fragment(), OnclickItem {
     fun searchVehicle() {
         var context = (activity as MainActivity).context
 
-        searchAdapter = SearchAdapter(viewModel.searchedArrayList, this)
+        searchAdapter = SearchAdapter(viewModel.searchedArrayList, this,viewModel.vehicleArrayListforUpload)
         recyclerView.adapter = searchAdapter
 
         val typeface = ResourcesCompat.getFont(context, R.font.open_sans_regular)
@@ -234,6 +251,7 @@ class HomeFragment : Fragment(), OnclickItem {
         println("position of holder $position")
         var Position = position.plus(1)
         tinyDB.putInt("vehicle", Position)
+
         alertDialog.dismiss()
         viewModel.selectVehicle(position)
     }
@@ -257,6 +275,35 @@ class HomeFragment : Fragment(), OnclickItem {
         }
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as MainActivity).binding.menu.setItemSelected(R.id.home, true)
+    }
+
+    fun createPopup(){
+        networkDialogBuilder = AlertDialog.Builder(getContext())
+        val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
+        networkAlertDialog= networkDialogBuilder.create()
+        proceed_btn=PopupView.findViewById(R.id.proceed_btn)
+        cancel_btn=PopupView.findViewById(R.id.cancel_btn)
+        viewModel.openPopup(networkAlertDialog,PopupView,resources)
+        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, proceed_btn)
+        cancel_btn.setOnClickListener {
+            networkAlertDialog.dismiss()
+
+        }
+        proceed_btn.setOnClickListener {
+          var stateCheck=  tinyDB.getBoolean("STATEAPI")
+            if(stateCheck){
+                (activity as MainActivity).updatePendingData(true)
+            }else{
+                (activity as MainActivity).updatePendingData(false)
+            }
+
+            networkAlertDialog.dismiss()
+        }
     }
 
 

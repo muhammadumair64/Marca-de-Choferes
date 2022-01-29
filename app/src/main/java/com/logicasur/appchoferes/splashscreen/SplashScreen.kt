@@ -67,7 +67,8 @@ class SplashScreen : BaseClass() {
                 spleshCheck=false
                 var intent = Intent(this, LoadingScreen::class.java)
                 startActivity(intent)
-                 viewModel.syncdata()
+                tinyDB.putBoolean("SYNC_CHECK",false)
+                 viewModel.checkData() //change
 
             }else{
                 otpTimeCheck()
@@ -111,7 +112,7 @@ class SplashScreen : BaseClass() {
                 if(netCheck()){
                     var intent = Intent(this, LoadingScreen::class.java)
                     startActivity(intent)
-                    viewModel.syncdata()
+//                    viewModel.checkData() //change
                 }
                 else{
                     Toast.makeText(this, "Verifique su conexión", Toast.LENGTH_SHORT).show()
