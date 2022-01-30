@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/dialogbox_shape"
+    android:paddingStart="@dimen/_20sdp"
     >
 <LinearLayout
     android:id="@+id/upper_layout"
@@ -15,7 +16,7 @@
     >
     <TextView
         android:id="@+id/topText"
-        android:textSize="@dimen/_17sdp"
+        android:textSize="@dimen/_15sdp"
         android:textColor="@color/Privacy_policy_text_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +26,7 @@
     <TextView
         android:layout_marginTop="@dimen/_4sdp"
         android:id="@+id/subText"
-        android:textSize="@dimen/_13sdp"
+        android:textSize="@dimen/_11sdp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/subtext"
@@ -45,8 +46,8 @@
 
         <RelativeLayout
             android:id="@+id/cancel_btn"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_35sdp"
             android:layout_gravity="center"
             android:background="@drawable/item_popup_btn_bg">
 
@@ -55,7 +56,7 @@
                 android:layout_height="wrap_content"
                android:layout_centerInParent="true"
                 android:text="@string/cancel"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="@dimen/_13sdp" />
 
         </RelativeLayout>
 
@@ -64,15 +65,15 @@
 
             android:id="@+id/proceed_btn"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_35sdp"
             android:layout_marginStart="@dimen/_45sdp"
-            android:background="@drawable/popup_window_button"
+            android:background="@drawable/item_network_popup_btn"
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/proceed"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp" />
+            android:textSize="@dimen/_13sdp" />
 
 
     </LinearLayout>

@@ -112,7 +112,7 @@ class SplashScreen : BaseClass() {
                 if(netCheck()){
                     var intent = Intent(this, LoadingScreen::class.java)
                     startActivity(intent)
-//                    viewModel.checkData() //change
+                    viewModel.syncdata() //change
                 }
                 else{
                     Toast.makeText(this, "Verifique su conexión", Toast.LENGTH_SHORT).show()

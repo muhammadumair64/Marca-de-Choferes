@@ -25,6 +25,7 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item.xml" value="0.15230263157894736" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item_background.xml" value="0.150814332247557" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item_editbutton.xml" value="0.5" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item_network_popup_btn.xml" value="0.40208333333333335" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item_otpbottomline.xml" value="0.175" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item_popup_btn_bg.xml" value="0.48333333333333334" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/drawable/item_searchbox.xml" value="0.15230263157894736" />
@@ -95,7 +96,7 @@
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_home.xml" value="0.6754716981132075" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/fragment_profile.xml" value="3.0" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item.xml" value="0.14210526315789473" />
-        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item_networkcheck_popup.xml" value="0.5224719101123596" />
+        <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item_networkcheck_popup.xml" value="0.55893536121673" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item_searchviewbox.xml" value="0.14210526315789473" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item_status_list.xml" value="0.315450643776824" />
         <entry key="..\:/Android Projects TestCase/Marca-de-Choferes/app/src/main/res/layout/item_vehiclelist.xml" value="0.4224137931034483" />

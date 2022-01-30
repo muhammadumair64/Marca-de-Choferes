@@ -177,7 +177,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     }
                     Timer().schedule(5000) {
                         Log.d("connection Exception", "connection lost")
-//                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     }
                 } catch (e: SocketTimeoutException) {
 
@@ -194,7 +194,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     Log.d("connection Exception", "Connect Not Available")
                     Timer().schedule(5000) {
                         Log.d("connection Exception", "connection lost")
-//                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     }
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
@@ -372,7 +372,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 //            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
 //        }
 
-//
+
         tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
 

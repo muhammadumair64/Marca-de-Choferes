@@ -769,6 +769,10 @@ class MainActivity : BaseClass(){
     fun performSomeActionOnBackPress(){
         stopService(Intent(this,TimerService::class.java))
         stopService(Intent(this,BreakTimerService::class.java))
+        var check = tinyDB.getBoolean("PENDINGCHECK")
+        if(check){
+            K.myTimer!!.cancel()
+        }
         finish()
 
 //        if( MyApplication.backPressCheck==200){

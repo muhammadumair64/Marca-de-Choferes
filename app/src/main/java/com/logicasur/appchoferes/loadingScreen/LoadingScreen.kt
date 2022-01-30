@@ -56,7 +56,7 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
     }
 
    fun initView(){
-setBarColor()
+       setBarColor()
        MyApplication.loadingContext = this
          imageBackground=findViewById(R.id.loadingBackground)
 
@@ -122,4 +122,8 @@ setBarColor()
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("LOADING_TESTING","Yes")
+    }
 }

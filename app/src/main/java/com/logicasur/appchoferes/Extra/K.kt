@@ -26,7 +26,7 @@ class K {
          lateinit var authRepository:AuthRepository
          var arrayList :ArrayList<UpdateActivityDataClass> = ArrayList()
          var tinyDB:TinyDB = TinyDB(MyApplication.appContext)
-
+        var myTimer:Timer? = null
         var primaryColor = "#7A59FC"
 //            get() {
 //                return tinyDB.getString("primaryColor") ?: "#7A59FC"
@@ -145,12 +145,12 @@ class K {
 
         fun checkNet(){
             tinyDB.putBoolean("PENDINGCHECK",true)
-            var myTimer = Timer()
-            myTimer.schedule(object : TimerTask() {
+          myTimer = Timer()
+            myTimer!!.schedule(object : TimerTask() {
                 override fun run() {
                     var netCheck=isConnected()
                     if(netCheck){
-                      checkPendingData(tinyDB,myTimer)
+                      checkPendingData(tinyDB,myTimer!!)
                     }
                     Log.d("NETCHECKTEST","---- $netCheck")
                 }
@@ -160,7 +160,7 @@ class K {
 
         fun checkPendingData(tinyDB: TinyDB, myTimer: Timer){
             arrayList = tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
-
+                  myTimer.cancel()
                 CoroutineScope(Job()).launch(Dispatchers.IO) {
                 for(item in arrayList){
                     if(item.state != null){
@@ -171,15 +171,14 @@ class K {
                         uploadPendingData(item.datetime,item.totalTime,item.activity,item.geoPosition,item.vehicle,
                             authRepository)
                     }
-
-
                 }
                 tinyDB.putBoolean("PENDINGCHECK",false)
-                myTimer.cancel()
+
                     arrayList.clear()
                     tinyDB.putListObject("PENDINGDATALIST", arrayList as ArrayList<Object>)
                         Log.d("PENDINGDATATESTING","YES NOW RUN")
                     tinyDB.putBoolean("SYNC_CHECK",true)
+
             }
 
 
@@ -206,12 +205,6 @@ class K {
                     )
                     println("SuccessResponse $response")
 
-
-                    if (response != null) {
-                        withContext(Dispatchers.Main) {
-                            (MyApplication.loadingContext as LoadingScreen).finish()
-                        }
-                    }
 
                 } catch (e: ResponseException) {
 
