@@ -44,6 +44,7 @@ import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.network.signinResponse.State
 import com.example.marcadechoferes.network.signinResponse.Vehicle
+import com.example.marcadechoferes.network.unsentApis.UnsentStateUpdate
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -72,7 +73,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     var progressBar = 0
     var latitude = 0.0
     var longitude = 0.0
-    var overTime =false
+    var overTime = false
 
     //activity
 
@@ -99,22 +100,22 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
 
 
-        MyApplication.TotalTime=tinyDB.getInt("defaultWork")
+        MyApplication.TotalTime = tinyDB.getInt("defaultWork")
 
         println("total Work Given ")
-        MyApplication.TotalBreak= tinyDB.getInt("defaultBreak")
+        MyApplication.TotalBreak = tinyDB.getInt("defaultBreak")
 
         var DefaultTOShow = MyApplication.TotalTime * 60
-        var time =getTimeStringFromDouble(DefaultTOShow)
+        var time = getTimeStringFromDouble(DefaultTOShow)
         println("time is thie $time")
         binding.maxTimer.text = time
         val sdf = SimpleDateFormat("dd MMM")
         val currentDate = sdf.format(Date())
-        System.out.println(" C DATE is  " + currentDate)
+        println(" C DATE is  " + currentDate)
 
         binding.date.text = "$currentDate"
-fadeColor()
- 
+        fadeColor()
+
         var Choice = tinyDB.getString("selectedState")
 
         when (Choice) {
@@ -144,7 +145,7 @@ fadeColor()
         }
         Timer().schedule(200) {
             viewModelScope.launch {
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     forgroundCheck()
                 }
             }
@@ -192,55 +193,55 @@ fadeColor()
 
     }
 
-        fun timers() {
+    fun timers() {
 
 
         dataBinding?.secondState?.setOnClickListener {
 
             if (checkGPS(activityContext!!)) {
-               secondStateAction()
+                secondStateAction()
             } else {
-                (activityContext as MainActivity).initPermission(){secondStateAction()}
+                (activityContext as MainActivity).initPermission() { secondStateAction() }
             }
 
         }
         dataBinding?.TakeBreak?.setOnClickListener {
 
             if (checkGPS(activityContext!!)) {
-             takeBreakAction()
+                takeBreakAction()
             } else {
-                (activityContext as MainActivity).initPermission(){takeBreakAction()}
+                (activityContext as MainActivity).initPermission() { takeBreakAction() }
             }
 
         }
         dataBinding?.EndDay?.setOnClickListener {
             if (checkGPS(activityContext!!)) {
-        endDayAction()
+                endDayAction()
             } else {
-                (activityContext as MainActivity).initPermission(){endDayAction()}
+                (activityContext as MainActivity).initPermission() { endDayAction() }
             }
-
 
 
         }
         dataBinding?.initialState?.setOnClickListener {
             if (checkGPS(activityContext!!)) {
-              initialStateAction()
+                initialStateAction()
             } else {
-                (activityContext as MainActivity).initPermission(){initialStateAction()}
+                (activityContext as MainActivity).initPermission() { initialStateAction() }
             }
         }
 
 
     }
-       fun secondStateAction(){
+
+    fun secondStateAction() {
         MyApplication.check = 0
         buttonSecondState()
     }
 
-       fun takeBreakAction(){
+    fun takeBreakAction() {
         var intent = (activityContext as MainActivity)
-        MyApplication.check=0
+        MyApplication.check = 0
         buttonTakeBreak()
         intent.stopTimer()
         intent.startTimerBreak()
@@ -248,9 +249,9 @@ fadeColor()
         hitActivityAPI(1, MyApplication.BreakToSend)
     }
 
-       fun endDayAction(){
+    fun endDayAction() {
         var intent = (activityContext as MainActivity)
-        MyApplication.check=300
+        MyApplication.check = 300
         buttonEndDay()
         intent.stopTimer()
         intent.stopTimerBreak()
@@ -258,20 +259,11 @@ fadeColor()
         hitActivityAPI(3, MyApplication.TimeToSend)
     }
 
-       fun initialStateAction(){
-         MyApplication.check=0
-         buttonInitailState()
-         tinyDB.putString("selectedState", "initialState")
-     }
-
-
-
-
-
-
-
-
-
+    fun initialStateAction() {
+        MyApplication.check = 0
+        buttonInitailState()
+        tinyDB.putString("selectedState", "initialState")
+    }
 
 
     fun buttonInitailState() {
@@ -288,21 +280,21 @@ fadeColor()
     }
 
     fun buttonEndDay() {
-        var language= tinyDB.getString("language")
-   fadeColor()
+        var language = tinyDB.getString("language")
+        fadeColor()
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
 //        dataBinding?.breakBar?.progress=0f
 //        dataBinding?.bar?.progress=0f
-        dataBinding?.StateActive?.setVisibility(View.GONE)
+        dataBinding?.StateActive?.visibility = View.GONE
         dataBinding?.vehicleListBtn?.isClickable = true
-        dataBinding?.spacer?.setVisibility(View.VISIBLE)
-        dataBinding?.secondState?.setVisibility(View.GONE)
-        dataBinding?.initialState?.setVisibility(View.VISIBLE)
+        dataBinding?.spacer?.visibility = View.VISIBLE
+        dataBinding?.secondState?.visibility = View.GONE
+        dataBinding?.initialState?.visibility = View.VISIBLE
         dataBinding?.vehicleListBtn?.setBackgroundResource(R.drawable.item_popup_btn_bg)
         dataBinding?.iconCar?.setBackgroundResource(R.drawable.ic_icon_awesome_car_alt)
         dataBinding?.vehicleNameSelected?.setTextColor(Color.parseColor("#000000"))
 
-        dataBinding?.Arrow?.setVisibility(View.VISIBLE)
+        dataBinding?.Arrow?.visibility = View.VISIBLE
         dataBinding?.dots?.visibility = View.GONE
 //        (activityContext as MainActivity).time = 0.0
 ////        dataBinding?.workTimer?.text = "00:00"
@@ -310,19 +302,18 @@ fadeColor()
 
         dataBinding?.statusListBtn?.visibility = View.GONE
         dataBinding?.vehicleNameSelected?.setTypeface(
-            dataBinding?.vehicleNameSelected?.getTypeface(),
+            dataBinding?.vehicleNameSelected?.typeface,
             Typeface.NORMAL
         )
-        if (language=="0"){
+        if (language == "0") {
             dataBinding?.secondState?.text = "Empezar"
             dataBinding?.vehicleNameSelected?.text = "Vehículo"
             dataBinding?.statusSelected?.text = "Selección estado"
-        }else if(language=="1"){
+        } else if (language == "1") {
             dataBinding?.vehicleNameSelected?.text = "Vehicle"
             dataBinding?.statusSelected?.text = "Status Select"
             dataBinding?.secondState?.text = "Start"
-        }
-        else{
+        } else {
             dataBinding?.vehicleNameSelected?.text = "Veículo"
             dataBinding?.statusSelected?.text = "Seleção de estado"
             dataBinding?.secondState?.text = "Começar"
@@ -334,10 +325,10 @@ fadeColor()
     }
 
     fun buttonTakeBreak() {
-        if(overTime==true){
+        if (overTime == true) {
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
-        }else{
-       fadeColor()
+        } else {
+            fadeColor()
         }
 
 
@@ -350,43 +341,42 @@ fadeColor()
         dataBinding?.spacer?.setVisibility(View.VISIBLE)
 
 
-        var language= tinyDB.getString("language")
-        if (language=="0"){
+        var language = tinyDB.getString("language")
+        if (language == "0") {
             dataBinding?.secondState?.text = "Fin del descanso"
 
-        }else if(language=="1"){
+        } else if (language == "1") {
 
             dataBinding?.secondState?.text = "End Break"
-        }
-        else{
+        } else {
             dataBinding?.secondState?.text = "Fim do intervalo"
         }
 //        dataBinding?.secondState?.text = getApplication(MyApplication.appContext).resources.getString(R.string.end_break)
-        dataBinding?.secondState?.setVisibility(View.VISIBLE)
+        dataBinding?.secondState?.visibility = View.VISIBLE
 
 
     }
 
     fun buttonSecondState() {
         var intent = (activityContext as MainActivity)
-        if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso"||dataBinding?.secondState?.text == "Fim do intervalo") {
+        if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
             goToSecondState()
             intent.stopTimerBreak()
             intent.startTimer()
-            Log.d("break timer","${MyApplication.BreakToSend}")
-            hitActivityAPI(2,MyApplication.BreakToSend)
+            Log.d("break timer", "${MyApplication.BreakToSend}")
+            hitActivityAPI(2, MyApplication.BreakToSend)
 
         } else {
-            tinyDB.putInt("lasttimebreak",0)
-            tinyDB.putInt("lasttimework",0)
-            intent.time=0.0
+            tinyDB.putInt("lasttimebreak", 0)
+            tinyDB.putInt("lasttimework", 0)
+            intent.time = 0.0
             Timer().schedule(200) {
                 intent.startTimer()
                 intent.startTimerBreak()
                 intent.stopTimerBreak()
             }
             goToActivState()
-            hitActivityAPI(0,MyApplication.TimeToSend)
+            hitActivityAPI(0, MyApplication.TimeToSend)
 
         }
     }
@@ -394,9 +384,9 @@ fadeColor()
     fun goToSecondState() {
 
         dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
-        if(overTime==true){
+        if (overTime == true) {
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
-        }else{
+        } else {
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
         }
 
@@ -411,9 +401,9 @@ fadeColor()
 
     fun goToActivState() {
 
-        if(overTime==true){
+        if (overTime == true) {
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
-        }else{
+        } else {
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
         }
         dataBinding?.secondState?.setVisibility(View.GONE)
@@ -521,7 +511,7 @@ fadeColor()
                     var userName = profile.name
                     Name.text = userName!!.split(" ").toTypedArray()[0]
                     var fatherName = profile.surname
-                    surname.text =fatherName!!.split(" ").toTypedArray()[0]
+                    surname.text = fatherName!!.split(" ").toTypedArray()[0]
                 }
                 println("user personal data $profile")
             }
@@ -548,16 +538,15 @@ fadeColor()
         MyApplication.TimeToSend = time
         if (time == default) {
             binding!!.bar.progress = 0F
-        }else if (time > default){
+        } else if (time > default) {
             println("overTime started ")
             overTime = true
-            binding!!.bar.progressBarColor= Color.parseColor("#169DFD")
-            var newOvertimer= time-default
+            binding!!.bar.progressBarColor = Color.parseColor("#169DFD")
+            var newOvertimer = time - default
             binding!!.bar.progress = newOvertimer.toFloat()
-        } else
-        {
+        } else {
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
-           overTime =false
+            overTime = false
             binding!!.bar.progress = time.toFloat()
         }
     }
@@ -576,7 +565,7 @@ fadeColor()
 
 
     fun getVehicle() {
-            viewModelScope.launch {
+        viewModelScope.launch {
             withContext(Dispatchers.IO) {
 
                 var vehicles = authRepository.getVehicle()
@@ -595,7 +584,7 @@ fadeColor()
                 }
 
 
-                if(MyApplication.check!=300){
+                if (MyApplication.check != 300) {
                     withContext(Dispatchers.Main) {
                         var vehicle = tinyDB.getInt("vehicle")
                         if (vehicle != 0) {
@@ -603,10 +592,9 @@ fadeColor()
                             selectVehicleByLocalDB(vehicle)
                         }
                     }
-                }else{
-               fadeColor()
+                } else {
+                    fadeColor()
                 }
-
 
 
             }
@@ -615,7 +603,7 @@ fadeColor()
     }
 
 
-               fun getState() {
+    fun getState() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
 
@@ -699,6 +687,7 @@ fadeColor()
         // uploadLocation()
         println("Current Location $longitude and $latitude")
     }
+
     fun getLocationForState(context: Context) {
         println("location call")
         var locationRequest = LocationRequest()
@@ -733,7 +722,7 @@ fadeColor()
 
                     LocationServices.getFusedLocationProviderClient(context)
                         .removeLocationUpdates(this)
-                        if (p0 != null && p0.locations.size > 0) {
+                    if (p0 != null && p0.locations.size > 0) {
                         longitude = p0.locations[0].longitude
                         latitude = p0.locations[0].latitude
 
@@ -759,7 +748,7 @@ fadeColor()
     }
 
     fun selectVehicle(position: Int) {
-        MyApplication.check=0
+        MyApplication.check = 0
         var text = searchedArrayList[position]
         println("selected text $text")
         dataBinding!!.apply {
@@ -793,7 +782,7 @@ fadeColor()
                 initialState.visibility = View.GONE
             }
             if (dataBinding?.StateActive?.isVisible == false && dataBinding?.initialState?.isVisible == false) {
-                dataBinding?.secondState?.visibility= View.VISIBLE
+                dataBinding?.secondState?.visibility = View.VISIBLE
             }
 
         }
@@ -849,6 +838,16 @@ fadeColor()
                 } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+
+                    authRepository.insertUnsentStateUpdate(
+                        UnsentStateUpdate(
+                            datetime,
+                            totalTime,
+                            state,
+                            geoPosition,
+                            vehicle
+                        )
+                    )
                     withContext(Dispatchers.Main) {
                         (MyApplication.loadingContext as LoadingScreen).finish()
                         Toast.makeText(
@@ -857,8 +856,7 @@ fadeColor()
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }
-                catch (e:SocketTimeoutException){
+                } catch (e: SocketTimeoutException) {
 
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
@@ -867,7 +865,8 @@ fadeColor()
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }            }
+                }
+            }
         }
 
 
@@ -991,10 +990,17 @@ fadeColor()
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 var vehiclePosition = tinyDB.getInt("vehicle")
-                      vehiclePosition=vehiclePosition.minus(1)
-                Log.d("position of Vehicle ","$vehiclePosition")
+                vehiclePosition = vehiclePosition.minus(1)
+                Log.d("position of Vehicle ", "$vehiclePosition")
                 var vehicle = vehicleArrayListforUpload[vehiclePosition]
-                (activityContext as MainActivity).updateActivity("$currentDate", totalTime, activity, geoPosition, vehicle,authRepository)
+                (activityContext as MainActivity).updateActivity(
+                    "$currentDate",
+                    totalTime,
+                    activity,
+                    geoPosition,
+                    vehicle,
+                    authRepository
+                )
             }
         }
     }
@@ -1034,7 +1040,7 @@ fadeColor()
         dataBinding?.day?.text = "$dayOfTheWeek"
     }
 
-    fun forgroundCheck(){
+    fun forgroundCheck() {
         TimerStart()
 //        viewModelScope.launch {
 //            withContext(Dispatchers.Main){
@@ -1050,93 +1056,91 @@ fadeColor()
 
     }
 
-    fun setPreviousWork(){
+    fun setPreviousWork() {
         var intent = (activityContext as MainActivity)
-        if(MyApplication.check==200){
+        if (MyApplication.check == 200) {
             intent.startTimer()
             intent.startTimerBreak()
-            var workTime=tinyDB.getInt("lasttimework")
-            var breakTime=tinyDB.getInt("lasttimebreak")
-            dataBinding?.bar?.progress= workTime.toFloat()
-            dataBinding?.breakBar?.progress=breakTime.toFloat()
-       fadeColor()
+            var workTime = tinyDB.getInt("lasttimework")
+            var breakTime = tinyDB.getInt("lasttimebreak")
+            dataBinding?.bar?.progress = workTime.toFloat()
+            dataBinding?.breakBar?.progress = breakTime.toFloat()
+            fadeColor()
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
             intent.stopTimerBreak()
             intent.stopTimer()
-        }
-    else{
-       if(intent.isMyServiceRunning(TimerService::class.java)){
-        intent.startTimerBreak()
-        intent.stopTimerBreak()
+        } else {
+            if (intent.isMyServiceRunning(TimerService::class.java)) {
+                intent.startTimerBreak()
+                intent.stopTimerBreak()
 
 
-    }else if(intent.isMyServiceRunning(BreakTimerService::class.java)) {
-             intent.startTimer()
-             intent.stopTimer()
-    } else if(MyApplication.check==300){
-           intent.startTimer()
-           intent.startTimerBreak()
-           var workTime=tinyDB.getInt("lasttimework")
-           var breakTime=tinyDB.getInt("lasttimebreak")
-           dataBinding?.bar?.progress= workTime.toFloat()
-           dataBinding?.breakBar?.progress=breakTime.toFloat()
-           dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
-           intent.stopTimerBreak()
-           intent.stopTimer()
+            } else if (intent.isMyServiceRunning(BreakTimerService::class.java)) {
+                intent.startTimer()
+                intent.stopTimer()
+            } else if (MyApplication.check == 300) {
+                intent.startTimer()
+                intent.startTimerBreak()
+                var workTime = tinyDB.getInt("lasttimework")
+                var breakTime = tinyDB.getInt("lasttimebreak")
+                dataBinding?.bar?.progress = workTime.toFloat()
+                dataBinding?.breakBar?.progress = breakTime.toFloat()
+                dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+                intent.stopTimerBreak()
+                intent.stopTimer()
 //           buttonEndDay()
-           Timer().schedule(200) {
-              barColor()
-           }
+                Timer().schedule(200) {
+                    barColor()
+                }
 
-       }
+            }
 
-}
+        }
     }
 
 
-    fun checkGPS(context: Context):Boolean{
-        var locationManager = context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
+    fun checkGPS(context: Context): Boolean {
+        var locationManager =
+            context.getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
         assert(locationManager != null)
         var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         return GpsStatus
     }
 
-    fun barColor(){
+    fun barColor() {
         viewModelScope.launch {
-            withContext(Dispatchers.Main){
-     fadeColor()
+            withContext(Dispatchers.Main) {
+                fadeColor()
             }
 
         }
     }
 
-    fun TimerStart(){
+    fun TimerStart() {
         var ref = (activityContext as MainActivity)
         var timerServiceCheck = ref.isMyServiceRunning(TimerService::class.java)
         var breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
 
 
-        if(dataBinding?.StateActive?.isVisible == true && timerServiceCheck==false)
-        {
+        if (dataBinding?.StateActive?.isVisible == true && timerServiceCheck == false) {
             ref.startTimer()
-            }
-        else if(dataBinding?.secondState!!.isVisible == true && breakTimerService==false){
-            if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso"||dataBinding?.secondState?.text == "Fim do intervalo"){
+        } else if (dataBinding?.secondState!!.isVisible == true && breakTimerService == false) {
+            if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
                 ref.startTimerBreak()
                 dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FF4D4E")
-               fadeColor()
+                fadeColor()
             }
 
         }
 
     }
 
-    fun fadeColor(){
-        var color =K.primaryColor.substringAfter("#")
-        color="#99$color"
+    fun fadeColor() {
+        var color = K.primaryColor.substringAfter("#")
+        color = "#99$color"
         dataBinding?.bar?.progressBarColor = Color.parseColor(color)
-        Log.d("FadeColor ","$color")
+        Log.d("FadeColor ", "$color")
 
     }
-    
+
 }

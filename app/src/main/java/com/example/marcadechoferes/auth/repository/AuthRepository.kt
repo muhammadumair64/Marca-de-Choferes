@@ -10,6 +10,10 @@ import com.example.marcadechoferes.network.getAvatarResponse.GetAvatarResponse
 import com.example.marcadechoferes.network.logoutResponse.MassageResponse
 import com.example.marcadechoferes.network.retrofitInterfaces.RetrofitInterface
 import com.example.marcadechoferes.network.signinResponse.*
+import com.example.marcadechoferes.network.unsentApis.UnsentProfileUpdate
+import com.example.marcadechoferes.network.unsentApis.UnsentStateUpdate
+import com.example.marcadechoferes.network.unsentApis.UnsentUpdateAvatar
+import com.example.marcadechoferes.network.unsentApis.UnsentUploadActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -259,6 +263,74 @@ class AuthRepository @Inject constructor(
     {
         val wrapVehicle = WrapVehicle(datetime,totalTime,activity,geoPosition,vehicle)
         return apiRequest { retrofitInterface.updateActivity(wrapVehicle,sessionIdAndToken)}
+    }
+
+
+    fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate)
+    {
+        localDataBase.unsentApiDao().insertUnsentStateUpdate(unsentStateUpdate)
+    }
+
+    fun insertUnsentUploadActivity(unsentUploadActivity: UnsentUploadActivity)
+    {
+        localDataBase.unsentApiDao().insertUnsentUploadActivity(unsentUploadActivity)
+    }
+
+    fun insertUnsentAvatarUpdate(unsentUpdateAvatar: UnsentUpdateAvatar){
+        localDataBase.unsentApiDao().insertUnsentAvatarUpdate(unsentUpdateAvatar)
+    }
+
+    fun insertUnsentProfileUpdate(unsentProfileUpdate: UnsentProfileUpdate){
+        localDataBase.unsentApiDao().insertUnsentProfileUpdate(unsentProfileUpdate)
+    }
+
+
+
+    fun deleteAllUUnsentStateUpdateDetails(){
+      localDataBase.unsentApiDao().deleteAllUUnsentStateUpdateDetails()
+    }
+
+    fun deleteAllUnsentUploadActivityDetails(){
+        localDataBase.unsentApiDao().deleteAllUnsentUploadActivityDetails()
+    }
+
+    fun deleteAllUnsentUpdateAvatarDetails(){
+        localDataBase.unsentApiDao().deleteAllUnsentUpdateAvatarDetails()
+    }
+
+    fun deleteAllUnsentProfileUpdateDetails(){
+        localDataBase.unsentApiDao().deleteAllUnsentProfileUpdateDetails()
+    }
+
+    fun isExistsUnsentStateUpdateDB(): Boolean{
+        return localDataBase.unsentApiDao().isExistsUnsentStateUpdateDB()
+    }
+
+    fun isExistsUnsentUploadActivityDB(): Boolean{
+        return localDataBase.unsentApiDao().isExistsUnsentUploadActivityDB()
+    }
+    fun isExistsUnsentUpdateAvatarDB(): Boolean{
+        return localDataBase.unsentApiDao().isExistsUnsentUpdateAvatarDB()
+    }
+    fun isExistsUnsentProfileUpdateDB(): Boolean{
+        return localDataBase.unsentApiDao().isExistsUnsentProfileUpdateDB()
+    }
+
+
+    fun getUnsentStateUpdateDetails(): UnsentStateUpdate{
+        return localDataBase.unsentApiDao().getUnsentStateUpdateDetails()
+    }
+
+    fun getUnsentUploadActivityDetails(): UnsentUploadActivity{
+        return localDataBase.unsentApiDao().getUnsentUploadActivityDetails()
+    }
+
+    fun getUnsentUpdateAvatarDetails(): UnsentUpdateAvatar{
+        return localDataBase.unsentApiDao().getUnsentUpdateAvatarDetails()
+    }
+
+    fun getUnsentProfileUpdateDetails(): UnsentProfileUpdate{
+        return localDataBase.unsentApiDao().getUnsentProfileUpdateDetails()
     }
 
 }

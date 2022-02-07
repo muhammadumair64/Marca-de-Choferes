@@ -85,7 +85,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                     if(validater==true && passwordCheck.length>=4){
 
                         signinAuth(emailCheck,passwordCheck)
-                        var intent = Intent(activityContext,LoadingScreen::class.java)
+                        val intent = Intent(activityContext,LoadingScreen::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
                     }else if(validater==false){

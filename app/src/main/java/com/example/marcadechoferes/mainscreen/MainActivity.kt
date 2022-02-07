@@ -45,6 +45,7 @@ import com.example.marcadechoferes.network.GeoPosition
 import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
 import com.example.marcadechoferes.network.signinResponse.Vehicle
+import com.example.marcadechoferes.network.unsentApis.UnsentUploadActivity
 
 
 import com.google.android.gms.location.LocationSettingsRequest
@@ -501,6 +502,7 @@ class MainActivity : BaseClass(){
                 } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+                    authRepository.insertUnsentUploadActivity(UnsentUploadActivity(activity,totalTime,geoPosition))
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             context,

@@ -29,6 +29,8 @@ import android.widget.Toast
 import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
 import com.example.marcadechoferes.network.NoInternetException
+import com.example.marcadechoferes.network.unsentApis.UnsentProfileUpdate
+import com.example.marcadechoferes.network.unsentApis.UnsentUpdateAvatar
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -176,6 +178,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                 }
                 catch (e: NoInternetException) {
                     println("position 2")
+                    authRepository.insertUnsentAvatarUpdate(UnsentUpdateAvatar(avatar))
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
@@ -223,6 +226,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+                    authRepository.insertUnsentProfileUpdate(UnsentProfileUpdate(name,surname))
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
                     }

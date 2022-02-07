@@ -21,6 +21,8 @@ import com.example.marcadechoferes.myApplication.MyApplication
 import com.example.marcadechoferes.network.ApiException
 import com.example.marcadechoferes.network.NoInternetException
 import com.example.marcadechoferes.network.ResponseException
+import com.example.marcadechoferes.network.unsentApis.UnsentLanguageUpdation
+import com.example.marcadechoferes.network.unsentApis.UnsentNotifyStateUpload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -116,7 +118,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
     fun selectedLanguageUplaod(language: Int, alterDialog: AlertDialog) {
 
 
-        var Token = tinyDB.getString("Cookie")
+        val token = tinyDB.getString("Cookie")
       MyApplication.checkForLanguageChange=200
         viewModelScope.launch {
 
@@ -124,7 +126,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             withContext(Dispatchers.IO) {
                 try {
 
-                    val response = mainRepository.updateLanguage(language, Token!!)
+                    val response = mainRepository.updateLanguage(language, token!!)
 
                     println("SuccessResponse $response")
 
@@ -155,14 +157,18 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     }
                 } catch (e: ResponseException) {
                     (MyApplication.loadingContext as LoadingScreen).finish()
+
                     println("logout Failed $e")
                 }
                 catch (e: ApiException) {
+
                     e.printStackTrace()
+
                 }
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+                    mainRepository.insertUnsentLanguageUpdate(UnsentLanguageUpdation( language))
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Check Your Internet Connection", Toast.LENGTH_SHORT).show()
                     }
@@ -211,9 +217,11 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     println("logout Failed $e")
                 }
                 catch (e: ApiException) {
+
                     e.printStackTrace()
                 }
                 catch (e: NoInternetException) {
+                    mainRepository.insertUnsentNotifyStateUpload(UnsentNotifyStateUpload(notify))
                     println("position 2")
                     e.printStackTrace()
                 }
