@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import javax.net.ssl.*
 import com.logicasur.appchoferes.Extra.NetworkConnectionInterceptor
+import com.logicasur.appchoferes.localDataBase.unsentApiDao.UnsentApiDao
 import com.logicasur.appchoferes.myApplication.MyApplication
 
 import okhttp3.*
@@ -174,6 +175,13 @@ class MyModule {
     fun provideDao(localDataBase: LocalDataBase): LocalDataBaseDao {
         return localDataBase.localDBDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideUnsentDao(localDataBase: LocalDataBase): UnsentApiDao {
+        return localDataBase.unsentApiDao()
+    }
+
 
 
 

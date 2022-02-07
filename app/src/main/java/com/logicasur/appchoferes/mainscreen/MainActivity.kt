@@ -571,6 +571,8 @@ class MainActivity : BaseClass(){
                             TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
+
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                     }
                 }
                 catch (e: SocketTimeoutException){
@@ -580,6 +582,7 @@ class MainActivity : BaseClass(){
                                TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                     }
                 }
                 catch(e: SocketException){
@@ -1066,8 +1069,6 @@ class MainActivity : BaseClass(){
     var obj = UpdateActivityDataClass(currentDate,time,activity,geoPosition,vehicle,null)
     return obj
 }
-
-
     fun getAPIDataForState(): UpdateActivityDataClass {
         var vehicle = tinyDB.getObject("VehicleForBackgroundPush",Vehicle::class.java)
         var geoPosition= tinyDB.getObject("GeoPosition",GeoPosition::class.java)

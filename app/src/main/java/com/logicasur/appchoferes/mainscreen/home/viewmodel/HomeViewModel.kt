@@ -1074,6 +1074,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                             TAG2,
                             Toast.LENGTH_SHORT
                         ).show()
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                     }
                 } catch (e: SocketException) {
                     LoadingScreen.onEndLoadingCallbacks?.endLoading()

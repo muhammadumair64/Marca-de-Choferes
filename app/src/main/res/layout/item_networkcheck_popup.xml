@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/dialogbox_shape"
-    android:paddingStart="@dimen/_20sdp"
+    android:paddingStart="@dimen/_15sdp"
     >
 <LinearLayout
     android:id="@+id/upper_layout"
@@ -35,12 +35,12 @@
 </LinearLayout>
 
     <LinearLayout
-        android:layout_marginBottom="@dimen/_20sdp"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/upper_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
         android:orientation="horizontal"
         android:padding="@dimen/_10sdp">
 
@@ -54,7 +54,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-               android:layout_centerInParent="true"
+                android:layout_centerInParent="true"
                 android:text="@string/cancel"
                 android:textSize="@dimen/_13sdp" />
 
@@ -67,7 +67,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_35sdp"
-            android:layout_marginStart="@dimen/_45sdp"
+            android:layout_marginStart="@dimen/_35sdp"
             android:background="@drawable/item_network_popup_btn"
             android:fontFamily="@font/open_sans_regular"
             android:text="@string/proceed"

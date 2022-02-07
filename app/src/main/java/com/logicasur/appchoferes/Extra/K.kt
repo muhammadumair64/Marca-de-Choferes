@@ -3,7 +3,6 @@ package com.logicasur.appchoferes.Extra
 import android.content.Context
 import android.util.Log
 import com.logicasur.appchoferes.auth.repository.AuthRepository
-import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
@@ -137,7 +136,6 @@ class K {
 
         @Throws(InterruptedException::class, IOException::class)
         fun isConnected(): Boolean {
-
             val command = "ping -c 1 google.com"
             return Runtime.getRuntime().exec(command).waitFor() == 0
         }
@@ -151,6 +149,7 @@ class K {
                     var netCheck=isConnected()
                     if(netCheck){
                       checkPendingData(tinyDB,myTimer!!)
+                        //faris start work here
                     }
                     Log.d("NETCHECKTEST","---- $netCheck")
                 }
@@ -168,7 +167,7 @@ class K {
                         updateState(item.datetime,item.totalTime,item.state,item.geoPosition,item.vehicle)
                     }else{
                         Log.d("PENDINGDATATESTING","DATA IS____ $item")
-                        uploadPendingData(item.datetime,item.totalTime,item.activity,item.geoPosition,item.vehicle,
+                        uploadPendingDataActivity(item.datetime,item.totalTime,item.activity,item.geoPosition,item.vehicle,
                             authRepository)
                     }
                 }
@@ -181,15 +180,14 @@ class K {
 
             }
 
-
         }
 
-       suspend fun uploadPendingData(datetime: String?,
-                              totalTime: Int?,
-                              activity: Int?,
-                              geoPosition: GeoPosition?,
-                              vehicle: Vehicle?,
-                              authRepository: AuthRepository
+       suspend fun uploadPendingDataActivity(datetime: String?,
+                                             totalTime: Int?,
+                                             activity: Int?,
+                                             geoPosition: GeoPosition?,
+                                             vehicle: Vehicle?,
+                                             authRepository: AuthRepository
         ){
 
 

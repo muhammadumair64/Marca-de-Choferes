@@ -240,6 +240,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
