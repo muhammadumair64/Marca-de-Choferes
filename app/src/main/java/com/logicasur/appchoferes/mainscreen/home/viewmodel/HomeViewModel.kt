@@ -53,6 +53,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,7 +64,7 @@ import kotlin.concurrent.schedule
 
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository) : ViewModel() {
     var activityContext: Context? = null
     var dataBinding: FragmentHomeBinding? = null
     var statusArrayList = ArrayList<String>()
@@ -112,7 +113,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         setPreviousWork()
         setDay()
         tagsForToast()
-        (context as MainActivity).initRepo(authRepository)
+        (context as MainActivity).initRepo(authRepository,mainRepository)
         MyBroadastReceivers.authRepository = authRepository
         binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
         binding.arrowdownbg.setBackgroundColor(Color.parseColor(K.primaryColor))
