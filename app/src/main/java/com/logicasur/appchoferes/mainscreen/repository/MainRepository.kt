@@ -13,101 +13,115 @@ class MainRepository @Inject constructor(
     val localDataBase: LocalDataBase
 ) : SafeApiRequest() {
 
-    suspend fun updateLanguage(language:Int,Token: String): MassageResponse {
+    suspend fun updateLanguage(language: Int, Token: String): MassageResponse {
 
-        return apiRequest { retrofitInterface.updateLanguage(language,Token)}
+        return apiRequest { retrofitInterface.updateLanguage(language, Token) }
     }
 
 
-    suspend fun updateNotification(notification:Boolean,Token: String): MassageResponse {
-     var notify =Notify(notification)
-        return apiRequest { retrofitInterface.updateNotification(notify,Token)}
+    suspend fun updateNotification(notification: Boolean, Token: String): MassageResponse {
+        var notify = Notify(notification)
+        return apiRequest { retrofitInterface.updateNotification(notify, Token) }
     }
 
 
-    suspend fun insertUnsentLanguageUpdate(unsentLanguageUpdation: UnsentLanguageUpdation){
+    suspend fun insertUnsentLanguageUpdate(unsentLanguageUpdation: UnsentLanguageUpdation) {
         localDataBase.unsentApiDao().insertUpdateLanguage(unsentLanguageUpdation)
     }
 
-    suspend fun insertUnsentNotifyStateUpload(unsentNotifyStateUpload: UnsentNotifyStateUpload)
-    {
+    suspend fun insertUnsentNotifyStateUpload(unsentNotifyStateUpload: UnsentNotifyStateUpload) {
         localDataBase.unsentApiDao().insertUnsentNotifyStateUpload(unsentNotifyStateUpload)
     }
 
-    fun deleteAllUnsentLanguageUpdationDetails(){
+    fun deleteAllUnsentLanguageUpdationDetails() {
         localDataBase.unsentApiDao().deleteAllUnsentLanguageUpdationDetails()
     }
 
-    fun deleteAllUnsentNotifyStateUploadDetails(){
+    fun deleteAllUnsentNotifyStateUploadDetails() {
         localDataBase.unsentApiDao().deleteAllUnsentNotifyStateUploadDetails()
     }
-    fun isExistsUpdateLanguageDB(): Boolean{
+
+    fun isExistsUpdateLanguageDB(): Boolean {
         return localDataBase.unsentApiDao().isExistsUpdateLanguageDB()
     }
-    fun isExistsUnsentNotifyStateUploadDB(): Boolean{
+
+    fun isExistsUnsentNotifyStateUploadDB(): Boolean {
         return localDataBase.unsentApiDao().isExistsUnsentNotifyStateUploadDB()
     }
 
 
-    fun getUnsentLanguageUpdateDetails(): UnsentLanguageUpdation{
+    fun getUnsentLanguageUpdateDetails(): UnsentLanguageUpdation {
         return localDataBase.unsentApiDao().getUnsentLanguageUpdateDetails()
     }
-    fun getUnsentNotifyStateUploadDetails(): UnsentNotifyStateUpload{
+
+    fun getUnsentNotifyStateUploadDetails(): UnsentNotifyStateUpload {
 
         return localDataBase.unsentApiDao().getUnsentNotifyStateUploadDetails()
     }
-    fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate)
-    {
+
+    fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate) {
         localDataBase.unsentApiDao().insertUnsentStateUpdate(unsentStateUpdate)
     }
 
-    fun insertUnsentUploadActivity(unsentUploadActivity: UnsentUploadActivity)
-    {
+    fun insertUnsentUploadActivity(unsentUploadActivity: UnsentUploadActivity) {
         localDataBase.unsentApiDao().insertUnsentUploadActivity(unsentUploadActivity)
     }
 
-    fun insertUnsentAvatarUpdate(unsentUpdateAvatar: UnsentUpdateAvatar){
+    fun insertUnsentAvatarUpdate(unsentUpdateAvatar: UnsentUpdateAvatar) {
         localDataBase.unsentApiDao().insertUnsentAvatarUpdate(unsentUpdateAvatar)
     }
 
-    fun insertUnsentProfileUpdate(unsentProfileUpdate: UnsentProfileUpdate){
+    fun insertUnsentProfileUpdate(unsentProfileUpdate: UnsentProfileUpdate) {
         localDataBase.unsentApiDao().insertUnsentProfileUpdate(unsentProfileUpdate)
     }
 
 
-
-    fun deleteAllUUnsentStateUpdateDetails(){
+    fun deleteAllUUnsentStateUpdateDetails() {
         localDataBase.unsentApiDao().deleteAllUUnsentStateUpdateDetails()
     }
 
-    fun deleteAllUnsentUploadActivityDetails(){
+    fun deleteAllUnsentUploadActivityDetails() {
         localDataBase.unsentApiDao().deleteAllUnsentUploadActivityDetails()
     }
 
-    fun deleteAllUnsentUpdateAvatarDetails(){
+    fun deleteAllUnsentUpdateAvatarDetails() {
         localDataBase.unsentApiDao().deleteAllUnsentUpdateAvatarDetails()
     }
 
-    fun deleteAllUnsentProfileUpdateDetails(){
+    fun deleteAllUnsentProfileUpdateDetails() {
         localDataBase.unsentApiDao().deleteAllUnsentProfileUpdateDetails()
     }
 
-    fun isExistsUnsentStateUpdateDB(): Boolean{
+    // delete Particular item
+    fun deleteUnsentStateUpdate(id: Int) {
+        localDataBase.unsentApiDao().deleteUnsentStateUpdate(id)
+    }
+
+   fun deleteUnsentUploadActivity(id: Int){
+        localDataBase.unsentApiDao().deleteUnsentUploadActivity(id)
+    }
+
+
+    // check exist
+
+    fun isExistsUnsentStateUpdateDB(): Boolean {
         return localDataBase.unsentApiDao().isExistsUnsentStateUpdateDB()
     }
 
-    fun isExistsUnsentUploadActivityDB(): Boolean{
+    fun isExistsUnsentUploadActivityDB(): Boolean {
         return localDataBase.unsentApiDao().isExistsUnsentUploadActivityDB()
     }
-    fun isExistsUnsentUpdateAvatarDB(): Boolean{
+
+    fun isExistsUnsentUpdateAvatarDB(): Boolean {
         return localDataBase.unsentApiDao().isExistsUnsentUpdateAvatarDB()
     }
-    fun isExistsUnsentProfileUpdateDB(): Boolean{
+
+    fun isExistsUnsentProfileUpdateDB(): Boolean {
         return localDataBase.unsentApiDao().isExistsUnsentProfileUpdateDB()
     }
 
 
-    fun getUnsentStateUpdateDetails():List< UnsentStateUpdate>{
+    fun getUnsentStateUpdateDetails(): List<UnsentStateUpdate> {
         return localDataBase.unsentApiDao().getUnsentStateUpdateDetails()
     }
 
