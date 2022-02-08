@@ -74,10 +74,10 @@ interface UnsentApiDao {
     fun getUnsentNotifyStateUploadDetails(): UnsentNotifyStateUpload
 
     @Query("SELECT * from UnsentStateUpdate")
-    fun getUnsentStateUpdateDetails(): UnsentStateUpdate
+    fun getUnsentStateUpdateDetails(): List<UnsentStateUpdate>
 
     @Query("SELECT * from UnsentUploadActivity")
-    fun getUnsentUploadActivityDetails(): UnsentUploadActivity
+    fun getUnsentUploadActivityDetails(): List<UnsentUploadActivity>
 
     @Query("SELECT * from UnsentUpdateAvatar")
     fun getUnsentUpdateAvatarDetails(): UnsentUpdateAvatar

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.mainscreen.MainActivity
+import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.GeoPosition
@@ -22,10 +23,11 @@ import kotlin.concurrent.schedule
 
 class K {
     companion object {
-         lateinit var authRepository:AuthRepository
-         var arrayList :ArrayList<UpdateActivityDataClass> = ArrayList()
-         var tinyDB:TinyDB = TinyDB(MyApplication.appContext)
-        var myTimer:Timer? = null
+        lateinit var authRepository: AuthRepository
+        lateinit var mainRepository: MainRepository
+        var arrayList: ArrayList<UpdateActivityDataClass> = ArrayList()
+        var tinyDB: TinyDB = TinyDB(MyApplication.appContext)
+        var myTimer: Timer? = null
         var primaryColor = "#7A59FC"
 //            get() {
 //                return tinyDB.getString("primaryColor") ?: "#7A59FC"
@@ -42,7 +44,7 @@ class K {
 
             var lastTimetoGo = tinyDB.getString("goBackTime")
 
-             Log.d("check the time i store ", "$lastTimetoGo")
+            Log.d("check the time i store ", "$lastTimetoGo")
 
             val simpleDateFormat = SimpleDateFormat("HH:mm:ss")
 
@@ -75,47 +77,45 @@ class K {
             var finalTimeDiff = hoursInSec + mintInSec + sec
 
             println("final time difference in sec is == $finalTimeDiff")
-            Log.d("finalssss time difference in sec is","$finalTimeDiff")
-            MyApplication.backPressCheck=200
+            Log.d("finalssss time difference in sec is", "$finalTimeDiff")
+            MyApplication.backPressCheck = 200
 
             //check which time is need to set
 
 
-
             var checkTimer = tinyDB.getString("checkTimer")
-            if(checkTimer=="workTime"){
-                if(resumeCheck==true){
-                    var previoustime=tinyDB.getInt("lasttimework")
-                    var newTime = previoustime+finalTimeDiff
-                    tinyDB.putInt("lasttimework",newTime.toInt())
-                    var intent= (context as MainActivity)
+            if (checkTimer == "workTime") {
+                if (resumeCheck == true) {
+                    var previoustime = tinyDB.getInt("lasttimework")
+                    var newTime = previoustime + finalTimeDiff
+                    tinyDB.putInt("lasttimework", newTime.toInt())
+                    var intent = (context as MainActivity)
                     intent.setTimer()
-                Timer().schedule(200) {
-                    intent.startTimer()
-                }
-                }else{
-                    tinyDB.putInt("lasttimework",finalTimeDiff.toInt())
+                    Timer().schedule(200) {
+                        intent.startTimer()
+                    }
+                } else {
+                    tinyDB.putInt("lasttimework", finalTimeDiff.toInt())
                 }
 //
 
-            }
-            else if(checkTimer=="breakTime"){
-                if(resumeCheck==true){
-                    var previoustime=tinyDB.getInt("lasttimebreak")
-                    var newTime = previoustime+finalTimeDiff
-                    var defaultBreak=workBreak * 60
-                    if(newTime > defaultBreak){
+            } else if (checkTimer == "breakTime") {
+                if (resumeCheck == true) {
+                    var previoustime = tinyDB.getInt("lasttimebreak")
+                    var newTime = previoustime + finalTimeDiff
+                    var defaultBreak = workBreak * 60
+                    if (newTime > defaultBreak) {
                         newTime = defaultBreak.toLong()
                     }
-                    tinyDB.putInt("lasttimebreak",newTime.toInt())
-                    var intent= (context as MainActivity)
+                    tinyDB.putInt("lasttimebreak", newTime.toInt())
+                    var intent = (context as MainActivity)
                     intent.setTimer()
                     Timer().schedule(200) {
                         intent.startTimerBreak()
                     }
-                }else{
-                 var serverBreak=tinyDB.getInt("ServerBreakTime")
-                    finalTimeDiff= finalTimeDiff+serverBreak
+                } else {
+                    var serverBreak = tinyDB.getInt("ServerBreakTime")
+                    finalTimeDiff = finalTimeDiff + serverBreak
 //                    var defaultBreak=workBreak * 60
 //                    if(finalTimeDiff > defaultBreak){
 //                        finalTimeDiff = defaultBreak.toLong()
@@ -130,7 +130,6 @@ class K {
             }
 
 
-
         }
 
 
@@ -141,95 +140,209 @@ class K {
         }
 
 
-        fun checkNet(){
-            tinyDB.putBoolean("PENDINGCHECK",true)
-          myTimer = Timer()
+        fun checkNet() {
+
+
+            tinyDB.putBoolean("PENDINGCHECK", true)
+            myTimer = Timer()
             myTimer!!.schedule(object : TimerTask() {
                 override fun run() {
-                    var netCheck=isConnected()
-                    if(netCheck){
-                      checkPendingData(tinyDB,myTimer!!)
+                    var netCheck = isConnected()
+                    if (netCheck) {
+//                      checkPendingData(tinyDB,myTimer!!)
                         //faris start work here
+                        CoroutineScope(Job()).launch(Dispatchers.IO) {
+
+                            val coroutineJob = Job()
+                            CoroutineScope(coroutineJob).launch(Dispatchers.IO) {
+                                checkStateAndUploadActivityDB()
+                            }
+                            coroutineJob.join()
+                            checkUpdateLanguageNotifyState()
+                        }
                     }
-                    Log.d("NETCHECKTEST","---- $netCheck")
+                    Log.d("NETCHECKTEST", "---- $netCheck")
                 }
             }, 0, 10000)
         }
 
 
-        fun checkPendingData(tinyDB: TinyDB, myTimer: Timer){
-            arrayList = tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
-                  myTimer.cancel()
-                CoroutineScope(Job()).launch(Dispatchers.IO) {
-                for(item in arrayList){
-                    if(item.state != null){
-                        Log.d("PENDINGDATATESTING_STATE","DATA IS____ $item")
-                        updateState(item.datetime,item.totalTime,item.state,item.geoPosition,item.vehicle)
-                    }else{
-                        Log.d("PENDINGDATATESTING","DATA IS____ $item")
-                        uploadPendingDataActivity(item.datetime,item.totalTime,item.activity,item.geoPosition,item.vehicle,
-                            authRepository)
+        suspend fun checkStateAndUploadActivityDB() {
+            if (mainRepository.isExistsUnsentStateUpdateDB()) {
+
+                val getUnsentStateUpdateValues =
+                    mainRepository.getUnsentStateUpdateDetails().toCollection(ArrayList())
+
+                for (getUnsentStateData in getUnsentStateUpdateValues) {
+                    val coroutineStateData=Job()
+                    CoroutineScope(coroutineStateData).launch(Dispatchers.IO) {
+                        val getState = State(
+                            0,
+                            getUnsentStateData.stateId,
+                            getUnsentStateData.stateDescription
+                        )
+                        val getVehicle = Vehicle(
+                            0,
+                            getUnsentStateData.vehicleId,
+                            getUnsentStateData.vehicleDescription,
+                            getUnsentStateData.vehiclePlateNumber
+                        )
+                        val getGeoPosition = GeoPosition(
+                            getUnsentStateData.latitudeGeoPosition,
+                            getUnsentStateData.longitudeGeoPosition
+                        )
+
+
+                        updateState(
+                            getUnsentStateData.datetime,
+                            getUnsentStateData.totalTime,
+                            getState,
+                            getGeoPosition,
+                            getVehicle
+                        )
+                    }
+
+                   coroutineStateData.join()
+
+                }
+
+            }
+            if (mainRepository.isExistsUnsentUploadActivityDB()) {
+
+
+                val getUnsentUploadActivityValues =
+                    mainRepository.getUnsentUploadActivityDetails().toCollection(ArrayList())
+
+
+                for (getUnsentUploadActivityData in getUnsentUploadActivityValues) {
+
+                    val coroutineUploadActivity=Job()
+                    CoroutineScope(coroutineUploadActivity).launch(Dispatchers.IO) {
+                        val getVehicle = Vehicle(
+                            0,
+                            getUnsentUploadActivityData.vehicleId,
+                            getUnsentUploadActivityData.vehicleDescription,
+                            getUnsentUploadActivityData.vehiclePlateNumber
+                        )
+                        val getGeoPosition = GeoPosition(
+                            getUnsentUploadActivityData.latitudeGeoPosition,
+                            getUnsentUploadActivityData.longitudeGeoPosition
+                        )
+
+                        uploadPendingDataActivity(
+                            getUnsentUploadActivityData.dateTime,
+                            getUnsentUploadActivityData.totalTime,
+                            getUnsentUploadActivityData.activity,
+                            getGeoPosition,
+                            getVehicle,
+                            authRepository
+                        )
+                    }
+                   coroutineUploadActivity.join()
+                }
+            }
+
+
+        }
+
+
+        suspend fun checkUpdateLanguageNotifyState() {
+            if (mainRepository.isExistsUpdateLanguageDB()) {
+                val getUnsentLanguageUpdateValue = mainRepository.getUnsentLanguageUpdateDetails()
+            }
+            if (mainRepository.isExistsUnsentNotifyStateUploadDB()) {
+                val getUnsentNotifyStateUploadValue =
+                    mainRepository.getUnsentNotifyStateUploadDetails()
+            }
+        }
+
+
+        fun checkPendingData(tinyDB: TinyDB, myTimer: Timer) {
+            arrayList = tinyDB.getListObject(
+                "PENDINGDATALIST",
+                UpdateActivityDataClass::class.java
+            ) as ArrayList<UpdateActivityDataClass>
+            myTimer.cancel()
+            CoroutineScope(Job()).launch(Dispatchers.IO) {
+                for (item in arrayList) {
+                    if (item.state != null) {
+                        Log.d("PENDINGDATATESTING_STATE", "DATA IS____ $item")
+                        updateState(
+                            item.datetime,
+                            item.totalTime,
+                            item.state,
+                            item.geoPosition,
+                            item.vehicle
+                        )
+                    } else {
+                        Log.d("PENDINGDATATESTING", "DATA IS____ $item")
+                        uploadPendingDataActivity(
+                            item.datetime,
+                            item.totalTime,
+                            item.activity,
+                            item.geoPosition,
+                            item.vehicle,
+                            authRepository
+                        )
                     }
                 }
-                tinyDB.putBoolean("PENDINGCHECK",false)
+                tinyDB.putBoolean("PENDINGCHECK", false)
 
-                    arrayList.clear()
-                    tinyDB.putListObject("PENDINGDATALIST", arrayList as ArrayList<Object>)
-                        Log.d("PENDINGDATATESTING","YES NOW RUN")
-                    tinyDB.putBoolean("SYNC_CHECK",true)
+                arrayList.clear()
+                tinyDB.putListObject("PENDINGDATALIST", arrayList as ArrayList<Object>)
+                Log.d("PENDINGDATATESTING", "YES NOW RUN")
+                tinyDB.putBoolean("SYNC_CHECK", true)
 
             }
 
         }
 
-       suspend fun uploadPendingDataActivity(datetime: String?,
-                                             totalTime: Int?,
-                                             activity: Int?,
-                                             geoPosition: GeoPosition?,
-                                             vehicle: Vehicle?,
-                                             authRepository: AuthRepository
-        ){
+        suspend fun uploadPendingDataActivity(
+            datetime: String?,
+            totalTime: Int?,
+            activity: Int?,
+            geoPosition: GeoPosition?,
+            vehicle: Vehicle?,
+            authRepository: AuthRepository
+        ) {
 
 
-                try {
-                    var Token = tinyDB.getString("Cookie")
-                    val response = authRepository.updateActivity(
-                        datetime,
-                        totalTime,
-                        activity,
-                        geoPosition,
-                        vehicle,
-                        Token!!
-                    )
-                    println("SuccessResponse $response")
+            try {
+                var Token = tinyDB.getString("Cookie")
+                val response = authRepository.updateActivity(
+                    datetime,
+                    totalTime,
+                    activity,
+                    geoPosition,
+                    vehicle,
+                    Token!!
+                )
+                println("SuccessResponse $response")
 
 
-                } catch (e: ResponseException) {
+            } catch (e: ResponseException) {
 
-                    println("ErrorResponse")
-                } catch (e: ApiException) {
-                    e.printStackTrace()
-                } catch (e: NoInternetException) {
-                    println("position 2")
-                    e.printStackTrace()
-                    withContext(Dispatchers.Main) {
+                println("ErrorResponse")
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            } catch (e: NoInternetException) {
+                println("position 2")
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
 
-                    }
                 }
-                catch (e: SocketTimeoutException){
-                    withContext(Dispatchers.Main) {
-                    }
+            } catch (e: SocketTimeoutException) {
+                withContext(Dispatchers.Main) {
                 }
-                catch(e: SocketException){
-                    withContext(Dispatchers.Main) {
+            } catch (e: SocketException) {
+                withContext(Dispatchers.Main) {
 
-                    }
-                    Log.d("connection Exception","Connect Not Available")
                 }
+                Log.d("connection Exception", "Connect Not Available")
+            }
 
 
         }
-
 
 
         suspend fun updateState(
@@ -246,37 +359,46 @@ class K {
 
 
 
-                    try {
+            try {
 
-                        val response = authRepository.updateState(
-                            datetime,
-                            totalTime,
-                            state,
-                            geoPosition,
-                            vehicle,
-                            Token!!
-                        )
+                val response = authRepository.updateState(
+                    datetime,
+                    totalTime,
+                    state,
+                    geoPosition,
+                    vehicle,
+                    Token!!
+                )
 
-                        println("SuccessResponse $response")
+                println("SuccessResponse $response")
 
 
-                    } catch (e: ResponseException) {
+            } catch (e: ResponseException) {
 
-                        println("ErrorResponse")
-                    } catch (e: ApiException) {
-                        e.printStackTrace()
-                    } catch (e: NoInternetException) {
-                        println("position 2")
-                        e.printStackTrace()
-                    } catch (e: SocketTimeoutException) {
+                println("ErrorResponse")
+            } catch (e: ApiException) {
+                e.printStackTrace()
+            } catch (e: NoInternetException) {
+                println("position 2")
+                e.printStackTrace()
+            } catch (e: SocketTimeoutException) {
 
-                    } catch (e: SocketException) {
+            } catch (e: SocketException) {
 
-                        Log.d("connection Exception", "Connect Not Available")
+                Log.d("connection Exception", "Connect Not Available")
 
-                    }
-                }
             }
         }
+    }
+
+
+    fun Job.status(): String = when {
+        isActive -> "Active/Completing"
+        isCompleted && isCancelled -> "Cancelled"
+        isCancelled -> "Cancelling"
+        isCompleted -> "Completed"
+        else -> "New"
+    }
+}
 
 

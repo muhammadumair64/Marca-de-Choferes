@@ -107,11 +107,11 @@ class MainRepository @Inject constructor(
     }
 
 
-    fun getUnsentStateUpdateDetails(): UnsentStateUpdate{
+    fun getUnsentStateUpdateDetails():List< UnsentStateUpdate>{
         return localDataBase.unsentApiDao().getUnsentStateUpdateDetails()
     }
 
-    fun getUnsentUploadActivityDetails(): UnsentUploadActivity {
+    fun getUnsentUploadActivityDetails(): List<UnsentUploadActivity> {
         return localDataBase.unsentApiDao().getUnsentUploadActivityDetails()
     }
 
