@@ -143,15 +143,15 @@ class MainRepository @Inject constructor(
 
 
 
-//    suspend fun deleteUnsentStartWorkTime(id: Int)
-//    {
-//        localDataBase.unsentApiDao().deleteUnsentStartWorkTime(id)
-//    }
-//
-//    suspend fun deleteUnsentStartBreakTime(id: Int)
-//    {
-//        localDataBase.unsentApiDao().deleteUnsentStartBreakTime(id)
-//    }
+    suspend fun deleteAllUnsentStartWorkTime()
+    {
+        localDataBase.unsentApiDao().deleteAllUnsentStartWorkTime()
+    }
+
+    suspend fun deleteAllUnsentStartBreakTime()
+    {
+        localDataBase.unsentApiDao().deleteAllUnsentStartBreakTime()
+    }
 
 
     suspend fun getUnsentStartWorkTimeDetails(): UnsentStartWorkTime

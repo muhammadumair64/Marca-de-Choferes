@@ -52,6 +52,12 @@ interface UnsentApiDao {
     @Query("DELETE FROM UnsentProfileUpdate")
     fun deleteAllUnsentProfileUpdateDetails()
 
+    @Query("DELETE FROM UnsentStartWorkTime")
+    fun deleteAllUnsentStartWorkTime()
+
+    @Query("DELETE FROM UnsentStartBreakTime")
+    fun deleteAllUnsentStartBreakTime()
+
 
     // Delete Particular item
 
@@ -62,11 +68,7 @@ interface UnsentApiDao {
     @Query("DELETE FROM UnsentUploadActivity WHERE roomDBId = :id")
     fun deleteUnsentUploadActivity(id: Int)
 
-//    @Query("DELETE FROM UnsentStartWorkTime WHERE roomDBId = :id")
-//    fun deleteUnsentStartWorkTime(id: Int)
-//
-//    @Query("DELETE FROM UnsentStartBreakTime WHERE roomDBId = :id")
-//    fun deleteUnsentStartBreakTime(id: Int)
+
 
 
     // Check Exists

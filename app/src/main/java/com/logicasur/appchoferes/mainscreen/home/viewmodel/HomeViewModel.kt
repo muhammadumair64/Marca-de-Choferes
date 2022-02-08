@@ -54,6 +54,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
+import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
+import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -1212,6 +1214,36 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
 //        tinyDB.putInt("SELECTEDACTIVITY",activity)
 //        tinyDB.putInt("TOTALTIMETOSEND",totalTime!!)
+        val sdf = SimpleDateFormat("yyyy-MM-dd,HH:mm:ss")
+        var currentDate = sdf.format(Date())
+        currentDate = currentDate + "Z"
+        when(activity){
+            0->{
+               viewModelScope.launch {
+                    withContext(Dispatchers.IO){
+                        if(mainRepository.getUnsentStartWorkTimeDetails()!=null){
+                          mainRepository.deleteAllUnsentStartWorkTime()
+                        }
+                        mainRepository!!.insertUnsentStartWorkTime(UnsentStartWorkTime(0,currentDate))
+                    }
+                }
+
+
+            }
+            1->{
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO){
+                        if(mainRepository.getUnsentStartBreakTimeDetails()!=null){
+                            mainRepository.deleteAllUnsentStartBreakTime()
+                        }
+                        mainRepository!!.insertUnsentStartBreakTime(UnsentStartBreakTime(0,currentDate))
+                    }
+                }
+
+
+            }
+        }
+
 
        var check= tinyDB.getBoolean("NETCHECK")
 if(check){

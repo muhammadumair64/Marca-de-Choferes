@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity
 class UnsentStartBreakTime(
     @PrimaryKey
+    var roomid: Int = 0,
     var time: String
 )

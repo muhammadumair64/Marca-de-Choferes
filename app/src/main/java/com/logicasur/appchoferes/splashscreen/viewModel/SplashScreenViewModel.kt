@@ -65,12 +65,13 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     var check=K.isConnected()
                     if(check == false){
                         viewModelScope.launch {
-                            withContext(Dispatchers.Main){
+                            withContext(Dispatchers.IO){
+                                getPreviousTimeWhenOffline()
                                 //changed
                                 var intent = Intent(activityContext,MainActivity::class.java)
                                 ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                                 //<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>
-                                Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                              //  Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                                 myTimer.cancel()
                             }
                         }
@@ -509,34 +510,40 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
 
 
-    private fun getPreviousTimeWhenOffline(response: SigninResponse) {
+    private fun getPreviousTimeWhenOffline() {
 
-
-//        tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
+        var breakTime=tinyDB.getInt("lasttimebreak")
 //        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
         var activity=tinyDB.getInt("SELECTEDACTIVITY")
         when (activity) {
             0 -> {
-                getWorkTimeWhenOffline(response)
+                getWorkTimeWhenOffline()
             }
             1 -> {
                 tinyDB.putString("checkTimer", "breakTime")
-                var breakDate = response.lastVar!!.lastWorkBreakDateIni
-                if (breakDate!!.isNotEmpty()) {
-                    breakDate = breakDate!!.split(".").toTypedArray()[0]
-                    breakDate = breakDate!!.split("T").toTypedArray()[1]
-                    Log.d("workDate Is", "date is $breakDate")
-                }
-                tinyDB.putString("goBackTime", breakDate)
-                tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO) {
+                        var breakDate =mainRepository.getUnsentStartBreakTimeDetails().time
+                            if (breakDate!!.isNotEmpty()) {
+                                breakDate = breakDate!!.split("Z").toTypedArray()[0]
+                                breakDate = breakDate!!.split(",").toTypedArray()[1]
+                                Log.d("workDate Is", "date is $breakDate")
+                            }
+                        tinyDB.putString("goBackTime", breakDate)
+                        tinyDB.putInt("ServerBreakTime",breakTime)
+                    }
 
-                getWorkTimeWhenOffline(response)
+
+                    var defaultBreak=tinyDB.getInt("defaultBreak")
+                    K.timeDifference(tinyDB, activityContext!!, false,defaultBreak)
+
+                    getWorkTimeWhenOffline()
+                }
 
             }
             2 -> {
                 MyApplication.dayEndCheck = 100
-                getWorkTimeWhenOffline(response)
+                getWorkTimeWhenOffline()
             }
             3->{
                 MyApplication.dayEndCheck = 200
@@ -545,16 +552,30 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
 
     }
-    fun getWorkTimeWhenOffline(response: SigninResponse) {
+
+    fun getWorkTimeWhenOffline() {
         tinyDB.putString("checkTimer", "workTime")
-        var workDate = response.lastVar!!.lastWorkedHoursDateIni
-        if (workDate!!.isNotEmpty()) {
-            workDate = workDate!!.split(".").toTypedArray()[0]
-            workDate = workDate!!.split("T").toTypedArray()[1]
-            Log.d("workDate Is", "date is $workDate")
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                var date = mainRepository.getUnsentStartWorkTimeDetails()
+                var workDate = date.time
+                if (workDate!!.isNotEmpty()) {
+                    workDate = workDate!!.split("Z").toTypedArray()[0]
+                    workDate = workDate!!.split(",").toTypedArray()[1]
+                    Log.d("workDate Is", "date is $workDate")
+                }
+                tinyDB.putString("goBackTime", workDate)
+            }
+           var defaultTime=tinyDB.getInt("defaultWork")
+
+                K.timeDifference(tinyDB, activityContext!!, false,defaultTime)
+
+
+
         }
-        tinyDB.putString("goBackTime", workDate)
-        K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+
+
     }
 
 }
