@@ -27,6 +27,7 @@ import android.graphics.Bitmap
 import android.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
@@ -64,8 +65,25 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
             edit.setOnClickListener {
 
-                var intent = Intent(context, CreateNewPasswordScreen::class.java)
-                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+             viewModelScope.launch {
+                    withContext(Dispatchers.IO){
+                        val check = K.isConnected()
+                        withContext(Dispatchers.Main){
+                            if(check){
+                                var intent = Intent(context, CreateNewPasswordScreen::class.java)
+                                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+                            }else{
+                                Toast.makeText(context,TAG2, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                    }
+
+                }
+
+
+
+
             }
 
 
@@ -106,6 +124,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     }
 
                 } catch (e: ResponseException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     println("logout Failed $e")
                 }
             }
@@ -182,9 +201,11 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     println("ErrorResponse")
 
                 } catch (e: ApiException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     e.printStackTrace()
                 }
                 catch (e: NoInternetException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){

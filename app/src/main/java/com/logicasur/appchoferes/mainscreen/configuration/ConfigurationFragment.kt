@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.Language
@@ -23,6 +25,9 @@ import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.configuration.viewModel.ConfigurationViewModel
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 @AndroidEntryPoint
@@ -89,13 +94,30 @@ class ConfigurationFragment : Fragment() {
 
         binding.languageLayout.setOnClickListener {
 
-            alertDialog.setView(contactPopupView)
-            viewModel.selectedLanguage()
-            alertDialog.show()
-            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-            val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
-            alertDialog.getWindow()?.setLayout(width, height)
-            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO){
+                    val check = K.isConnected()
+                    withContext(Dispatchers.Main){
+                        if(check){
+                            alertDialog.setView(contactPopupView)
+                            viewModel.selectedLanguage()
+                            alertDialog.show()
+                            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                            val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
+                            alertDialog.getWindow()?.setLayout(width, height)
+                            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }else{
+                            Toast.makeText(context, viewModel.TAG2, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                }
+
+            }
+
+
+
         }
         dismiss = contactPopupView.findViewById(R.id.close)
         dismiss.setOnClickListener {

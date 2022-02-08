@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.logicasur.appchoferes.Extra.Language
@@ -38,6 +39,9 @@ import com.logicasur.appchoferes.Extra.K
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -109,8 +113,21 @@ class ProfileFragment : Fragment() {
 
 
         binding.editProfile.setOnClickListener {
+lifecycleScope.launch {
+    withContext(Dispatchers.IO){
+        val check = K.isConnected()
+        withContext(Dispatchers.Main){
+            if(check){
+                initPermission()
+            }else{
+                Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT).show()
+            }
+        }
 
-                 initPermission()
+    }
+
+}
+
         }
 
 
@@ -184,30 +201,73 @@ class ProfileFragment : Fragment() {
 
 
         binding.editName.setOnClickListener {
-            option = 1
-            alertDialog.setView(contactPopupView)
-            title.text = getResources().getString(R.string.firstname)
-            var name = binding.TitleName.text
-            println("showable name is $name")
-            changedName.setText("$name", TextView.BufferType.EDITABLE);
-            alertDialog.show()
-            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-            val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
-            alertDialog.getWindow()?.setLayout(width, height)
-            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO){
+                    val check = K.isConnected()
+                    withContext(Dispatchers.Main){
+                        if(check){
+
+                            option = 1
+                            alertDialog.setView(contactPopupView)
+                            title.text = getResources().getString(R.string.firstname)
+                            var name = binding.TitleName.text
+                            println("showable name is $name")
+                            changedName.setText("$name", TextView.BufferType.EDITABLE);
+                            alertDialog.show()
+                            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                            val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
+                            alertDialog.getWindow()?.setLayout(width, height)
+                            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+
+
+                        }else{
+                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                }
+
+            }
+
         }
         binding.editSurname.setOnClickListener {
-            option = 2
-            alertDialog.setView(contactPopupView)
-            title.text = getResources().getString(R.string.father_name)
-            var name = binding.FatherName.text
-            println("showable name is $name")
-            changedName.setText("$name", TextView.BufferType.EDITABLE);
-            alertDialog.show()
-            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-            val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
-            alertDialog.getWindow()?.setLayout(width, height)
-            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO){
+                    val check = K.isConnected()
+                    withContext(Dispatchers.Main){
+                        if(check){
+
+                            option = 2
+                            alertDialog.setView(contactPopupView)
+                            title.text = getResources().getString(R.string.father_name)
+                            var name = binding.FatherName.text
+                            println("showable name is $name")
+                            changedName.setText("$name", TextView.BufferType.EDITABLE);
+                            alertDialog.show()
+                            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                            val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
+                            alertDialog.getWindow()?.setLayout(width, height)
+                            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+
+
+                        }else{
+                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                }
+
+            }
+
+
+
+
+
         }
 
         dismiss = contactPopupView.findViewById(R.id.close)

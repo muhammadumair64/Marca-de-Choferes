@@ -561,12 +561,15 @@ class MainActivity : BaseClass(){
                             TAG1,
                             Toast.LENGTH_SHORT
                         ).show()
+                        updatePendingData(false)
                         (MyApplication.loadingContext as LoadingScreen).finish()
                     }
                     println("ErrorResponse")
                 } catch (e: ApiException) {
+                    updatePendingData(false)
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
+                    updatePendingData(false)
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
@@ -1055,7 +1058,7 @@ class MainActivity : BaseClass(){
         var time = 0
     when(activity){
         0->{
-           time =  WorkTime
+           time =  0
         }
         1->{
             time = BreakTime

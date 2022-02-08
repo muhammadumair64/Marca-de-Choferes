@@ -153,15 +153,15 @@ class K {
                         //faris start work here
                         CoroutineScope(Job()).launch(Dispatchers.IO) {
 
-                            val coroutineJob = Job()
-                            CoroutineScope(coroutineJob).launch(Dispatchers.IO) {
+//                            val coroutineJob = Job()
+//                            CoroutineScope(coroutineJob).launch(Dispatchers.IO) {
 
                                 checkStateAndUploadActivityDB()
-                            }
+                            //}
                             Log.d("PENDING_DATA_TESTING","before")
-                            coroutineJob.join()
+//                            coroutineJob.join()
                             Log.d("PENDING_DATA_TESTING","After")
-                            checkUpdateLanguageNotifyState()
+//                            checkUpdateLanguageNotifyState()
                         }
                     }
                     Log.d("NETCHECKTEST", "---- $netCheck")
@@ -178,9 +178,9 @@ class K {
                 val getUnsentStateUpdateValues =
                     mainRepository.getUnsentStateUpdateDetails().toCollection(ArrayList())
 
+
                 for (getUnsentStateData in getUnsentStateUpdateValues) {
-                    val coroutineStateData = Job()
-                    CoroutineScope(coroutineStateData).launch(Dispatchers.IO) {
+
                         val getState = State(
                             0,
                             getUnsentStateData.stateId,
@@ -208,9 +208,9 @@ class K {
                         )
                     }
                    Log.d("PENDING_DATA_TESTING","STATE UPDATE")
-                   coroutineStateData.join()
+
                     Log.d("PENDING_DATA_TESTING","AFter STATE UPDATE")
-                }
+
 
 
             }
@@ -220,11 +220,9 @@ class K {
                 val getUnsentUploadActivityValues =
                     mainRepository.getUnsentUploadActivityDetails().toCollection(ArrayList())
 
-
                 for (getUnsentUploadActivityData in getUnsentUploadActivityValues) {
 
-                    val coroutineUploadActivity = Job()
-                    CoroutineScope(coroutineUploadActivity).launch(Dispatchers.IO) {
+
                         val getVehicle = Vehicle(
                             0,
                             getUnsentUploadActivityData.vehicleId,
@@ -247,10 +245,10 @@ class K {
                         )
                     }
                     Log.d("PENDING_DATA_TESTING","Activity UPDATE")
-                   coroutineUploadActivity.join()
+//                   coroutineUploadActivity.join()
                     Log.d("PENDING_DATA_TESTING","after Activity UPDATE")
                 }
-            }
+
 
             if(!(mainRepository.isExistsUnsentStateUpdateDB()) && !(mainRepository.isExistsUnsentUploadActivityDB()))
             {

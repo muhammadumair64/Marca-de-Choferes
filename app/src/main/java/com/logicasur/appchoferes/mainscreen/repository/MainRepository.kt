@@ -122,4 +122,13 @@ class MainRepository @Inject constructor(
         return localDataBase.unsentApiDao().getUnsentProfileUpdateDetails()
     }
 
+    // delete Particular item
+    suspend fun deleteUnsentStateUpdate(id: Int) {
+        localDataBase.unsentApiDao().deleteUnsentStateUpdate(id)
+    }
+
+    suspend fun deleteUnsentUploadActivity(id: Int){
+        localDataBase.unsentApiDao().deleteUnsentUploadActivity(id)
+    }
+
 }

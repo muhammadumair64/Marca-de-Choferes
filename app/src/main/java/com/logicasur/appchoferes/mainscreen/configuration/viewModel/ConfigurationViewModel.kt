@@ -124,20 +124,50 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
         dataBinding!!.apply {
            toggleOFF!!.setOnClickListener {
-               var intent = Intent(context, LoadingScreen::class.java)
-            ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                selectedNotifyStateUplaod(true)
-               toggleON!!.visibility = View.VISIBLE
-               toggleOFF.visibility = View.GONE
+               viewModelScope.launch {
+                   withContext(Dispatchers.IO){
+                       val check = K.isConnected()
+                       withContext(Dispatchers.Main){
+                           if(check){
+                               var intent = Intent(context, LoadingScreen::class.java)
+                               ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+                               selectedNotifyStateUplaod(true)
+                               toggleON!!.visibility = View.VISIBLE
+                               toggleOFF.visibility = View.GONE
+                           }else{
+                               Toast.makeText(context,TAG2, Toast.LENGTH_SHORT).show()
+                           }
+                       }
+
+                   }
+
+               }
+
             }
 
 
             toggleON!!.setOnClickListener {
-                var intent = Intent(context, LoadingScreen::class.java)
-                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                selectedNotifyStateUplaod(false)
-                toggleOFF!!.visibility = View.VISIBLE
-                toggleON.visibility = View.GONE
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO){
+                        val check = K.isConnected()
+                        withContext(Dispatchers.Main){
+                            if(check){
+                                var intent = Intent(context, LoadingScreen::class.java)
+                                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+                                selectedNotifyStateUplaod(false)
+                                toggleOFF!!.visibility = View.VISIBLE
+                                toggleON.visibility = View.GONE
+
+                            }else{
+                                Toast.makeText(context,TAG2, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                    }
+
+                }
+
+
             }
         }
 
