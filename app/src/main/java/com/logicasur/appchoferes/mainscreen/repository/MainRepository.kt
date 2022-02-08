@@ -131,4 +131,37 @@ class MainRepository @Inject constructor(
         localDataBase.unsentApiDao().deleteUnsentUploadActivity(id)
     }
 
+    suspend fun insertUnsentStartWorkTime(unsentStartWorkTime: UnsentStartWorkTime)
+    {
+        localDataBase.unsentApiDao().insertUnsentStartWorkTime(unsentStartWorkTime)
+    }
+
+    suspend fun insertUnsentStartBreakTime(unsentStartBreakTimeWorkTime: UnsentStartBreakTime)
+    {
+        localDataBase.unsentApiDao().insertUnsentStartBreakTime(unsentStartBreakTimeWorkTime)
+    }
+
+
+
+//    suspend fun deleteUnsentStartWorkTime(id: Int)
+//    {
+//        localDataBase.unsentApiDao().deleteUnsentStartWorkTime(id)
+//    }
+//
+//    suspend fun deleteUnsentStartBreakTime(id: Int)
+//    {
+//        localDataBase.unsentApiDao().deleteUnsentStartBreakTime(id)
+//    }
+
+
+    suspend fun getUnsentStartWorkTimeDetails(): List<UnsentStartWorkTime>
+    {
+        return localDataBase.unsentApiDao().getUnsentStartWorkTimeDetails()
+    }
+
+    suspend fun getUnsentStartBreakTimeDetails(): List<UnsentStartBreakTime>
+    {
+        return localDataBase.unsentApiDao().getUnsentStartBreakTimeDetails()
+    }
+
 }

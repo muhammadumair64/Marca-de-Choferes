@@ -26,6 +26,12 @@ interface UnsentApiDao {
     @Insert
     fun insertUnsentProfileUpdate(unsentProfileUpdate: UnsentProfileUpdate)
 
+    @Insert
+    fun insertUnsentStartWorkTime(unsentStartWorkTime: UnsentStartWorkTime)
+
+    @Insert
+    fun insertUnsentStartBreakTime(unsentStartBreakTimeWorkTime: UnsentStartBreakTime)
+
 
     // Delete All
     @Query("DELETE FROM UnsentLanguageUpdation")
@@ -56,6 +62,11 @@ interface UnsentApiDao {
     @Query("DELETE FROM UnsentUploadActivity WHERE roomDBId = :id")
     fun deleteUnsentUploadActivity(id: Int)
 
+//    @Query("DELETE FROM UnsentStartWorkTime WHERE roomDBId = :id")
+//    fun deleteUnsentStartWorkTime(id: Int)
+//
+//    @Query("DELETE FROM UnsentStartBreakTime WHERE roomDBId = :id")
+//    fun deleteUnsentStartBreakTime(id: Int)
 
 
     // Check Exists
@@ -96,4 +107,13 @@ interface UnsentApiDao {
 
     @Query("SELECT * from UnsentProfileUpdate")
     fun getUnsentProfileUpdateDetails(): UnsentProfileUpdate
+
+
+    @Query("SELECT * from UnsentStartWorkTime")
+    fun getUnsentStartWorkTimeDetails(): List<UnsentStartWorkTime>
+
+    @Query("SELECT * from UnsentStartBreakTime")
+    fun getUnsentStartBreakTimeDetails(): List<UnsentStartBreakTime>
+
+
 }
