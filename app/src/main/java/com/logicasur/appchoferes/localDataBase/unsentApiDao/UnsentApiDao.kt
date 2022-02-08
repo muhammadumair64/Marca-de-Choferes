@@ -110,10 +110,10 @@ interface UnsentApiDao {
 
 
     @Query("SELECT * from UnsentStartWorkTime")
-    fun getUnsentStartWorkTimeDetails(): List<UnsentStartWorkTime>
+    fun getUnsentStartWorkTimeDetails(): UnsentStartWorkTime
 
     @Query("SELECT * from UnsentStartBreakTime")
-    fun getUnsentStartBreakTimeDetails(): List<UnsentStartBreakTime>
+    fun getUnsentStartBreakTimeDetails(): UnsentStartBreakTime
 
 
 }

@@ -154,12 +154,12 @@ class MainRepository @Inject constructor(
 //    }
 
 
-    suspend fun getUnsentStartWorkTimeDetails(): List<UnsentStartWorkTime>
+    suspend fun getUnsentStartWorkTimeDetails(): UnsentStartWorkTime
     {
         return localDataBase.unsentApiDao().getUnsentStartWorkTimeDetails()
     }
 
-    suspend fun getUnsentStartBreakTimeDetails(): List<UnsentStartBreakTime>
+    suspend fun getUnsentStartBreakTimeDetails(): UnsentStartBreakTime
     {
         return localDataBase.unsentApiDao().getUnsentStartBreakTimeDetails()
     }
