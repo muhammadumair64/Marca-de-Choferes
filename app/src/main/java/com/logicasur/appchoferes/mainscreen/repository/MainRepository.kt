@@ -34,92 +34,92 @@ class MainRepository @Inject constructor(
         localDataBase.unsentApiDao().insertUnsentNotifyStateUpload(unsentNotifyStateUpload)
     }
 
-    fun deleteAllUnsentLanguageUpdationDetails(){
+   suspend fun deleteAllUnsentLanguageUpdationDetails(){
         localDataBase.unsentApiDao().deleteAllUnsentLanguageUpdationDetails()
     }
 
-    fun deleteAllUnsentNotifyStateUploadDetails(){
+   suspend fun deleteAllUnsentNotifyStateUploadDetails(){
         localDataBase.unsentApiDao().deleteAllUnsentNotifyStateUploadDetails()
     }
-    fun isExistsUpdateLanguageDB(): Boolean{
+    suspend fun isExistsUpdateLanguageDB(): Boolean{
         return localDataBase.unsentApiDao().isExistsUpdateLanguageDB()
     }
-    fun isExistsUnsentNotifyStateUploadDB(): Boolean{
+    suspend fun isExistsUnsentNotifyStateUploadDB(): Boolean{
         return localDataBase.unsentApiDao().isExistsUnsentNotifyStateUploadDB()
     }
 
 
-    fun getUnsentLanguageUpdateDetails(): UnsentLanguageUpdation{
+    suspend fun getUnsentLanguageUpdateDetails(): UnsentLanguageUpdation{
         return localDataBase.unsentApiDao().getUnsentLanguageUpdateDetails()
     }
-    fun getUnsentNotifyStateUploadDetails(): UnsentNotifyStateUpload{
+    suspend fun getUnsentNotifyStateUploadDetails(): UnsentNotifyStateUpload{
 
         return localDataBase.unsentApiDao().getUnsentNotifyStateUploadDetails()
     }
-    fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate)
+    suspend fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate)
     {
         localDataBase.unsentApiDao().insertUnsentStateUpdate(unsentStateUpdate)
     }
 
-    fun insertUnsentUploadActivity(unsentUploadActivity: UnsentUploadActivity)
+    suspend fun insertUnsentUploadActivity(unsentUploadActivity: UnsentUploadActivity)
     {
         localDataBase.unsentApiDao().insertUnsentUploadActivity(unsentUploadActivity)
     }
 
-    fun insertUnsentAvatarUpdate(unsentUpdateAvatar: UnsentUpdateAvatar){
+    suspend fun insertUnsentAvatarUpdate(unsentUpdateAvatar: UnsentUpdateAvatar){
         localDataBase.unsentApiDao().insertUnsentAvatarUpdate(unsentUpdateAvatar)
     }
 
-    fun insertUnsentProfileUpdate(unsentProfileUpdate: UnsentProfileUpdate){
+    suspend fun insertUnsentProfileUpdate(unsentProfileUpdate: UnsentProfileUpdate){
         localDataBase.unsentApiDao().insertUnsentProfileUpdate(unsentProfileUpdate)
     }
 
 
 
-    fun deleteAllUUnsentStateUpdateDetails(){
+    suspend fun deleteAllUUnsentStateUpdateDetails(){
         localDataBase.unsentApiDao().deleteAllUUnsentStateUpdateDetails()
     }
 
-    fun deleteAllUnsentUploadActivityDetails(){
+    suspend fun deleteAllUnsentUploadActivityDetails(){
         localDataBase.unsentApiDao().deleteAllUnsentUploadActivityDetails()
     }
 
-    fun deleteAllUnsentUpdateAvatarDetails(){
+    suspend fun deleteAllUnsentUpdateAvatarDetails(){
         localDataBase.unsentApiDao().deleteAllUnsentUpdateAvatarDetails()
     }
 
-    fun deleteAllUnsentProfileUpdateDetails(){
+    suspend fun deleteAllUnsentProfileUpdateDetails(){
         localDataBase.unsentApiDao().deleteAllUnsentProfileUpdateDetails()
     }
 
-    fun isExistsUnsentStateUpdateDB(): Boolean{
+    suspend fun isExistsUnsentStateUpdateDB(): Boolean{
         return localDataBase.unsentApiDao().isExistsUnsentStateUpdateDB()
     }
 
-    fun isExistsUnsentUploadActivityDB(): Boolean{
+    suspend fun isExistsUnsentUploadActivityDB(): Boolean{
         return localDataBase.unsentApiDao().isExistsUnsentUploadActivityDB()
     }
-    fun isExistsUnsentUpdateAvatarDB(): Boolean{
+    suspend fun isExistsUnsentUpdateAvatarDB(): Boolean{
         return localDataBase.unsentApiDao().isExistsUnsentUpdateAvatarDB()
     }
-    fun isExistsUnsentProfileUpdateDB(): Boolean{
+    suspend fun isExistsUnsentProfileUpdateDB(): Boolean{
         return localDataBase.unsentApiDao().isExistsUnsentProfileUpdateDB()
     }
 
 
-    fun getUnsentStateUpdateDetails():List< UnsentStateUpdate>{
+    suspend fun getUnsentStateUpdateDetails():List< UnsentStateUpdate>{
         return localDataBase.unsentApiDao().getUnsentStateUpdateDetails()
     }
 
-    fun getUnsentUploadActivityDetails(): List<UnsentUploadActivity> {
+    suspend fun getUnsentUploadActivityDetails(): List<UnsentUploadActivity> {
         return localDataBase.unsentApiDao().getUnsentUploadActivityDetails()
     }
 
-    fun getUnsentUpdateAvatarDetails(): UnsentUpdateAvatar {
+    suspend fun getUnsentUpdateAvatarDetails(): UnsentUpdateAvatar {
         return localDataBase.unsentApiDao().getUnsentUpdateAvatarDetails()
     }
 
-    fun getUnsentProfileUpdateDetails(): UnsentProfileUpdate {
+    suspend fun getUnsentProfileUpdateDetails(): UnsentProfileUpdate {
         return localDataBase.unsentApiDao().getUnsentProfileUpdateDetails()
     }
 

@@ -1123,7 +1123,7 @@ class MainActivity : BaseClass(){
 lifecycleScope.launch {
     withContext(Dispatchers.IO){
         var apiData = getAPIDataForState()
-        var objState= UnsentStateUpdate(0,apiData.datetime,apiData.totalTime)
+        var objState= UnsentStateUpdate(0,apiData.datetime,apiData.totalTime,apiData.state!!.id,apiData.state!!.description,apiData.vehicle!!.id,apiData.vehicle!!.description,apiData.vehicle!!.plateNumber,apiData.geoPosition!!.latitud,apiData.geoPosition!!.longitud)
         mainRepository!!.insertUnsentStateUpdate(objState)
     }
 }
@@ -1131,7 +1131,7 @@ lifecycleScope.launch {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO){
                     var apiData = getActivityAPIData()
-                    var objActivity=UnsentUploadActivity(0,apiData.activity!!,apiData.totalTime)
+                    var objActivity=UnsentUploadActivity(0, apiData.datetime!!,apiData.activity!!,apiData.totalTime,apiData.vehicle!!.id,apiData.vehicle!!.description,apiData.vehicle!!.plateNumber,apiData.geoPosition!!.latitud,apiData.geoPosition!!.longitud)
                     mainRepository!!.insertUnsentUploadActivity(objActivity)
                 }
             }

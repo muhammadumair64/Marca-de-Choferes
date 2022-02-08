@@ -155,9 +155,12 @@ class K {
 
                             val coroutineJob = Job()
                             CoroutineScope(coroutineJob).launch(Dispatchers.IO) {
+
                                 checkStateAndUploadActivityDB()
                             }
+                            Log.d("PENDING_DATA_TESTING","before")
                             coroutineJob.join()
+                            Log.d("PENDING_DATA_TESTING","After")
                             checkUpdateLanguageNotifyState()
                         }
                     }
@@ -168,6 +171,8 @@ class K {
 
 
         suspend fun checkStateAndUploadActivityDB() {
+            Log.d("PENDING_DATA_TESTING","Call checkStateAndUploadActivityDB")
+            myTimer!!.cancel()
             if (mainRepository.isExistsUnsentStateUpdateDB()) {
 
                 val getUnsentStateUpdateValues =
@@ -201,10 +206,11 @@ class K {
                             getVehicle
                         )
                     }
-
+                   Log.d("PENDING_DATA_TESTING","STATE UPDATE")
                    coroutineStateData.join()
-
+                    Log.d("PENDING_DATA_TESTING","AFter STATE UPDATE")
                 }
+
 
             }
             if (mainRepository.isExistsUnsentUploadActivityDB()) {
@@ -238,8 +244,20 @@ class K {
                             authRepository
                         )
                     }
+                    Log.d("PENDING_DATA_TESTING","Activity UPDATE")
                    coroutineUploadActivity.join()
+                    Log.d("PENDING_DATA_TESTING","after Activity UPDATE")
                 }
+            }
+
+            if(!(mainRepository.isExistsUnsentStateUpdateDB()) && !(mainRepository.isExistsUnsentUploadActivityDB()))
+            {
+                tinyDB.putBoolean("PENDINGCHECK", false)
+                tinyDB.putBoolean("SYNC_CHECK", true)
+            }
+            else
+            {
+                checkStateAndUploadActivityDB()
             }
 
 
@@ -369,6 +387,7 @@ class K {
                     vehicle,
                     Token!!
                 )
+
 
                 println("SuccessResponse $response")
 
