@@ -9,7 +9,16 @@ import com.logicasur.appchoferes.network.signinResponse.Vehicle
 @Entity
 data class UnsentStateUpdate(
     @PrimaryKey(autoGenerate = true)
-    var roomDBId: Int =0,
+    var roomDBId: Int = 0,
     var datetime: String?,
-    var totalTime: Int?
+    var totalTime: Int?,
+    val stateId: Int,
+    val stateDescription: String,
+    val vehicleId: Int,
+    val vehicleDescription: String,
+    val vehiclePlateNumber: String,
+    var latitudeGeoPosition: Double,
+    var longitudeGeoPosition: Double
+
+
 )

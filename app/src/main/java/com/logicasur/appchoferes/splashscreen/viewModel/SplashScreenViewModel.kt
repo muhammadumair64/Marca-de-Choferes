@@ -14,6 +14,7 @@ import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.auth.signin.SignInActivity
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.mainscreen.MainActivity
+import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.NoInternetException
@@ -32,7 +33,7 @@ import javax.inject.Inject
 import kotlin.concurrent.schedule
 
 @HiltViewModel
-class SplashScreenViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
+class SplashScreenViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -44,6 +45,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
         tinyDB = TinyDB(context)
         tagsForToast()
         K.authRepository= authRepository
+        K.mainRepository=mainRepository
 
 
     }

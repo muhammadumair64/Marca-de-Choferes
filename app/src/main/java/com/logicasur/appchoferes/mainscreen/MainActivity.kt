@@ -64,6 +64,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import com.logicasur.appchoferes.databinding.ActivityMainBinding
 import com.logicasur.appchoferes.databinding.FragmentHomeBinding
+import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.network.signinResponse.State
 import java.text.SimpleDateFormat
 
