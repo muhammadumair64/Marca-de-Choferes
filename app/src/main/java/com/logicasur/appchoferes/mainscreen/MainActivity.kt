@@ -66,6 +66,8 @@ import com.logicasur.appchoferes.databinding.ActivityMainBinding
 import com.logicasur.appchoferes.databinding.FragmentHomeBinding
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.network.signinResponse.State
+import com.logicasur.appchoferes.network.unsentApis.UnsentStateUpdate
+import com.logicasur.appchoferes.network.unsentApis.UnsentUploadActivity
 import java.text.SimpleDateFormat
 
 import java.lang.Exception
@@ -100,6 +102,7 @@ class MainActivity : BaseClass(){
      var WorkTime = 0
      var BreakTime = 0
      var authRepository:AuthRepository? = null
+     var mainRepository:MainRepository? = null
     var latitude=0.0
     var longitude =0.0
     var breakBarProgress = 0
@@ -650,8 +653,8 @@ class MainActivity : BaseClass(){
         super.onDestroy()
     }
 
-    fun initRepo(authRepository: AuthRepository){
-
+    fun initRepo(authRepository: AuthRepository, mainRepository: MainRepository){
+        this.mainRepository = mainRepository
         this.authRepository = authRepository
     }
 
@@ -1042,7 +1045,7 @@ class MainActivity : BaseClass(){
 
     }
 
-    fun getAPIData(): UpdateActivityDataClass {
+    fun getActivityAPIData(): UpdateActivityDataClass {
     var vehicle = tinyDB.getObject("VehicleForBackgroundPush",Vehicle::class.java)
     var geoPosition= tinyDB.getObject("GeoPosition",GeoPosition::class.java)
     val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
@@ -1102,28 +1105,46 @@ class MainActivity : BaseClass(){
     fun updatePendingData(checkState: Boolean) {
         tinyDB.putBoolean("NETCHECK",false)
 
+//        if(checkState){
+////            var obj = getAPIDataForState()
+////            arrayList= tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
+////            arrayList.add(obj)
+//        }else{
+//            var obj = getActivityAPIData()
+//            arrayList= tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
+//            arrayList.add(obj)
+//        }
+//        tinyDB.putListObject("PENDINGDATALIST",arrayList as ArrayList<Object>)
+
+
+
+
         if(checkState){
-            var obj = getAPIDataForState()
-            arrayList= tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
-            arrayList.add(obj)
+lifecycleScope.launch {
+    withContext(Dispatchers.IO){
+        var apiData = getAPIDataForState()
+        var objState= UnsentStateUpdate(0,apiData.datetime,apiData.totalTime)
+        mainRepository!!.insertUnsentStateUpdate(objState)
+    }
+}
         }else{
-            var obj = getAPIData()
-            arrayList= tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
-            arrayList.add(obj)
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO){
+                    var apiData = getActivityAPIData()
+                    var objActivity=UnsentUploadActivity(0,apiData.activity!!,apiData.totalTime)
+                    mainRepository!!.insertUnsentUploadActivity(objActivity)
+                }
+            }
+
         }
 
-
-
-        tinyDB.putListObject("PENDINGDATALIST",arrayList as ArrayList<Object>)
        var check = tinyDB.getBoolean("PENDINGCHECK")
         if(check== false){
             K.checkNet()
-
         }
+
         if(checkState == false){
-
                 action()
-
         }
 
 

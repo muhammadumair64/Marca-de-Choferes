@@ -113,7 +113,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
         setPreviousWork()
         setDay()
         tagsForToast()
-        (context as MainActivity).initRepo(authRepository)
+        (context as MainActivity).initRepo(authRepository,mainRepository)
         MyBroadastReceivers.authRepository = authRepository
         binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
         binding.arrowdownbg.setBackgroundColor(Color.parseColor(K.primaryColor))
