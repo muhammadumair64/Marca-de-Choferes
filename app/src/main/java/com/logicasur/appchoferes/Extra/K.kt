@@ -179,7 +179,7 @@ class K {
                     mainRepository.getUnsentStateUpdateDetails().toCollection(ArrayList())
 
                 for (getUnsentStateData in getUnsentStateUpdateValues) {
-                    val coroutineStateData=Job()
+                    val coroutineStateData = Job()
                     CoroutineScope(coroutineStateData).launch(Dispatchers.IO) {
                         val getState = State(
                             0,
@@ -199,6 +199,7 @@ class K {
 
 
                         updateState(
+                            getUnsentStateData.roomDBId,
                             getUnsentStateData.datetime,
                             getUnsentStateData.totalTime,
                             getState,
@@ -222,7 +223,7 @@ class K {
 
                 for (getUnsentUploadActivityData in getUnsentUploadActivityValues) {
 
-                    val coroutineUploadActivity=Job()
+                    val coroutineUploadActivity = Job()
                     CoroutineScope(coroutineUploadActivity).launch(Dispatchers.IO) {
                         val getVehicle = Vehicle(
                             0,
@@ -236,6 +237,7 @@ class K {
                         )
 
                         uploadPendingDataActivity(
+                            getUnsentUploadActivityData.roomDBId,
                             getUnsentUploadActivityData.dateTime,
                             getUnsentUploadActivityData.totalTime,
                             getUnsentUploadActivityData.activity,
@@ -275,47 +277,48 @@ class K {
         }
 
 
-        fun checkPendingData(tinyDB: TinyDB, myTimer: Timer) {
-            arrayList = tinyDB.getListObject(
-                "PENDINGDATALIST",
-                UpdateActivityDataClass::class.java
-            ) as ArrayList<UpdateActivityDataClass>
-            myTimer.cancel()
-            CoroutineScope(Job()).launch(Dispatchers.IO) {
-                for (item in arrayList) {
-                    if (item.state != null) {
-                        Log.d("PENDINGDATATESTING_STATE", "DATA IS____ $item")
-                        updateState(
-                            item.datetime,
-                            item.totalTime,
-                            item.state,
-                            item.geoPosition,
-                            item.vehicle
-                        )
-                    } else {
-                        Log.d("PENDINGDATATESTING", "DATA IS____ $item")
-                        uploadPendingDataActivity(
-                            item.datetime,
-                            item.totalTime,
-                            item.activity,
-                            item.geoPosition,
-                            item.vehicle,
-                            authRepository
-                        )
-                    }
-                }
-                tinyDB.putBoolean("PENDINGCHECK", false)
-
-                arrayList.clear()
-                tinyDB.putListObject("PENDINGDATALIST", arrayList as ArrayList<Object>)
-                Log.d("PENDINGDATATESTING", "YES NOW RUN")
-                tinyDB.putBoolean("SYNC_CHECK", true)
-
-            }
-
-        }
+//        fun checkPendingData(tinyDB: TinyDB, myTimer: Timer) {
+//            arrayList = tinyDB.getListObject(
+//                "PENDINGDATALIST",
+//                UpdateActivityDataClass::class.java
+//            ) as ArrayList<UpdateActivityDataClass>
+//            myTimer.cancel()
+//            CoroutineScope(Job()).launch(Dispatchers.IO) {
+//                for (item in arrayList) {
+//                    if (item.state != null) {
+//                        Log.d("PENDINGDATATESTING_STATE", "DATA IS____ $item")
+//                        updateState(
+//                            item.datetime,
+//                            item.totalTime,
+//                            item.state,
+//                            item.geoPosition,
+//                            item.vehicle
+//                        )
+//                    } else {
+//                        Log.d("PENDINGDATATESTING", "DATA IS____ $item")
+//                        uploadPendingDataActivity(
+//                            item.datetime,
+//                            item.totalTime,
+//                            item.activity,
+//                            item.geoPosition,
+//                            item.vehicle,
+//                            authRepository
+//                        )
+//                    }
+//                }
+//                tinyDB.putBoolean("PENDINGCHECK", false)
+//
+//                arrayList.clear()
+//                tinyDB.putListObject("PENDINGDATALIST", arrayList as ArrayList<Object>)
+//                Log.d("PENDINGDATATESTING", "YES NOW RUN")
+//                tinyDB.putBoolean("SYNC_CHECK", true)
+//
+//            }
+//
+//        }
 
         suspend fun uploadPendingDataActivity(
+            roomId: Int,
             datetime: String?,
             totalTime: Int?,
             activity: Int?,
@@ -335,6 +338,7 @@ class K {
                     vehicle,
                     Token!!
                 )
+                mainRepository.deleteUnsentUploadActivity(roomId)
                 println("SuccessResponse $response")
 
 
@@ -364,6 +368,7 @@ class K {
 
 
         suspend fun updateState(
+            roomId: Int,
             datetime: String?,
             totalTime: Int?,
             state: State?,
@@ -387,6 +392,7 @@ class K {
                     vehicle,
                     Token!!
                 )
+                mainRepository.deleteUnsentStateUpdate(roomId)
 
 
                 println("SuccessResponse $response")

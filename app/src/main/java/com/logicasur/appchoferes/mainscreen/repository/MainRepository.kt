@@ -13,24 +13,23 @@ class MainRepository @Inject constructor(
     val localDataBase: LocalDataBase
 ) : SafeApiRequest() {
 
-    suspend fun updateLanguage(language:Int,Token: String): MassageResponse {
+    suspend fun updateLanguage(language: Int, Token: String): MassageResponse {
 
-        return apiRequest { retrofitInterface.updateLanguage(language,Token)}
+        return apiRequest { retrofitInterface.updateLanguage(language, Token) }
     }
 
 
-    suspend fun updateNotification(notification:Boolean,Token: String): MassageResponse {
-     var notify =Notify(notification)
-        return apiRequest { retrofitInterface.updateNotification(notify,Token)}
+    suspend fun updateNotification(notification: Boolean, Token: String): MassageResponse {
+        var notify = Notify(notification)
+        return apiRequest { retrofitInterface.updateNotification(notify, Token) }
     }
 
 
-    suspend fun insertUnsentLanguageUpdate(unsentLanguageUpdation: UnsentLanguageUpdation){
+    suspend fun insertUnsentLanguageUpdate(unsentLanguageUpdation: UnsentLanguageUpdation) {
         localDataBase.unsentApiDao().insertUpdateLanguage(unsentLanguageUpdation)
     }
 
-    suspend fun insertUnsentNotifyStateUpload(unsentNotifyStateUpload: UnsentNotifyStateUpload)
-    {
+    suspend fun insertUnsentNotifyStateUpload(unsentNotifyStateUpload: UnsentNotifyStateUpload) {
         localDataBase.unsentApiDao().insertUnsentNotifyStateUpload(unsentNotifyStateUpload)
     }
 

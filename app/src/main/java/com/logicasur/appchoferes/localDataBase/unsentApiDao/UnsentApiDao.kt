@@ -15,7 +15,7 @@ interface UnsentApiDao {
     fun insertUnsentNotifyStateUpload(unsentNotifyStateUpload: UnsentNotifyStateUpload)
 
     @Insert
-    fun insertUnsentStateUpdate(unsentStateUpdate:UnsentStateUpdate)
+    fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate)
 
     @Insert
     fun insertUnsentUploadActivity(unsentUploadActivity: UnsentUploadActivity)
@@ -27,7 +27,7 @@ interface UnsentApiDao {
     fun insertUnsentProfileUpdate(unsentProfileUpdate: UnsentProfileUpdate)
 
 
-
+    // Delete All
     @Query("DELETE FROM UnsentLanguageUpdation")
     fun deleteAllUnsentLanguageUpdationDetails()
 
@@ -47,6 +47,18 @@ interface UnsentApiDao {
     fun deleteAllUnsentProfileUpdateDetails()
 
 
+    // Delete Particular item
+
+    @Query("DELETE FROM UnsentStateUpdate WHERE roomDBId = :id")
+    fun deleteUnsentStateUpdate(id: Int)
+
+
+    @Query("DELETE FROM UnsentUploadActivity WHERE roomDBId = :id")
+    fun deleteUnsentUploadActivity(id: Int)
+
+
+
+    // Check Exists
 
     @Query("SELECT EXISTS(SELECT * FROM UnsentLanguageUpdation)")
     fun isExistsUpdateLanguageDB(): Boolean
