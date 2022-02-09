@@ -153,5 +153,8 @@ interface RetrofitInterface {
     ):Response<SplashResponse>
 
 
-
+    @POST("check")
+    suspend fun checkServer(
+        @Header("Cookie") sessionIdAndToken: String
+    ): Response<MassageResponse>
 }

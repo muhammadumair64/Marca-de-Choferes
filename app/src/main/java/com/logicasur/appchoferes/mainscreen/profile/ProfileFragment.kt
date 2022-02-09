@@ -36,6 +36,7 @@ import com.logicasur.appchoferes.mainscreen.profile.viewmodel.ProfileViewModel
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import dagger.hilt.android.AndroidEntryPoint
@@ -113,29 +114,29 @@ class ProfileFragment : Fragment() {
 
 
         binding.editProfile.setOnClickListener {
-lifecycleScope.launch {
-    withContext(Dispatchers.IO){
-        val check = K.isConnected()
-        withContext(Dispatchers.Main){
-            if(check){
-                initPermission()
-            }else{
-                Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val check = K.isConnected()
+                    withContext(Dispatchers.Main) {
+                        if (check) {
+                            initPermission()
+                        } else {
+                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+
+                }
+
             }
-        }
-
-    }
-
-}
 
         }
-
 
 
     }
 
 
-    fun startImagePicker(){
+    fun startImagePicker() {
         com.github.dhaval2404.imagepicker.ImagePicker.with(this)
             //Crop image(Optional), Check Customization for more option
             .compress(1024)            //Final image size will be less than 1 MB(Optional)
@@ -145,6 +146,7 @@ lifecycleScope.launch {
             )    //Final image resolution will be less than 1080 x 1080(Optional)
             .start()
     }
+
     fun initPermission() {
 
         val permissions =
@@ -159,8 +161,7 @@ lifecycleScope.launch {
             object : PermissionHandler() {
                 override fun onGranted() {
 
-                startImagePicker()
-
+                    startImagePicker()
 
 
                 }
@@ -203,10 +204,10 @@ lifecycleScope.launch {
         binding.editName.setOnClickListener {
 
             lifecycleScope.launch {
-                withContext(Dispatchers.IO){
+                withContext(Dispatchers.IO) {
                     val check = K.isConnected()
-                    withContext(Dispatchers.Main){
-                        if(check){
+                    withContext(Dispatchers.Main) {
+                        if (check) {
 
                             option = 1
                             alertDialog.setView(contactPopupView)
@@ -221,9 +222,9 @@ lifecycleScope.launch {
                             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
 
-
-                        }else{
-                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
 
@@ -236,10 +237,10 @@ lifecycleScope.launch {
 
 
             lifecycleScope.launch {
-                withContext(Dispatchers.IO){
+                withContext(Dispatchers.IO) {
                     val check = K.isConnected()
-                    withContext(Dispatchers.Main){
-                        if(check){
+                    withContext(Dispatchers.Main) {
+                        if (check) {
 
                             option = 2
                             alertDialog.setView(contactPopupView)
@@ -250,13 +251,13 @@ lifecycleScope.launch {
                             alertDialog.show()
                             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
                             val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
-                            alertDialog.getWindow()?.setLayout(width, height)
+                            alertDialog.window?.setLayout(width, height)
                             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
 
-
-                        }else{
-                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
 
@@ -265,14 +266,11 @@ lifecycleScope.launch {
             }
 
 
-
-
-
         }
 
         dismiss = contactPopupView.findViewById(R.id.close)
         confirmbtn = contactPopupView.findViewById(R.id.confirm_btn)
-        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor,confirmbtn)
+        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, confirmbtn)
         changedName = contactPopupView.findViewById(R.id.popup_Name_Field)
         dismiss.setOnClickListener {
             alertDialog.dismiss()
@@ -285,40 +283,58 @@ lifecycleScope.launch {
                 var Name = binding.TitleName.text
                 Log.d("input Parameters", "$nameChanges  $fatherName  $Name")
                 if (option == 1) {
-                    profileViewModel.updateProfile(
-                        nameChanges.toString(),
-                        fatherName.toString(),
-                        alertDialog
-                    )
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        ServerCheck.serverCheck {
+                            profileViewModel.updateProfile(
+                                nameChanges.toString(),
+                                fatherName.toString(),
+                                alertDialog
+                            )
+                        }
+                    }
+//                    profileViewModel.updateProfile(
+//                        nameChanges.toString(),
+//                        fatherName.toString(),
+//                        alertDialog
+//                    )
                 } else {
-                    profileViewModel.updateProfile(
-                        Name.toString(),
-                        nameChanges.toString(),
-                        alertDialog
-                    )
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        ServerCheck.serverCheck {
+                            profileViewModel.updateProfile(
+                                Name.toString(),
+                                nameChanges.toString(),
+                                alertDialog
+                            )
+                        }
+
+                    }
+//                    profileViewModel.updateProfile(
+//                        Name.toString(),
+//                        nameChanges.toString(),
+//                        alertDialog
+//                    )
                 }
             }
         }
 
 
-
     }
 
 
-    fun setButtonColor(){
+    fun setButtonColor() {
 
         binding.editSurname.setCardBackgroundColor(Color.parseColor(K.primaryColor))
         binding.editName.setCardBackgroundColor(Color.parseColor(K.primaryColor))
         binding.edit.setCardBackgroundColor(Color.parseColor(K.primaryColor))
         binding.editProfile.setCardBackgroundColor(Color.parseColor(K.primaryColor))
         binding.upperLayoutFrount!!.setBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.upperLayoutFrount!!.alpha =0.73F
+        binding.upperLayoutFrount!!.alpha = 0.73F
     }
 
     override fun onResume() {
         super.onResume()
 
-            (activity as MainActivity).binding.menu.setItemSelected(R.id.User, true)
+        (activity as MainActivity).binding.menu.setItemSelected(R.id.User, true)
 
     }
 

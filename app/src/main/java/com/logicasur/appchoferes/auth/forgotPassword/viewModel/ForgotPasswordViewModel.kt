@@ -49,7 +49,8 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
             Toast.makeText(activityContext, "Enter Email", Toast.LENGTH_SHORT).show()
                     }
             else {
-                if (validater == true) {
+                if (validater) {
+
                     userforgotPassword(emailCheck)
                     var intent = Intent(activityContext, LoadingScreen::class.java)
                     startActivity(activityContext!!, intent, Bundle.EMPTY)

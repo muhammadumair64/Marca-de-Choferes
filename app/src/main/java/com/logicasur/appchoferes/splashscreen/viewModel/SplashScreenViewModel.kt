@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.auth.signin.SignInActivity
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
@@ -46,6 +47,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
         tagsForToast()
         K.authRepository= authRepository
         K.mainRepository=mainRepository
+        ServerCheck.authRepository=authRepository
 
 
     }

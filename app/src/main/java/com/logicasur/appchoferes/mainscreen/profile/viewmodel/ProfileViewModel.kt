@@ -27,8 +27,8 @@ import android.graphics.Bitmap
 import android.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.NoInternetException
@@ -42,9 +42,9 @@ import java.util.*
 class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
-    lateinit var imageInBitmap:Bitmap
+    lateinit var imageInBitmap: Bitmap
     lateinit var dataBinding: FragmentProfileBinding
-    var TAG2 =""
+    var TAG2 = ""
     fun viewsForFragment(context: Context, binding: FragmentProfileBinding) {
         activityContext = context
         dataBinding = binding
@@ -52,11 +52,11 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
         tagsForToast()
         val sdf = SimpleDateFormat("dd MMM")
         val currentDate = sdf.format(Date())
-        System.out.println(" C DATE is  "+currentDate)
-        binding.date.text="$currentDate"
+        System.out.println(" C DATE is  " + currentDate)
+        binding.date.text = "$currentDate"
         getProfile()
         setDay()
-        var image=tinyDB.getString("Avatar")
+        var image = tinyDB.getString("Avatar")
         Base64ToBitmap(image.toString())
 
 
@@ -65,15 +65,15 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
             edit.setOnClickListener {
 
-             viewModelScope.launch {
-                    withContext(Dispatchers.IO){
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO) {
                         val check = K.isConnected()
-                        withContext(Dispatchers.Main){
-                            if(check){
+                        withContext(Dispatchers.Main) {
+                            if (check) {
                                 var intent = Intent(context, CreateNewPasswordScreen::class.java)
                                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                            }else{
-                                Toast.makeText(context,TAG2, Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
                             }
                         }
 
@@ -82,13 +82,16 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                 }
 
 
-
-
             }
 
-
             Logout.setOnClickListener {
-                logoutUser()
+                viewModelScope.launch(Dispatchers.IO) {
+                    ServerCheck.serverCheck {
+                        logoutUser()
+                    }
+                }
+
+//                logoutUser()
                 var intent = Intent(context, LoadingScreen::class.java)
                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
             }
@@ -103,7 +106,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
             withContext(Dispatchers.IO) {
                 try {
-                    MyApplication.checkForLanguageChange=200
+                    MyApplication.checkForLanguageChange = 200
                     val name = tinyDB.getString("User")
                     val response =
                         authRepository.logoutUser(name!!)
@@ -117,7 +120,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                         authRepository.clearData()
                         tinyDB.clear()
                         K.primaryColor = "#7A59FC"
-                         K.secondrayColor = "#653FFB"
+                        K.secondrayColor = "#653FFB"
                         var intent = Intent(activityContext, SignInActivity::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                         (activityContext as MainActivity).finish()
@@ -161,23 +164,27 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
     }
 
-    fun bitmapToBase64(bitmapImage:Bitmap){
-        imageInBitmap=bitmapImage
+    fun bitmapToBase64(bitmapImage: Bitmap) {
+        imageInBitmap = bitmapImage
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
         val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
         val encoded = Base64.encodeToString(byteArray, Base64.DEFAULT)
         println("encoded $encoded")
-            dataBinding.profileImage.setImageBitmap(imageInBitmap)
+        dataBinding.profileImage.setImageBitmap(imageInBitmap)
+        viewModelScope.launch(Dispatchers.IO) {
+            ServerCheck.serverCheck {
+                updateAvatar(encoded)
+            }
+        }
 
-
-         updateAvatar(encoded)
+//         updateAvatar(encoded)
         var intent = Intent(activityContext, LoadingScreen::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
     }
 
-    fun updateAvatar(avatar:String){
-        var Token=tinyDB.getString("Cookie")
+    fun updateAvatar(avatar: String) {
+        var Token = tinyDB.getString("Cookie")
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
@@ -185,14 +192,14 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                 try {
 
 
-                    val response = authRepository.updateAvatar(avatar,Token!!)
+                    val response = authRepository.updateAvatar(avatar, Token!!)
 
                     println("SuccessResponse $response")
 
 
 
-                    if(response!=null) {
-                        tinyDB.putString("Avatar",avatar)
+                    if (response != null) {
+                        tinyDB.putString("Avatar", avatar)
                         (MyApplication.loadingContext as LoadingScreen).finish()
                     }
 
@@ -203,19 +210,17 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                 } catch (e: ApiException) {
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     e.printStackTrace()
-                }
-                catch (e: NoInternetException) {
+                } catch (e: NoInternetException) {
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     println("position 2")
                     e.printStackTrace()
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
-                }
-                catch(e: SocketException){
+                } catch (e: SocketException) {
                     LoadingScreen.onEndLoadingCallbacks?.endLoading()
-                    Log.d("connection Exception","Connect Not Available")
-                    withContext(Dispatchers.Main){
+                    Log.d("connection Exception", "Connect Not Available")
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -225,8 +230,8 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
     }
 
-    fun updateProfile(name:String,surname:String,alertDialog: AlertDialog){
-        var Token=tinyDB.getString("Cookie")
+    fun updateProfile(name: String, surname: String, alertDialog: AlertDialog) {
+        var Token = tinyDB.getString("Cookie")
 
         var intent = Intent(activityContext, LoadingScreen::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
@@ -237,17 +242,17 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                 try {
 
 
-                    val response = authRepository.updateProfile(name,surname,Token!!)
+                    val response = authRepository.updateProfile(name, surname, Token!!)
 
                     println("SuccessResponse $response")
 
 
 
-                    if(response!=null) {
-                        dataBinding.TitleName.text=name
-                        dataBinding.FatherName.text=surname
+                    if (response != null) {
+                        dataBinding.TitleName.text = name
+                        dataBinding.FatherName.text = surname
 
-                        updateProfileLocal(name,surname)
+                        updateProfileLocal(name, surname)
                         (MyApplication.loadingContext as LoadingScreen).finish()
                         alertDialog.dismiss()
                     }
@@ -257,19 +262,17 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     println("ErrorResponse")
                 } catch (e: ApiException) {
                     e.printStackTrace()
-                }
-                catch (e: NoInternetException) {
+                } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
                     (MyApplication.loadingContext as LoadingScreen).finish()
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
-                }
-                catch(e: SocketException){
+                } catch (e: SocketException) {
                     LoadingScreen.onEndLoadingCallbacks?.endLoading()
-                    Log.d("connection Exception","Connect Not Available")
-                    withContext(Dispatchers.Main){
+                    Log.d("connection Exception", "Connect Not Available")
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -279,20 +282,20 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
     }
 
-    fun updateProfileLocal(name:String,fatherName:String){
+    fun updateProfileLocal(name: String, fatherName: String) {
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
 
                 authRepository.clearProfile()
-                var language=tinyDB.getString("language")
-                var notify=tinyDB.getBoolean("notify")
-                var email =tinyDB.getString("User")
-                var profileData=Profile(0,"",language?.toInt(),name,notify,fatherName)
+                var language = tinyDB.getString("language")
+                var notify = tinyDB.getBoolean("notify")
+                var email = tinyDB.getString("User")
+                var profileData = Profile(0, "", language?.toInt(), name, notify, fatherName)
                 authRepository.insetProfile(profileData)
-                var profile=authRepository.getProfile()
+                var profile = authRepository.getProfile()
 
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     dataBinding.apply {
                         Name.text = profile.name
                         surName.text = profile.surname
@@ -308,31 +311,51 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
         }
 
 
-
-
     }
 
-    fun setDay(){
+    fun setDay() {
         val sdf = SimpleDateFormat("EEEE")
         val d = Date()
         val dayOfTheWeek = sdf.format(d)
-        dataBinding?.day?.text="$dayOfTheWeek"
+        dataBinding?.day?.text = "$dayOfTheWeek"
     }
-    fun tagsForToast(){
-        var language= tinyDB.getString("language")
-        if (language=="0"){
+
+    fun tagsForToast() {
+        var language = tinyDB.getString("language")
+        if (language == "0") {
             TAG2 = "Comprueba tu conexión a Internet"
 
-        }else if(language=="1"){
+        } else if (language == "1") {
 
 
-            TAG2 ="Check Your Internet Connection"
-        }
-        else{
+            TAG2 = "Check Your Internet Connection"
+        } else {
 
-            TAG2="Verifique a sua conexão com a internet"
+            TAG2 = "Verifique a sua conexão com a internet"
         }
 
     }
+
+
+//  suspend  fun checkServerStatus():Boolean
+//    {
+//        var checkStatus:Boolean?=null
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val serverResponse=ServerCheck.serverCheck()
+//            if(serverResponse)
+//            {
+//              Log.d(TAG2,"Server is Active you can hit the API")
+//                checkStatus=true
+//
+//            }
+//            else
+//            {
+//                Log.d(TAG2,"Server is not Active")
+//                checkStatus=false
+//            }
+//
+//        }
+//        return checkStatus!!
+//    }
 
 }
