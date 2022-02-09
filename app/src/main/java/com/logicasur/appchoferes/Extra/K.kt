@@ -2,6 +2,7 @@ package com.logicasur.appchoferes.Extra
 
 import android.content.Context
 import android.util.Log
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
@@ -160,8 +161,8 @@ class K {
 
 //                            val coroutineJob = Job()
 //                            CoroutineScope(coroutineJob).launch(Dispatchers.IO) {
-
-                                checkStateAndUploadActivityDB()
+                            ServerCheck.serverCheck {   checkStateAndUploadActivityDB() }
+//                                checkStateAndUploadActivityDB()
                             //}
                             Log.d("PENDING_DATA_TESTING","before")
 //                            coroutineJob.join()
@@ -175,97 +176,98 @@ class K {
         }
 
 
-        suspend fun checkStateAndUploadActivityDB() {
+         fun checkStateAndUploadActivityDB() {
             Log.d("PENDING_DATA_TESTING","Call checkStateAndUploadActivityDB")
-            myTimer!!.cancel()
-            if (mainRepository.isExistsUnsentStateUpdateDB()) {
-
-                val getUnsentStateUpdateValues =
-                    mainRepository.getUnsentStateUpdateDetails().toCollection(ArrayList())
+             CoroutineScope(Job()).launch(Dispatchers.IO) {
 
 
-                for (getUnsentStateData in getUnsentStateUpdateValues) {
+                 myTimer!!.cancel()
+                 if (mainRepository.isExistsUnsentStateUpdateDB()) {
 
-                        val getState = State(
-                            0,
-                            getUnsentStateData.stateId,
-                            getUnsentStateData.stateDescription
-                        )
-                        val getVehicle = Vehicle(
-                            0,
-                            getUnsentStateData.vehicleId,
-                            getUnsentStateData.vehicleDescription,
-                            getUnsentStateData.vehiclePlateNumber
-                        )
-                        val getGeoPosition = GeoPosition(
-                            getUnsentStateData.latitudeGeoPosition,
-                            getUnsentStateData.longitudeGeoPosition
-                        )
+                     val getUnsentStateUpdateValues =
+                         mainRepository.getUnsentStateUpdateDetails().toCollection(ArrayList())
 
 
-                        updateState(
-                            getUnsentStateData.roomDBId,
-                            getUnsentStateData.datetime,
-                            getUnsentStateData.totalTime,
-                            getState,
-                            getGeoPosition,
-                            getVehicle
-                        )
-                    }
-                   Log.d("PENDING_DATA_TESTING","STATE UPDATE")
+                     for (getUnsentStateData in getUnsentStateUpdateValues) {
 
-                    Log.d("PENDING_DATA_TESTING","AFter STATE UPDATE")
-
-
-
-            }
-            if (mainRepository.isExistsUnsentUploadActivityDB()) {
-
-
-                val getUnsentUploadActivityValues =
-                    mainRepository.getUnsentUploadActivityDetails().toCollection(ArrayList())
-
-                for (getUnsentUploadActivityData in getUnsentUploadActivityValues) {
+                         val getState = State(
+                             0,
+                             getUnsentStateData.stateId,
+                             getUnsentStateData.stateDescription
+                         )
+                         val getVehicle = Vehicle(
+                             0,
+                             getUnsentStateData.vehicleId,
+                             getUnsentStateData.vehicleDescription,
+                             getUnsentStateData.vehiclePlateNumber
+                         )
+                         val getGeoPosition = GeoPosition(
+                             getUnsentStateData.latitudeGeoPosition,
+                             getUnsentStateData.longitudeGeoPosition
+                         )
 
 
-                        val getVehicle = Vehicle(
-                            0,
-                            getUnsentUploadActivityData.vehicleId,
-                            getUnsentUploadActivityData.vehicleDescription,
-                            getUnsentUploadActivityData.vehiclePlateNumber
-                        )
-                        val getGeoPosition = GeoPosition(
-                            getUnsentUploadActivityData.latitudeGeoPosition,
-                            getUnsentUploadActivityData.longitudeGeoPosition
-                        )
+                         updateState(
+                             getUnsentStateData.roomDBId,
+                             getUnsentStateData.datetime,
+                             getUnsentStateData.totalTime,
+                             getState,
+                             getGeoPosition,
+                             getVehicle
+                         )
+                     }
+                     Log.d("PENDING_DATA_TESTING", "STATE UPDATE")
 
-                        uploadPendingDataActivity(
-                            getUnsentUploadActivityData.roomDBId,
-                            getUnsentUploadActivityData.dateTime,
-                            getUnsentUploadActivityData.totalTime,
-                            getUnsentUploadActivityData.activity,
-                            getGeoPosition,
-                            getVehicle,
-                            authRepository
-                        )
-                    }
-                    Log.d("PENDING_DATA_TESTING","Activity UPDATE")
+                     Log.d("PENDING_DATA_TESTING", "AFter STATE UPDATE")
+
+
+                 }
+                 if (mainRepository.isExistsUnsentUploadActivityDB()) {
+
+
+                     val getUnsentUploadActivityValues =
+                         mainRepository.getUnsentUploadActivityDetails().toCollection(ArrayList())
+
+                     for (getUnsentUploadActivityData in getUnsentUploadActivityValues) {
+
+
+                         val getVehicle = Vehicle(
+                             0,
+                             getUnsentUploadActivityData.vehicleId,
+                             getUnsentUploadActivityData.vehicleDescription,
+                             getUnsentUploadActivityData.vehiclePlateNumber
+                         )
+                         val getGeoPosition = GeoPosition(
+                             getUnsentUploadActivityData.latitudeGeoPosition,
+                             getUnsentUploadActivityData.longitudeGeoPosition
+                         )
+
+                         uploadPendingDataActivity(
+                             getUnsentUploadActivityData.roomDBId,
+                             getUnsentUploadActivityData.dateTime,
+                             getUnsentUploadActivityData.totalTime,
+                             getUnsentUploadActivityData.activity,
+                             getGeoPosition,
+                             getVehicle,
+                             authRepository
+                         )
+                     }
+                     Log.d("PENDING_DATA_TESTING", "Activity UPDATE")
 //                   coroutineUploadActivity.join()
-                    Log.d("PENDING_DATA_TESTING","after Activity UPDATE")
-                }
+                     Log.d("PENDING_DATA_TESTING", "after Activity UPDATE")
+                 }
 
 
-            if(!(mainRepository.isExistsUnsentStateUpdateDB()) && !(mainRepository.isExistsUnsentUploadActivityDB()))
-            {
-                tinyDB.putBoolean("PENDINGCHECK", false)
-                tinyDB.putBoolean("SYNC_CHECK", true)
-            }
-            else
-            {
-                checkStateAndUploadActivityDB()
-            }
+                 if (!(mainRepository.isExistsUnsentStateUpdateDB()) && !(mainRepository.isExistsUnsentUploadActivityDB())) {
+                     tinyDB.putBoolean("PENDINGCHECK", false)
+                     tinyDB.putBoolean("SYNC_CHECK", true)
+                 } else {
+                     ServerCheck.serverCheck {
+                         checkStateAndUploadActivityDB()
+                     }
+                 }
 
-
+             }
         }
 
 

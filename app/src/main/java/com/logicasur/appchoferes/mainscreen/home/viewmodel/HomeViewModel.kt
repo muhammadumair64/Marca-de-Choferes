@@ -53,6 +53,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
@@ -66,7 +67,10 @@ import kotlin.concurrent.schedule
 
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    val authRepository: AuthRepository,
+    val mainRepository: MainRepository
+) : ViewModel() {
     var activityContext: Context? = null
     var dataBinding: FragmentHomeBinding? = null
     var statusArrayList = ArrayList<String>()
@@ -82,11 +86,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
     var longitude = 0.0
     var overTimeCheck = false
     var TAG2 = ""
-
-
-
-
-
 
 
     //activity
@@ -115,7 +114,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
         setPreviousWork()
         setDay()
         tagsForToast()
-        (context as MainActivity).initRepo(authRepository,mainRepository)
+        (context as MainActivity).initRepo(authRepository, mainRepository)
         MyBroadastReceivers.authRepository = authRepository
         binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
         binding.arrowdownbg.setBackgroundColor(Color.parseColor(K.primaryColor))
@@ -236,12 +235,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 
 
         dataBinding?.secondState?.setOnClickListener {
-            tinyDB.putBoolean("STATEAPI",false)
-                    if(dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
-                                 tinyDB.putInt("SELECTEDACTIVITY",2)
-                    }else{
-                                  tinyDB.putInt("SELECTEDACTIVITY",0)
-                    }
+            tinyDB.putBoolean("STATEAPI", false)
+            if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
+                tinyDB.putInt("SELECTEDACTIVITY", 2)
+            } else {
+                tinyDB.putInt("SELECTEDACTIVITY", 0)
+            }
 
 
             if (checkGPS(activityContext!!)) {
@@ -252,9 +251,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 
         }
         dataBinding?.TakeBreak?.setOnClickListener {
-            tinyDB.putBoolean("STATEAPI",false)
+            tinyDB.putBoolean("STATEAPI", false)
 
-           tinyDB.putInt("SELECTEDACTIVITY",1)
+            tinyDB.putInt("SELECTEDACTIVITY", 1)
 
 
             if (checkGPS(activityContext!!)) {
@@ -266,8 +265,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
         }
 
         dataBinding?.EndDay?.setOnClickListener {
-            tinyDB.putBoolean("STATEAPI",false)
-            tinyDB.putInt("SELECTEDACTIVITY",3)
+            tinyDB.putBoolean("STATEAPI", false)
+            tinyDB.putInt("SELECTEDACTIVITY", 3)
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { endDayAction() }
             } else {
@@ -277,7 +276,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 
         }
         dataBinding?.initialState?.setOnClickListener {
-            tinyDB.putBoolean("STATEAPI",false)
+            tinyDB.putBoolean("STATEAPI", false)
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { initialStateAction() }
             } else {
@@ -482,7 +481,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
             Timer().schedule(200) {
                 intent.startTimer()
                 intent.startTimerBreak()
-                Log.d("BREAKTIMERTEST","3")
+                Log.d("BREAKTIMERTEST", "3")
                 intent.stopTimerBreak()
             }
 
@@ -682,9 +681,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 //            }
 
 
-            var cycle = time/default
+            var cycle = time / default
             var value = cycle.toInt() * default
-            var progress = time-value
+            var progress = time - value
             binding!!.bar.progress = progress.toFloat()
 
 
@@ -719,7 +718,8 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
         if (time >= default) {
             tinyDB.putBoolean("overBreakTime", true)
             if (binding!!.StateActive.isVisible) {
-                binding!!.breakBar.progressBarColor = Color.parseColor("#FFD6D9")//change to light red
+                binding!!.breakBar.progressBarColor =
+                    Color.parseColor("#FFD6D9")//change to light red
             } else {
                 binding!!.breakBar.progressBarColor = Color.parseColor("#FF4D4E")
             }
@@ -736,11 +736,10 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 //            }
 
 
-            var cycle = time/default
+            var cycle = time / default
             var value = cycle.toInt() * default
-            var progress = time-value
+            var progress = time - value
             binding!!.breakBar.progress = progress.toFloat()
-
 
 
         } else {
@@ -765,7 +764,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
                 var lastId = tinyDB.getInt("lastVehicleid")
                 for (item in vehicles) {
                     if (item.id == lastId) {
-                        Log.d("VEHICALTESTING","Vehicle ${item.plateNumber}")
+                        Log.d("VEHICALTESTING", "Vehicle ${item.plateNumber}")
                         position
                         tinyDB.putInt("vehicle", position)
                     }
@@ -792,7 +791,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
                     if (vehicle != 0) {
                         vehicle = vehicle.minus(1)
                         selectVehicleByLocalDB(vehicle)
-                    }else{
+                    } else {
 
                         dataBinding!!.initialState.visibility = View.VISIBLE
                         dataBinding!!.secondState.visibility = View.GONE
@@ -942,6 +941,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 
                         println("Current Location $longitude and $latitude")
                         var geoPosition = GeoPosition(latitude, longitude)
+
                         uploadState(positionForState, geoPosition)
 
 
@@ -963,7 +963,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
         println("selected text $text")
         dataBinding!!.apply {
             vehicleListBtn.setBackgroundResource(R.drawable.bg_selectedvehicleback)
-           // iconCar.setBackground(ContextCompat.getDrawable(activityContext!!,R.drawable.ic_white_car))
+            // iconCar.setBackground(ContextCompat.getDrawable(activityContext!!,R.drawable.ic_white_car))
             iconCar.visibility = View.GONE
             iconCarbg.visibility = View.GONE
             iconCarWhite!!.visibility = View.VISIBLE
@@ -992,7 +992,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
         dataBinding!!.apply {
             vehicleListBtn.setBackgroundResource(R.drawable.bg_selectedvehicleback)
 //            iconCar.setBackgroundResource(R.drawable.ic_white_car)
-            iconCar.visibility =View.GONE
+            iconCar.visibility = View.GONE
             iconCarbg.visibility = View.GONE
             iconCarWhite!!.visibility = View.VISIBLE
             vehicleNameSelected.setTextColor(Color.WHITE)
@@ -1094,12 +1094,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 
 
     fun hitStateAPI(position: Int) {
-        Log.d("STATETESTING","HIT")
+        Log.d("STATETESTING", "HIT")
         positionForState = position
-         var status = statusArrayListforUpload[position]
-        tinyDB.putObject("STATE_OBJ",status)
-        tinyDB.putBoolean("STATEAPI",true)
-        (activityContext as MainActivity).initPermission() {getLocationForState(activityContext!!)}
+        var status = statusArrayListforUpload[position]
+        tinyDB.putObject("STATE_OBJ", status)
+        tinyDB.putBoolean("STATEAPI", true)
+        (activityContext as MainActivity).initPermission() { getLocationForState(activityContext!!) }
 
 //        getLocationForState(activityContext!!)
 
@@ -1113,7 +1113,6 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
     }
 
 
-
     fun uploadState(position: Int, geoPosition: GeoPosition?) {
         val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
         var currentDate = sdf.format(Date())
@@ -1123,10 +1122,26 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 var vehiclePosition = tinyDB.getInt("vehicle")
-                var vehicle = vehicleArrayListforUpload[vehiclePosition-1]
+                var vehicle = vehicleArrayListforUpload[vehiclePosition - 1]
                 var status = statusArrayListforUpload[position]
                 println("status is $status")
-                updateState("$currentDate", MyApplication.TimeToSend, status, geoPosition, vehicle)
+                viewModelScope.launch(Dispatchers.IO) {
+                    ServerCheck.serverCheckActivityOrStatus(
+                        "$currentDate",
+                        MyApplication.TimeToSend, null,
+                        geoPosition,
+                        vehicle, status
+                    ) {
+                        updateState(
+                            "$currentDate",
+                            MyApplication.TimeToSend,
+                            status,
+                            geoPosition,
+                            vehicle
+                        )
+                    }
+                }
+//                updateState("$currentDate", MyApplication.TimeToSend, status, geoPosition, vehicle)
             }
         }
     }
@@ -1214,61 +1229,66 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
 
 
-
-
-
-
 //        tinyDB.putInt("SELECTEDACTIVITY",activity)
 //        tinyDB.putInt("TOTALTIMETOSEND",totalTime!!)
         val sdf = SimpleDateFormat("yyyy-MM-dd,HH:mm:ss")
         var currentDate = sdf.format(Date())
         currentDate = currentDate + "Z"
-        when(activity){
-            0->{
-               viewModelScope.launch {
-                    withContext(Dispatchers.IO){
-                        if(mainRepository.getUnsentStartWorkTimeDetails()!=null){
-                          mainRepository.deleteAllUnsentStartWorkTime()
+        when (activity) {
+            0 -> {
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO) {
+                        if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
+                            mainRepository.deleteAllUnsentStartWorkTime()
                         }
-                        mainRepository!!.insertUnsentStartWorkTime(UnsentStartWorkTime(0,currentDate))
+                        mainRepository!!.insertUnsentStartWorkTime(
+                            UnsentStartWorkTime(
+                                0,
+                                currentDate
+                            )
+                        )
                     }
                 }
 
 
             }
-            1->{
-                tinyDB.putInt("breaksendtime",totalTime!!)
+            1 -> {
+                tinyDB.putInt("breaksendtime", totalTime!!)
                 viewModelScope.launch {
-                    withContext(Dispatchers.IO){
-                        if(mainRepository.getUnsentStartBreakTimeDetails()!=null){
+                    withContext(Dispatchers.IO) {
+                        if (mainRepository.getUnsentStartBreakTimeDetails() != null) {
                             mainRepository.deleteAllUnsentStartBreakTime()
                         }
-                        mainRepository!!.insertUnsentStartBreakTime(UnsentStartBreakTime(0,currentDate))
+                        mainRepository!!.insertUnsentStartBreakTime(
+                            UnsentStartBreakTime(
+                                0,
+                                currentDate
+                            )
+                        )
                     }
                 }
 
 
             }
-            2->{
-                tinyDB.putInt("breaksendtime",totalTime!!)
+            2 -> {
+                tinyDB.putInt("breaksendtime", totalTime!!)
             }
         }
 
 
-       var check= tinyDB.getBoolean("NETCHECK")
-if(check){
-    totalTimeForActivty = totalTime!!
-    selectedActivty = activity
+        var check = tinyDB.getBoolean("NETCHECK")
+        if (check) {
+            totalTimeForActivty = totalTime!!
+            selectedActivty = activity
 
-    if (CheckConnection.netCheck(activityContext!!)) {
-        getLocation(activityContext!!)
-    } else {
-        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-    }
-}else{
-    tinyDB.putBoolean("NETCHECK",true)
-}
-
+            if (CheckConnection.netCheck(activityContext!!)) {
+                getLocation(activityContext!!)
+            } else {
+                Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            tinyDB.putBoolean("NETCHECK", true)
+        }
 
 
     }
@@ -1286,14 +1306,23 @@ if(check){
                 vehiclePosition = vehiclePosition.minus(1)
                 Log.d("position of Vehicle ", "$vehiclePosition")
                 var vehicle = vehicleArrayListforUpload[vehiclePosition]
-                (activityContext as MainActivity).updateActivity(
+                ServerCheck.serverCheckActivityOrStatus(
                     "$currentDate",
                     totalTime,
                     activity,
                     geoPosition,
-                    vehicle,
-                    authRepository
-                )
+                    vehicle, null
+                ) {
+                    (activityContext as MainActivity).updateActivity(
+                        "$currentDate",
+                        totalTime,
+                        activity,
+                        geoPosition,
+                        vehicle,
+                        authRepository
+                    )
+                }
+
             }
         }
     }
@@ -1534,13 +1563,13 @@ if(check){
 
         if (timerServiceCheck == true && breakTimerService == false) {
             dataBinding!!.statusListBtn.visibility = View.VISIBLE
-            Log.d("BREAKTIMERTEST","1")
+            Log.d("BREAKTIMERTEST", "1")
             ref.startTimerBreak()
             dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
             Timer().schedule(100) {
 
                 ref.stopTimerBreak()
-                Log.d("BREAKTIMERTEST","2")
+                Log.d("BREAKTIMERTEST", "2")
             }
 
         }
@@ -1587,23 +1616,17 @@ if(check){
 
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
-            networkAlertDialog.show()
-            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-            val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-            networkAlertDialog.getWindow()?.setLayout(width, height);
-            networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            val window: Window? = networkAlertDialog.getWindow()
-            val wlp: WindowManager.LayoutParams = window!!.getAttributes()
-            wlp.gravity = Gravity.BOTTOM
-            window.setAttributes(wlp)
+        networkAlertDialog.show()
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+        val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+        networkAlertDialog.getWindow()?.setLayout(width, height);
+        networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val window: Window? = networkAlertDialog.getWindow()
+        val wlp: WindowManager.LayoutParams = window!!.getAttributes()
+        wlp.gravity = Gravity.BOTTOM
+        window.setAttributes(wlp)
 
     }
-
-
-
-
-
-
 
 
 }

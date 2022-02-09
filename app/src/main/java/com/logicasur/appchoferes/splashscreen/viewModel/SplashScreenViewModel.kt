@@ -50,6 +50,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
         K.authRepository= authRepository
         K.mainRepository=mainRepository
         ServerCheck.authRepository=authRepository
+        ServerCheck.mainRepository=mainRepository
 
 
     }
