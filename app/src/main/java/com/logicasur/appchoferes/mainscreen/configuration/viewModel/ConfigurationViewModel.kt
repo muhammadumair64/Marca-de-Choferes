@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.FragmentConfigurationBinding
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
@@ -92,21 +93,33 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
             tinyDB.putString("language", "0")
-            selectedLanguageUplaod(0, alterDialog)
+            viewModelScope.launch(Dispatchers.IO) {
+                ServerCheck.serverCheck{ selectedLanguageUplaod(0, alterDialog)  }
+            }
+
+//            selectedLanguageUplaod(0, alterDialog)
         }
         language1.setOnClickListener {
             language1Selected()
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
             tinyDB.putString("language", "1")
-            selectedLanguageUplaod(1, alterDialog)        }
+            viewModelScope.launch(Dispatchers.IO) {
+                ServerCheck.serverCheck{   selectedLanguageUplaod(1, alterDialog)}
+            }
+
+//            selectedLanguageUplaod(1, alterDialog)
+            }
 
         language2.setOnClickListener {
             language2Selected()
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
             tinyDB.putString("language", "2")
-            selectedLanguageUplaod(2, alterDialog)
+            viewModelScope.launch(Dispatchers.IO) {
+                ServerCheck.serverCheck{selectedLanguageUplaod(2, alterDialog)}
+            }
+//            selectedLanguageUplaod(2, alterDialog)
         }
 
 
@@ -131,7 +144,9 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                            if(check){
                                var intent = Intent(context, LoadingScreen::class.java)
                                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                               selectedNotifyStateUplaod(true)
+                               Log.d("ConfigurationViewModel","true")
+                               ServerCheck.serverCheck {selectedNotifyStateUplaod(true) }
+//                               selectedNotifyStateUplaod(true)
                                toggleON!!.visibility = View.VISIBLE
                                toggleOFF.visibility = View.GONE
                            }else{
@@ -154,7 +169,9 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                             if(check){
                                 var intent = Intent(context, LoadingScreen::class.java)
                                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                                selectedNotifyStateUplaod(false)
+                                Log.d("ConfigurationViewModel","false")
+                                ServerCheck.serverCheck { selectedNotifyStateUplaod(false) }
+//                                selectedNotifyStateUplaod(false)
                                 toggleOFF!!.visibility = View.VISIBLE
                                 toggleON.visibility = View.GONE
 

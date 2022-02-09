@@ -276,4 +276,10 @@ class AuthRepository @Inject constructor(
         return apiRequest { retrofitInterface.getSplashScreen()}
     }
 
+
+    suspend fun checkServer(token:String):MassageResponse
+    {
+        return apiRequest {retrofitInterface.checkServer(token)}
+    }
+
 }
