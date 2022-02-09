@@ -71,7 +71,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     if(check == false){
 
 
-
+                        MyApplication.checKForPopup = true
                  viewModelScope.launch {
     withContext(Dispatchers.Main){
         delay(2000)

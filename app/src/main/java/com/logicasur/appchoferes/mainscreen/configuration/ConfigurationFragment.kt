@@ -56,7 +56,7 @@ class ConfigurationFragment : Fragment() {
         var viewBinding = binding.root
         initViews()
         openPopupWindow()
-   customeColor()
+        customeColor()
         return viewBinding
 
     }
@@ -128,6 +128,7 @@ class ConfigurationFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        (activity as MainActivity).binding.menu.setItemSelected(R.id.Settings, true)
        var reload= tinyDB.getBoolean("reload")
         if(reload) {
             val id = findNavController().currentDestination?.id

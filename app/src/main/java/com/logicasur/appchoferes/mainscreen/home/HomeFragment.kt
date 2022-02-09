@@ -62,7 +62,7 @@ class HomeFragment : Fragment(), OnclickItem {
     lateinit var tinyDB: TinyDB
     lateinit var fragment : HomeFragment
     var mainContext: Context? = null
-    var popupCheck = true
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -314,9 +314,9 @@ class HomeFragment : Fragment(), OnclickItem {
             networkAlertDialog.dismiss()
         }
 
-        if(popupCheck== true){
+        if(MyApplication.checKForPopup == true){
             closePopup()
-            popupCheck = false
+            MyApplication.checKForPopup = false
         }
 
     }

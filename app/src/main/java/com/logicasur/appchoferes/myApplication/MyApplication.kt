@@ -23,6 +23,7 @@ class MyApplication:Application() {
         MyApplication.dayEndCheck = 0
         MyApplication.backPressCheck=0
         MyApplication.breakBarProgress=0
+        MyApplication.checKForPopup=false
     }
 
     companion object {
@@ -41,6 +42,7 @@ class MyApplication:Application() {
         var backPressCheck by Delegates.notNull<Int>()
          var dayEndCheck by Delegates.notNull<Int>()
         var breakBarProgress by Delegates.notNull<Int>()
+        var checKForPopup by Delegates.notNull<Boolean>()
     }
 
 
