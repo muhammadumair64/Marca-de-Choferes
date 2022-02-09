@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.repository.AuthRepository
-import com.logicasur.appchoferes.auth.signin.SignInActivity
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
@@ -23,6 +22,7 @@ import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.logicasur.appchoferes.splashscreen.SplashScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.SocketException
@@ -40,6 +40,8 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
     val currentDate = sdf.format(Date())
     var check = 0
     var TAG2 = ""
+    var myTimer: Timer? = null
+
     fun viewsOfActivity(context: Context) {
         activityContext = context
         tinyDB = TinyDB(context)
@@ -52,34 +54,37 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
     fun checkData(){
         K.checkNet()
-        var myTimer = Timer()
-        myTimer.schedule(object : TimerTask() {
+        myTimer = Timer()
+        myTimer!!.schedule(object : TimerTask() {
             override fun run() {
            var check = tinyDB.getBoolean("SYNC_CHECK")
                 if(check==true){
                     Log.d("SYNC_CHECK_TESTING","RUN SYNC")
                     syncdata()
-                    myTimer.cancel()
+                    myTimer!!.cancel()
                 }
                 else{
                     var check=K.isConnected()
                     if(check == false){
-                        viewModelScope.launch {
-                            withContext(Dispatchers.IO){
-                                getPreviousTimeWhenOffline()
-                                //changed
-                                var intent = Intent(activityContext,MainActivity::class.java)
-                                ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
+
+
+                 viewModelScope.launch {
+    withContext(Dispatchers.Main){
+        delay(2000)
+        LoadingScreen.onEndLoadingCallbacks?.openPopup(myTimer!!)
+    }
+}
+
+                            //changed
                                 //<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>
                               //  Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-                                myTimer.cancel()
-                            }
-                        }
+
 
                     }
                 }
             }
-        }, 0, 5000)
+        }, 0, 10000)
     }
 
 
@@ -510,72 +515,6 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
 
 
-    private fun getPreviousTimeWhenOffline() {
 
-        var breakTime=tinyDB.getInt("lasttimebreak")
-//        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
-        var activity=tinyDB.getInt("SELECTEDACTIVITY")
-        when (activity) {
-            0 -> {
-                getWorkTimeWhenOffline()
-            }
-            1 -> {
-                tinyDB.putString("checkTimer", "breakTime")
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        var breakDate =mainRepository.getUnsentStartBreakTimeDetails().time
-                            if (breakDate!!.isNotEmpty()) {
-                                breakDate = breakDate!!.split("Z").toTypedArray()[0]
-                                breakDate = breakDate!!.split(",").toTypedArray()[1]
-                                Log.d("workDate Is", "date is $breakDate")
-                            }
-                        tinyDB.putString("goBackTime", breakDate)
-                        tinyDB.putInt("ServerBreakTime",breakTime)
-                    }
-
-
-                    var defaultBreak=tinyDB.getInt("defaultBreak")
-                    K.timeDifference(tinyDB, activityContext!!, false,defaultBreak)
-
-                    getWorkTimeWhenOffline()
-                }
-
-            }
-            2 -> {
-                MyApplication.dayEndCheck = 100
-                getWorkTimeWhenOffline()
-            }
-            3->{
-                MyApplication.dayEndCheck = 200
-            }
-        }
-
-
-    }
-
-    fun getWorkTimeWhenOffline() {
-        tinyDB.putString("checkTimer", "workTime")
-
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                var date = mainRepository.getUnsentStartWorkTimeDetails()
-                var workDate = date.time
-                if (workDate!!.isNotEmpty()) {
-                    workDate = workDate!!.split("Z").toTypedArray()[0]
-                    workDate = workDate!!.split(",").toTypedArray()[1]
-                    Log.d("workDate Is", "date is $workDate")
-                }
-                tinyDB.putString("goBackTime", workDate)
-            }
-           var defaultTime=tinyDB.getInt("defaultWork")
-
-                K.timeDifference(tinyDB, activityContext!!, false,defaultTime)
-
-
-
-        }
-
-
-    }
 
 }

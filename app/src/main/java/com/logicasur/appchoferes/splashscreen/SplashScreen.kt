@@ -1,6 +1,7 @@
 package com.logicasur.appchoferes.splashscreen
 
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -10,9 +11,12 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Base64
+import android.view.View
 import android.view.WindowManager
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.BaseClass
@@ -24,11 +28,13 @@ import com.logicasur.appchoferes.auth.otp.OTP_Activity
 import com.logicasur.appchoferes.auth.signin.SignInActivity
 import com.logicasur.appchoferes.databinding.ActivitySplashScreenBinding
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
+import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.splashscreen.viewModel.SplashScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.schedule
@@ -41,6 +47,11 @@ class SplashScreen : BaseClass() {
     lateinit var binding: ActivitySplashScreenBinding
     var background =""
     var spleshCheck = true
+
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        var temp = isMyServiceRunning(UploadRemaingDataService::class.java)
@@ -55,6 +66,7 @@ class SplashScreen : BaseClass() {
         viewModel.viewsOfActivity(this)
         tinyDB = TinyDB(this)
         var checker = tinyDB.getString("User")
+//        createPopup()
 
 //        background= tinyDB.getString("SplashBG").toString()
 //        if(background.isNotEmpty() && !background.contains(".png")){
@@ -275,6 +287,11 @@ class SplashScreen : BaseClass() {
         }
 
     }
+
+
+
+
+
 
 
 }

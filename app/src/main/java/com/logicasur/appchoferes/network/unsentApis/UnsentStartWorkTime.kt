@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class UnsentStartWorkTime(
     @PrimaryKey
     var roomid: Int = 0,
-    var time: String
+    var time: String?
 )

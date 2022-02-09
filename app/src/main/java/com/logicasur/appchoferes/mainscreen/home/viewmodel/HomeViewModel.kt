@@ -1212,6 +1212,12 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 //    }
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
+
+
+
+
+
+
 //        tinyDB.putInt("SELECTEDACTIVITY",activity)
 //        tinyDB.putInt("TOTALTIMETOSEND",totalTime!!)
         val sdf = SimpleDateFormat("yyyy-MM-dd,HH:mm:ss")
@@ -1231,6 +1237,7 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
 
             }
             1->{
+                tinyDB.putInt("breaksendtime",totalTime!!)
                 viewModelScope.launch {
                     withContext(Dispatchers.IO){
                         if(mainRepository.getUnsentStartBreakTimeDetails()!=null){
@@ -1241,6 +1248,9 @@ class HomeViewModel @Inject constructor(val authRepository: AuthRepository,val m
                 }
 
 
+            }
+            2->{
+                tinyDB.putInt("breaksendtime",totalTime!!)
             }
         }
 

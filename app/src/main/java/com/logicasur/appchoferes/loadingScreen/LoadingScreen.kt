@@ -1,8 +1,8 @@
 package com.logicasur.appchoferes.loadingScreen
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
@@ -16,17 +16,23 @@ import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
 import dagger.hilt.android.AndroidEntryPoint
 import android.graphics.Color
-import android.view.Window
-
-import androidx.core.content.ContextCompat
+import android.view.View
 
 import android.view.WindowManager
+import android.widget.RelativeLayout
+import androidx.appcompat.widget.AppCompatButton
+import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.Extra.K
-import com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService.Companion.activity
+import java.util.*
 
 
 @AndroidEntryPoint
-class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
+class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
+    lateinit var proceed_btn  : AppCompatButton
+    lateinit var cancel_btn: RelativeLayout
+    var networkAlertDialog: AlertDialog? = null
+    lateinit var networkDialogBuilder:AlertDialog.Builder
+
     val loadingViewModel: loadingViewModel by viewModels()
     companion object
     {
@@ -39,11 +45,14 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onEndLoadingCallbacks  = this
+        loadingViewModel.activityContext = this
         val language= Language()
         language.setLanguage(baseContext)
         setContentView(R.layout.activity_loading_screen)
 
         tinyDB= TinyDB(this)
+        K.primaryColor=tinyDB.getString("primaryColor")!!
+        K.secondrayColor=tinyDB.getString("secondrayColor")!!
         initView()
          imageFromServer= tinyDB.getString("loadingBG").toString()
         if(imageFromServer.isNotEmpty()){
@@ -58,6 +67,7 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
    fun initView(){
        setBarColor()
        MyApplication.loadingContext = this
+//       createPopup()
          imageBackground=findViewById(R.id.loadingBackground)
 
 
@@ -100,6 +110,10 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
         finish()
     }
 
+    override fun openPopup(myTimer: Timer) {
+         createPopup(myTimer)
+    }
+
     fun setBarColor(){
 // clear FLAG_TRANSLUCENT_STATUS flag:
 
@@ -125,5 +139,35 @@ class LoadingScreen : AppCompatActivity(),onEndLoadingCallbacks{
     override fun onDestroy() {
         super.onDestroy()
         Log.d("LOADING_TESTING","Yes")
+    }
+
+
+    fun createPopup(myTimer: Timer) {
+        if(networkAlertDialog != null){
+            if(networkAlertDialog!!.isShowing){
+                networkAlertDialog!!.dismiss()
+            }
+        }
+
+        networkDialogBuilder = AlertDialog.Builder(this)
+        val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
+        networkAlertDialog= networkDialogBuilder.create()
+        proceed_btn=PopupView.findViewById(R.id.proceed_btn)
+        cancel_btn=PopupView.findViewById(R.id.cancel_btn)
+        loadingViewModel.openPopup(networkAlertDialog!!,PopupView,resources)
+        setGrad(K.primaryColor, K.secondrayColor, proceed_btn)
+        cancel_btn.setOnClickListener {
+            networkAlertDialog!!.dismiss()
+
+
+        }
+        proceed_btn.setOnClickListener {
+            myTimer.cancel()
+            loadingViewModel.getPreviousTimeWhenOffline()
+            networkAlertDialog!! .dismiss()
+        }
+
+
+
     }
 }

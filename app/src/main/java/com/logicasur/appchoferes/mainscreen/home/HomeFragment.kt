@@ -24,6 +24,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
@@ -32,6 +33,11 @@ import com.logicasur.appchoferes.mainscreen.home.Adapter.StatusAdapter
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.myApplication.MyApplication
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 @AndroidEntryPoint
@@ -56,6 +62,7 @@ class HomeFragment : Fragment(), OnclickItem {
     lateinit var tinyDB: TinyDB
     lateinit var fragment : HomeFragment
     var mainContext: Context? = null
+    var popupCheck = true
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -116,7 +123,6 @@ class HomeFragment : Fragment(), OnclickItem {
         })
 
 
-
         mainViewModel.navigationLiveData.observe(
             viewLifecycleOwner, androidx.lifecycle.Observer {
                 println("Live Data $it")
@@ -147,7 +153,9 @@ class HomeFragment : Fragment(), OnclickItem {
         binding.profileImage.setOnClickListener {
             mainViewModel.navigationLiveData.postValue("2")
         }
-
+        Timer().schedule(1000) {
+//            closePopup()
+        }
 
     }
 
@@ -302,12 +310,36 @@ class HomeFragment : Fragment(), OnclickItem {
                 (activity as MainActivity).updatePendingData(false)
             }
 
+
             networkAlertDialog.dismiss()
         }
+
+        if(popupCheck== true){
+            closePopup()
+            popupCheck = false
+        }
+
     }
 
 
+
+fun closePopup(){
+            lifecycleScope.launch {
+            withContext(Dispatchers.IO){
+
+if(networkAlertDialog != null){
+    networkAlertDialog.dismiss()
 }
+
+                }
+            }
+        }
+
+
+}
+
+
+
 
 
 

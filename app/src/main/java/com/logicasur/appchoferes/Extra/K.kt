@@ -87,14 +87,17 @@ class K {
             if (checkTimer == "workTime") {
                 if (resumeCheck == true) {
                     var previoustime = tinyDB.getInt("lasttimework")
+                    Log.d("TimerTESTING", "1----- $previoustime")
                     var newTime = previoustime + finalTimeDiff
                     tinyDB.putInt("lasttimework", newTime.toInt())
+                    Log.d("TimerTESTING", "2---- $newTime")
                     var intent = (context as MainActivity)
                     intent.setTimer()
                     Timer().schedule(200) {
                         intent.startTimer()
                     }
                 } else {
+                    Log.d("TimerTESTING", "1.1.1----- $finalTimeDiff")
                     tinyDB.putInt("lasttimework", finalTimeDiff.toInt())
                 }
 //
@@ -103,11 +106,13 @@ class K {
                 if (resumeCheck == true) {
                     var previoustime = tinyDB.getInt("lasttimebreak")
                     var newTime = previoustime + finalTimeDiff
+                    Log.d("TimerTESTING", "1.1----- $previoustime")
                     var defaultBreak = workBreak * 60
                     if (newTime > defaultBreak) {
                         newTime = defaultBreak.toLong()
                     }
                     tinyDB.putInt("lasttimebreak", newTime.toInt())
+                    Log.d("TimerTESTING", "2.1----- $newTime ")
                     var intent = (context as MainActivity)
                     intent.setTimer()
                     Timer().schedule(200) {
@@ -119,7 +124,7 @@ class K {
 //                    var defaultBreak=workBreak * 60
 //                    if(finalTimeDiff > defaultBreak){
 //                        finalTimeDiff = defaultBreak.toLong()
-//                    }
+//                    }8
                     tinyDB.putInt("lasttimebreak", finalTimeDiff.toInt())
                 }
 //                intent.setTimer()
@@ -375,10 +380,6 @@ class K {
         ) {
 
             var Token = tinyDB.getString("Cookie")
-
-
-
-
 
             try {
 
