@@ -1610,8 +1610,7 @@ class HomeViewModel @Inject constructor(
 
 
         }
-
-
+        breakErrorOverWrite()
     }
 
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
@@ -1627,6 +1626,22 @@ class HomeViewModel @Inject constructor(
         window.setAttributes(wlp)
 
     }
+
+    fun breakErrorOverWrite(){
+        var ref = (activityContext as MainActivity)
+        var breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
+        if(dataBinding!!.StateActive.isVisible){
+            if(breakTimerService == true){
+                ref.stopTimerBreak()
+                breakTimerLargeToSmall()
+                workTimerSmallToLarge()
+
+            }
+
+        }
+
+    }
+
 
 
 }
