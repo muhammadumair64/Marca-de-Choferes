@@ -100,12 +100,12 @@ class MyModule {
             sslContext.init(null, arrayOf<TrustManager>(trustManager), null)
 
 
-//     .addInterceptor(networkConnectionInterceptor)
+//         .addInterceptor(okHttpLoggingInterceptor)
 
 
             val sslSocketFactory = sslContext.socketFactory
             OkHttpClient.Builder()
-                .addInterceptor(okHttpLoggingInterceptor)
+                .addInterceptor(networkConnectionInterceptor)
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(50, TimeUnit.SECONDS)
                 .writeTimeout(1, TimeUnit.MINUTES)

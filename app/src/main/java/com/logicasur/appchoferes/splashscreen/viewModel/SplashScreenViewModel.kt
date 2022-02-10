@@ -20,6 +20,8 @@ import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.NoInternetException
 import com.logicasur.appchoferes.network.ResponseException
 import com.logicasur.appchoferes.network.signinResponse.SigninResponse
+import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
+import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
 import com.logicasur.appchoferes.splashscreen.SplashScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -67,10 +69,9 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     myTimer!!.cancel()
                 }
                 else{
+                    Log.d("SYNC_CHECK_TESTING","In False")
                     var check=K.isConnected()
                     if(check == false){
-
-
                         MyApplication.checKForPopup = true
                  viewModelScope.launch {
     withContext(Dispatchers.Main){
@@ -418,6 +419,50 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
               MyApplication.dayEndCheck = 200
             }
         }
+
+
+        var workStartTime=response.lastVar.lastWorkedHoursDateIni
+        var breakStartTime =response.lastVar.lastWorkBreakDateIni
+        if(workStartTime != null){
+            workStartTime= workStartTime!!.replace("T",",")
+            workStartTime= workStartTime!!.split(".").toTypedArray()[0]
+            workStartTime = workStartTime+"Z"
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
+                        mainRepository.deleteAllUnsentStartWorkTime()
+                    }
+                    mainRepository!!.insertUnsentStartWorkTime(
+                        UnsentStartWorkTime(
+                            0,
+                            workStartTime
+                        )
+                    )
+                }
+            }
+        }
+
+        if(breakStartTime != null){
+            breakStartTime= breakStartTime!!.replace("T",",")
+            breakStartTime= breakStartTime!!.split(".").toTypedArray()[0]
+            breakStartTime = breakStartTime+"Z"
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (mainRepository.getUnsentStartBreakTimeDetails() != null) {
+                        mainRepository.deleteAllUnsentStartBreakTime()
+                    }
+                    mainRepository!!.insertUnsentStartBreakTime(
+                        UnsentStartBreakTime(
+                            0,
+                            breakStartTime
+                        )
+                    )
+                }
+            }
+        }
+
 
 
     }

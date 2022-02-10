@@ -871,9 +871,9 @@ class HomeViewModel @Inject constructor(
                         latitude = p0.locations[0].latitude
 
                         val geocoder = Geocoder(context, Locale.getDefault())
-                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-                        var location = addresses[0].featureName.toString()
-                        println("City Name is $location")
+//                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+//                        var location = addresses[0].featureName.toString()
+//                        println("City Name is $location")
 //                        Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
 
                         println("Current Location $longitude and $latitude")
@@ -934,9 +934,9 @@ class HomeViewModel @Inject constructor(
                         latitude = p0.locations[0].latitude
 
                         val geocoder = Geocoder(context, Locale.getDefault())
-                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-                        var location = addresses[0].featureName.toString()
-                        println("City Name is $location")
+//                        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+//                        var location = addresses[0].featureName.toString()
+//                        println("City Name is $location")
 //                      Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
 
                         println("Current Location $longitude and $latitude")

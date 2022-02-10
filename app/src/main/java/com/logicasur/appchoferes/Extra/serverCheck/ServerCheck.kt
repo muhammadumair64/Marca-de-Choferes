@@ -8,12 +8,15 @@ import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.GeoPosition
+import com.logicasur.appchoferes.network.NoInternetException
 import com.logicasur.appchoferes.network.logoutResponse.MassageResponse
 import com.logicasur.appchoferes.network.signinResponse.State
 import com.logicasur.appchoferes.network.signinResponse.Vehicle
 import com.logicasur.appchoferes.network.unsentApis.UnsentStateUpdate
 import com.logicasur.appchoferes.network.unsentApis.UnsentUploadActivity
 import kotlinx.coroutines.*
+import java.net.SocketException
+import java.net.SocketTimeoutException
 
 
 class ServerCheck {
@@ -49,12 +52,31 @@ class ServerCheck {
 //
 //                    }
 
-                } catch (e: Exception) {
+                } catch (e: SocketTimeoutException){
                     withContext(Dispatchers.Main)
                     {
                         Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
                             .show()
                     }
+                    serverCheck { action() }
+            }
+                catch (e:SocketException)
+                {
+                    withContext(Dispatchers.Main)
+                    {
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    serverCheck { action() }
+                }
+                catch (e: NoInternetException)
+                {
+                    Log.d(TAG, " Exception..${e.localizedMessage}")
+                    serverCheck { action() }
+                }
+
+                catch (e: Exception) {
+
                     Log.d(TAG, " Exception..${e.localizedMessage}")
                     serverCheck { action() }
                 }
@@ -96,11 +118,11 @@ class ServerCheck {
 //                    }
 
                 } catch (e: Exception) {
-                    withContext(Dispatchers.Main)
-                    {
-                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                            .show()
-                    }
+//                    withContext(Dispatchers.Main)
+//                    {
+//                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+//                            .show()
+//                    }
                     Log.d(TAG, " Exception..${e.localizedMessage}")
                     if (state == null) {
                         mainRepository.insertUnsentUploadActivity(

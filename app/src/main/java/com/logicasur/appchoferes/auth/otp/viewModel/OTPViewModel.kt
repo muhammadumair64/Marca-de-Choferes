@@ -35,6 +35,9 @@ import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.logicasur.appchoferes.splashscreen.SplashScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.logicasur.appchoferes.mainscreen.repository.MainRepository
+import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
+import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
 import com.logicasur.appchoferes.utils.MyFirebaseMessagingService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +50,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
+class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
      var fromSplash :Boolean? = null;
@@ -393,7 +396,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
@@ -508,6 +511,50 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository) : Vie
                 tinyDB.putString("selectedState","endDay")
             }
         }
+
+
+        var workStartTime=response.lastVar.lastWorkedHoursDateIni
+        var breakStartTime =response.lastVar.lastWorkBreakDateIni
+        if(workStartTime != null){
+            workStartTime= workStartTime!!.replace("T",",")
+            workStartTime= workStartTime!!.split(".").toTypedArray()[0]
+            workStartTime = workStartTime+"Z"
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
+                        mainRepository.deleteAllUnsentStartWorkTime()
+                    }
+                    mainRepository!!.insertUnsentStartWorkTime(
+                        UnsentStartWorkTime(
+                            0,
+                            workStartTime
+                        )
+                    )
+                }
+            }
+        }
+
+        if(breakStartTime != null){
+            breakStartTime= breakStartTime!!.replace("T",",")
+            breakStartTime= breakStartTime!!.split(".").toTypedArray()[0]
+            breakStartTime = breakStartTime+"Z"
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (mainRepository.getUnsentStartBreakTimeDetails() != null) {
+                        mainRepository.deleteAllUnsentStartBreakTime()
+                    }
+                    mainRepository!!.insertUnsentStartBreakTime(
+                        UnsentStartBreakTime(
+                            0,
+                            breakStartTime
+                        )
+                    )
+                }
+            }
+        }
+
 
 
 

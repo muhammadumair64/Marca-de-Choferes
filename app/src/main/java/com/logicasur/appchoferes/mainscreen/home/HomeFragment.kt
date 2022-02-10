@@ -296,7 +296,13 @@ class HomeFragment : Fragment(), OnclickItem {
         networkAlertDialog= networkDialogBuilder.create()
         proceed_btn=PopupView.findViewById(R.id.proceed_btn)
         cancel_btn=PopupView.findViewById(R.id.cancel_btn)
-        viewModel.openPopup(networkAlertDialog,PopupView,resources)
+        if(!MyApplication.checKForPopup){
+            viewModel.openPopup(networkAlertDialog,PopupView,resources)
+
+        }else{
+            MyApplication.checKForPopup = false
+        }
+
         (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, proceed_btn)
         cancel_btn.setOnClickListener {
             networkAlertDialog.dismiss()

@@ -32,6 +32,9 @@ import com.logicasur.appchoferes.network.ResponseException
 import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.logicasur.appchoferes.mainscreen.repository.MainRepository
+import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
+import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
 import com.logicasur.appchoferes.utils.MyFirebaseMessagingService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +47,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
+class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     var Token=""
@@ -232,6 +235,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
                     e.printStackTrace()
                 }
                 catch (e: NoInternetException) {
+                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
@@ -502,6 +506,48 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository) : 
             }
         }
 
+
+        var workStartTime=response.lastVar.lastWorkedHoursDateIni
+        var breakStartTime =response.lastVar.lastWorkBreakDateIni
+        if(workStartTime != null){
+            workStartTime= workStartTime!!.replace("T",",")
+            workStartTime= workStartTime!!.split(".").toTypedArray()[0]
+            workStartTime = workStartTime+"Z"
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
+                        mainRepository.deleteAllUnsentStartWorkTime()
+                    }
+                    mainRepository!!.insertUnsentStartWorkTime(
+                        UnsentStartWorkTime(
+                            0,
+                            workStartTime
+                        )
+                    )
+                }
+            }
+        }
+
+        if(breakStartTime != null){
+            breakStartTime= breakStartTime!!.replace("T",",")
+            breakStartTime= breakStartTime!!.split(".").toTypedArray()[0]
+            breakStartTime = breakStartTime+"Z"
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (mainRepository.getUnsentStartBreakTimeDetails() != null) {
+                        mainRepository.deleteAllUnsentStartBreakTime()
+                    }
+                    mainRepository!!.insertUnsentStartBreakTime(
+                        UnsentStartBreakTime(
+                            0,
+                            breakStartTime
+                        )
+                    )
+                }
+            }
+        }
 
     }
 
