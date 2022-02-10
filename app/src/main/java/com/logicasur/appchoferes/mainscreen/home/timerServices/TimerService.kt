@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
@@ -31,7 +32,13 @@ class TimerService : Service()
     {
         println("i am here 012")
         timer.cancel()
-        (MyApplication.activityContext as MainActivity).checkScreen()
+        try{
+            (MyApplication.activityContext as MainActivity).checkScreen()
+        }
+        catch (e:Exception){
+            Log.d("Testing","stop")
+        }
+
         super.onDestroy()
     }
 
