@@ -31,13 +31,14 @@ import okhttp3.*
 @InstallIn(SingletonComponent::class)
 class MyModule {
 
-     var context:Context? = null
+    var context: Context? = null
 
     val baseUrl = "https://logicasur.com:27123/app/v1/"
+
     @Singleton
     @Provides
     fun provideContext(application: Application): Context {
-      context= application.applicationContext
+        context = application.applicationContext
 
         return context!!
     }
@@ -51,7 +52,7 @@ class MyModule {
 
     @Provides
     @Singleton
-    fun provideNetWorkCheckInterceptor():NetworkConnectionInterceptor {
+    fun provideNetWorkCheckInterceptor(): NetworkConnectionInterceptor {
 
         return NetworkConnectionInterceptor(MyApplication.appContext)
     }
@@ -65,7 +66,10 @@ class MyModule {
 
     @Provides
     @Singleton
-     fun provideUnsafeOkHttpClient(   okHttpLoggingInterceptor: HttpLoggingInterceptor,networkConnectionInterceptor: NetworkConnectionInterceptor): OkHttpClient {
+    fun provideUnsafeOkHttpClient(
+        okHttpLoggingInterceptor: HttpLoggingInterceptor,
+        networkConnectionInterceptor: NetworkConnectionInterceptor
+    ): OkHttpClient {
         return try {
             // Create a trust manager that does not validate certificate chains
             val trustAllCerts = arrayOf<TrustManager>(
@@ -109,7 +113,7 @@ class MyModule {
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(50, TimeUnit.SECONDS)
                 .writeTimeout(1, TimeUnit.MINUTES)
-                .sslSocketFactory(sslSocketFactory,trustManager)
+                .sslSocketFactory(sslSocketFactory, trustManager)
                 .hostnameVerifier(HostnameVerifier { hostname, session -> true })
                 .build()
         } catch (e: Exception) {
@@ -118,11 +122,10 @@ class MyModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideRetrofit(
-        okHttpLoggingInterceptor: HttpLoggingInterceptor,okHttpClient: OkHttpClient
+        okHttpLoggingInterceptor: HttpLoggingInterceptor, okHttpClient: OkHttpClient
     ): Retrofit {
 
 
@@ -136,10 +139,6 @@ class MyModule {
 //            .readTimeout(40, TimeUnit.SECONDS)
 //            .writeTimeout(30, TimeUnit.SECONDS)
 //            .build()
-
-
-
-
 
 
         return Retrofit.Builder()
@@ -162,9 +161,11 @@ class MyModule {
     @Provides
     fun provideDataBase(application: Application): LocalDataBase {
 
-        return  Room.databaseBuilder(application,
-           LocalDataBase::class.java,
-            "localdataBase")
+        return Room.databaseBuilder(
+            application,
+            LocalDataBase::class.java,
+            "localdataBase"
+        )
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
@@ -181,10 +182,6 @@ class MyModule {
     fun provideUnsentDao(localDataBase: LocalDataBase): UnsentApiDao {
         return localDataBase.unsentApiDao()
     }
-
-
-
-
 
 
 }

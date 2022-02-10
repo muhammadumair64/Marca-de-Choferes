@@ -17,6 +17,7 @@ import com.logicasur.appchoferes.network.unsentApis.UnsentUploadActivity
 import kotlinx.coroutines.*
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.util.*
 
 
 class ServerCheck {
@@ -30,6 +31,23 @@ class ServerCheck {
 
 
         suspend fun serverCheck(action: () -> Unit) {
+
+
+var check =0
+            var myTimer = Timer()
+            myTimer!!.schedule(object : TimerTask() {
+                override fun run() {
+if(check==1){
+    Log.d("NETCHECKTEST", "----working")
+    myTimer.purge()
+    myTimer.cancel()
+}else{
+    check++
+}
+
+                }
+            }, 0,12000)
+
             tagsForToast()
             Log.d(TAG, "Server Check function")
 
@@ -42,6 +60,8 @@ class ServerCheck {
 
                     Log.d(TAG, "$checkServerResponse")
                     if (checkServerResponse == MassageResponse("ok")) {
+                        myTimer.cancel()
+                        myTimer.purge()
                         Log.d(TAG, "Server is working fine")
                         action()
                     }
@@ -58,7 +78,7 @@ class ServerCheck {
                         Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
                             .show()
                     }
-                    serverCheck { action() }
+//                    serverCheck { action() }
             }
                 catch (e:SocketException)
                 {
@@ -67,18 +87,18 @@ class ServerCheck {
                         Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
                             .show()
                     }
-                    serverCheck { action() }
+//                    serverCheck { action() }
                 }
                 catch (e: NoInternetException)
                 {
                     Log.d(TAG, " Exception..${e.localizedMessage}")
-                    serverCheck { action() }
+//                    serverCheck { action() }
                 }
 
                 catch (e: Exception) {
 
                     Log.d(TAG, " Exception..${e.localizedMessage}")
-                    serverCheck { action() }
+//                    serverCheck { action() }
                 }
 
 
@@ -98,6 +118,9 @@ class ServerCheck {
             tagsForToast()
             Log.d(TAG, "Server Check function")
 
+
+
+
             CoroutineScope(Job()).launch(Dispatchers.IO) {
                 try {
                     val Token = tinyDB.getString("Cookie")
@@ -107,6 +130,7 @@ class ServerCheck {
 
                     Log.d(TAG, "$checkServerResponse")
                     if (checkServerResponse == MassageResponse("ok")) {
+
                         Log.d(TAG, "Server is working fine")
                         action1()
                     }
