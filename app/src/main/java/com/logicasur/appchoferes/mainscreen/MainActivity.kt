@@ -785,6 +785,7 @@ class MainActivity : BaseClass(){
         if(check){
             K.myTimer!!.cancel()
         }
+        finishAffinity()
         finish()
 
 //        if( MyApplication.backPressCheck==200){

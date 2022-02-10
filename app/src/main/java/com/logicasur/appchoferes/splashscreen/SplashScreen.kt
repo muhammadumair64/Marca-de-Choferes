@@ -11,6 +11,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.RelativeLayout
@@ -59,7 +60,7 @@ class SplashScreen : BaseClass() {
 //        var intent=Intent(this,UploadRemaingDataService::class.java)
 //        stopService(intent)
 //        temp = isMyServiceRunning(UploadRemaingDataService::class.java)
-//        Log.d("check service ",temp.toString())
+        Log.d("SYNC_TESTING","In On create")
 
         val language = Language()
         language.setLanguage(baseContext)
