@@ -121,6 +121,10 @@ class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
          createPopup(myTimer)
     }
 
+    override fun openServerPopup() {
+        createServerAlertPopup()
+    }
+
     fun setBarColor(){
 // clear FLAG_TRANSLUCENT_STATUS flag:
 

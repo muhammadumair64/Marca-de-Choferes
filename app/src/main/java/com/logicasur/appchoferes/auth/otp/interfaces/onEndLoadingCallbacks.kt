@@ -5,4 +5,5 @@ import java.util.*
 interface onEndLoadingCallbacks {
     fun endLoading()
     fun openPopup(myTimer: Timer)
+    fun openServerPopup()
 }
