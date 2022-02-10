@@ -176,11 +176,16 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                                 var intent = Intent(context, LoadingScreen::class.java)
                                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
                                 Log.d("ConfigurationViewModel", "false")
-                                ServerCheck.serverCheck(null) {
-                                    selectedNotifyStateUplaod(
-                                        false,
-                                        {}
-                                    )
+//                                ServerCheck.serverCheck(null) {
+//                                    selectedNotifyStateUplaod(
+//                                        false,
+//                                        {}
+//                                    )
+//                                }
+
+                                ServerCheck.serverCheckTesting(null) { serverAction ->
+
+                                    selectedNotifyStateUplaod(false, serverAction)
                                 }
 //                                selectedNotifyStateUplaod(false)
                                 toggleOFF!!.visibility = View.VISIBLE
