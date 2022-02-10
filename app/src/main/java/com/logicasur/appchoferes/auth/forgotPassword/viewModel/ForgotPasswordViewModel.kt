@@ -105,7 +105,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
                 }
                 catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()

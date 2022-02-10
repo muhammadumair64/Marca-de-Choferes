@@ -284,7 +284,7 @@ class ProfileFragment : Fragment() {
                 Log.d("input Parameters", "$nameChanges  $fatherName  $Name")
                 if (option == 1) {
                     lifecycleScope.launch(Dispatchers.IO) {
-                        ServerCheck.serverCheck {
+                        ServerCheck.serverCheck(null) {
                             profileViewModel.updateProfile(
                                 nameChanges.toString(),
                                 fatherName.toString(),
@@ -299,7 +299,7 @@ class ProfileFragment : Fragment() {
 //                    )
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
-                        ServerCheck.serverCheck {
+                        ServerCheck.serverCheck(null) {
                             profileViewModel.updateProfile(
                                 Name.toString(),
                                 nameChanges.toString(),

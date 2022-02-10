@@ -1080,7 +1080,7 @@ class HomeViewModel @Inject constructor(
                         (MyApplication.loadingContext as LoadingScreen).finish()
                     }
                 } catch (e: SocketException) {
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception", "Connect Not Available")
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()

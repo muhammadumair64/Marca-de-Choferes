@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.BuildConfig
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
@@ -43,7 +42,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.Reader
 import java.net.SocketException
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -235,7 +233,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                     e.printStackTrace()
                 }
                 catch (e: NoInternetException) {
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
@@ -243,7 +241,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                     }
                 }
                 catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
@@ -336,7 +334,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
 
                 }
                 catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
@@ -391,7 +389,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                     println("ErrorResponse")
                 }
                 catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()

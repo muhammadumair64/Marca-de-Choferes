@@ -76,7 +76,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                  viewModelScope.launch {
     withContext(Dispatchers.Main){
         delay(2000)
-        LoadingScreen.onEndLoadingCallbacks?.openPopup(myTimer!!)
+        LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
     }
 }
 
@@ -193,7 +193,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     }
                     Timer().schedule(5000) {
                         Log.d("connection Exception", "connection lost")
-                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                        LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     }
                 } catch (e: SocketTimeoutException) {
 
@@ -210,7 +210,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     Log.d("connection Exception", "Connect Not Available")
                     Timer().schedule(5000) {
                         Log.d("connection Exception", "connection lost")
-                        LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                        LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     }
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
@@ -262,7 +262,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
         }
         catch(e: SocketException){
-            LoadingScreen.onEndLoadingCallbacks?.endLoading()
+            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
             Log.d("connection Exception","Connect Not Available")
             withContext(Dispatchers.Main){
                 Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
@@ -364,7 +364,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                     }
                 } catch (e: SocketException) {
                     Log.d("connection Exception", "Connect Not Available")
-                    LoadingScreen.onEndLoadingCallbacks!!.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                 }
             }
         }

@@ -18,7 +18,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.BuildConfig
 import com.logicasur.appchoferes.Extra.K
 
 import com.logicasur.appchoferes.Extra.TinyDB
@@ -46,7 +45,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.Reader
 import java.net.SocketException
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -277,7 +275,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
                     tinyDB.putString("User", "")
                     val response = convertErrorBody(e.response)
                     withContext(Dispatchers.Main){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
 //                        (activityContext as OTP_Activity).finish()
 //                        var intent = Intent(activityContext, OTP_Activity::class.java)
 //                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
@@ -302,7 +300,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
                     }
                 }
                 catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
@@ -396,7 +394,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
@@ -406,7 +404,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
 
                 }
                 catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
@@ -463,7 +461,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
                     }
                 }
                 catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()

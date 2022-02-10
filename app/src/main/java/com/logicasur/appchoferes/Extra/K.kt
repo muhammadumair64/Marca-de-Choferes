@@ -161,7 +161,7 @@ class K {
 
 //                            val coroutineJob = Job()
 //                            CoroutineScope(coroutineJob).launch(Dispatchers.IO) {
-                            ServerCheck.serverCheck {   checkStateAndUploadActivityDB() }
+                            ServerCheck.serverCheck(null) {   checkStateAndUploadActivityDB() }
 //                                checkStateAndUploadActivityDB()
                             //}
                             Log.d("PENDING_DATA_TESTING","before")
@@ -262,7 +262,7 @@ class K {
                      tinyDB.putBoolean("PENDINGCHECK", false)
                      tinyDB.putBoolean("SYNC_CHECK", true)
                  } else {
-                     ServerCheck.serverCheck {
+                     ServerCheck.serverCheck(null) {
                          checkStateAndUploadActivityDB()
                      }
                  }

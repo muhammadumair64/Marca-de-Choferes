@@ -11,7 +11,7 @@ import com.logicasur.appchoferes.R
 import androidx.activity.viewModels
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
-import com.logicasur.appchoferes.auth.otp.interfaces.onEndLoadingCallbacks
+import com.logicasur.appchoferes.auth.otp.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,13 +21,15 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.Extra.K
+import kotlinx.coroutines.launch
 import java.util.*
 
 
 @AndroidEntryPoint
-class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
+class LoadingScreen :BaseClass(),OnEndLoadingCallbacks{
     lateinit var proceed_btn  : AppCompatButton
     lateinit var cancel_btn: RelativeLayout
     var networkAlertDialog: AlertDialog? = null
@@ -42,7 +44,8 @@ class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
     val loadingViewModel: loadingViewModel by viewModels()
     companion object
     {
-         var onEndLoadingCallbacks : onEndLoadingCallbacks? = null
+         var OnEndLoadingCallbacks : OnEndLoadingCallbacks? = null
+
     }
 
     lateinit var tinyDB: TinyDB
@@ -50,7 +53,7 @@ class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
     lateinit var  imageBackground:ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        onEndLoadingCallbacks  = this
+        OnEndLoadingCallbacks  = this
         loadingViewModel.activityContext = this
         val language= Language()
         language.setLanguage(baseContext)
@@ -122,7 +125,10 @@ class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
     }
 
     override fun openServerPopup() {
-        createServerAlertPopup()
+        lifecycleScope.launch {
+            createServerAlertPopup()
+        }
+
     }
 
     fun setBarColor(){

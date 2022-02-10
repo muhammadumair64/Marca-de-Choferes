@@ -86,7 +86,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
             Logout.setOnClickListener {
                 viewModelScope.launch(Dispatchers.IO) {
-                    ServerCheck.serverCheck {
+                    ServerCheck.serverCheck(null) {
                         logoutUser()
                     }
                 }
@@ -173,7 +173,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
         println("encoded $encoded")
         dataBinding.profileImage.setImageBitmap(imageInBitmap)
         viewModelScope.launch(Dispatchers.IO) {
-            ServerCheck.serverCheck {
+            ServerCheck.serverCheck(null) {
                 updateAvatar(encoded)
             }
         }
@@ -218,7 +218,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: SocketException) {
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception", "Connect Not Available")
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
@@ -270,7 +270,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: SocketException) {
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception", "Connect Not Available")
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()

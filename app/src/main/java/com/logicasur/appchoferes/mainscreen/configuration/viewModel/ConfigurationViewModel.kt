@@ -24,11 +24,13 @@ import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.NoInternetException
 import com.logicasur.appchoferes.network.ResponseException
+import com.logicasur.appchoferes.network.logoutResponse.MassageResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.SocketException
+import java.util.*
 import javax.inject.Inject
 
 
@@ -49,7 +51,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
     lateinit var image0: ImageView
     lateinit var image1: ImageView
     lateinit var image2: ImageView
-      var TAG2=""
+    var TAG2 = ""
     fun viewsForConfigurationFragment(
         context: Context,
         binding: FragmentConfigurationBinding,
@@ -61,12 +63,11 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
         tinyDB = TinyDB(context)
         tagsForToast()
 
-       val notify=tinyDB.getBoolean("notify")
-        if(notify==true){
+        val notify = tinyDB.getBoolean("notify")
+        if (notify == true) {
             dataBinding!!.toggleOFF!!.visibility = View.GONE
             dataBinding!!.toggleON!!.visibility = View.VISIBLE
-        }
-        else{
+        } else {
             dataBinding!!.toggleOFF!!.visibility = View.VISIBLE
             dataBinding!!.toggleON!!.visibility = View.GONE
         }
@@ -94,7 +95,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
             tinyDB.putString("language", "0")
             viewModelScope.launch(Dispatchers.IO) {
-                ServerCheck.serverCheck{ selectedLanguageUplaod(0, alterDialog)  }
+                ServerCheck.serverCheck(null) { selectedLanguageUplaod(0, alterDialog) }
             }
 
 //            selectedLanguageUplaod(0, alterDialog)
@@ -105,11 +106,11 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
             tinyDB.putString("language", "1")
             viewModelScope.launch(Dispatchers.IO) {
-                ServerCheck.serverCheck{   selectedLanguageUplaod(1, alterDialog)}
+                ServerCheck.serverCheck(null) { selectedLanguageUplaod(1, alterDialog) }
             }
 
 //            selectedLanguageUplaod(1, alterDialog)
-            }
+        }
 
         language2.setOnClickListener {
             language2Selected()
@@ -117,7 +118,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
             tinyDB.putString("language", "2")
             viewModelScope.launch(Dispatchers.IO) {
-                ServerCheck.serverCheck{selectedLanguageUplaod(2, alterDialog)}
+                ServerCheck.serverCheck(null) { selectedLanguageUplaod(2, alterDialog) }
             }
 //            selectedLanguageUplaod(2, alterDialog)
         }
@@ -136,47 +137,57 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 //        })
 
         dataBinding!!.apply {
-           toggleOFF!!.setOnClickListener {
-               viewModelScope.launch {
-                   withContext(Dispatchers.IO){
-                       val check = K.isConnected()
-                       withContext(Dispatchers.Main){
-                           if(check){
-                               var intent = Intent(context, LoadingScreen::class.java)
-                               ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                               Log.d("ConfigurationViewModel","true")
-                               ServerCheck.serverCheck {selectedNotifyStateUplaod(true) }
+            toggleOFF!!.setOnClickListener {
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO) {
+                        val check = K.isConnected()
+                        withContext(Dispatchers.Main) {
+                            if (check) {
+                                var intent = Intent(context, LoadingScreen::class.java)
+                                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+                                Log.d("ConfigurationViewModel", "true")
+//                                ServerCheck.serverCheck(null) { selectedNotifyStateUplaod(true) }
+
+                                ServerCheck.serverCheckTesting(null) { serverAction ->
+
+                                    selectedNotifyStateUplaod(true, serverAction)
+                                }
 //                               selectedNotifyStateUplaod(true)
-                               toggleON!!.visibility = View.VISIBLE
-                               toggleOFF.visibility = View.GONE
-                           }else{
-                               Toast.makeText(context,TAG2, Toast.LENGTH_SHORT).show()
-                           }
-                       }
+                                toggleON!!.visibility = View.VISIBLE
+                                toggleOFF.visibility = View.GONE
+                            } else {
+                                Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
+                            }
+                        }
 
-                   }
+                    }
 
-               }
+                }
 
             }
 
 
             toggleON!!.setOnClickListener {
                 viewModelScope.launch {
-                    withContext(Dispatchers.IO){
+                    withContext(Dispatchers.IO) {
                         val check = K.isConnected()
-                        withContext(Dispatchers.Main){
-                            if(check){
+                        withContext(Dispatchers.Main) {
+                            if (check) {
                                 var intent = Intent(context, LoadingScreen::class.java)
                                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                                Log.d("ConfigurationViewModel","false")
-                                ServerCheck.serverCheck { selectedNotifyStateUplaod(false) }
+                                Log.d("ConfigurationViewModel", "false")
+                                ServerCheck.serverCheck(null) {
+                                    selectedNotifyStateUplaod(
+                                        false,
+                                        {}
+                                    )
+                                }
 //                                selectedNotifyStateUplaod(false)
                                 toggleOFF!!.visibility = View.VISIBLE
                                 toggleON.visibility = View.GONE
 
-                            }else{
-                                Toast.makeText(context,TAG2, Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
                             }
                         }
 
@@ -189,7 +200,6 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
         }
 
 
-
     }
 
 
@@ -197,7 +207,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
 
         var Token = tinyDB.getString("Cookie")
-      MyApplication.checkForLanguageChange=200
+        MyApplication.checkForLanguageChange = 200
         viewModelScope.launch {
 
 
@@ -221,9 +231,10 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                                 dataBinding!!.languageNameInitails.text = "ESP"
                                 (activityContext as MainActivity).restartActivity()
                             } else if (language == 1) {
-                                if(dataBinding!=null){
-                                    println("English Selected")                                }
-                                var eng ="ENG"
+                                if (dataBinding != null) {
+                                    println("English Selected")
+                                }
+                                var eng = "ENG"
                                 dataBinding!!.languageNameInitails.text = "$eng"
                                 (activityContext as MainActivity).restartActivity()
 
@@ -236,22 +247,19 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                 } catch (e: ResponseException) {
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     println("logout Failed $e")
-                }
-                catch (e: ApiException) {
+                } catch (e: ApiException) {
                     e.printStackTrace()
-                }
-                catch (e: NoInternetException) {
+                } catch (e: NoInternetException) {
 
                     println("position 2")
                     e.printStackTrace()
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
-                }
-                catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
-                    Log.d("connection Exception","Connect Not Available")
-                    withContext(Dispatchers.Main){
+                } catch (e: SocketException) {
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                    Log.d("connection Exception", "Connect Not Available")
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -261,18 +269,50 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
     }
 
-    fun selectedNotifyStateUplaod(notify: Boolean) {
+    fun selectedNotifyStateUplaod(notify: Boolean, serverAction: () -> Unit) {
         var Token = tinyDB.getString("Cookie")
+
+        var notifyResponse: MassageResponse? = null
+//        var check = 0
+//        val myTimer = Timer()
+//        myTimer!!.schedule(object : TimerTask() {
+//            override fun run() {
+//                if (check == 1 || check == 2) {
+//                    viewModelScope.launch(Dispatchers.IO) {
+//                        ServerCheck.serverCheck(LoadingScreen.OnEndLoadingCallbacks) {}
+//                    }
+//                    check++
+//                } else if (check > 2) {
+//                    Log.d("NETCHECKTEST", "----working")
+//                    myTimer.purge()
+//                    myTimer.cancel()
+////                    if (notifyResponse == null ) {
+////
+////                    }
+//                } else {
+//                    check++
+//                }
+//
+//            }
+//        }, 0, 20000)
+
+
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
                 try {
 
-                    val response = mainRepository.updateNotification(notify, Token!!)
+                    notifyResponse = mainRepository.updateNotification(notify, Token!!)
 
-                    println("SuccessResponse $response")
 
-                    if (response != null) {
+                    println("SuccessResponse $notifyResponse")
+
+                    if (notifyResponse != null) {
+                        serverAction()
+//                        myTimer.cancel()
+//                        myTimer.purge()
+
+
                         withContext(Dispatchers.Main) {
 
                             (MyApplication.loadingContext as LoadingScreen).finish()
@@ -297,18 +337,15 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                 } catch (e: ResponseException) {
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     println("logout Failed $e")
-                }
-                catch (e: ApiException) {
+                } catch (e: ApiException) {
                     e.printStackTrace()
-                }
-                catch (e: NoInternetException) {
+                } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-                }
-                catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks!!.endLoading()
-                    Log.d("connection Exception","Connect Not Available")
-                    withContext(Dispatchers.Main){
+                } catch (e: SocketException) {
+                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                    Log.d("connection Exception", "Connect Not Available")
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -364,25 +401,23 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
         }
 
     }
-    fun tagsForToast(){
-        var language= tinyDB.getString("language")
-        if (language=="0"){
+
+    fun tagsForToast() {
+        var language = tinyDB.getString("language")
+        if (language == "0") {
 
             TAG2 = "Comprueba tu conexión a Internet"
 
-        }else if(language=="1"){
+        } else if (language == "1") {
 
 
-            TAG2 ="Check Your Internet Connection"
-        }
-        else{
+            TAG2 = "Check Your Internet Connection"
+        } else {
 
-            TAG2="Verifique a sua conexão com a internet"
+            TAG2 = "Verifique a sua conexão com a internet"
         }
 
     }
-
-
 
 
 }

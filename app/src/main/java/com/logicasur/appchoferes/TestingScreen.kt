@@ -30,7 +30,7 @@ class TestingScreen : AppCompatActivity() {
         send = findViewById(R.id.send)
         send.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
-                ServerCheck.serverCheck {
+                ServerCheck.serverCheck(null) {
                     forToast()
                 }
 

@@ -100,7 +100,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     if (editPassword.text.length >= 4) {
                         var passsword = editPassword.text
                         viewModelScope.launch(Dispatchers.IO) {
-                            ServerCheck.serverCheck {CreateNewPassword(passsword.toString())}
+                            ServerCheck.serverCheck (null){CreateNewPassword(passsword.toString())}
                         }
 //                        CreateNewPassword(passsword.toString())
                         var intent = Intent(context, LoadingScreen::class.java)
@@ -167,7 +167,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     }
                 }
                 catch(e: SocketException){
-                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
