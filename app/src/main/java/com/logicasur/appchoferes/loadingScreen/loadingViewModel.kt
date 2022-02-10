@@ -33,6 +33,7 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,va
      lateinit var activityContext : Context
     val sdf = SimpleDateFormat("yyyy-MM-dd")
     val currentDate = sdf.format(Date())
+
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
         networkAlertDialog.show()
@@ -46,6 +47,23 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,va
         window.setAttributes(wlp)
 
     }
+
+
+    fun openServerPopup(serverAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
+        serverAlertDialog.setView(PopupView)
+        serverAlertDialog.show()
+        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+        val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+        serverAlertDialog.getWindow()?.setLayout(width, height);
+        serverAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val window: Window? = serverAlertDialog.getWindow()
+        val wlp: WindowManager.LayoutParams = window!!.getAttributes()
+        wlp.gravity = Gravity.BOTTOM
+        window.setAttributes(wlp)
+
+    }
+
+
   fun getPreviousTimeWhenOffline() {
 
         var breakTime=tinyDB.getInt("breaksendtime")

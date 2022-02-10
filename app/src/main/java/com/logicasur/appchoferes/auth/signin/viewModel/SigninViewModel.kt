@@ -137,7 +137,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "6"
+        var appVersion: String? = "7"
         var appBuild: String? =  Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -213,7 +213,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                         tinyDB.putBoolean("notify",notify)
                         checkStateByServer(response)
                         Token = tinyDB.getString("Cookie").toString()
-                        Log.d("LoadingImage","Before")
+                        Log.d("TOKENTESTING","$Token")
                         getPreviousTime(response)
                         getLoadingScreenImage()
 

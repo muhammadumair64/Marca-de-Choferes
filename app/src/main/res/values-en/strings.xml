@@ -45,4 +45,7 @@
     <string name="subtext">Do you want to proceed without Internet?</string>
     <string name="proceed">Proceed</string>
     <string name="cancel">Cancel</string>
+    <string name="go_back">Go Back</string>
+    <string name="go_back_top_text">Unable to connect with server</string>
+    <string name="go_back_sub_text">Try later</string>
 </resources>

@@ -33,6 +33,12 @@ class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
     var networkAlertDialog: AlertDialog? = null
     lateinit var networkDialogBuilder:AlertDialog.Builder
 
+    lateinit var go_back_btn  : AppCompatButton
+    var serverAlertDialog: AlertDialog? = null
+    lateinit var serverDialogBuilder:AlertDialog.Builder
+
+
+
     val loadingViewModel: loadingViewModel by viewModels()
     companion object
     {
@@ -66,6 +72,7 @@ class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
 
    fun initView(){
        setBarColor()
+//       createServerAlertPopup()
        MyApplication.loadingContext = this
 //       createPopup()
          imageBackground=findViewById(R.id.loadingBackground)
@@ -165,6 +172,24 @@ class LoadingScreen :BaseClass(),onEndLoadingCallbacks{
             myTimer.cancel()
             loadingViewModel.getPreviousTimeWhenOffline()
             networkAlertDialog!! .dismiss()
+        }
+
+
+
+    }
+
+
+    fun createServerAlertPopup() {
+        serverDialogBuilder = AlertDialog.Builder(this)
+        val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
+        serverAlertDialog= serverDialogBuilder.create()
+        go_back_btn=PopupView.findViewById(R.id.go_back)
+
+        loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
+
+        setGrad(K.primaryColor, K.secondrayColor, go_back_btn)
+         go_back_btn.setOnClickListener {
+            serverAlertDialog!!.dismiss()
         }
 
 
