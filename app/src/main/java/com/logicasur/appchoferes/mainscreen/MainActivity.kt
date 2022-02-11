@@ -514,11 +514,19 @@ class MainActivity : BaseClass(){
         geoPosition: GeoPosition?,
         vehicle: Vehicle?,
         authRepository: AuthRepository
+
     ) {
-        if(activity == 3){
-            var intent = Intent(this, LoadingScreen::class.java)
-            startActivity(intent)
+        Log.d("END_DAY_TESTING","StartLoading")
+        var intent = Intent(this, LoadingScreen::class.java)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main){
+                if(activity == 3){
+                    startActivity(intent)
+                }
+            }
+
         }
+
         if(activity==2){
             if (totalTime != null) {
                 tinyDB.putInt("lasttimebreak", totalTime)

@@ -36,6 +36,7 @@ class K {
         var arrayList: ArrayList<UpdateActivityDataClass> = ArrayList()
         var tinyDB: TinyDB = TinyDB(MyApplication.appContext)
         var myTimer: Timer? = null
+        var value = false
         var primaryColor = "#7A59FC"
 //            get() {
 //                return tinyDB.getString("primaryColor") ?: "#7A59FC"
@@ -149,14 +150,14 @@ class K {
 
         @Throws(InterruptedException::class, IOException::class)
         fun isConnected(): Boolean {
-            val command = "ping -i 1 -c 1 google.com"
-            var value = false
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                value= Runtime.getRuntime().exec(command).waitFor(2,TimeUnit.SECONDS)
-            }else{
-                 value = Runtime.getRuntime().exec(command).waitFor()==0
-            }
-            return value
+            val command = "ping -w 2 -c 1 google.com"
+//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                Log.d("CONNECTION_Testing","IN CONDITION")
+//                value = Runtime.getRuntime().exec(command).waitFor(2000L,TimeUnit.MILLISECONDS)
+//            }else{
+//                 value = Runtime.getRuntime().exec(command).waitFor()==0
+//            }
+            return Runtime.getRuntime().exec(command).waitFor()==0
 
         }
 
@@ -192,7 +193,6 @@ class K {
             tinyDB.putBoolean("PENDINGCHECK", true)
             myTimer = Timer()
             myTimer!!.schedule(object : TimerTask() {
-
                 override fun run() {
                     var netCheck = isConnected()
                     if (netCheck) {

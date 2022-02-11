@@ -331,8 +331,10 @@ class HomeFragment : Fragment(), OnclickItem {
         proceed_btn.setOnClickListener {
 
             var position= tinyDB.getInt("state")
-            position = position.minus(1)
-            viewModel.selectState(position)
+            if(position!=0){
+                position = position.minus(1)
+                viewModel.selectState(position)
+            }
           var stateCheck=  tinyDB.getBoolean("STATEAPI")
             if(stateCheck){
                 (activity as MainActivity).updatePendingData(true)
