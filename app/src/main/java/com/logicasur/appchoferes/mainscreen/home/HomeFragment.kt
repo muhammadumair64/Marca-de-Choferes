@@ -268,8 +268,14 @@ class HomeFragment : Fragment(), OnclickItem {
     override fun statusSelection(position: Int) {
         dialog.dismiss()
         var Position = position.plus(1)
+        var previous=tinyDB.getInt("state")
+        if(previous!=0){
+            tinyDB.putInt("previous_state",previous)
+        }
+
+
         tinyDB.putInt("state", Position)
-        viewModel.selectState(position)
+//        viewModel.selectState(position)
         viewModel.hitStateAPI(position)
         (activity as MainActivity).getLocation(requireContext())
 
@@ -287,6 +293,11 @@ class HomeFragment : Fragment(), OnclickItem {
 
     override fun onResume() {
         super.onResume()
+        var position= tinyDB.getInt("state")
+        if(position!=0){
+            position = position.minus(1)
+            viewModel.selectState(position)
+        }
         (activity as MainActivity).binding.menu.setItemSelected(R.id.home, true)
     }
 
@@ -305,10 +316,23 @@ class HomeFragment : Fragment(), OnclickItem {
 
         (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, proceed_btn)
         cancel_btn.setOnClickListener {
+
             networkAlertDialog.dismiss()
+            var stateCheck=  tinyDB.getBoolean("STATEAPI")
+            if(stateCheck){
+                var position=tinyDB.getInt("previous_state")
+                if(position!=0){
+                    tinyDB.putInt("state",position)
+                }
+
+            }
 
         }
         proceed_btn.setOnClickListener {
+
+            var position= tinyDB.getInt("state")
+            position = position.minus(1)
+            viewModel.selectState(position)
           var stateCheck=  tinyDB.getBoolean("STATEAPI")
             if(stateCheck){
                 (activity as MainActivity).updatePendingData(true)
@@ -340,6 +364,7 @@ if(networkAlertDialog != null){
                 }
             }
         }
+
 
 
 }

@@ -1050,6 +1050,9 @@ class HomeViewModel @Inject constructor(
 
 
                     if (response != null) {
+                        var position= tinyDB.getInt("state")
+                        position = position.minus(1)
+                        selectState(position)
                             action()
                         (MyApplication.loadingContext as LoadingScreen).finish()
                     }
@@ -1058,6 +1061,7 @@ class HomeViewModel @Inject constructor(
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     println("ErrorResponse")
                 } catch (e: ApiException) {
+                    (MyApplication.loadingContext as LoadingScreen).finish()
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
                     println("position 2")

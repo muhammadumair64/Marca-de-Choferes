@@ -165,6 +165,8 @@ class ServerCheck {
                                 geoPosition.longitud
                             )
                         )
+
+
                     } else {
                         mainRepository.insertUnsentStateUpdate(
                             UnsentStateUpdate(
@@ -180,6 +182,9 @@ class ServerCheck {
                                 geoPosition.longitud
                             )
                         )
+                        CoroutineScope(Job()).launch {
+                            LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                        }
                     }
                     K.checkNet()
 
@@ -370,7 +375,7 @@ class ServerCheck {
                             override fun run() {
                                 if (checkOnApiCall == 1 || checkOnApiCall == 2) {
                                     CoroutineScope(Job()).launch {
-                                        serverCheck(LoadingScreen.OnEndLoadingCallbacks) {}
+                                        serverCheckDuringStatus(LoadingScreen.OnEndLoadingCallbacks) {}
                                     }
 
                                     checkOnApiCall++
@@ -397,6 +402,83 @@ class ServerCheck {
 
 
                         }
+                    }
+
+
+                } catch (e: SocketTimeoutException) {
+                    withContext(Dispatchers.Main)
+                    {
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+//                    serverCheck { action() }
+                } catch (e: SocketException) {
+                    withContext(Dispatchers.Main)
+                    {
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+//                    serverCheck { action() }
+                } catch (e: NoInternetException) {
+                    Log.d(TAG, " Exception..${e.localizedMessage}")
+//                    serverCheck { action() }
+                } catch (e: Exception) {
+
+                    Log.d(TAG, " Exception..${e.localizedMessage}")
+//                    serverCheck { action() }
+                }
+
+
+            }
+
+
+        }
+        suspend fun serverCheckDuringStatus(onEndLoadingCallbacks: OnEndLoadingCallbacks?, action: () -> Unit) {
+
+            var checkServerResponse: MassageResponse? = null
+
+            var check = 0
+            val myTimer = Timer()
+            myTimer!!.schedule(object : TimerTask() {
+                override fun run() {
+                    if (check == 1) {
+                        Log.d("NETCHECKTEST", "In popUp condition[p")
+                        Log.d("NETCHECKTEST", "----working in required")
+                        Log.d("NETCHECKTEST", LoadingScreen.OnEndLoadingCallbacks.toString())
+                        CoroutineScope(Job()).launch(Dispatchers.Main) {
+                            LoadingScreen.OnEndLoadingCallbacks!!.openPopup(null)
+                        }
+
+//                        if (onEndLoadingCallbacks != null) {
+//
+//
+//                        }
+                        myTimer.purge()
+                        myTimer.cancel()
+                    } else {
+                        check++
+                    }
+
+                }
+            }, 0, 12000)
+
+            tagsForToast()
+            Log.d(TAG, "Server Check function")
+
+            CoroutineScope(Job()).launch(Dispatchers.IO) {
+                try {
+                    val Token = tinyDB.getString("Cookie")
+
+                    checkServerResponse =
+                        authRepository.checkServer(Token!!)
+
+                    Log.d(TAG, "$checkServerResponse")
+                    if (checkServerResponse == MassageResponse("ok")) {
+                        myTimer.cancel()
+                        myTimer.purge()
+                        Log.d(TAG, "Server is working fine")
+
+                        action()
                     }
 
 

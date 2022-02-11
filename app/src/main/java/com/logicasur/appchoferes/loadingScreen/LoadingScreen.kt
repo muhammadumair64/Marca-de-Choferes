@@ -186,6 +186,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
             }
             else{
                 (activity as MainActivity).updatePendingData(true)
+                finish()
             }
 
             networkAlertDialog!! .dismiss()
