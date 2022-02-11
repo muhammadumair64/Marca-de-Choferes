@@ -24,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.auth.otp.interfaces.OnEndLoadingCallbacks
+import com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService.Companion.activity
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -120,7 +121,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
         finish()
     }
 
-    override fun openPopup(myTimer: Timer) {
+    override fun openPopup(myTimer: Timer?) {
          createPopup(myTimer)
     }
 
@@ -159,7 +160,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
 
-    fun createPopup(myTimer: Timer) {
+    fun createPopup(myTimer: Timer?) {
         if(networkAlertDialog != null){
             if(networkAlertDialog!!.isShowing){
                 networkAlertDialog!!.dismiss()
@@ -179,8 +180,14 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
         }
         proceed_btn.setOnClickListener {
-            myTimer.cancel()
-            loadingViewModel.getPreviousTimeWhenOffline()
+            if(myTimer!=null){
+                myTimer.cancel()
+                loadingViewModel.getPreviousTimeWhenOffline()
+            }
+            else{
+                (activity as MainActivity).updatePendingData(true)
+            }
+
             networkAlertDialog!! .dismiss()
         }
 
