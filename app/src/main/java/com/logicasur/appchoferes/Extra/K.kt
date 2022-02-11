@@ -1,7 +1,10 @@
 package com.logicasur.appchoferes.Extra
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.mainscreen.MainActivity
@@ -15,12 +18,16 @@ import com.logicasur.appchoferes.network.signinResponse.State
 import com.logicasur.appchoferes.network.signinResponse.Vehicle
 import kotlinx.coroutines.*
 import java.io.IOException
+import java.net.HttpURLConnection
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
+
 
 class K {
     companion object {
@@ -139,12 +146,45 @@ class K {
         }
 
 
+
         @Throws(InterruptedException::class, IOException::class)
         fun isConnected(): Boolean {
-            val command = "ping -c 1 google.com"
-            return Runtime.getRuntime().exec(command).waitFor() == 0
+            val command = "ping -i 1 -c 1 google.com"
+            var value = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                value= Runtime.getRuntime().exec(command).waitFor(2,TimeUnit.SECONDS)
+            }else{
+                 value = Runtime.getRuntime().exec(command).waitFor()==0
+            }
+            return value
+
         }
 
+
+//        fun isConnected2(context: Context): Boolean {
+//            val cm = context
+//                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//            val activeNetwork = cm.activeNetworkInfo
+//            return if (activeNetwork != null && activeNetwork.isConnected) {
+//                try {
+//                    val url = URL("https://www.google.com/")
+//                    val urlc: HttpURLConnection = url.openConnection() as HttpURLConnection
+//                    urlc.setRequestProperty("User-Agent", "test")
+//                    urlc.setRequestProperty("Connection", "close")
+//                    urlc.setConnectTimeout(2000) // mTimeout is in seconds
+//                    urlc.connect()
+//                    if (urlc.getResponseCode() == 200) {
+//                        Log.d("Testing_net","Here")
+//                        true
+//                    } else {
+//                        false
+//                    }
+//                } catch (e: IOException) {
+//                    Log.i("warning", "Error checking internet connection", e)
+//                    false
+//                }
+//            } else false
+//        }
 
         fun checkNet() {
 
@@ -152,6 +192,7 @@ class K {
             tinyDB.putBoolean("PENDINGCHECK", true)
             myTimer = Timer()
             myTimer!!.schedule(object : TimerTask() {
+
                 override fun run() {
                     var netCheck = isConnected()
                     if (netCheck) {
