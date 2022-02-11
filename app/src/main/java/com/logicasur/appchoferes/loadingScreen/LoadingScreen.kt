@@ -11,7 +11,6 @@ import com.logicasur.appchoferes.R
 import androidx.activity.viewModels
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
-import com.logicasur.appchoferes.auth.otp.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,12 +23,13 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.auth.otp.interfaces.OnEndLoadingCallbacks
 import kotlinx.coroutines.launch
 import java.util.*
 
 
 @AndroidEntryPoint
-class LoadingScreen :BaseClass(),OnEndLoadingCallbacks{
+class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     lateinit var proceed_btn  : AppCompatButton
     lateinit var cancel_btn: RelativeLayout
     var networkAlertDialog: AlertDialog? = null
@@ -200,6 +200,7 @@ class LoadingScreen :BaseClass(),OnEndLoadingCallbacks{
         setGrad(K.primaryColor, K.secondrayColor, go_back_btn)
          go_back_btn.setOnClickListener {
             serverAlertDialog!!.dismiss()
+             finish()
         }
 
 

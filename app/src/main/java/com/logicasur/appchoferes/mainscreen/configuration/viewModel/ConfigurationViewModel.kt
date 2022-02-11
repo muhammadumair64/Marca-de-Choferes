@@ -93,9 +93,16 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-            tinyDB.putString("language", "0")
+//            tinyDB.putString("language", "0")
             viewModelScope.launch(Dispatchers.IO) {
-                ServerCheck.serverCheck(null) { selectedLanguageUplaod(0, alterDialog) }
+//                ServerCheck.serverCheck(null) { selectedLanguageUplaod(0, alterDialog) }
+
+                ServerCheck.serverCheckTesting(null){serverAction ->
+                    selectedLanguageUplaod(0, alterDialog){
+                        serverAction()
+                    }
+
+                }
             }
 
 //            selectedLanguageUplaod(0, alterDialog)
@@ -104,9 +111,16 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             language1Selected()
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-            tinyDB.putString("language", "1")
+//            tinyDB.putString("language", "1")
             viewModelScope.launch(Dispatchers.IO) {
-                ServerCheck.serverCheck(null) { selectedLanguageUplaod(1, alterDialog) }
+//                ServerCheck.serverCheck(null) { selectedLanguageUplaod(1, alterDialog) }
+                ServerCheck.serverCheckTesting(null){serverAction ->
+                    selectedLanguageUplaod(1, alterDialog){
+                        serverAction()
+                    }
+
+                }
+
             }
 
 //            selectedLanguageUplaod(1, alterDialog)
@@ -116,9 +130,17 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             language2Selected()
             var intent = Intent(context, LoadingScreen::class.java)
             ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-            tinyDB.putString("language", "2")
+//            tinyDB.putString("language", "2")
             viewModelScope.launch(Dispatchers.IO) {
-                ServerCheck.serverCheck(null) { selectedLanguageUplaod(2, alterDialog) }
+//                ServerCheck.serverCheck(null) { selectedLanguageUplaod(2, alterDialog) }
+
+                ServerCheck.serverCheckTesting(null){serverAction ->
+                    selectedLanguageUplaod(2, alterDialog){
+                        serverAction()
+                    }
+
+                }
+
             }
 //            selectedLanguageUplaod(2, alterDialog)
         }
@@ -153,8 +175,8 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                                     selectedNotifyStateUplaod(true, serverAction)
                                 }
 //                               selectedNotifyStateUplaod(true)
-                                toggleON!!.visibility = View.VISIBLE
-                                toggleOFF.visibility = View.GONE
+//                                toggleON!!.visibility = View.VISIBLE
+//                                toggleOFF.visibility = View.GONE
                             } else {
                                 Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
                             }
@@ -188,8 +210,8 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                                     selectedNotifyStateUplaod(false, serverAction)
                                 }
 //                                selectedNotifyStateUplaod(false)
-                                toggleOFF!!.visibility = View.VISIBLE
-                                toggleON.visibility = View.GONE
+//                                toggleOFF!!.visibility = View.VISIBLE
+//                                toggleON.visibility = View.GONE
 
                             } else {
                                 Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
@@ -208,7 +230,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
     }
 
 
-    fun selectedLanguageUplaod(language: Int, alterDialog: AlertDialog) {
+    fun selectedLanguageUplaod(language: Int, alterDialog: AlertDialog,action:()->Unit) {
 
 
         var Token = tinyDB.getString("Cookie")
@@ -224,7 +246,21 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     println("SuccessResponse $response")
 
                     if (response != null) {
+                        action()
                         tinyDB.putBoolean("reload", true)
+                        when(language){
+                            0->{
+                                tinyDB.putString("language", "0")
+                            }
+                            1->{
+                                tinyDB.putString("language", "1")
+                            }
+                            2->{
+                                tinyDB.putString("language", "2")
+                            }
+
+
+                        }
                         withContext(Dispatchers.Main) {
                             (MyApplication.loadingContext as LoadingScreen).finish()
                         }
@@ -314,9 +350,20 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
                     if (notifyResponse != null) {
                         serverAction()
+
+                        if(notify){
+                            dataBinding!!.toggleON!!.visibility = View.VISIBLE
+                           dataBinding!!.toggleOFF.visibility = View.GONE
+                        }else{
+                            dataBinding!!.toggleOFF!!.visibility = View.VISIBLE
+                            dataBinding!!.toggleON.visibility = View.GONE
+                        }
 //                        myTimer.cancel()
 //                        myTimer.purge()
 
+
+
+                        
 
                         withContext(Dispatchers.Main) {
 
