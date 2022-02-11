@@ -318,7 +318,116 @@ class ServerCheck {
 
 
         }
+        suspend fun serverCheckMainActivityApi(
+            onEndLoadingCallbacks: OnEndLoadingCallbacks?,
+            apiCall: (serverAction: () -> Unit) -> Unit
+        ) {
+            Log.d(TAG, "Server Check Testing function starts")
+            var checkServerResponse: MassageResponse? = null
 
+            var check = 0
+            val serverCheckTimer = Timer()
+            serverCheckTimer.schedule(object : TimerTask() {
+                override fun run() {
+                    if (check == 1) {
+                        Log.d("NETCHECKTEST", "----working")
+
+                        CoroutineScope(Job()).launch(Dispatchers.Main) {
+                            LoadingScreen.OnEndLoadingCallbacks!!.openPopup(null)
+                        }
+
+//                        if (checkServerResponse == null && onEndLoadingCallbacks != null) {
+//                            onEndLoadingCallbacks.openServerPopup()
+//                        }
+                        serverCheckTimer.purge()
+                        serverCheckTimer.cancel()
+                    } else {
+                        check++
+                    }
+
+                }
+            }, 0, 10000)
+
+            tagsForToast()
+            Log.d(TAG, "Server Check function")
+
+            CoroutineScope(Job()).launch(Dispatchers.IO) {
+                try {
+                    val Token = tinyDB.getString("Cookie")
+
+                    checkServerResponse =
+                        authRepository.checkServer(Token!!)
+
+                    Log.d(TAG, "$checkServerResponse")
+                    if (checkServerResponse == MassageResponse("ok")) {
+                        serverCheckTimer.cancel()
+                        serverCheckTimer.purge()
+                        Log.d(TAG, "ServerTesting is working fine")
+
+                        var checkOnApiCall = 0
+                        val myTimer = Timer()
+                        myTimer.schedule(object : TimerTask() {
+                            override fun run() {
+                                if (checkOnApiCall == 1 || checkOnApiCall == 2) {
+                                    CoroutineScope(Job()).launch {
+                                        serverCheck(LoadingScreen.OnEndLoadingCallbacks) {}
+                                    }
+
+                                    checkOnApiCall++
+                                } else if (checkOnApiCall > 2) {
+                                    Log.d("NETCHECKTEST", "----workingTesting")
+                                    myTimer.purge()
+                                    myTimer.cancel()
+//                    if (notifyResponse == null ) {
+//
+//                    }
+                                } else {
+                                    checkOnApiCall++
+                                }
+
+                            }
+                        }, 0, 20000)
+
+                        apiCall() {
+                            // Server is not well
+
+                            Log.d(TAG,"Response is received Cancel the timer.")
+                            myTimer.cancel()
+                            myTimer.purge()
+
+
+                        }
+                    }
+
+
+                } catch (e: SocketTimeoutException) {
+                    withContext(Dispatchers.Main)
+                    {
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+//                    serverCheck { action() }
+                } catch (e: SocketException) {
+                    withContext(Dispatchers.Main)
+                    {
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+//                    serverCheck { action() }
+                } catch (e: NoInternetException) {
+                    Log.d(TAG, " Exception..${e.localizedMessage}")
+//                    serverCheck { action() }
+                } catch (e: Exception) {
+
+                    Log.d(TAG, " Exception..${e.localizedMessage}")
+//                    serverCheck { action() }
+                }
+
+
+            }
+
+
+        }
 
     }
 

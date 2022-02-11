@@ -585,6 +585,7 @@ class MainActivity : BaseClass(){
                     }
                 }
                 catch (e: SocketTimeoutException){
+                    updatePendingData(false)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             context,
@@ -595,6 +596,7 @@ class MainActivity : BaseClass(){
                     }
                 }
                 catch(e: SocketException){
+                    updatePendingData(false)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             context,

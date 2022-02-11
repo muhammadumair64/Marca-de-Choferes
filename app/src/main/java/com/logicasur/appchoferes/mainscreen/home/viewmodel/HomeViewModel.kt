@@ -1025,7 +1025,7 @@ class HomeViewModel @Inject constructor(
         totalTime: Int?,
         state: State?,
         geoPosition: GeoPosition?,
-        vehicle: Vehicle?
+        vehicle: Vehicle?,action:()->Unit
     ) {
 
         var Token = tinyDB.getString("Cookie")
@@ -1050,6 +1050,7 @@ class HomeViewModel @Inject constructor(
 
 
                     if (response != null) {
+                            action()
                         (MyApplication.loadingContext as LoadingScreen).finish()
                     }
 
@@ -1132,19 +1133,44 @@ class HomeViewModel @Inject constructor(
                         geoPosition,
                         vehicle, status
                     ) {
-                        updateState(
-                            "$currentDate",
+                        stateUploadByAction("$currentDate",
                             MyApplication.TimeToSend,
                             status,
                             geoPosition,
-                            vehicle
-                        )
+                            vehicle)
                     }
                 }
 //                updateState("$currentDate", MyApplication.TimeToSend, status, geoPosition, vehicle)
             }
         }
     }
+
+    fun stateUploadByAction(
+        currentDate: String,
+        timeToSend: Int,
+        status: State,
+        geoPosition: GeoPosition?,
+        vehicle: Vehicle
+    )
+    {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            ServerCheck.serverCheckMainActivityApi(null){serverAction->
+
+                updateState(
+                    "$currentDate",
+                    timeToSend,
+                    status,
+                    geoPosition,
+                    vehicle
+                )
+                {serverAction()}
+            }
+        }
+
+
+    }
+
 
 
 //    fun updateActivity(
