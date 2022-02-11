@@ -35,8 +35,10 @@ import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.profile.viewmodel.ProfileViewModel
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
+import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import dagger.hilt.android.AndroidEntryPoint
@@ -116,9 +118,9 @@ class ProfileFragment : Fragment() {
         binding.editProfile.setOnClickListener {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    val check = K.isConnected()
+//                    val check = K.isConnected()
                     withContext(Dispatchers.Main) {
-                        if (check) {
+                        if (CheckConnection.netCheck(context)) {
                             initPermission()
                         } else {
                             Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
@@ -205,9 +207,9 @@ class ProfileFragment : Fragment() {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    val check = K.isConnected()
+//                    val check = K.isConnected()
                     withContext(Dispatchers.Main) {
-                        if (check) {
+                        if (CheckConnection.netCheck(context)) {
 
                             option = 1
                             alertDialog.setView(contactPopupView)
@@ -238,9 +240,9 @@ class ProfileFragment : Fragment() {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    val check = K.isConnected()
+//                    val check = K.isConnected()
                     withContext(Dispatchers.Main) {
-                        if (check) {
+                        if (CheckConnection.netCheck(context)) {
 
                             option = 2
                             alertDialog.setView(contactPopupView)
@@ -277,21 +279,34 @@ class ProfileFragment : Fragment() {
         }
 
         confirmbtn.setOnClickListener {
+            var intent = Intent(context, LoadingScreen::class.java)
+            startActivity(intent)
             var nameChanges = changedName.text
             if ((nameChanges.length >= 3)) {
                 var fatherName = binding.FatherName.text
                 var Name = binding.TitleName.text
                 Log.d("input Parameters", "$nameChanges  $fatherName  $Name")
                 if (option == 1) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        ServerCheck.serverCheck(null) {
-                            profileViewModel.updateProfile(
-                                nameChanges.toString(),
-                                fatherName.toString(),
-                                alertDialog
-                            )
+//                    lifecycleScope.launch(Dispatchers.IO) {
+//                        ServerCheck.serverCheck(null) {
+//                            profileViewModel.updateProfile(
+//                                nameChanges.toString(),
+//                                fatherName.toString(),
+//                                alertDialog
+//                            )
+//                        }
+
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            ServerCheck.serverCheckTesting(null) { serverAction ->
+                                profileViewModel.updateProfile(
+                                    nameChanges.toString(),
+                                    fatherName.toString(),
+                                    alertDialog
+                                ) { serverAction() }
+                            }
+
                         }
-                    }
+
 //                    profileViewModel.updateProfile(
 //                        nameChanges.toString(),
 //                        fatherName.toString(),
@@ -299,13 +314,20 @@ class ProfileFragment : Fragment() {
 //                    )
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
-                        ServerCheck.serverCheck(null) {
+                        ServerCheck.serverCheckTesting(null){serverAction->
                             profileViewModel.updateProfile(
                                 Name.toString(),
                                 nameChanges.toString(),
                                 alertDialog
-                            )
+                            ){serverAction()}
                         }
+//                        ServerCheck.serverCheck(null) {
+//                            profileViewModel.updateProfile(
+//                                Name.toString(),
+//                                nameChanges.toString(),
+//                                alertDialog
+//                            )
+//                        }
 
                     }
 //                    profileViewModel.updateProfile(

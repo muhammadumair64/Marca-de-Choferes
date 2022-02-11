@@ -221,6 +221,7 @@ class ServerCheck {
                 override fun run() {
                     if (check == 1) {
                         Log.d("NETCHECKTEST", "----working")
+
                         CoroutineScope(Job()).launch(Dispatchers.Main) {
                             LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         }
@@ -251,7 +252,7 @@ class ServerCheck {
                     if (checkServerResponse == MassageResponse("ok")) {
                         serverCheckTimer.cancel()
                         serverCheckTimer.purge()
-                        Log.d(TAG, "Server is working fine")
+                        Log.d(TAG, "ServerTesting is working fine")
 
                         var checkOnApiCall = 0
                         val myTimer = Timer()
@@ -264,7 +265,7 @@ class ServerCheck {
 
                                     checkOnApiCall++
                                 } else if (checkOnApiCall > 2) {
-                                    Log.d("NETCHECKTEST", "----working")
+                                    Log.d("NETCHECKTEST", "----workingTesting")
                                     myTimer.purge()
                                     myTimer.cancel()
 //                    if (notifyResponse == null ) {

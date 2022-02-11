@@ -27,6 +27,7 @@ import android.graphics.Bitmap
 import android.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.myApplication.MyApplication
@@ -67,9 +68,9 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-                        val check = K.isConnected()
+//                        val check = K.isConnected()
                         withContext(Dispatchers.Main) {
-                            if (check) {
+                            if (CheckConnection.netCheck(activityContext!!)) {
                                 var intent = Intent(context, CreateNewPasswordScreen::class.java)
                                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
                             } else {
@@ -86,8 +87,12 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
             Logout.setOnClickListener {
                 viewModelScope.launch(Dispatchers.IO) {
-                    ServerCheck.serverCheck(null) {
-                        logoutUser()
+//                    ServerCheck.serverCheck(null) {
+//                        logoutUser()
+//                    }
+
+                    ServerCheck.serverCheckTesting(null){ serverAction ->
+                        logoutUser(){serverAction()}
                     }
                 }
 
@@ -100,7 +105,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
     }
 
-    fun logoutUser() {
+    fun logoutUser(action: () -> Unit) {
 
         viewModelScope.launch {
 
@@ -114,6 +119,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     println("SuccessResponse $response")
 
                     if (response != null) {
+                            action()
                         (activityContext as MainActivity).stopTimer()
                         (activityContext as MainActivity).stopTimerBreak()
 
@@ -171,10 +177,13 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
         val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
         val encoded = Base64.encodeToString(byteArray, Base64.DEFAULT)
         println("encoded $encoded")
-        dataBinding.profileImage.setImageBitmap(imageInBitmap)
         viewModelScope.launch(Dispatchers.IO) {
-            ServerCheck.serverCheck(null) {
-                updateAvatar(encoded)
+//            ServerCheck.serverCheck(null) {
+//                updateAvatar(encoded,imageInBitmap)
+//            }
+            ServerCheck.serverCheckTesting(null){serverAction ->
+                updateAvatar(encoded,imageInBitmap){serverAction()}
+
             }
         }
 
@@ -183,7 +192,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
     }
 
-    fun updateAvatar(avatar: String) {
+    fun updateAvatar(avatar: String, imageInBitmap: Bitmap,action:()->Unit) {
         var Token = tinyDB.getString("Cookie")
         viewModelScope.launch {
 
@@ -199,6 +208,8 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
 
                     if (response != null) {
+                        action()
+                        dataBinding.profileImage.setImageBitmap(imageInBitmap)
                         tinyDB.putString("Avatar", avatar)
                         (MyApplication.loadingContext as LoadingScreen).finish()
                     }
@@ -230,11 +241,11 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
     }
 
-    fun updateProfile(name: String, surname: String, alertDialog: AlertDialog) {
+    fun updateProfile(name: String, surname: String, alertDialog: AlertDialog,action:()->Unit) {
         var Token = tinyDB.getString("Cookie")
 
-        var intent = Intent(activityContext, LoadingScreen::class.java)
-        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+//        var intent = Intent(activityContext, LoadingScreen::class.java)
+//        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
@@ -249,6 +260,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
 
                     if (response != null) {
+                        action()
                         dataBinding.TitleName.text = name
                         dataBinding.FatherName.text = surname
 

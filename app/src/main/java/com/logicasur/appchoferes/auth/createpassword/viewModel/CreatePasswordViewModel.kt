@@ -100,7 +100,10 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     if (editPassword.text.length >= 4) {
                         var passsword = editPassword.text
                         viewModelScope.launch(Dispatchers.IO) {
-                            ServerCheck.serverCheck (null){CreateNewPassword(passsword.toString())}
+//                            ServerCheck.serverCheck (null){CreateNewPassword(passsword.toString())}
+                            ServerCheck.serverCheckTesting(null){serverAction ->
+                                CreateNewPassword(passsword.toString()){serverAction()}
+                            }
                         }
 //                        CreateNewPassword(passsword.toString())
                         var intent = Intent(context, LoadingScreen::class.java)
@@ -127,7 +130,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
     }
 
 
-    fun CreateNewPassword(password: String) {
+    fun CreateNewPassword(password: String,action:()->Unit) {
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
@@ -140,6 +143,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
 
 
                     if (response != null) {
+                        action()
                         Log.d("stack clear ","Stack IS Cleared")
                         withContext(Dispatchers.Main){
                             (activityContext as CreateNewPasswordScreen).moveToNext()
