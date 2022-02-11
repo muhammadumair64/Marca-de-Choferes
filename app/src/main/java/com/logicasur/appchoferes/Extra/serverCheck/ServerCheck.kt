@@ -41,12 +41,19 @@ class ServerCheck {
             myTimer!!.schedule(object : TimerTask() {
                 override fun run() {
                     if (check == 1) {
-                        Log.d("NETCHECKTEST", "----working")
+                        Log.d("NETCHECKTEST", "----working in required")
+                        Log.d("NETCHECKTEST", "In popUp condition[p")
+                        Log.d("NETCHECKTEST", LoadingScreen.OnEndLoadingCallbacks.toString())
+                        CoroutineScope(Job()).launch(Dispatchers.Main) {
+                            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        }
+
+//                        if (onEndLoadingCallbacks != null) {
+//
+//
+//                        }
                         myTimer.purge()
                         myTimer.cancel()
-                        if (checkServerResponse == null && onEndLoadingCallbacks != null) {
-                            onEndLoadingCallbacks.openServerPopup()
-                        }
                     } else {
                         check++
                     }

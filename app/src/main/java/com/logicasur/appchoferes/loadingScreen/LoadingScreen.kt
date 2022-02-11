@@ -125,9 +125,9 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
     override fun openServerPopup() {
-        lifecycleScope.launch {
+
             createServerAlertPopup()
-        }
+
 
     }
 

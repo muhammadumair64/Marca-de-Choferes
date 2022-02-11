@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
@@ -97,8 +98,8 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(0, alterDialog) }
 
-                ServerCheck.serverCheckTesting(null){serverAction ->
-                    selectedLanguageUplaod(0, alterDialog){
+                ServerCheck.serverCheckTesting(null) { serverAction ->
+                    selectedLanguageUplaod(0, alterDialog) {
                         serverAction()
                     }
 
@@ -114,8 +115,8 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 //            tinyDB.putString("language", "1")
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(1, alterDialog) }
-                ServerCheck.serverCheckTesting(null){serverAction ->
-                    selectedLanguageUplaod(1, alterDialog){
+                ServerCheck.serverCheckTesting(null) { serverAction ->
+                    selectedLanguageUplaod(1, alterDialog) {
                         serverAction()
                     }
 
@@ -134,8 +135,8 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(2, alterDialog) }
 
-                ServerCheck.serverCheckTesting(null){serverAction ->
-                    selectedLanguageUplaod(2, alterDialog){
+                ServerCheck.serverCheckTesting(null) { serverAction ->
+                    selectedLanguageUplaod(2, alterDialog) {
                         serverAction()
                     }
 
@@ -162,9 +163,9 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             toggleOFF!!.setOnClickListener {
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-                        val check = K.isConnected()
+//                        val check = K.isConnected()
                         withContext(Dispatchers.Main) {
-                            if (check) {
+                            if (CheckConnection.netCheck(activityContext!!)) {
                                 var intent = Intent(context, LoadingScreen::class.java)
                                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
                                 Log.d("ConfigurationViewModel", "true")
@@ -192,9 +193,9 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             toggleON!!.setOnClickListener {
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-                        val check = K.isConnected()
+//                        val check = K.isConnected()
                         withContext(Dispatchers.Main) {
-                            if (check) {
+                            if (CheckConnection.netCheck(activityContext!!)) {
                                 var intent = Intent(context, LoadingScreen::class.java)
                                 ContextCompat.startActivity(context, intent, Bundle.EMPTY)
                                 Log.d("ConfigurationViewModel", "false")
@@ -230,7 +231,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
     }
 
 
-    fun selectedLanguageUplaod(language: Int, alterDialog: AlertDialog,action:()->Unit) {
+    fun selectedLanguageUplaod(language: Int, alterDialog: AlertDialog, action: () -> Unit) {
 
 
         var Token = tinyDB.getString("Cookie")
@@ -248,14 +249,14 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     if (response != null) {
                         action()
                         tinyDB.putBoolean("reload", true)
-                        when(language){
-                            0->{
+                        when (language) {
+                            0 -> {
                                 tinyDB.putString("language", "0")
                             }
-                            1->{
+                            1 -> {
                                 tinyDB.putString("language", "1")
                             }
-                            2->{
+                            2 -> {
                                 tinyDB.putString("language", "2")
                             }
 
@@ -350,20 +351,19 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
                     if (notifyResponse != null) {
                         serverAction()
-
-                        if(notify){
-                            dataBinding!!.toggleON!!.visibility = View.VISIBLE
-                           dataBinding!!.toggleOFF.visibility = View.GONE
-                        }else{
-                            dataBinding!!.toggleOFF!!.visibility = View.VISIBLE
-                            dataBinding!!.toggleON.visibility = View.GONE
+                        withContext(Dispatchers.Main) {
+                            if (notify) {
+                                dataBinding!!.toggleON!!.visibility = View.VISIBLE
+                                dataBinding!!.toggleOFF.visibility = View.GONE
+                            } else {
+                                dataBinding!!.toggleOFF!!.visibility = View.VISIBLE
+                                dataBinding!!.toggleON.visibility = View.GONE
+                            }
                         }
+
 //                        myTimer.cancel()
 //                        myTimer.purge()
 
-
-
-                        
 
                         withContext(Dispatchers.Main) {
 
