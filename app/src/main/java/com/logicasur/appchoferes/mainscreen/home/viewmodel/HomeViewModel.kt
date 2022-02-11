@@ -878,7 +878,10 @@ class HomeViewModel @Inject constructor(
 
                         println("Current Location $longitude and $latitude")
                         var geoPosition = GeoPosition(latitude, longitude)
-                        uploadActivity(selectedActivty, totalTimeForActivty, geoPosition)
+
+                            uploadActivity(selectedActivty, totalTimeForActivty, geoPosition)
+
+
 
 
                     }
@@ -1346,17 +1349,33 @@ class HomeViewModel @Inject constructor(
                     geoPosition,
                     vehicle, null
                 ) {
-                    (activityContext as MainActivity).updateActivity(
-                        "$currentDate",
+                    updateActivityForAction("$currentDate",
                         totalTime,
                         activity,
                         geoPosition,
-                        vehicle,
-                        authRepository
-                    )
+                        vehicle)
                 }
 
             }
+        }
+    }
+
+    fun updateActivityForAction(
+        s: String,
+        totalTime: Int?,
+        activity: Int,
+        geoPosition: GeoPosition,
+        vehicle: Vehicle
+    ) {
+        viewModelScope.launch {
+            (activityContext as MainActivity).updateActivity(
+                s,
+                totalTime,
+                activity,
+                geoPosition,
+                vehicle,
+                authRepository
+            )
         }
     }
 

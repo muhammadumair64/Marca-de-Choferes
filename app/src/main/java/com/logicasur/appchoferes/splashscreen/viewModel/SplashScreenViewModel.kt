@@ -158,7 +158,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 //                        Log.d("CheckLoading",image)
                         //changed
                         val imageCheck=tinyDB.getString("LOADINGIMAGE")
-
+                        Log.d("LOADINGIMAGETESTING","-------> $imageCheck")
                         if(response.images.loadingScreen!=imageCheck || response.images.loadingScreen ==""){
                             println("LOADING IMAGE IS HERE ")
                             tinyDB.putString("LOADINGIMAGE",response.images.loadingScreen)

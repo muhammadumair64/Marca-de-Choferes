@@ -507,7 +507,7 @@ class MainActivity : BaseClass(){
         }
     }
 
-    fun updateActivity(
+  suspend fun updateActivity(
         datetime: String?,
         totalTime: Int?,
         activity: Int?,
@@ -516,108 +516,126 @@ class MainActivity : BaseClass(){
         authRepository: AuthRepository
 
     ) {
-        Log.d("END_DAY_TESTING","StartLoading")
-        var intent = Intent(this, LoadingScreen::class.java)
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main){
-                if(activity == 3){
-                    startActivity(intent)
+
+
+        if(mainRepository!!.isExistsUnsentUploadActivityDB()){
+            Log.d("ACTIVITY_BY_DATABASE","IN INSERT MODE")
+            if (activity == 2) {
+                if (totalTime != null) {
+                    tinyDB.putInt("lasttimebreak", totalTime)
                 }
             }
+            this.authRepository = authRepository
+            tinyDB.putInt("ActivityCheck", activity!!)
+            var obj =
+                UpdateActivityDataClass(datetime, totalTime, activity, geoPosition, vehicle, null)
+            Log.d("PENDINGDATATESTING", "DATA IS IN MAIN____ $obj")
+            tinyDB.putObject("upadteActivity", obj)
+            tinyDB.putObject("GeoPosition", geoPosition)
+            updatePendingData(false)
 
-        }
+        }else {
+            Log.d("END_DAY_TESTING", "StartLoading")
+            var intent = Intent(this, LoadingScreen::class.java)
+            lifecycleScope.launch {
+                withContext(Dispatchers.Main) {
+                    if (activity == 3) {
+                        startActivity(intent)
+                    }
+                }
 
-        if(activity==2){
-            if (totalTime != null) {
-                tinyDB.putInt("lasttimebreak", totalTime)
             }
-        }
-        this.authRepository=authRepository
-        tinyDB.putInt("ActivityCheck",activity!!)
-         var obj = UpdateActivityDataClass(datetime,totalTime,activity,geoPosition,vehicle,null)
-        Log.d("PENDINGDATATESTING","DATA IS IN MAIN____ $obj")
-        tinyDB.putObject("upadteActivity",obj)
-        tinyDB.putObject("GeoPosition",geoPosition)
+
+            if (activity == 2) {
+                if (totalTime != null) {
+                    tinyDB.putInt("lasttimebreak", totalTime)
+                }
+            }
+            this.authRepository = authRepository
+            tinyDB.putInt("ActivityCheck", activity!!)
+            var obj =
+                UpdateActivityDataClass(datetime, totalTime, activity, geoPosition, vehicle, null)
+            Log.d("PENDINGDATATESTING", "DATA IS IN MAIN____ $obj")
+            tinyDB.putObject("upadteActivity", obj)
+            tinyDB.putObject("GeoPosition", geoPosition)
 
 
-        var Token = tinyDB.getString("Cookie")
-        lifecycleScope.launch {
+            var Token = tinyDB.getString("Cookie")
+            lifecycleScope.launch {
 
-            withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
 
-                try {
+                    try {
 
-                    val response = authRepository.updateActivity(
-                        datetime,
-                        totalTime,
-                        activity,
-                        geoPosition,
-                        vehicle,
-                        Token!!
-                    )
-                    println("SuccessResponse $response")
+                        val response = authRepository.updateActivity(
+                            datetime,
+                            totalTime,
+                            activity,
+                            geoPosition,
+                            vehicle,
+                            Token!!
+                        )
+                        println("SuccessResponse $response")
 
 
-                    if (response != null) {
+                        if (response != null) {
+                            withContext(Dispatchers.Main) {
+                                (MyApplication.loadingContext as LoadingScreen).finish()
+                            }
+                        }
+
+                    } catch (e: ResponseException) {
                         withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                context,
+                                TAG1,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            updatePendingData(false)
                             (MyApplication.loadingContext as LoadingScreen).finish()
                         }
-                    }
-
-                } catch (e: ResponseException) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context,
-                            TAG1,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        println("ErrorResponse")
+                    } catch (e: ApiException) {
                         updatePendingData(false)
-                        (MyApplication.loadingContext as LoadingScreen).finish()
-                    }
-                    println("ErrorResponse")
-                } catch (e: ApiException) {
-                    updatePendingData(false)
-                    e.printStackTrace()
-                } catch (e: NoInternetException) {
-                    updatePendingData(false)
-                    println("position 2")
-                    e.printStackTrace()
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context,
-                            TAG2,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        e.printStackTrace()
+                    } catch (e: NoInternetException) {
+                        updatePendingData(false)
+                        println("position 2")
+                        e.printStackTrace()
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                context,
+                                TAG2,
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                        (MyApplication.loadingContext as LoadingScreen).finish()
+                            (MyApplication.loadingContext as LoadingScreen).finish()
+                        }
+                    } catch (e: SocketTimeoutException) {
+                        updatePendingData(false)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                context,
+                                TAG2,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            (MyApplication.loadingContext as LoadingScreen).finish()
+                        }
+                    } catch (e: SocketException) {
+                        updatePendingData(false)
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                context,
+                                TAG2,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        Log.d("connection Exception", "Connect Not Available")
                     }
-                }
-                catch (e: SocketTimeoutException){
-                    updatePendingData(false)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context,
-                               TAG2,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        (MyApplication.loadingContext as LoadingScreen).finish()
-                    }
-                }
-                catch(e: SocketException){
-                    updatePendingData(false)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            context,
-                            TAG2,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    Log.d("connection Exception","Connect Not Available")
                 }
             }
+
         }
-
-
     }
 
 
