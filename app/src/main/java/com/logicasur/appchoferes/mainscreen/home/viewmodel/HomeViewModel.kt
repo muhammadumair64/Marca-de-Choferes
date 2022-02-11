@@ -833,6 +833,12 @@ class HomeViewModel @Inject constructor(
 
     //Get Location
     fun getLocation(context: Context) {
+
+        //change
+
+        var intent = Intent(context, LoadingScreen::class.java)
+        ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+
         println("location call")
         var locationRequest = LocationRequest()
         locationRequest.interval = 10000
@@ -1023,7 +1029,7 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun updateState(
+     fun updateState(
         datetime: String?,
         totalTime: Int?,
         state: State?,
@@ -1031,71 +1037,87 @@ class HomeViewModel @Inject constructor(
         vehicle: Vehicle?,action:()->Unit
     ) {
 
-        var Token = tinyDB.getString("Cookie")
+         viewModelScope.launch {
+             withContext(Dispatchers.IO){
+                 if (mainRepository.isExistsUnsentStateUpdateDB()){
+                     (activityContext as MainActivity).updatePendingData(true)
+                     var position= tinyDB.getInt("state")
+                     position = position.minus(1)
+                     selectState(position)
+                     action()
+                     (MyApplication.loadingContext as LoadingScreen).finish()
+                 }else{
+                     var Token = tinyDB.getString("Cookie")
 
-        viewModelScope.launch {
+                     viewModelScope.launch {
 
-            withContext(Dispatchers.IO) {
+                         withContext(Dispatchers.IO) {
 
-                try {
+                             try {
 
-                    val response = authRepository.updateState(
-                        datetime,
-                        totalTime,
-                        state,
-                        geoPosition,
-                        vehicle,
-                        Token!!
-                    )
+                                 val response = authRepository.updateState(
+                                     datetime,
+                                     totalTime,
+                                     state,
+                                     geoPosition,
+                                     vehicle,
+                                     Token!!
+                                 )
 
-                    println("SuccessResponse $response")
+                                 println("SuccessResponse $response")
 
 
 
-                    if (response != null) {
-                        var position= tinyDB.getInt("state")
-                        position = position.minus(1)
-                        selectState(position)
-                            action()
-                        (MyApplication.loadingContext as LoadingScreen).finish()
-                    }
+                                 if (response != null) {
+                                     var position= tinyDB.getInt("state")
+                                     position = position.minus(1)
+                                     selectState(position)
+                                     action()
+                                     (MyApplication.loadingContext as LoadingScreen).finish()
+                                 }
 
-                } catch (e: ResponseException) {
-                    (MyApplication.loadingContext as LoadingScreen).finish()
-                    println("ErrorResponse")
-                } catch (e: ApiException) {
-                    (MyApplication.loadingContext as LoadingScreen).finish()
-                    e.printStackTrace()
-                } catch (e: NoInternetException) {
-                    println("position 2")
-                    e.printStackTrace()
-                    withContext(Dispatchers.Main) {
-                        (MyApplication.loadingContext as LoadingScreen).finish()
-                        Toast.makeText(
-                            activityContext,
-                            (activityContext as MainActivity).TAG2,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } catch (e: SocketTimeoutException) {
+                             } catch (e: ResponseException) {
+                                 (MyApplication.loadingContext as LoadingScreen).finish()
+                                 println("ErrorResponse")
+                             } catch (e: ApiException) {
+                                 (MyApplication.loadingContext as LoadingScreen).finish()
+                                 e.printStackTrace()
+                             } catch (e: NoInternetException) {
+                                 println("position 2")
+                                 e.printStackTrace()
+                                 withContext(Dispatchers.Main) {
+                                     (MyApplication.loadingContext as LoadingScreen).finish()
+                                     Toast.makeText(
+                                         activityContext,
+                                         (activityContext as MainActivity).TAG2,
+                                         Toast.LENGTH_SHORT
+                                     ).show()
+                                 }
+                             } catch (e: SocketTimeoutException) {
 
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            TAG2,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        (MyApplication.loadingContext as LoadingScreen).finish()
-                    }
-                } catch (e: SocketException) {
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                    Log.d("connection Exception", "Connect Not Available")
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
+                                 withContext(Dispatchers.Main) {
+                                     Toast.makeText(
+                                         activityContext,
+                                         TAG2,
+                                         Toast.LENGTH_SHORT
+                                     ).show()
+                                     (MyApplication.loadingContext as LoadingScreen).finish()
+                                 }
+                             } catch (e: SocketException) {
+                                 LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                                 Log.d("connection Exception", "Connect Not Available")
+                                 withContext(Dispatchers.Main) {
+                                     Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                                 }
+                             }
+                         }
+                     }
+                 }
+             }
+         }
+
+
+
 
 
     }
@@ -1152,7 +1174,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun stateUploadByAction(
+ fun stateUploadByAction(
         currentDate: String,
         timeToSend: Int,
         status: State,

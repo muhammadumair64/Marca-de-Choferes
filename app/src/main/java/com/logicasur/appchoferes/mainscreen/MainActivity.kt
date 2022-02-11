@@ -533,18 +533,20 @@ class MainActivity : BaseClass(){
             tinyDB.putObject("upadteActivity", obj)
             tinyDB.putObject("GeoPosition", geoPosition)
             updatePendingData(false)
+            (MyApplication.loadingContext as LoadingScreen).finish()
+
 
         }else {
             Log.d("END_DAY_TESTING", "StartLoading")
-            var intent = Intent(this, LoadingScreen::class.java)
-            lifecycleScope.launch {
-                withContext(Dispatchers.Main) {
-                    if (activity == 3) {
-                        startActivity(intent)
-                    }
-                }
-
-            }
+//            var intent = Intent(this, LoadingScreen::class.java)
+//            lifecycleScope.launch {
+//                withContext(Dispatchers.Main) {
+//                    if (activity == 3) {
+//                        startActivity(intent)
+//                    }
+//                }
+//
+//            }
 
             if (activity == 2) {
                 if (totalTime != null) {
