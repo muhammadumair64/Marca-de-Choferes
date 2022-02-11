@@ -2,10 +2,12 @@ package com.logicasur.appchoferes
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.logicasur.appchoferes.Extra.K
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.utils.TestingViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,11 +31,16 @@ class TestingScreen : AppCompatActivity() {
     fun initView() {
         send = findViewById(R.id.send)
         send.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO) {
-                ServerCheck.serverCheck(null) {
-                    forToast()
-                }
 
+            lifecycleScope.launch(Dispatchers.IO) {
+                var check = K.isConnected()
+                Log.d("Testing_net","$check")
+
+//                ServerCheck.serverCheck(null) {
+//                    forToast()
+//                }
+//
+//
 
             }
         }
