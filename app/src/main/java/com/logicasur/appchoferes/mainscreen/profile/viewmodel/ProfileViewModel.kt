@@ -264,9 +264,10 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
                     if (response != null) {
                         action()
-                        dataBinding.TitleName.text = name
-                        dataBinding.FatherName.text = surname
-
+                        withContext(Dispatchers.Main){
+                            dataBinding.TitleName.text = name
+                            dataBinding.FatherName.text = surname
+                        }
                         updateProfileLocal(name, surname)
                         (MyApplication.loadingContext as LoadingScreen).finish()
                         alertDialog.dismiss()
