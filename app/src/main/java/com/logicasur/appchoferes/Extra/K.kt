@@ -18,6 +18,7 @@ import com.logicasur.appchoferes.network.signinResponse.State
 import com.logicasur.appchoferes.network.signinResponse.Vehicle
 import kotlinx.coroutines.*
 import java.io.IOException
+import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -424,6 +425,9 @@ class K {
                 }
                 Log.d("connection Exception", "Connect Not Available")
             }
+            catch(e:Exception){
+                Log.d("connection Exception", "Connect Not Available")
+            }
 
 
         }
@@ -470,6 +474,9 @@ class K {
 
                 Log.d("connection Exception", "Connect Not Available")
 
+            }
+            catch(e: Exception){
+                Log.d("connection Exception", "Connect Not Available")
             }
         }
     }
