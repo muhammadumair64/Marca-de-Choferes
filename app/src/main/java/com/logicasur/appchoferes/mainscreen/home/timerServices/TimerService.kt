@@ -19,12 +19,15 @@ class TimerService : Service()
     lateinit var tinyDB: TinyDB
 
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int
     {
         tinyDB = TinyDB(MyApplication.appContext)
         var workTime=tinyDB.getInt("lasttimework")
-        val time = intent.getDoubleExtra(TIME_EXTRA,workTime.toDouble())
-        timer.scheduleAtFixedRate(TimeTask(time), 0, 1000)
+        if(intent != null){
+            val time = intent.getDoubleExtra(TIME_EXTRA,workTime.toDouble())
+            timer.scheduleAtFixedRate(TimeTask(time), 0, 1000)
+        }
+
         return START_STICKY
     }
 
