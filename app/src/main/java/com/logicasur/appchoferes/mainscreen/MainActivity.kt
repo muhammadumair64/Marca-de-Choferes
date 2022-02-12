@@ -1142,6 +1142,7 @@ class MainActivity : BaseClass() {
 
 
         if (checkState) {
+            Log.d("STATE_TESTING","NOT good")
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     val apiData = getAPIDataForState()
@@ -1162,6 +1163,7 @@ class MainActivity : BaseClass() {
                 }
             }
         } else {
+            Log.d("STATE_TESTING","OK")
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     var apiData = getActivityAPIData()

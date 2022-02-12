@@ -185,8 +185,14 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
                 loadingViewModel.getPreviousTimeWhenOffline()
             }
             else{
-                (activity as MainActivity).updatePendingData(true)
                 finish()
+                try{
+                    (activity as MainActivity).updatePendingData(true)
+                } catch (e:Exception){
+                    Log.d("IN Starting main","ERROR")
+                }
+
+
             }
 
             networkAlertDialog!! .dismiss()

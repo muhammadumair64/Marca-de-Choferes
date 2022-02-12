@@ -95,11 +95,13 @@ class ServerCheck {
                     }
 //                    serverCheck { action() }
                 } catch (e: NoInternetException) {
+//                    LoadingScreen.OnEndLoadingCallbacks!!.openPopup(null)
                     Log.d(TAG, " Exception..${e.localizedMessage}")
 //                    serverCheck { action() }
                 } catch (e: Exception) {
 
                     Log.d(TAG, " Exception..${e.localizedMessage}")
+//                    LoadingScreen.OnEndLoadingCallbacks!!.openPopup(null)
 //                    serverCheck { action() }
                 }
 
@@ -118,7 +120,7 @@ class ServerCheck {
             vehicle: Vehicle?, state: State?, action1: () -> Unit,
         ) {
             tagsForToast()
-            Log.d(TAG, "Server Check function")
+            Log.d(TAG, "Server Check function 2nd")
 
 
 
@@ -150,14 +152,15 @@ class ServerCheck {
 //                            .show()
 //                    }
                     Log.d(TAG, " Exception..${e.localizedMessage}")
+
                     if (state == null) {
                         mainRepository.insertUnsentStateOrUploadActivity(
                             UnsentStatusOrUploadActivity(
                                 0,
                                 datetime!!,
+                               null,
+                                null,
                                 activity!!,
-                                null,
-                                null,
                                 totalTime,
                                 vehicle!!.id,
                                 vehicle.description,
@@ -166,6 +169,10 @@ class ServerCheck {
                                 geoPosition.longitud
                             )
                         )
+                        CoroutineScope(Job()).launch {
+                            Log.d("STATE_TESTING","IN END LOADING")
+                            LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                        }
 
 
                     } else {
@@ -183,6 +190,7 @@ class ServerCheck {
                             )
                         )
                         CoroutineScope(Job()).launch {
+                            Log.d("STATE_TESTING","IN END LOADING")
                             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                         }
                     }

@@ -837,8 +837,7 @@ class HomeViewModel @Inject constructor(
 
         //change
 
-        var intent = Intent(context, LoadingScreen::class.java)
-        ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+
 
         println("location call")
         var locationRequest = LocationRequest()
@@ -903,8 +902,7 @@ class HomeViewModel @Inject constructor(
 
     fun getLocationForState(context: Context) {
 
-        var intent = Intent(activityContext, LoadingScreen::class.java)
-        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
 
         println("location call")
         var locationRequest = LocationRequest()
@@ -1148,6 +1146,8 @@ class HomeViewModel @Inject constructor(
 
 
     fun uploadState(position: Int, geoPosition: GeoPosition?) {
+        var intent = Intent(activityContext, LoadingScreen::class.java)
+        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
         val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
         var currentDate = sdf.format(Date())
         currentDate = currentDate + "Z"
@@ -1357,6 +1357,9 @@ class HomeViewModel @Inject constructor(
 
 
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
+        var intent = Intent(activityContext, LoadingScreen::class.java)
+        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
         val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
         var currentDate = sdf.format(Date())
         tinyDB.putString("ActivityDate", currentDate)
