@@ -148,14 +148,18 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
             withContext(Dispatchers.IO) {
 
                 var profile = authRepository.getProfile()
-                dataBinding.apply {
-                    Name.text = profile.name
-                    surName.text = profile.surname
-                    TitleName.text = profile.name
-                    FatherName.text = profile.surname
-                    Email.text = tinyDB.getString("User")
+              withContext(Dispatchers.Main)
+              {
+                  dataBinding.apply {
+                      Name.text = profile.name
+                      surName.text = profile.surname
+                      TitleName.text = profile.name
+                      FatherName.text = profile.surname
+                      Email.text = tinyDB.getString("User")
 
-                }
+                  }
+              }
+
                 println("user personal data $profile")
             }
 
