@@ -60,6 +60,7 @@ import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -1109,6 +1110,9 @@ class HomeViewModel @Inject constructor(
                                  withContext(Dispatchers.Main) {
                                      Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                                  }
+                             }
+                             catch(e:Exception){
+                                 Log.d("connection Exception", "Connect Not Available")
                              }
                          }
                      }
