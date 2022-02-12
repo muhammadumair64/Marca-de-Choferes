@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.Reader
+import java.lang.Exception
 import java.net.SocketException
 import javax.inject.Inject
 
@@ -251,6 +252,9 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                         ).show()
                     }
                 }
+                catch(e: Exception){
+                    Log.d("connection Exception", "Connect Not Available")
+                }
             }
         }
     }
@@ -339,6 +343,9 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
+                }
+                catch(e:Exception){
+                    Log.d("connection Exception", "Connect Not Available")
                 }
 
 

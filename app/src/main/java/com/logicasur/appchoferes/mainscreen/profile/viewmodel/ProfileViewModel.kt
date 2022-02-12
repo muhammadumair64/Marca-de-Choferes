@@ -34,6 +34,7 @@ import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.NoInternetException
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 import java.net.SocketException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -135,6 +136,9 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                 } catch (e: ResponseException) {
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     println("logout Failed $e")
+                }
+                catch(e:Exception){
+                    Log.d("connection Exception", "Connect Not Available")
                 }
             }
         }
@@ -242,6 +246,9 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
+                catch(e:Exception){
+                    Log.d("connection Exception", "Connect Not Available")
+                }
             }
         }
 
@@ -295,6 +302,9 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
+                }
+                catch(e: Exception){
+                    Log.d("connection Exception", "Connect Not Available")
                 }
             }
         }
