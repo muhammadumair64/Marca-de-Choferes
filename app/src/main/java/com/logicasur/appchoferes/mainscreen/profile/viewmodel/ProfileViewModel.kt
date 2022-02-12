@@ -209,9 +209,12 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
                     if (response != null) {
                         action()
-                        dataBinding.profileImage.setImageBitmap(imageInBitmap)
-                        tinyDB.putString("Avatar", avatar)
-                        (MyApplication.loadingContext as LoadingScreen).finish()
+                        withContext(Dispatchers.Main){
+                            dataBinding.profileImage.setImageBitmap(imageInBitmap)
+                            tinyDB.putString("Avatar", avatar)
+                            (MyApplication.loadingContext as LoadingScreen).finish()
+                        }
+
                     }
 
                 } catch (e: ResponseException) {
