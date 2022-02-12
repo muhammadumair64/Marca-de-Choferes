@@ -450,7 +450,7 @@ class K {
                     vehicle,
                     Token!!
                 )
-                mainRepository.deleteUnsentStateUpdate(roomId)
+                mainRepository.deleteUnsentUploadActivity(roomId)
 
 
                 println("SuccessResponse $response")
