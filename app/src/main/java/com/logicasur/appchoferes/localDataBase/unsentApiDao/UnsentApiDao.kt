@@ -18,7 +18,7 @@ interface UnsentApiDao {
     fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate)
 
     @Insert
-    fun insertUnsentUploadActivity(unsentUploadActivity: UnsentUploadActivity)
+    fun insertUnsentStateOrUploadActivity(unsentStatusOrUploadActivity: UnsentStatusOrUploadActivity)
 
     @Insert
     fun insertUnsentAvatarUpdate(unsentUpdateAvatar: UnsentUpdateAvatar)
@@ -43,7 +43,7 @@ interface UnsentApiDao {
     @Query("DELETE FROM UnsentStateUpdate")
     fun deleteAllUUnsentStateUpdateDetails()
 
-    @Query("DELETE FROM UnsentUploadActivity")
+    @Query("DELETE FROM UnsentStatusOrUploadActivity")
     fun deleteAllUnsentUploadActivityDetails()
 
     @Query("DELETE FROM UnsentUpdateAvatar")
@@ -65,7 +65,7 @@ interface UnsentApiDao {
     fun deleteUnsentStateUpdate(id: Int)
 
 
-    @Query("DELETE FROM UnsentUploadActivity WHERE roomDBId = :id")
+    @Query("DELETE FROM UnsentStatusOrUploadActivity WHERE roomDBId = :id")
     fun deleteUnsentUploadActivity(id: Int)
 
 
@@ -82,7 +82,7 @@ interface UnsentApiDao {
     @Query("SELECT EXISTS(SELECT * FROM UnsentStateUpdate)")
     fun isExistsUnsentStateUpdateDB(): Boolean
 
-    @Query("SELECT EXISTS(SELECT * FROM UnsentUploadActivity)")
+    @Query("SELECT EXISTS(SELECT * FROM UnsentStatusOrUploadActivity)")
     fun isExistsUnsentUploadActivityDB(): Boolean
 
     @Query("SELECT EXISTS(SELECT * FROM UnsentUpdateAvatar)")
@@ -101,8 +101,8 @@ interface UnsentApiDao {
     @Query("SELECT * from UnsentStateUpdate")
     fun getUnsentStateUpdateDetails(): List<UnsentStateUpdate>
 
-    @Query("SELECT * from UnsentUploadActivity")
-    fun getUnsentUploadActivityDetails(): List<UnsentUploadActivity>
+    @Query("SELECT * from UnsentStatusOrUploadActivity")
+    fun getUnsentUploadActivityDetails(): List<UnsentStatusOrUploadActivity>
 
     @Query("SELECT * from UnsentUpdateAvatar")
     fun getUnsentUpdateAvatarDetails(): UnsentUpdateAvatar

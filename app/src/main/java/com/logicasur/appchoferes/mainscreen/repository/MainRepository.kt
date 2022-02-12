@@ -55,14 +55,14 @@ class MainRepository @Inject constructor(
 
         return localDataBase.unsentApiDao().getUnsentNotifyStateUploadDetails()
     }
-    suspend fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate)
-    {
-        localDataBase.unsentApiDao().insertUnsentStateUpdate(unsentStateUpdate)
-    }
+//    suspend fun insertUnsentStateUpdate(unsentStateUpdate: UnsentStateUpdate)
+//    {
+//        localDataBase.unsentApiDao().insertUnsentStateUpdate(unsentStateUpdate)
+//    }
 
-    suspend fun insertUnsentUploadActivity(unsentUploadActivity: UnsentUploadActivity)
+    suspend fun insertUnsentStateOrUploadActivity(unsentStatusOrUploadActivity: UnsentStatusOrUploadActivity)
     {
-        localDataBase.unsentApiDao().insertUnsentUploadActivity(unsentUploadActivity)
+        localDataBase.unsentApiDao().insertUnsentStateOrUploadActivity(unsentStatusOrUploadActivity)
     }
 
     suspend fun insertUnsentAvatarUpdate(unsentUpdateAvatar: UnsentUpdateAvatar){
@@ -91,9 +91,9 @@ class MainRepository @Inject constructor(
         localDataBase.unsentApiDao().deleteAllUnsentProfileUpdateDetails()
     }
 
-    suspend fun isExistsUnsentStateUpdateDB(): Boolean{
-        return localDataBase.unsentApiDao().isExistsUnsentStateUpdateDB()
-    }
+//    suspend fun isExistsUnsentStateUpdateDB(): Boolean{
+//        return localDataBase.unsentApiDao().isExistsUnsentStateUpdateDB()
+//    }
 
     suspend fun isExistsUnsentUploadActivityDB(): Boolean{
         return localDataBase.unsentApiDao().isExistsUnsentUploadActivityDB()
@@ -110,7 +110,7 @@ class MainRepository @Inject constructor(
         return localDataBase.unsentApiDao().getUnsentStateUpdateDetails()
     }
 
-    suspend fun getUnsentUploadActivityDetails(): List<UnsentUploadActivity> {
+    suspend fun getUnsentUploadActivityDetails(): List<UnsentStatusOrUploadActivity> {
         return localDataBase.unsentApiDao().getUnsentUploadActivityDetails()
     }
 

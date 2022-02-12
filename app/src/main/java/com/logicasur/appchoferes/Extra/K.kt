@@ -147,7 +147,6 @@ class K {
         }
 
 
-
         @Throws(InterruptedException::class, IOException::class)
         fun isConnected(): Boolean {
             val command = "ping -w 2 -c 1 google.com"
@@ -157,7 +156,7 @@ class K {
 //            }else{
 //                 value = Runtime.getRuntime().exec(command).waitFor()==0
 //            }
-            return Runtime.getRuntime().exec(command).waitFor()==0
+            return Runtime.getRuntime().exec(command).waitFor() == 0
 
         }
 
@@ -202,12 +201,12 @@ class K {
 
 //                            val coroutineJob = Job()
 //                            CoroutineScope(coroutineJob).launch(Dispatchers.IO) {
-                            ServerCheck.serverCheck(null) {   checkStateAndUploadActivityDB() }
+                            ServerCheck.serverCheck(null) { checkStateAndUploadActivityDB() }
 //                                checkStateAndUploadActivityDB()
                             //}
-                            Log.d("PENDING_DATA_TESTING","before")
+                            Log.d("PENDING_DATA_TESTING", "before")
 //                            coroutineJob.join()
-                            Log.d("PENDING_DATA_TESTING","After")
+                            Log.d("PENDING_DATA_TESTING", "After")
 //                            checkUpdateLanguageNotifyState()
                         }
                     }
@@ -217,98 +216,115 @@ class K {
         }
 
 
-         fun checkStateAndUploadActivityDB() {
-            Log.d("PENDING_DATA_TESTING","Call checkStateAndUploadActivityDB")
-             CoroutineScope(Job()).launch(Dispatchers.IO) {
+        fun checkStateAndUploadActivityDB() {
+            Log.d("PENDING_DATA_TESTING", "Call checkStateAndUploadActivityDB")
+            CoroutineScope(Job()).launch(Dispatchers.IO) {
 
 
-                 myTimer!!.cancel()
-                 if (mainRepository.isExistsUnsentStateUpdateDB()) {
-
-                     val getUnsentStateUpdateValues =
-                         mainRepository.getUnsentStateUpdateDetails().toCollection(ArrayList())
-
-
-                     for (getUnsentStateData in getUnsentStateUpdateValues) {
-
-                         val getState = State(
-                             0,
-                             getUnsentStateData.stateId,
-                             getUnsentStateData.stateDescription
-                         )
-                         val getVehicle = Vehicle(
-                             0,
-                             getUnsentStateData.vehicleId,
-                             getUnsentStateData.vehicleDescription,
-                             getUnsentStateData.vehiclePlateNumber
-                         )
-                         val getGeoPosition = GeoPosition(
-                             getUnsentStateData.latitudeGeoPosition,
-                             getUnsentStateData.longitudeGeoPosition
-                         )
-
-
-                         updateState(
-                             getUnsentStateData.roomDBId,
-                             getUnsentStateData.datetime,
-                             getUnsentStateData.totalTime,
-                             getState,
-                             getGeoPosition,
-                             getVehicle
-                         )
-                     }
-                     Log.d("PENDING_DATA_TESTING", "STATE UPDATE")
-
-                     Log.d("PENDING_DATA_TESTING", "AFter STATE UPDATE")
-
-
-                 }
-                 if (mainRepository.isExistsUnsentUploadActivityDB()) {
-
-
-                     val getUnsentUploadActivityValues =
-                         mainRepository.getUnsentUploadActivityDetails().toCollection(ArrayList())
-
-                     for (getUnsentUploadActivityData in getUnsentUploadActivityValues) {
+                myTimer!!.cancel()
+//                 if (mainRepository.isExistsUnsentStateUpdateDB()) {
+//
+//                     val getUnsentStateUpdateValues =
+//                         mainRepository.getUnsentStateUpdateDetails().toCollection(ArrayList())
+//
+//
+//                     for (getUnsentStateData in getUnsentStateUpdateValues) {
+//
+//                         val getState = State(
+//                             0,
+//                             getUnsentStateData.stateId,
+//                             getUnsentStateData.stateDescription
+//                         )
+//                         val getVehicle = Vehicle(
+//                             0,
+//                             getUnsentStateData.vehicleId,
+//                             getUnsentStateData.vehicleDescription,
+//                             getUnsentStateData.vehiclePlateNumber
+//                         )
+//                         val getGeoPosition = GeoPosition(
+//                             getUnsentStateData.latitudeGeoPosition,
+//                             getUnsentStateData.longitudeGeoPosition
+//                         )
+//
+//
+//                         updateState(
+//                             getUnsentStateData.roomDBId,
+//                             getUnsentStateData.datetime,
+//                             getUnsentStateData.totalTime,
+//                             getState,
+//                             getGeoPosition,
+//                             getVehicle
+//                         )
+//                     }
+//                     Log.d("PENDING_DATA_TESTING", "STATE UPDATE")
+//
+//                     Log.d("PENDING_DATA_TESTING", "AFter STATE UPDATE")
+//
+//
+//                 }
+                if (mainRepository.isExistsUnsentUploadActivityDB()) {
 
 
-                         val getVehicle = Vehicle(
-                             0,
-                             getUnsentUploadActivityData.vehicleId,
-                             getUnsentUploadActivityData.vehicleDescription,
-                             getUnsentUploadActivityData.vehiclePlateNumber
-                         )
-                         val getGeoPosition = GeoPosition(
-                             getUnsentUploadActivityData.latitudeGeoPosition,
-                             getUnsentUploadActivityData.longitudeGeoPosition
-                         )
+                    val getUnsentUploadActivityValues =
+                        mainRepository.getUnsentUploadActivityDetails().toCollection(ArrayList())
 
-                         uploadPendingDataActivity(
-                             getUnsentUploadActivityData.roomDBId,
-                             getUnsentUploadActivityData.dateTime,
-                             getUnsentUploadActivityData.totalTime,
-                             getUnsentUploadActivityData.activity,
-                             getGeoPosition,
-                             getVehicle,
-                             authRepository
-                         )
-                     }
-                     Log.d("PENDING_DATA_TESTING", "Activity UPDATE")
+                    for (getUnsentUploadActivityData in getUnsentUploadActivityValues) {
+
+
+                        val getVehicle = Vehicle(
+                            0,
+                            getUnsentUploadActivityData.vehicleId,
+                            getUnsentUploadActivityData.vehicleDescription,
+                            getUnsentUploadActivityData.vehiclePlateNumber
+                        )
+                        val getGeoPosition = GeoPosition(
+                            getUnsentUploadActivityData.latitudeGeoPosition,
+                            getUnsentUploadActivityData.longitudeGeoPosition
+                        )
+
+                        if (getUnsentUploadActivityData.stateId == null) {
+
+                            uploadPendingDataActivity(
+                                getUnsentUploadActivityData.roomDBId,
+                                getUnsentUploadActivityData.dateTime,
+                                getUnsentUploadActivityData.totalTime,
+                                getUnsentUploadActivityData.activity,
+                                getGeoPosition,
+                                getVehicle,
+                                authRepository
+                            )
+                        } else {
+                            val getState = State(
+                                0,
+                                getUnsentUploadActivityData.stateId,
+                                getUnsentUploadActivityData.stateDescription!!
+                            )
+                            updateState(
+                                getUnsentUploadActivityData.roomDBId,
+                                getUnsentUploadActivityData.dateTime,
+                                getUnsentUploadActivityData.totalTime,
+                                getState,
+                                getGeoPosition,
+                                getVehicle
+                            )
+                        }
+                    }
+                    Log.d("PENDING_DATA_TESTING", "Activity UPDATE")
 //                   coroutineUploadActivity.join()
-                     Log.d("PENDING_DATA_TESTING", "after Activity UPDATE")
-                 }
+                    Log.d("PENDING_DATA_TESTING", "after Activity UPDATE")
+                }
 
 
-                 if (!(mainRepository.isExistsUnsentStateUpdateDB()) && !(mainRepository.isExistsUnsentUploadActivityDB())) {
-                     tinyDB.putBoolean("PENDINGCHECK", false)
-                     tinyDB.putBoolean("SYNC_CHECK", true)
-                 } else {
-                     ServerCheck.serverCheck(null) {
-                         checkStateAndUploadActivityDB()
-                     }
-                 }
+                if (!(mainRepository.isExistsUnsentUploadActivityDB())) {
+                    tinyDB.putBoolean("PENDINGCHECK", false)
+                    tinyDB.putBoolean("SYNC_CHECK", true)
+                } else {
+                    ServerCheck.serverCheck(null) {
+                        checkStateAndUploadActivityDB()
+                    }
+                }
 
-             }
+            }
         }
 
 

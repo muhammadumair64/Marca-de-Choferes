@@ -1039,7 +1039,7 @@ class HomeViewModel @Inject constructor(
 
          viewModelScope.launch {
              withContext(Dispatchers.IO){
-                 if (mainRepository.isExistsUnsentStateUpdateDB()){
+                 if (mainRepository.isExistsUnsentUploadActivityDB()){
                      (activityContext as MainActivity).updatePendingData(true)
                      var position= tinyDB.getInt("state")
                      position = position.minus(1)

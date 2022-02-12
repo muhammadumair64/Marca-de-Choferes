@@ -14,8 +14,7 @@ import com.logicasur.appchoferes.network.NoInternetException
 import com.logicasur.appchoferes.network.logoutResponse.MassageResponse
 import com.logicasur.appchoferes.network.signinResponse.State
 import com.logicasur.appchoferes.network.signinResponse.Vehicle
-import com.logicasur.appchoferes.network.unsentApis.UnsentStateUpdate
-import com.logicasur.appchoferes.network.unsentApis.UnsentUploadActivity
+import com.logicasur.appchoferes.network.unsentApis.UnsentStatusOrUploadActivity
 import kotlinx.coroutines.*
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -152,11 +151,13 @@ class ServerCheck {
 //                    }
                     Log.d(TAG, " Exception..${e.localizedMessage}")
                     if (state == null) {
-                        mainRepository.insertUnsentUploadActivity(
-                            UnsentUploadActivity(
+                        mainRepository.insertUnsentStateOrUploadActivity(
+                            UnsentStatusOrUploadActivity(
                                 0,
                                 datetime!!,
                                 activity!!,
+                                null,
+                                null,
                                 totalTime,
                                 vehicle!!.id,
                                 vehicle.description,
@@ -168,13 +169,12 @@ class ServerCheck {
 
 
                     } else {
-                        mainRepository.insertUnsentStateUpdate(
-                            UnsentStateUpdate(
+                        mainRepository.insertUnsentStateOrUploadActivity(
+                            UnsentStatusOrUploadActivity(
                                 0,
                                 datetime!!,
-                                totalTime,
                                 state.id,
-                                state.description,
+                                state.description, null, totalTime,
                                 vehicle!!.id,
                                 vehicle.description,
                                 vehicle.plateNumber,
@@ -286,7 +286,7 @@ class ServerCheck {
                         apiCall() {
                             // Server is not well
 
-                            Log.d(TAG,"Response is received Cancel the timer.")
+                            Log.d(TAG, "Response is received Cancel the timer.")
                             myTimer.cancel()
                             myTimer.purge()
 
@@ -323,6 +323,7 @@ class ServerCheck {
 
 
         }
+
         suspend fun serverCheckMainActivityApi(
             onEndLoadingCallbacks: OnEndLoadingCallbacks?,
             apiCall: (serverAction: () -> Unit) -> Unit
@@ -396,7 +397,7 @@ class ServerCheck {
                         apiCall() {
                             // Server is not well
 
-                            Log.d(TAG,"Response is received Cancel the timer.")
+                            Log.d(TAG, "Response is received Cancel the timer.")
                             myTimer.cancel()
                             myTimer.purge()
 
@@ -433,7 +434,11 @@ class ServerCheck {
 
 
         }
-        suspend fun serverCheckDuringStatus(onEndLoadingCallbacks: OnEndLoadingCallbacks?, action: () -> Unit) {
+
+        suspend fun serverCheckDuringStatus(
+            onEndLoadingCallbacks: OnEndLoadingCallbacks?,
+            action: () -> Unit
+        ) {
 
             var checkServerResponse: MassageResponse? = null
 
