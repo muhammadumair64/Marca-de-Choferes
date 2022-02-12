@@ -619,6 +619,9 @@ class MainActivity : BaseClass() {
                         }
                         Log.d("connection Exception", "Connect Not Available")
                     }
+                    catch(e:Exception){
+                        Log.d("connection Exception", "Connect Not Available")
+                    }
                 }
             }
 

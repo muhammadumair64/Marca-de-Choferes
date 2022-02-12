@@ -27,6 +27,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 import javax.inject.Inject
 import java.net.SocketException
 
@@ -176,6 +177,9 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     withContext(Dispatchers.Main){
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
+                }
+                catch(e: Exception){
+                    Log.d("connection Exception", "Connect Not Available")
                 }
             }
         }

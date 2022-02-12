@@ -30,6 +30,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 import java.net.SocketException
 import java.util.*
 import javax.inject.Inject
@@ -305,6 +306,9 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
+                catch(e: Exception){
+                    Log.d("connection Exception", "Connect Not Available")
+                }
             }
         }
 
@@ -400,6 +404,9 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
+                }
+                catch(e:Exception){
+                    Log.d("connection Exception", "Connect Not Available")
                 }
             }
         }
