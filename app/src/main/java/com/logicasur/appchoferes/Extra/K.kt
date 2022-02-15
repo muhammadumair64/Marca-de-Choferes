@@ -22,6 +22,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 import com.androchef.happytimer.utils.DateTimeUtils
+import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import java.text.DateFormat
 
 
@@ -218,7 +219,12 @@ class K {
                     }
                     Log.d("NETCHECKTEST", "---- $netCheck")
                     try{
-                        
+                        if(MyApplication.checKForActivityLoading){
+                            LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                            MyApplication.checKForActivityLoading = false
+                        }
+
+
                     }catch (e:Exception){
 
                     }

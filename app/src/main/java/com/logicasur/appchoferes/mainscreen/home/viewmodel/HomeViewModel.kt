@@ -1358,6 +1358,7 @@ class HomeViewModel @Inject constructor(
 
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
         Log.d("startUpload","activity function.")
+        MyApplication.checKForActivityLoading = true
         var intent = Intent(activityContext, LoadingScreen::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 

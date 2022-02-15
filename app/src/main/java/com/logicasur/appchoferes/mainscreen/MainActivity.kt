@@ -519,7 +519,7 @@ class MainActivity : BaseClass() {
             tinyDB.putObject("GeoPosition", geoPosition)
             updatePendingData(false)
             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
-
+//            MyApplication.checKForActivityLoading = false
 
         } else {
             Log.d("END_DAY_TESTING", "StartLoading")
