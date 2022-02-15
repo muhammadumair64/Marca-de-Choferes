@@ -2,7 +2,7 @@ package com.logicasur.appchoferes.Extra.serverCheck
 
 import android.util.Log
 import android.widget.Toast
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.otp.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.auth.repository.AuthRepository
@@ -21,7 +21,7 @@ import java.net.SocketTimeoutException
 import java.util.*
 
 
-class ServerCheck {
+class ServerCheck{
 
     companion object {
         var TAG2 = ""
@@ -29,6 +29,7 @@ class ServerCheck {
         val TAG = "c"
         lateinit var authRepository: AuthRepository
         lateinit var mainRepository: MainRepository
+    }
 
 
         suspend fun serverCheck(onEndLoadingCallbacks: OnEndLoadingCallbacks?, action: () -> Unit) {
@@ -132,7 +133,7 @@ class ServerCheck {
             totalTime: Int?,
             activity: Int?,
             geoPosition: GeoPosition?,
-            vehicle: Vehicle?, state: State?, action1: () -> Unit,
+            vehicle: Vehicle?, state: State?, action1: () -> Unit,resendApis: ResendApis
         ) {
             tagsForToast()
             Log.d(TAG, "Server Check function 2nd")
@@ -187,6 +188,7 @@ class ServerCheck {
                         CoroutineScope(Job()).launch {
                             Log.d("STATE_TESTING", "IN END LOADING")
                             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                            LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                         }
 
 
@@ -209,7 +211,7 @@ class ServerCheck {
                             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                         }
                     }
-                    K.checkNet()
+                    resendApis.checkNet()
 
                 }
 
@@ -539,7 +541,7 @@ class ServerCheck {
 
         }
 
-    }
+
 
 
 }

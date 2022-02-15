@@ -16,7 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
@@ -97,7 +97,7 @@ class ConfigurationFragment : Fragment() {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO){
-                    val check = K.isConnected()
+                    val check = ResendApis.isConnected()
                     withContext(Dispatchers.Main){
                         if(check){
                             alertDialog.setView(contactPopupView)
@@ -159,10 +159,10 @@ class ConfigurationFragment : Fragment() {
 
 
     fun customeColor(){
-        binding.upperLayoutBack!!.setBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.arrowBack1!!.setBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.arrowBack2!!.setBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.togglebg!!.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.upperLayoutBack!!.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.arrowBack1!!.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.arrowBack2!!.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.togglebg!!.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
     }
 
 

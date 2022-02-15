@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.ItemStatusListBinding
@@ -41,14 +41,14 @@ class StatusAdapter (var statusArrayList: ArrayList<String>, val onclickItem: On
          selected = selected.minus(1)
         if(selected==position){
             holder.statusBinding.searchedText.setTextColor(Color.BLACK)
-            holder.statusBinding.closebg.setBackgroundColor(Color.parseColor(K.primaryColor))
+            holder.statusBinding.closebg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         }
 
 
         holder.statusBinding.status.setOnClickListener {
 
             holder.statusBinding.searchedText.setTextColor(Color.BLACK)
-            holder.statusBinding.closebg.setBackgroundColor(Color.parseColor(K.primaryColor))
+            holder.statusBinding.closebg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
             onclickItem.statusSelection(position)
         }
 

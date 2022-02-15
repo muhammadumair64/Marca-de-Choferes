@@ -8,9 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
 import android.transition.TransitionInflater
 import android.util.Log
@@ -18,7 +16,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -36,7 +33,7 @@ import com.logicasur.appchoferes.mainscreen.profile.viewmodel.ProfileViewModel
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.nabinbhandari.android.permissions.PermissionHandler
@@ -46,7 +43,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.concurrent.schedule
 
 
 @AndroidEntryPoint
@@ -118,7 +114,7 @@ class ProfileFragment : Fragment() {
         binding.editProfile.setOnClickListener {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-//                    val check = K.isConnected()
+//                    val check = ResendApis.isConnected()
                     withContext(Dispatchers.Main) {
                         if (CheckConnection.netCheck(context)) {
                             initPermission()
@@ -207,7 +203,7 @@ class ProfileFragment : Fragment() {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-//                    val check = K.isConnected()
+//                    val check = ResendApis.isConnected()
                     withContext(Dispatchers.Main) {
                         if (CheckConnection.netCheck(context)) {
 
@@ -240,7 +236,7 @@ class ProfileFragment : Fragment() {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-//                    val check = K.isConnected()
+//                    val check = ResendApis.isConnected()
                     withContext(Dispatchers.Main) {
                         if (CheckConnection.netCheck(context)) {
 
@@ -272,7 +268,7 @@ class ProfileFragment : Fragment() {
 
         dismiss = contactPopupView.findViewById(R.id.close)
         confirmbtn = contactPopupView.findViewById(R.id.confirm_btn)
-        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, confirmbtn)
+        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, confirmbtn)
         changedName = contactPopupView.findViewById(R.id.popup_Name_Field)
         dismiss.setOnClickListener {
             alertDialog.dismiss()
@@ -345,11 +341,11 @@ class ProfileFragment : Fragment() {
 
     fun setButtonColor() {
 
-        binding.editSurname.setCardBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.editName.setCardBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.edit.setCardBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.editProfile.setCardBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.upperLayoutFrount!!.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.editSurname.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.editName.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.edit.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.editProfile.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.upperLayoutFrount!!.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         binding.upperLayoutFrount!!.alpha = 0.73F
     }
 

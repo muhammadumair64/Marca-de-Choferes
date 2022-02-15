@@ -1,7 +1,6 @@
 package com.logicasur.appchoferes.splashscreen
 
 import android.app.ActivityManager
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -12,16 +11,13 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
-import android.view.View
 import android.view.WindowManager
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.BaseClass
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
@@ -29,13 +25,11 @@ import com.logicasur.appchoferes.auth.otp.OTP_Activity
 import com.logicasur.appchoferes.auth.signin.SignInActivity
 import com.logicasur.appchoferes.databinding.ActivitySplashScreenBinding
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
-import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.splashscreen.viewModel.SplashScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.security.AccessController.getContext
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.schedule
@@ -152,7 +146,7 @@ class SplashScreen : BaseClass() {
             setGrad(firstColor, secondColor,binding.startButton)
             setBarColor()
         }else{
-            setGrad(K.primaryColor, K.secondrayColor,binding.startButton)
+            setGrad(ResendApis.primaryColor, ResendApis.secondrayColor,binding.startButton)
         }
 
 
@@ -227,7 +221,7 @@ class SplashScreen : BaseClass() {
                     if(temp<=2){
                         var intent = Intent(this, OTP_Activity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                        intent.putExtra(K.splashToOtp,true)
+                        intent.putExtra(ResendApis.splashToOtp,true)
                         startActivity(intent)
                         this.finish()
                     }

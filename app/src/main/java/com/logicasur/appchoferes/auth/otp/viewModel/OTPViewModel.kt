@@ -18,7 +18,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.createpassword.CreateNewPasswordScreen
@@ -48,14 +48,15 @@ import java.net.SocketException
 import javax.inject.Inject
 
 @HiltViewModel
-class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository) : ViewModel() {
+class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
+                                       val mainRepository: MainRepository,val resendApis: ResendApis) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
      var fromSplash :Boolean? = null;
     fun viewsForOTPScreen(context: Context, binding: ActivityOtpBinding) {
         activityContext = context
         tinyDB = TinyDB(context)
-        binding.arrowBack.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.arrowBack.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         binding.edt1.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -253,11 +254,11 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
                         }
 
                         if (response.colors.primary.isNotEmpty()) {
-                            K.primaryColor = response.colors.primary ?: "#7A59FC"
-                            K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            ResendApis.primaryColor = response.colors.primary ?: "#7A59FC"
+                            ResendApis.secondrayColor = response.colors.secondary ?: "#653FFB"
                             Log.d("COLORCHECKTESTING",response.colors.primary )
-                            tinyDB.putString("primaryColor",K.primaryColor)
-                            tinyDB.putString("secondrayColor",K.secondrayColor)
+                            tinyDB.putString("primaryColor",ResendApis.primaryColor)
+                            tinyDB.putString("secondrayColor",ResendApis.secondrayColor)
                         }
 
                         tinyDB.putString("User",userName)
@@ -595,7 +596,8 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                resendApis.
+                timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 
                 getWorkTime(response)
 
@@ -666,7 +668,8 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+
+        resendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
 
 
@@ -699,7 +702,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
 //                    Log.d("TimeOfLastWork", "date is $workDate")
 //                }
 //                tinyDB.putString("goBackTime", workDate)
-//                K.timeDifference(tinyDB, activityContext!!, false,response.work!!.workBreak)
+//                ResendApis.timeDifference(tinyDB, activityContext!!, false,response.work!!.workBreak)
 //            }
 //            1 -> {
 //                tinyDB.putString("checkTimer", "breakTime")
@@ -711,7 +714,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
 //                }
 //                tinyDB.putString("goBackTime", breakDate)
 //                tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-//                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+//                ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 //            }
 //            2 -> {
 //                MyApplication.dayEndCheck = 100
@@ -723,7 +726,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,val ma
 //                    Log.d("workDate Is", "date is $workDate")
 //                }
 //                tinyDB.putString("goBackTime", workDate)
-//                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+//                ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 //            }
 //            3->{
 //                MyApplication.dayEndCheck = 200

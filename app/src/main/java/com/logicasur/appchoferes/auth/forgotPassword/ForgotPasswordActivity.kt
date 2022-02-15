@@ -7,7 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.logicasur.appchoferes.Extra.BaseClass
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.auth.forgotPassword.viewModel.ForgotPasswordViewModel
@@ -29,7 +29,7 @@ class ForgotPasswordActivity :BaseClass() {
 
     fun initViews(){
         forgotPasswordViewModel.viewsForForgotPasswordActivity(context,binding)
-        setGrad(K.primaryColor, K.secondrayColor,binding.SubmitButton)
+        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor,binding.SubmitButton)
         showSoftKeyboard(binding.email)
 
     }

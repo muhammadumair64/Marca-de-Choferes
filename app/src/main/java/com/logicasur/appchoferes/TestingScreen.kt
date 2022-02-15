@@ -7,13 +7,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.logicasur.appchoferes.Extra.K
-import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.utils.TestingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class TestingScreen : AppCompatActivity() {
@@ -33,8 +31,8 @@ class TestingScreen : AppCompatActivity() {
         send.setOnClickListener {
 
             lifecycleScope.launch(Dispatchers.IO) {
-                var check = K.isConnected()
-                Log.d("Testing_net","$check")
+//                var check = ResendApis.isConnected()
+//                Log.d("Testing_net","$check")
 
 //                ServerCheck.serverCheck(null) {
 //                    forToast()

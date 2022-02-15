@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.logicasur.appchoferes.Extra.BaseClass
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.auth.signin.viewModel.SigninViewModel
@@ -28,7 +28,7 @@ class SignInActivity : BaseClass() {
 
     fun initViews(){
 
-        setGrad(K.primaryColor, K.secondrayColor,binding.signInBtn)
+        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor,binding.signInBtn)
         signinViewModel.viewsOfActivitySignin(context,binding)
     }
 

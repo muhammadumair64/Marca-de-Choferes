@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
@@ -33,7 +33,7 @@ import java.net.SocketException
 
 
 @HiltViewModel
-class CreatePasswordViewModel @Inject constructor(val authRepository: AuthRepository) :
+class CreatePasswordViewModel @Inject constructor(val authRepository: AuthRepository, val resendApis: ResendApis) :
     ViewModel() {
     var TAG1=""
 
@@ -45,7 +45,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
         activityContext = context
         tinyDB = TinyDB(MyApplication.appContext)
         Token = tinyDB.getString("Cookie").toString()
-         binding.arrowBack.setBackgroundColor(Color.parseColor(K.primaryColor))
+         binding.arrowBack.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         var language= tinyDB.getString("language")
         if (language=="0"){
             TAG1 ="Contraseña demasiado corta"
@@ -102,7 +102,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
                         var passsword = editPassword.text
                         viewModelScope.launch(Dispatchers.IO) {
 //                            ServerCheck.serverCheck (null){CreateNewPassword(passsword.toString())}
-                            ServerCheck.serverCheckTesting(null){serverAction ->
+                           resendApis.serverCheck.serverCheckTesting(null){serverAction ->
                                 CreateNewPassword(passsword.toString()){serverAction()}
                             }
                         }

@@ -122,10 +122,10 @@ class MainActivity : BaseClass() {
 
         tinyDB = TinyDB(this)
 
-        K.primaryColor = tinyDB.getString("primaryColor")!!
-        K.secondrayColor = tinyDB.getString("secondrayColor")!!
+        ResendApis.primaryColor = tinyDB.getString("primaryColor")!!
+        ResendApis.secondrayColor = tinyDB.getString("secondrayColor")!!
 
-//        K.timeDifference(tinyDB)
+//        ResendApis.timeDifference(tinyDB)
         tagsForToast()
         serviceIntent = Intent(applicationContext, TimerService::class.java)
         registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
@@ -171,9 +171,9 @@ class MainActivity : BaseClass() {
 
 
     fun NavBar() {
-        Log.d("AVATARTESTING", "IN NAV BAR ${K.primaryColor}")
+        Log.d("AVATARTESTING", "IN NAV BAR ${ResendApis.primaryColor}")
 
-        binding.menu.setMenuResource(R.menu.navigationbar_menu, Color.parseColor(K.primaryColor))
+        binding.menu.setMenuResource(R.menu.navigationbar_menu, Color.parseColor(ResendApis.primaryColor))
         binding.menu.setItemSelected(R.id.home, true)
         binding.menu.setOnItemSelectedListener {
 
@@ -360,7 +360,7 @@ class MainActivity : BaseClass() {
         if (GpsStatus) {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    if (K.isConnected()) {
+                    if (ResendApis.isConnected()) {
                         withContext(Dispatchers.Main) {
                             action()
                             getLocation(context)
@@ -397,7 +397,7 @@ class MainActivity : BaseClass() {
             val task = LocationServices.getSettingsClient(it)
                 .checkLocationSettings(builder.build())
 
-            if (K.isConnected()) {
+            if (ResendApis.isConnected()) {
                 Log.d("PENDINGAPITESTING", "IN GPS POPUP SETTING")
                 MainActivity.action = action
             } else {
@@ -471,7 +471,7 @@ class MainActivity : BaseClass() {
             Log.d("isSuccess GPS PRO", "nvnf ${checkGPS()}")
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    if (K.isConnected()) {
+                    if (ResendApis.isConnected()) {
                         withContext(Dispatchers.Main) {
                             action?.invoke()
                             getLocation(context)
@@ -806,7 +806,7 @@ class MainActivity : BaseClass() {
         stopService(Intent(this, BreakTimerService::class.java))
         var check = tinyDB.getBoolean("PENDINGCHECK")
         if (check) {
-            K.myTimer!!.cancel()
+            ResendApis.myTimer!!.cancel()
         }
         finishAffinity()
         finish()
@@ -869,12 +869,12 @@ class MainActivity : BaseClass() {
 
     override fun onResume() {
         Log.d("check_ON_RESUME", "${MyApplication.checkForResume}")
-        binding.menu.setMenuResource(R.menu.navigationbar_menu, Color.parseColor(K.primaryColor))
+        binding.menu.setMenuResource(R.menu.navigationbar_menu, Color.parseColor(ResendApis.primaryColor))
         if (MyApplication.checkForResume == 200) {
 
             try {
 //                unregisterReceiver(receiver)
-                K.timeDifference(tinyDB, this, true, MyApplication.TotalBreak)
+                ResendApis.timeDifference(tinyDB, this, true, MyApplication.TotalBreak)
                 MyApplication.checkForResume = 0
             } catch (e: Exception) {
                 MyApplication.checkForResume = 0
@@ -1193,7 +1193,7 @@ class MainActivity : BaseClass() {
 
         var check = tinyDB.getBoolean("PENDINGCHECK")
         if (check == false) {
-            K.checkNet()
+            ResendApis.checkNet()
         }
 
         if (checkState == false) {

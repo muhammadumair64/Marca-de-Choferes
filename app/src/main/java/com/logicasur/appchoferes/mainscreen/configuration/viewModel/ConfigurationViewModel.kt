@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.R
@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.net.SocketException
-import java.util.*
 import javax.inject.Inject
 
 
@@ -164,7 +163,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             toggleOFF!!.setOnClickListener {
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-//                        val check = K.isConnected()
+//                        val check = ResendApis.isConnected()
                         withContext(Dispatchers.Main) {
                             if (CheckConnection.netCheck(activityContext!!)) {
                                 var intent = Intent(context, LoadingScreen::class.java)
@@ -194,7 +193,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             toggleON!!.setOnClickListener {
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-//                        val check = K.isConnected()
+//                        val check = ResendApis.isConnected()
                         withContext(Dispatchers.Main) {
                             if (CheckConnection.netCheck(activityContext!!)) {
                                 var intent = Intent(context, LoadingScreen::class.java)
@@ -416,7 +415,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
     fun language0Selected() {
         text0.setTextColor(Color.BLACK)
-        image0.setBackgroundColor(Color.parseColor(K.primaryColor))
+        image0.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
 
         text1.setTextColor(Color.parseColor("#C6C6C6"))
         image1.setBackgroundColor(Color.GRAY)
@@ -427,7 +426,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
     fun language1Selected() {
         text1.setTextColor(Color.BLACK)
-        image1.setBackgroundColor(Color.parseColor(K.primaryColor))
+        image1.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
 
         text0.setTextColor(Color.parseColor("#C6C6C6"))
         image0.setBackgroundColor(Color.GRAY)
@@ -438,7 +437,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 
     fun language2Selected() {
         text2.setTextColor(Color.BLACK)
-        image2.setBackgroundColor(Color.parseColor(K.primaryColor))
+        image2.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
 
         text1.setTextColor(Color.parseColor("#C6C6C6"))
         image1.setBackgroundColor(Color.GRAY)

@@ -12,7 +12,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.ItemVehiclelistBinding
@@ -53,7 +53,7 @@ class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClic
     selected=selected.minus(1)
     if(selected==position){
         holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.BLACK)
-        holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor(K.primaryColor))
+        holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
     }
         holder.adapterViewBindingAdapter.vehicle.setOnClickListener {
             Log.d("VEHICALTESTING","${holder.adapterViewBindingAdapter.searchedText.text}")
@@ -76,7 +76,7 @@ class SearchAdapter(var vehicleSearchArrayList: ArrayList<String>,var onItemClic
 
             onItemClicked.vehicleSelected(position)
             holder.adapterViewBindingAdapter.searchedText.setTextColor(Color.BLACK)
-            holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor(K.primaryColor))
+            holder.adapterViewBindingAdapter.checkbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
             println("holder position $holder")
         }
 

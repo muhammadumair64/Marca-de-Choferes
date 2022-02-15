@@ -15,7 +15,7 @@ import com.logicasur.appchoferes.databinding.ActivityForgotPasswordBinding
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.forgotPassword.ForgotPasswordActivity
 import com.logicasur.appchoferes.auth.repository.AuthRepository
@@ -39,7 +39,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
     fun viewsForForgotPasswordActivity(context: Context,binding: ActivityForgotPasswordBinding){
         activityContext= context
         tinyDB= TinyDB(context)
-        binding.arrowBack.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.arrowBack.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         binding.SubmitButton.setOnClickListener {
 
                 val emailCheck: String = binding.email.text.toString()

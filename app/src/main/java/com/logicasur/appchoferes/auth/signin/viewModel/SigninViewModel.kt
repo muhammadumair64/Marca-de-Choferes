@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.auth.forgotPassword.ForgotPasswordActivity
@@ -196,10 +196,10 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
 
 
                         if (response.colors.primary.isNotEmpty()) {
-                            K.primaryColor = response.colors.primary ?: "#7A59FC"
-                            K.secondrayColor = response.colors.secondary ?: "#653FFB"
-                            tinyDB.putString("primaryColor",K.primaryColor)
-                            tinyDB.putString("secondrayColor",K.secondrayColor)
+                            ResendApis.primaryColor = response.colors.primary ?: "#7A59FC"
+                            ResendApis.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            tinyDB.putString("primaryColor",ResendApis.primaryColor)
+                            tinyDB.putString("secondrayColor",ResendApis.secondrayColor)
                         }
                         
                         tinyDB.putString("User",userName)
@@ -489,7 +489,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 
                 getWorkTime(response)
 
@@ -560,7 +560,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
 
 

@@ -20,12 +20,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
-import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.BaseClass
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.auth.otp.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService.Companion.activity
-import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -61,8 +59,8 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
         setContentView(R.layout.activity_loading_screen)
 
         tinyDB= TinyDB(this)
-        K.primaryColor=tinyDB.getString("primaryColor")!!
-        K.secondrayColor=tinyDB.getString("secondrayColor")!!
+        ResendApis.primaryColor=tinyDB.getString("primaryColor")!!
+        ResendApis.secondrayColor=tinyDB.getString("secondrayColor")!!
         initView()
          imageFromServer= tinyDB.getString("loadingBG").toString()
         if(imageFromServer.isNotEmpty()){
@@ -173,7 +171,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
         proceed_btn=PopupView.findViewById(R.id.proceed_btn)
         cancel_btn=PopupView.findViewById(R.id.cancel_btn)
         loadingViewModel.openPopup(networkAlertDialog!!,PopupView,resources)
-        setGrad(K.primaryColor, K.secondrayColor, proceed_btn)
+        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, proceed_btn)
         cancel_btn.setOnClickListener {
             networkAlertDialog!!.dismiss()
 
@@ -211,7 +209,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
         loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
 
-        setGrad(K.primaryColor, K.secondrayColor, go_back_btn)
+        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, go_back_btn)
          go_back_btn.setOnClickListener {
             serverAlertDialog!!.dismiss()
              finish()

@@ -15,7 +15,7 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
@@ -99,7 +99,7 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,va
 
 
                     var defaultBreak=tinyDB.getInt("defaultBreak")
-                    K.timeDifference(tinyDB, activityContext!!, false,defaultBreak)
+                    ResendApis.timeDifference(tinyDB, activityContext!!, false,defaultBreak)
 
                     getWorkTimeWhenOffline()
                 }
@@ -143,7 +143,7 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,va
             }
             var defaultTime=tinyDB.getInt("defaultWork")
 
-            K.timeDifference(tinyDB, activityContext!!, false,defaultTime)
+            ResendApis.timeDifference(tinyDB, activityContext!!, false,defaultTime)
             Log.d("TimerTESTING", "Here")
             var intent = Intent(activityContext, MainActivity::class.java)
             ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)

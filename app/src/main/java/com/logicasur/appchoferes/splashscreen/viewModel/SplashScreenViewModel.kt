@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.auth.repository.AuthRepository
@@ -49,8 +49,8 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
         activityContext = context
         tinyDB = TinyDB(context)
         tagsForToast()
-        K.authRepository= authRepository
-        K.mainRepository=mainRepository
+        ResendApis.authRepository= authRepository
+        ResendApis.mainRepository=mainRepository
         ServerCheck.authRepository=authRepository
         ServerCheck.mainRepository=mainRepository
 
@@ -59,7 +59,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
     fun checkData(){
         MyApplication.checKForSyncLoading=true
-        K.checkNet()
+        ResendApis.checkNet()
         myTimer = Timer()
         myTimer!!.schedule(object : TimerTask() {
             override fun run() {
@@ -71,7 +71,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 }
                 else{
                     Log.d("SYNC_CHECK_TESTING","In False")
-                    var check=K.isConnected()
+                    var check=ResendApis.isConnected()
                     if(check == false){
                         MyApplication.checKForPopup = true
                  viewModelScope.launch {
@@ -139,11 +139,11 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                         }
 
                         if (response.colors.primary.isNotEmpty()) {
-                            K.primaryColor = response.colors.primary ?: "#7A59FC"
-                            K.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            ResendApis.primaryColor = response.colors.primary ?: "#7A59FC"
+                            ResendApis.secondrayColor = response.colors.secondary ?: "#653FFB"
                             Log.d("COLORCHECKTESTING",response.colors.primary )
-                            tinyDB.putString("primaryColor",K.primaryColor)
-                            tinyDB.putString("secondrayColor",K.secondrayColor)
+                            tinyDB.putString("primaryColor",ResendApis.primaryColor)
+                            tinyDB.putString("secondrayColor",ResendApis.secondrayColor)
                         }
 
                        var color= tinyDB.getString("primaryColor")
@@ -412,7 +412,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 
                 getWorkTime(response)
 
@@ -483,7 +483,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
 
 

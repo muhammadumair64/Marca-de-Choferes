@@ -21,7 +21,11 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import javax.net.ssl.*
 import com.logicasur.appchoferes.Extra.NetworkConnectionInterceptor
+import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
+import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.localDataBase.unsentApiDao.UnsentApiDao
+import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
 
 import okhttp3.*
@@ -155,6 +159,29 @@ class MyModule {
 
         return retrofit.create(RetrofitInterface::class.java)
     }
+
+
+
+    @Provides
+    @Singleton
+    fun provideServerCheck(): ServerCheck {
+
+        return ServerCheck()
+    }
+
+    @Provides
+    @Singleton
+    fun provideResendApis(authRepository: AuthRepository,
+                          mainRepository: MainRepository,
+                          serverCheck: ServerCheck): ResendApis {
+
+        return ResendApis(authRepository,mainRepository,serverCheck)
+    }
+
+
+
+
+
 
 
     @Singleton

@@ -26,10 +26,9 @@ import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import java.text.DateFormat
 
 
-class K {
+class ResendApis constructor(val authRepository: AuthRepository, val mainRepository: MainRepository, val serverCheck: ServerCheck) {
+
     companion object {
-        lateinit var authRepository: AuthRepository
-        lateinit var mainRepository: MainRepository
         var arrayList: ArrayList<UpdateActivityDataClass> = ArrayList()
         var tinyDB: TinyDB = TinyDB(MyApplication.appContext)
         var myTimer: Timer? = null
@@ -45,6 +44,7 @@ class K {
 //            }
 
         const val splashToOtp = "splashToOtp"
+    }
 
         fun timeDifference(tinyDB: TinyDB, context: Context, resumeCheck: Boolean, workBreak: Int) {
 
@@ -208,7 +208,7 @@ class K {
 
 //                            val coroutineJob = Job()
 //                            CoroutineScope(coroutineJob).launch(Dispatchers.IO) {
-                            ServerCheck.serverCheck(null) { checkStateAndUploadActivityDB() }
+                            serverCheck.serverCheck(null) { checkStateAndUploadActivityDB() }
 //                                checkStateAndUploadActivityDB()
                             //}
                             Log.d("PENDING_DATA_TESTING", "before")
@@ -341,7 +341,7 @@ class K {
                     tinyDB.putBoolean("PENDINGCHECK", false)
                     tinyDB.putBoolean("SYNC_CHECK", true)
                 } else {
-                    ServerCheck.serverCheck(null) {
+                    serverCheck.serverCheck(null) {
                         checkStateAndUploadActivityDB()
                     }
                 }
@@ -547,7 +547,7 @@ class K {
         }
 
 
-    }
+
 
 
     fun Job.status(): String = when {

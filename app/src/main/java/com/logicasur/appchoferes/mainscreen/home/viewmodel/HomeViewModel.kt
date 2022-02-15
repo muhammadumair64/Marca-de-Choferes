@@ -35,7 +35,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.MyBroadastReceivers
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.repository.AuthRepository
@@ -117,10 +117,10 @@ class HomeViewModel @Inject constructor(
         tagsForToast()
         (context as MainActivity).initRepo(authRepository, mainRepository)
         MyBroadastReceivers.authRepository = authRepository
-        binding.cardColor.setCardBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.arrowdownbg.setBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.arrowbg.setBackgroundColor(Color.parseColor(K.primaryColor))
-        binding.iconCarbg.setBackgroundColor(Color.parseColor(K.primaryColor))
+        binding.cardColor.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.arrowdownbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.arrowbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.iconCarbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
 
         MyApplication.TotalTime = tinyDB.getInt("defaultWork")
 
@@ -137,7 +137,7 @@ class HomeViewModel @Inject constructor(
         System.out.println(" C DATE is  " + currentDate)
 
         binding.date.text = "$currentDate"
-        dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+        dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
         var Choice = tinyDB.getString("selectedState")
 
         when (Choice) {
@@ -198,7 +198,7 @@ class HomeViewModel @Inject constructor(
     fun Workbar() {
         dataBinding!!.bar.apply {
             var default = tinyDB.getInt("defaultWork")
-            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+            dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
             default = default * 60
             var maxTime = default
             progressMax = maxTime.toFloat()
@@ -498,7 +498,7 @@ class HomeViewModel @Inject constructor(
         if (overTimeCheck == true) {
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
         } else {
-            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+            dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
         }
 
         breakTimerLargeToSmall()
@@ -515,7 +515,7 @@ class HomeViewModel @Inject constructor(
         if (overTimeCheck == true) {
             dataBinding?.bar?.progressBarColor = Color.parseColor("#169DFD")
         } else {
-            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+            dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
         }
         dataBinding?.secondState?.setVisibility(View.GONE)
         dataBinding?.StateActive?.setVisibility(View.VISIBLE)
@@ -692,7 +692,7 @@ class HomeViewModel @Inject constructor(
             Log.d("BARPROGRESS", "Yes here")
             tinyDB.putInt("BARPROGRESS", 0)
             tinyDB.putBoolean("overTime", false)
-            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+            dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
             overTimeCheck = false
             binding!!.bar.progress = time.toFloat()
         }
@@ -1467,7 +1467,7 @@ class HomeViewModel @Inject constructor(
         if (MyApplication.check == 200) {
             intent.startTimer()
             intent.startTimerBreak()
-            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+            dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
             var workTime = tinyDB.getInt("lasttimework")
             var breakTime = tinyDB.getInt("lasttimebreak")
             dataBinding?.bar?.progress = workTime.toFloat()
@@ -1556,7 +1556,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fadeColor() {
-        var color = K.primaryColor.substringAfter("#")
+        var color = ResendApis.primaryColor.substringAfter("#")
         color = "#99$color"
         dataBinding?.bar?.progressBarColor = Color.parseColor(color)
         Log.d("FadeColor ", "$color")
@@ -1649,7 +1649,7 @@ class HomeViewModel @Inject constructor(
             dataBinding!!.statusListBtn.visibility = View.VISIBLE
             Log.d("BREAKTIMERTEST", "1")
             ref.startTimerBreak()
-            dataBinding?.bar?.progressBarColor = Color.parseColor(K.primaryColor)
+            dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
             Timer().schedule(100) {
 
                 ref.stopTimerBreak()

@@ -28,7 +28,7 @@ import android.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
 import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
@@ -69,7 +69,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-//                        val check = K.isConnected()
+//                        val check = ResendApis.isConnected()
                         withContext(Dispatchers.Main) {
                             if (CheckConnection.netCheck(activityContext!!)) {
                                 var intent = Intent(context, CreateNewPasswordScreen::class.java)
@@ -126,8 +126,8 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 
                         authRepository.clearData()
                         tinyDB.clear()
-                        K.primaryColor = "#7A59FC"
-                        K.secondrayColor = "#653FFB"
+                        ResendApis.primaryColor = "#7A59FC"
+                        ResendApis.secondrayColor = "#653FFB"
                         var intent = Intent(activityContext, SignInActivity::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                         (activityContext as MainActivity).finish()

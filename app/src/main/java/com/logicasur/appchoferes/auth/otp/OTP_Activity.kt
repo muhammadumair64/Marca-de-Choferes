@@ -7,7 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.logicasur.appchoferes.Extra.BaseClass
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.auth.otp.viewModel.OTPViewModel
@@ -28,8 +28,8 @@ class OTP_Activity : BaseClass(){
     }
 
     fun initViews(){
-        otpViewModel.fromSplash = intent.getBooleanExtra(K.splashToOtp,false)
-        setGrad(K.primaryColor, K.secondrayColor,binding.SubmitButton)
+        otpViewModel.fromSplash = intent.getBooleanExtra(ResendApis.splashToOtp,false)
+        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor,binding.SubmitButton)
         otpViewModel.viewsForOTPScreen(context,binding)
         showSoftKeyboard(binding.edt1)
     }

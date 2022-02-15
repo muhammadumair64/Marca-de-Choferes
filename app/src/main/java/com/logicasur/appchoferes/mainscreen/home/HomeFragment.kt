@@ -26,7 +26,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.mainscreen.viewModel.MainViewModel
 import com.logicasur.appchoferes.mainscreen.home.Adapter.SearchAdapter
 import com.logicasur.appchoferes.mainscreen.home.Adapter.StatusAdapter
@@ -92,9 +92,9 @@ class HomeFragment : Fragment(), OnclickItem {
         var context = (activity as MainActivity).context
         mainContext = context
         binding.statusListBtn.visibility = View.GONE
-        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, binding.secondState)
-        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, binding.TakeBreak)
-        binding.date.setTextColor(Color.parseColor(K.primaryColor))
+        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, binding.secondState)
+        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, binding.TakeBreak)
+        binding.date.setTextColor(Color.parseColor(ResendApis.primaryColor))
         binding.apply {
             initialState?.setVisibility(View.VISIBLE)
             secondState?.setVisibility(View.GONE)
@@ -314,7 +314,7 @@ class HomeFragment : Fragment(), OnclickItem {
             MyApplication.checKForPopup = false
         }
 
-        (activity as MainActivity).setGrad(K.primaryColor, K.secondrayColor, proceed_btn)
+        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, proceed_btn)
         cancel_btn.setOnClickListener {
 
             networkAlertDialog.dismiss()

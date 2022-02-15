@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.logicasur.appchoferes.Extra.BaseClass
-import com.logicasur.appchoferes.Extra.K
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.auth.createpassword.viewModel.CreatePasswordViewModel
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.R
@@ -33,7 +33,7 @@ class CreateNewPasswordScreen : BaseClass() {
     }
 
     fun initView() {
-        setGrad(K.primaryColor, K.secondrayColor,binding.SubmitBtn)
+        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor,binding.SubmitBtn)
         createPasswordViewModel.viewsForCreatePassword(context, binding)
          showSoftKeyboard(binding.editPassword)
     }
