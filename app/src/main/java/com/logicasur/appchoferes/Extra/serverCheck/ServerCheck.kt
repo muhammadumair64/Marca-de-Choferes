@@ -85,6 +85,7 @@ class ServerCheck {
                     {
                         Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
                             .show()
+                        LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                     }
 //                    serverCheck { action() }
                 } catch (e: SocketException) {
@@ -92,15 +93,18 @@ class ServerCheck {
                     {
                         Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
                             .show()
+                        LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                     }
 //                    serverCheck { action() }
                 } catch (e: NoInternetException) {
 //                    LoadingScreen.OnEndLoadingCallbacks!!.openPopup(null)
                     Log.d(TAG, " Exception..${e.localizedMessage}")
+                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
 //                    serverCheck { action() }
                 } catch (e: Exception) {
 
                     Log.d(TAG, " Exception..${e.localizedMessage}")
+                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
 //                    LoadingScreen.OnEndLoadingCallbacks!!.openPopup(null)
 //                    serverCheck { action() }
                 }

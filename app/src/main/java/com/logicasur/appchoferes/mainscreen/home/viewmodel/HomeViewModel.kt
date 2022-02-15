@@ -836,9 +836,6 @@ class HomeViewModel @Inject constructor(
     fun getLocation(context: Context) {
 
         //change
-
-
-
         println("location call")
         var locationRequest = LocationRequest()
         locationRequest.interval = 10000
