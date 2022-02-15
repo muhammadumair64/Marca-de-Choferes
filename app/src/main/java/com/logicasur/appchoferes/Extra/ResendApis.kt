@@ -31,20 +31,22 @@ class ResendApis constructor(val authRepository: AuthRepository, val mainReposit
     companion object {
         var arrayList: ArrayList<UpdateActivityDataClass> = ArrayList()
         var tinyDB: TinyDB = TinyDB(MyApplication.appContext)
-        var myTimer: Timer? = null
         var value = false
         var primaryColor = "#7A59FC"
+        var secondrayColor = "#653FFB"
 //            get() {
 //                return tinyDB.getString("primaryColor") ?: "#7A59FC"
 //            }
 
-        var secondrayColor = "#653FFB"
+
 //            get() {
 //                return tinyDB.getString("secondrayColor") ?: "#653FFB"
 //            }
 
         const val splashToOtp = "splashToOtp"
     }
+
+    var myTimer: Timer? = null
 
         fun timeDifference(tinyDB: TinyDB, context: Context, resumeCheck: Boolean, workBreak: Int) {
 

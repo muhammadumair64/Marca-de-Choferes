@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -39,6 +40,9 @@ class ConfigurationFragment : Fragment() {
     lateinit var binding: FragmentConfigurationBinding
     lateinit var dismiss: ImageView
     lateinit var tinyDB: TinyDB
+    @Inject
+    lateinit var resendApis: ResendApis
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -97,7 +101,7 @@ class ConfigurationFragment : Fragment() {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO){
-                    val check = ResendApis.isConnected()
+                    val check = resendApis.isConnected()
                     withContext(Dispatchers.Main){
                         if(check){
                             alertDialog.setView(contactPopupView)

@@ -133,7 +133,7 @@ class ServerCheck{
             totalTime: Int?,
             activity: Int?,
             geoPosition: GeoPosition?,
-            vehicle: Vehicle?, state: State?, action1: () -> Unit,resendApis: ResendApis
+            vehicle: Vehicle?, state: State?,resendApis: ResendApis,action1: () -> Unit
         ) {
             tagsForToast()
             Log.d(TAG, "Server Check function 2nd")

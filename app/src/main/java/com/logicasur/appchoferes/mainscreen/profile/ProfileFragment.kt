@@ -43,6 +43,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -56,6 +57,10 @@ class ProfileFragment : Fragment() {
     lateinit var confirmbtn: AppCompatButton
     val profileViewModel: ProfileViewModel by viewModels()
     lateinit var mainViewModel: MainViewModel
+
+    @Inject
+    lateinit var resendApis: ResendApis
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -293,7 +298,7 @@ class ProfileFragment : Fragment() {
 //                        }
 
                         lifecycleScope.launch(Dispatchers.IO) {
-                            ServerCheck.serverCheckTesting(null) { serverAction ->
+                       resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
                                 profileViewModel.updateProfile(
                                     nameChanges.toString(),
                                     fatherName.toString(),
@@ -310,7 +315,7 @@ class ProfileFragment : Fragment() {
 //                    )
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
-                        ServerCheck.serverCheckTesting(null){serverAction->
+                        resendApis.serverCheck.serverCheckTesting(null){serverAction->
                             profileViewModel.updateProfile(
                                 Name.toString(),
                                 nameChanges.toString(),

@@ -36,11 +36,13 @@ import javax.inject.Inject
 import kotlin.concurrent.schedule
 
 @HiltViewModel
-class SplashScreenViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository) : ViewModel() {
+class SplashScreenViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository, val resendApis: ResendApis) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     val sdf = SimpleDateFormat("yyyy-MM-dd")
     val currentDate = sdf.format(Date())
+
+
     var check = 0
     var TAG2 = ""
     var myTimer: Timer? = null
@@ -49,8 +51,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
         activityContext = context
         tinyDB = TinyDB(context)
         tagsForToast()
-        ResendApis.authRepository= authRepository
-        ResendApis.mainRepository=mainRepository
+
         ServerCheck.authRepository=authRepository
         ServerCheck.mainRepository=mainRepository
 
@@ -59,7 +60,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
     fun checkData(){
         MyApplication.checKForSyncLoading=true
-        ResendApis.checkNet()
+        resendApis.checkNet()
         myTimer = Timer()
         myTimer!!.schedule(object : TimerTask() {
             override fun run() {
@@ -71,7 +72,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 }
                 else{
                     Log.d("SYNC_CHECK_TESTING","In False")
-                    var check=ResendApis.isConnected()
+                    var check=resendApis.isConnected()
                     if(check == false){
                         MyApplication.checKForPopup = true
                  viewModelScope.launch {
@@ -412,7 +413,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                resendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 
                 getWorkTime(response)
 
@@ -483,7 +484,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        resendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
 
 

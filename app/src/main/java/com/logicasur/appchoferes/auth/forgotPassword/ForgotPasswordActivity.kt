@@ -16,6 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ForgotPasswordActivity :BaseClass() {
+
+
     lateinit var binding:ActivityForgotPasswordBinding
     val context:Context=this
     val forgotPasswordViewModel:ForgotPasswordViewModel by viewModels()

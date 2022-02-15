@@ -71,6 +71,7 @@ import java.text.SimpleDateFormat
 
 import java.lang.Exception
 import java.net.SocketException
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
@@ -98,6 +99,10 @@ class MainActivity : BaseClass() {
     var timeBreak = 0.0
     var dataBinding: FragmentHomeBinding? = null
     val viewModel: HomeViewModel by viewModels()
+    
+    @Inject
+    lateinit var resendApis: ResendApis
+    
     lateinit var tinyDB: TinyDB
     var WorkTime = 0
     var BreakTime = 0
@@ -125,7 +130,7 @@ class MainActivity : BaseClass() {
         ResendApis.primaryColor = tinyDB.getString("primaryColor")!!
         ResendApis.secondrayColor = tinyDB.getString("secondrayColor")!!
 
-//        ResendApis.timeDifference(tinyDB)
+//        resendApis.timeDifference(tinyDB)
         tagsForToast()
         serviceIntent = Intent(applicationContext, TimerService::class.java)
         registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
@@ -360,7 +365,7 @@ class MainActivity : BaseClass() {
         if (GpsStatus) {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    if (ResendApis.isConnected()) {
+                    if (resendApis.isConnected()) {
                         withContext(Dispatchers.Main) {
                             action()
                             getLocation(context)
@@ -397,7 +402,7 @@ class MainActivity : BaseClass() {
             val task = LocationServices.getSettingsClient(it)
                 .checkLocationSettings(builder.build())
 
-            if (ResendApis.isConnected()) {
+            if (resendApis.isConnected()) {
                 Log.d("PENDINGAPITESTING", "IN GPS POPUP SETTING")
                 MainActivity.action = action
             } else {
@@ -471,7 +476,7 @@ class MainActivity : BaseClass() {
             Log.d("isSuccess GPS PRO", "nvnf ${checkGPS()}")
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    if (ResendApis.isConnected()) {
+                    if (resendApis.isConnected()) {
                         withContext(Dispatchers.Main) {
                             action?.invoke()
                             getLocation(context)
@@ -806,7 +811,7 @@ class MainActivity : BaseClass() {
         stopService(Intent(this, BreakTimerService::class.java))
         var check = tinyDB.getBoolean("PENDINGCHECK")
         if (check) {
-            ResendApis.myTimer!!.cancel()
+            resendApis.myTimer!!.cancel()
         }
         finishAffinity()
         finish()
@@ -874,7 +879,7 @@ class MainActivity : BaseClass() {
 
             try {
 //                unregisterReceiver(receiver)
-                ResendApis.timeDifference(tinyDB, this, true, MyApplication.TotalBreak)
+                resendApis.timeDifference(tinyDB, this, true, MyApplication.TotalBreak)
                 MyApplication.checkForResume = 0
             } catch (e: Exception) {
                 MyApplication.checkForResume = 0
@@ -1193,7 +1198,7 @@ class MainActivity : BaseClass() {
 
         var check = tinyDB.getBoolean("PENDINGCHECK")
         if (check == false) {
-            ResendApis.checkNet()
+            resendApis.checkNet()
         }
 
         if (checkState == false) {

@@ -46,7 +46,7 @@ import java.net.SocketException
 import javax.inject.Inject
 
 @HiltViewModel
-class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository) : ViewModel() {
+class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository,val resendApis: ResendApis) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     var Token=""
@@ -489,7 +489,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                resendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 
                 getWorkTime(response)
 
@@ -560,7 +560,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        ResendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        resendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
 
 

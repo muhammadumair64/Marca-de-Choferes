@@ -36,7 +36,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ConfigurationViewModel @Inject constructor(val mainRepository: MainRepository) : ViewModel() {
+class ConfigurationViewModel @Inject constructor(val mainRepository: MainRepository ,val resendApis: ResendApis) : ViewModel() {
     var language: Int = 0
     var activityContext: Context? = null
     var dataBinding: FragmentConfigurationBinding? = null
@@ -98,7 +98,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(0, alterDialog) }
 
-                ServerCheck.serverCheckTesting(null) { serverAction ->
+               resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
                     selectedLanguageUplaod(0, alterDialog) {
                         serverAction()
                     }
@@ -115,7 +115,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 //            tinyDB.putString("language", "1")
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(1, alterDialog) }
-                ServerCheck.serverCheckTesting(null) { serverAction ->
+                resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
                     selectedLanguageUplaod(1, alterDialog) {
                         serverAction()
                     }
@@ -135,7 +135,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(2, alterDialog) }
 
-                ServerCheck.serverCheckTesting(null) { serverAction ->
+                resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
                     selectedLanguageUplaod(2, alterDialog) {
                         serverAction()
                     }
@@ -171,7 +171,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                                 Log.d("ConfigurationViewModel", "true")
 //                                ServerCheck.serverCheck(null) { selectedNotifyStateUplaod(true) }
 
-                                ServerCheck.serverCheckTesting(null) { serverAction ->
+                                resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
 
                                     selectedNotifyStateUplaod(true, serverAction)
                                 }
@@ -206,7 +206,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 //                                    )
 //                                }
 
-                                ServerCheck.serverCheckTesting(null) { serverAction ->
+                                resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
 
                                     selectedNotifyStateUplaod(false, serverAction)
                                 }

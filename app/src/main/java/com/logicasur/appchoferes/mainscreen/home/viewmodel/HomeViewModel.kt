@@ -70,7 +70,8 @@ import kotlin.concurrent.schedule
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val authRepository: AuthRepository,
-    val mainRepository: MainRepository
+    val mainRepository: MainRepository,
+    val resendApis: ResendApis
 ) : ViewModel() {
     var activityContext: Context? = null
     var dataBinding: FragmentHomeBinding? = null
@@ -1188,7 +1189,7 @@ class HomeViewModel @Inject constructor(
     {
 
         viewModelScope.launch(Dispatchers.IO) {
-            ServerCheck.serverCheckMainActivityApi(null){serverAction->
+            resendApis.serverCheck.serverCheckMainActivityApi(null){serverAction->
 
                 updateState(
                     "$currentDate",
@@ -1373,12 +1374,12 @@ class HomeViewModel @Inject constructor(
                 vehiclePosition = vehiclePosition.minus(1)
                 Log.d("positionOfVehicle ", "$vehiclePosition")
                 var vehicle = vehicleArrayListforUpload[vehiclePosition]
-                ServerCheck.serverCheckActivityOrStatus(
+                resendApis.serverCheck.serverCheckActivityOrStatus(
                     "$currentDate",
                     totalTime,
                     activity,
                     geoPosition,
-                    vehicle, null
+                    vehicle, null,resendApis
                 ) {
                     updateActivityForAction("$currentDate",
                         totalTime,

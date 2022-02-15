@@ -41,7 +41,7 @@ import java.util.*
 
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
+class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,val resendApis: ResendApis) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     lateinit var imageInBitmap: Bitmap
@@ -92,7 +92,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 //                        logoutUser()
 //                    }
 
-                    ServerCheck.serverCheckTesting(null){ serverAction ->
+                    resendApis.serverCheck.serverCheckTesting(null){ serverAction ->
                         logoutUser(){serverAction()}
                     }
                 }
@@ -189,7 +189,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository) :
 //            ServerCheck.serverCheck(null) {
 //                updateAvatar(encoded,imageInBitmap)
 //            }
-            ServerCheck.serverCheckTesting(null){serverAction ->
+          resendApis.serverCheck.serverCheckTesting(null){serverAction ->
                 updateAvatar(encoded,imageInBitmap){serverAction()}
 
             }
