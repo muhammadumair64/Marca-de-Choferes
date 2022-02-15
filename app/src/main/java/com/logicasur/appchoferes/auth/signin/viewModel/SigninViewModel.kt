@@ -453,6 +453,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
 
     private fun getPreviousTime(response: SigninResponse) {
 
+        Log.d("NEGATIVE_TESTING", "in function")
+
 //        var workDate = tinyDB.getString("ActivityDate")
 //        var workDate = response.lastVar!!.lastWorkedHoursDateIni
 //        if(workDate!!.isNotEmpty()){
@@ -466,50 +468,41 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
 //            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
 //        }
 
-//
+
         tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
 
         when (response.lastVar.lastActivity) {
             0 -> {
-                tinyDB.putString("checkTimer", "workTime")
-                var workDate = response.lastVar!!.lastWorkedHoursDateIni
-                if (workDate!!.isNotEmpty()) {
-                    workDate = workDate!!.split(".").toTypedArray()[0]
-                    workDate = workDate!!.split("T").toTypedArray()[1]
-                    Log.d("TimeOfLastWork", "date is $workDate")
-                }
-                tinyDB.putString("goBackTime", workDate)
-                K.timeDifference(tinyDB, activityContext!!, false,response.work!!.workBreak)
+                Log.d("NEGATIVE_TESTING", "in function2")
+                getWorkTime(response)
             }
             1 -> {
+                Log.d("NEGATIVE_TESTING", "in function break")
                 tinyDB.putString("checkTimer", "breakTime")
                 var breakDate = response.lastVar!!.lastWorkBreakDateIni
                 if (breakDate!!.isNotEmpty()) {
                     breakDate = breakDate!!.split(".").toTypedArray()[0]
-                    breakDate = breakDate!!.split("T").toTypedArray()[1]
+                    breakDate = breakDate!!.replace("T"," ")
+                    breakDate = breakDate!!.replace("-","/")
                     Log.d("workDate Is", "date is $breakDate")
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
                 K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+
+                getWorkTime(response)
+
             }
             2 -> {
                 MyApplication.dayEndCheck = 100
-                tinyDB.putString("checkTimer", "workTime")
-                var workDate = response.lastVar!!.lastWorkedHoursDateIni
-                if (workDate!!.isNotEmpty()) {
-                    workDate = workDate!!.split(".").toTypedArray()[0]
-                    workDate = workDate!!.split("T").toTypedArray()[1]
-                    Log.d("workDate Is", "date is $workDate")
-                }
-                tinyDB.putString("goBackTime", workDate)
-                K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                getWorkTime(response)
             }
             3->{
                 MyApplication.dayEndCheck = 200
             }
         }
+
 
 
         var workStartTime=response.lastVar.lastWorkedHoursDateIni
@@ -533,7 +526,6 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                 }
             }
         }
-
         if(breakStartTime != null){
             breakStartTime= breakStartTime!!.replace("T",",")
             breakStartTime= breakStartTime!!.split(".").toTypedArray()[0]
@@ -554,6 +546,21 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
             }
         }
 
+
+
+    }
+    fun getWorkTime(response: SigninResponse) {
+        Log.d("NEGATIVE_TESTING", "in function 3")
+        tinyDB.putString("checkTimer", "workTime")
+        var workDate = response.lastVar!!.lastWorkedHoursDateIni
+        if (workDate!!.isNotEmpty()) {
+            workDate = workDate!!.split(".").toTypedArray()[0]
+            workDate = workDate!!.replace("T"," ")
+            workDate = workDate!!.replace("-","/")
+            Log.d("workDate Is", "date is $workDate")
+        }
+        tinyDB.putString("goBackTime", workDate)
+        K.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
 
 
