@@ -220,6 +220,7 @@ class K {
                     Log.d("NETCHECKTEST", "---- $netCheck")
                     try{
                         if(MyApplication.checKForActivityLoading){
+                            Log.d("LoadingEND", "----true----")
                             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                             MyApplication.checKForActivityLoading = false
                         }

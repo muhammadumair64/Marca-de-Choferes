@@ -116,6 +116,13 @@ class ServerCheck {
 
         }
 
+        fun endLoading(){
+            if(MyApplication.checKForSyncLoading){
+                LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                MyApplication.checKForSyncLoading = false
+            }
+        }
+
 
         suspend fun serverCheckActivityOrStatus(
             datetime: String?,

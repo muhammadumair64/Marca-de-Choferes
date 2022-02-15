@@ -25,6 +25,7 @@ class MyApplication:Application() {
         MyApplication.breakBarProgress=0
         MyApplication.checKForPopup=false
         MyApplication.checKForActivityLoading = false
+        MyApplication.checKForSyncLoading = false
     }
 
     companion object {
@@ -45,6 +46,7 @@ class MyApplication:Application() {
         var breakBarProgress by Delegates.notNull<Int>()
         var checKForPopup by Delegates.notNull<Boolean>()
         var checKForActivityLoading by Delegates.notNull<Boolean>()
+        var checKForSyncLoading by Delegates.notNull<Boolean>()
     }
 
 

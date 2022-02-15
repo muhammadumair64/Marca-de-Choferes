@@ -58,6 +58,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
     }
 
     fun checkData(){
+        MyApplication.checKForSyncLoading=true
         K.checkNet()
         myTimer = Timer()
         myTimer!!.schedule(object : TimerTask() {
