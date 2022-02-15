@@ -57,11 +57,11 @@ class ResendApis constructor(val authRepository: AuthRepository, val mainReposit
             val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
             var currentDate = sdf.format(Date())
             Log.d("check_the_time_i_store ", "$currentDate")
-            var datetest2 = getDateFromString(currentDate)
+            var datetest2 = getDateFromString("2022/02/15 01:10:06")
 
 
             var lastTimetoGo = tinyDB.getString("goBackTime")
-            var datetest1 = getDateFromString(lastTimetoGo!!)
+            var datetest1 = getDateFromString("2022/02/13 23:16:06")
 
             Log.d("check_the_time_i_store ", "$lastTimetoGo")
             var finalTimeDiff = printDifference(datetest1, datetest2)
@@ -536,9 +536,12 @@ class ResendApis constructor(val authRepository: AuthRepository, val mainReposit
                 "    $elapsedDays, $elapsedHours, $elapsedMinutes, $elapsedSeconds"
             )
 
+            var dayInSec= elapsedDays * 86400
             var hourSEC = elapsedHours * 3600
             var minutesSEC = elapsedMinutes * 60
-            var finalTimeInSec = hourSEC + minutesSEC + elapsedSeconds
+            var finalTimeInSec = hourSEC + minutesSEC + elapsedSeconds + dayInSec
+
+
 
             return finalTimeInSec
         }
