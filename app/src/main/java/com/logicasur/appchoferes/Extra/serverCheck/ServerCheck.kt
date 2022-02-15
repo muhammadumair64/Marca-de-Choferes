@@ -26,7 +26,7 @@ class ServerCheck {
     companion object {
         var TAG2 = ""
         var tinyDB = TinyDB(MyApplication.appContext)
-        val TAG = "CheckServer"
+        val TAG = "c"
         lateinit var authRepository: AuthRepository
         lateinit var mainRepository: MainRepository
 
@@ -67,6 +67,7 @@ class ServerCheck {
                 try {
                     val Token = tinyDB.getString("Cookie")
 
+                    Log.d(TAG, "Server CHECK API Hit")
                     checkServerResponse =
                         authRepository.checkServer(Token!!)
 

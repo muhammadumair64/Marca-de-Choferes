@@ -1107,6 +1107,7 @@ class HomeViewModel @Inject constructor(
                                  }
                              }
                              catch(e:Exception){
+                                 LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                                  Log.d("connection Exception", "Connect Not Available")
                              }
                          }
@@ -1157,18 +1158,20 @@ class HomeViewModel @Inject constructor(
                 var status = statusArrayListforUpload[position]
                 println("status is $status")
                 viewModelScope.launch(Dispatchers.IO) {
-                    ServerCheck.serverCheckActivityOrStatus(
-                        "$currentDate",
-                        MyApplication.TimeToSend, null,
-                        geoPosition,
-                        vehicle, status
-                    ) {
-                        stateUploadByAction("$currentDate",
-                            MyApplication.TimeToSend,
-                            status,
-                            geoPosition,
-                            vehicle)
-                    }
+//                    ServerCheck.serverCheckActivityOrStatus(
+//                        "$currentDate",
+//                        MyApplication.TimeToSend, null,
+//                        geoPosition,
+//                        vehicle, status
+//                    ) {
+//                        stateUploadByAction("$currentDate",
+//                            MyApplication.TimeToSend,
+//                            status,
+//                            geoPosition,
+//                            vehicle)
+//                    }
+
+                    stateUploadByAction(currentDate,MyApplication.TimeToSend,status,geoPosition,vehicle)
                 }
 //                updateState("$currentDate", MyApplication.TimeToSend, status, geoPosition, vehicle)
             }

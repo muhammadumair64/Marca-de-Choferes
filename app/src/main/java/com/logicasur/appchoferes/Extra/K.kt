@@ -329,6 +329,8 @@ class K {
 
 
                 if (!(mainRepository.isExistsUnsentUploadActivityDB())) {
+                    myTimer = null
+
                     tinyDB.putBoolean("PENDINGCHECK", false)
                     tinyDB.putBoolean("SYNC_CHECK", true)
                 } else {

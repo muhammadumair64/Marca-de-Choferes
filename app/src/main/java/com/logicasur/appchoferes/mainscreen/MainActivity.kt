@@ -518,7 +518,7 @@ class MainActivity : BaseClass() {
             tinyDB.putObject("upadteActivity", obj)
             tinyDB.putObject("GeoPosition", geoPosition)
             updatePendingData(false)
-            (MyApplication.loadingContext as LoadingScreen).finish()
+            LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
 
 
         } else {
@@ -584,6 +584,7 @@ class MainActivity : BaseClass() {
                         println("ErrorResponse")
                     } catch (e: ApiException) {
                         updatePendingData(false)
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                         e.printStackTrace()
                     } catch (e: NoInternetException) {
                         updatePendingData(false)
@@ -617,9 +618,12 @@ class MainActivity : BaseClass() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                         Log.d("connection Exception", "Connect Not Available")
                     }
                     catch(e:Exception){
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                         Log.d("connection Exception", "Connect Not Available")
                     }
                 }
