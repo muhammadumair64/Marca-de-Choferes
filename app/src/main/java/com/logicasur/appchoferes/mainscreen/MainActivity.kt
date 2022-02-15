@@ -79,7 +79,7 @@ class MainActivity : BaseClass() {
 
     companion object {
         const val LOCATION_SETTING_REQUEST = 999
-        lateinit var action: () -> Unit
+        var action: (() -> Unit)? = null
     }
 
     var arrayList: ArrayList<UpdateActivityDataClass> = ArrayList()
@@ -472,7 +472,7 @@ class MainActivity : BaseClass() {
                 withContext(Dispatchers.IO) {
                     if (K.isConnected()) {
                         withContext(Dispatchers.Main) {
-                            action()
+                            action?.invoke()
                             getLocation(context)
                         }
 
@@ -501,7 +501,7 @@ class MainActivity : BaseClass() {
         authRepository: AuthRepository
 
     ) {
-
+        Log.d("updateActivity", "Function")
 
         if (mainRepository!!.isExistsUnsentUploadActivityDB()) {
             Log.d("ACTIVITY_BY_DATABASE", "IN INSERT MODE")
@@ -534,6 +534,7 @@ class MainActivity : BaseClass() {
 //            }
 
             if (activity == 2) {
+
                 if (totalTime != null) {
                     tinyDB.putInt("lasttimebreak", totalTime)
                 }
@@ -621,8 +622,7 @@ class MainActivity : BaseClass() {
 
                         (MyApplication.loadingContext as LoadingScreen).finish()
                         Log.d("connection Exception", "Connect Not Available")
-                    }
-                    catch(e:Exception){
+                    } catch (e: Exception) {
                         (MyApplication.loadingContext as LoadingScreen).finish()
                         Log.d("connection Exception", "Connect Not Available")
                     }
@@ -1146,7 +1146,7 @@ class MainActivity : BaseClass() {
 
 
         if (checkState) {
-            Log.d("STATE_TESTING","NOT good")
+            Log.d("STATE_TESTING", "NOT good")
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     val apiData = getAPIDataForState()
@@ -1167,7 +1167,7 @@ class MainActivity : BaseClass() {
                 }
             }
         } else {
-            Log.d("STATE_TESTING","OK")
+            Log.d("STATE_TESTING", "OK")
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     var apiData = getActivityAPIData()
@@ -1196,7 +1196,7 @@ class MainActivity : BaseClass() {
         }
 
         if (checkState == false) {
-            action()
+            action?.invoke()
         }
 
 

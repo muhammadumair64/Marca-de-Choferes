@@ -879,7 +879,7 @@ class HomeViewModel @Inject constructor(
 //                        println("City Name is $location")
 //                        Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
 
-                        println("Current Location $longitude and $latitude")
+                      Log.d("CurrentLocation"," $longitude and $latitude")
                         var geoPosition = GeoPosition(latitude, longitude)
 
                             uploadActivity(selectedActivty, totalTimeForActivty, geoPosition)
@@ -1357,6 +1357,7 @@ class HomeViewModel @Inject constructor(
 
 
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
+        Log.d("startUpload","activity function.")
         var intent = Intent(activityContext, LoadingScreen::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
@@ -1364,12 +1365,12 @@ class HomeViewModel @Inject constructor(
         var currentDate = sdf.format(Date())
         tinyDB.putString("ActivityDate", currentDate)
         currentDate = currentDate + "Z"
-        System.out.println(" C DATE is  " + currentDate)
+        System.out.println(" startUpload" + currentDate)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 var vehiclePosition = tinyDB.getInt("vehicle")
                 vehiclePosition = vehiclePosition.minus(1)
-                Log.d("position of Vehicle ", "$vehiclePosition")
+                Log.d("positionOfVehicle ", "$vehiclePosition")
                 var vehicle = vehicleArrayListforUpload[vehiclePosition]
                 ServerCheck.serverCheckActivityOrStatus(
                     "$currentDate",
@@ -1396,6 +1397,7 @@ class HomeViewModel @Inject constructor(
         geoPosition: GeoPosition,
         vehicle: Vehicle
     ) {
+        Log.d("UpdateActivity","ForAction")
         viewModelScope.launch {
             (activityContext as MainActivity).updateActivity(
                 s,

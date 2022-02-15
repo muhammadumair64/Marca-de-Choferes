@@ -54,22 +54,15 @@ class K {
             val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
             var currentDate = sdf.format(Date())
             Log.d("check_the_time_i_store ", "$currentDate")
-            var datetest2=getDateFromString(currentDate)
-
-
+            var datetest2 = getDateFromString(currentDate)
 
 
             var lastTimetoGo = tinyDB.getString("goBackTime")
             var datetest1 = getDateFromString(lastTimetoGo!!)
 
             Log.d("check_the_time_i_store ", "$lastTimetoGo")
-            var finalTimeDiff = printDifference(datetest1,datetest2)
-            Log.d("TIME_TESTING"," final test $finalTimeDiff")
-
-
-
-
-
+            var finalTimeDiff = printDifference(datetest1, datetest2)
+            Log.d("TIME_TESTING", " final test $finalTimeDiff")
 
 
 // val simpleDateFormat = SimpleDateFormat("HH:mm:ss")
@@ -224,6 +217,11 @@ class K {
                         }
                     }
                     Log.d("NETCHECKTEST", "---- $netCheck")
+                    try{
+                        
+                    }catch (e:Exception){
+
+                    }
                 }
             }, 0, 10000)
         }
@@ -233,8 +231,10 @@ class K {
             Log.d("PENDING_DATA_TESTING", "Call checkStateAndUploadActivityDB")
             CoroutineScope(Job()).launch(Dispatchers.IO) {
 
+                if (myTimer != null) {
+                    myTimer!!.cancel()
+                }
 
-                myTimer!!.cancel()
 //                 if (mainRepository.isExistsUnsentStateUpdateDB()) {
 //
 //                     val getUnsentStateUpdateValues =
@@ -438,8 +438,7 @@ class K {
 
                 }
                 Log.d("connection Exception", "Connect Not Available")
-            }
-            catch(e:Exception){
+            } catch (e: Exception) {
                 Log.d("connection Exception", "Connect Not Available")
             }
 
@@ -488,8 +487,7 @@ class K {
 
                 Log.d("connection Exception", "Connect Not Available")
 
-            }
-            catch(e: Exception){
+            } catch (e: Exception) {
                 Log.d("connection Exception", "Connect Not Available")
             }
         }
@@ -524,11 +522,14 @@ class K {
                 "%d days, %d hours, %d minutes, %d seconds%n",
                 elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds
             )
-            Log.d("TESTING_TIME","    $elapsedDays, $elapsedHours, $elapsedMinutes, $elapsedSeconds")
+            Log.d(
+                "TESTING_TIME",
+                "    $elapsedDays, $elapsedHours, $elapsedMinutes, $elapsedSeconds"
+            )
 
             var hourSEC = elapsedHours * 3600
             var minutesSEC = elapsedMinutes * 60
-            var finalTimeInSec = hourSEC+ minutesSEC+ elapsedSeconds
+            var finalTimeInSec = hourSEC + minutesSEC + elapsedSeconds
 
             return finalTimeInSec
         }
@@ -539,11 +540,7 @@ class K {
         }
 
 
-
-
-
     }
-
 
 
     fun Job.status(): String = when {
