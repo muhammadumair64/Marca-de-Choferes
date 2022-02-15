@@ -375,6 +375,8 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
     private fun getPreviousTime(response: SigninResponse) {
 
+        Log.d("NEGATIVE_TESTING", "in function")
+
 //        var workDate = tinyDB.getString("ActivityDate")
 //        var workDate = response.lastVar!!.lastWorkedHoursDateIni
 //        if(workDate!!.isNotEmpty()){
@@ -394,14 +396,17 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
         when (response.lastVar.lastActivity) {
             0 -> {
+                Log.d("NEGATIVE_TESTING", "in function2")
                 getWorkTime(response)
             }
             1 -> {
+                Log.d("NEGATIVE_TESTING", "in function break")
                 tinyDB.putString("checkTimer", "breakTime")
                 var breakDate = response.lastVar!!.lastWorkBreakDateIni
                 if (breakDate!!.isNotEmpty()) {
                     breakDate = breakDate!!.split(".").toTypedArray()[0]
-                    breakDate = breakDate!!.split("T").toTypedArray()[1]
+                    breakDate = breakDate!!.replace("T"," ")
+                    breakDate = breakDate!!.replace("-","/")
                     Log.d("workDate Is", "date is $breakDate")
                 }
                 tinyDB.putString("goBackTime", breakDate)
@@ -419,6 +424,7 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
               MyApplication.dayEndCheck = 200
             }
         }
+
 
 
         var workStartTime=response.lastVar.lastWorkedHoursDateIni
@@ -442,7 +448,6 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
                 }
             }
         }
-
         if(breakStartTime != null){
             breakStartTime= breakStartTime!!.replace("T",",")
             breakStartTime= breakStartTime!!.split(".").toTypedArray()[0]
@@ -467,11 +472,13 @@ class SplashScreenViewModel @Inject constructor(val authRepository: AuthReposito
 
     }
     fun getWorkTime(response: SigninResponse) {
+        Log.d("NEGATIVE_TESTING", "in function 3")
         tinyDB.putString("checkTimer", "workTime")
         var workDate = response.lastVar!!.lastWorkedHoursDateIni
         if (workDate!!.isNotEmpty()) {
             workDate = workDate!!.split(".").toTypedArray()[0]
-            workDate = workDate!!.split("T").toTypedArray()[1]
+            workDate = workDate!!.replace("T"," ")
+            workDate = workDate!!.replace("-","/")
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)

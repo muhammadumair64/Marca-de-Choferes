@@ -89,7 +89,8 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,va
                         var breakDate =mainRepository.getUnsentStartBreakTimeDetails().time
                         if (breakDate!!.isNotEmpty()) {
                             breakDate = breakDate!!.split("Z").toTypedArray()[0]
-                            breakDate = breakDate!!.split(",").toTypedArray()[1]
+                            breakDate = breakDate!!.replace(","," ")
+                            breakDate = breakDate!!.replace("-","/")
                             Log.d("workDate Is", "date is $breakDate")
                         }
                         tinyDB.putString("goBackTime", breakDate)
@@ -133,7 +134,9 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,va
                 var workDate = date.time
                 if (workDate!!.isNotEmpty()) {
                     workDate = workDate!!.split("Z").toTypedArray()[0]
-                    workDate = workDate!!.split(",").toTypedArray()[1]
+                    workDate = workDate!!.replace(","," ")
+                    workDate = workDate!!.replace("-","/")
+
                     Log.d("workDate Is", "date is $workDate")
                 }
                 tinyDB.putString("goBackTime", workDate)

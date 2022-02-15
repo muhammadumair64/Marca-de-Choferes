@@ -1,10 +1,7 @@
 package com.logicasur.appchoferes.Extra
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.mainscreen.MainActivity
@@ -18,16 +15,14 @@ import com.logicasur.appchoferes.network.signinResponse.State
 import com.logicasur.appchoferes.network.signinResponse.Vehicle
 import kotlinx.coroutines.*
 import java.io.IOException
-import java.lang.Exception
-import java.net.HttpURLConnection
 import java.net.SocketException
 import java.net.SocketTimeoutException
-import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
+import com.androchef.happytimer.utils.DateTimeUtils
+import java.text.DateFormat
 
 
 class K {
@@ -52,42 +47,59 @@ class K {
 
         fun timeDifference(tinyDB: TinyDB, context: Context, resumeCheck: Boolean, workBreak: Int) {
 
+
+//    var datetest1 = getDateFromString("2022/02/14 13:51:47")
+
+
+            val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+            var currentDate = sdf.format(Date())
+            Log.d("check_the_time_i_store ", "$currentDate")
+            var datetest2=getDateFromString(currentDate)
+
+
+
+
             var lastTimetoGo = tinyDB.getString("goBackTime")
+            var datetest1 = getDateFromString(lastTimetoGo!!)
 
-            Log.d("check the time i store ", "$lastTimetoGo")
+            Log.d("check_the_time_i_store ", "$lastTimetoGo")
+            var finalTimeDiff = printDifference(datetest1,datetest2)
+            Log.d("TIME_TESTING"," final test $finalTimeDiff")
 
-            val simpleDateFormat = SimpleDateFormat("HH:mm:ss")
 
-            val sdf = SimpleDateFormat("HH:mm:ss")
-            val currentDate = sdf.format(Date())
 
-            var date1 = simpleDateFormat.parse(lastTimetoGo)
-            var date2 = simpleDateFormat.parse(currentDate)
 
-            val difference: Long = date2.getTime() - date1.getTime()
-            var days = (difference / (1000 * 60 * 60 * 24)).toInt()
-            var hours = ((difference - 1000 * 60 * 60 * 24 * days) / (1000 * 60 * 60)) as Long
-            var min =
-                (difference - 1000 * 60 * 60 * 24 * days - 1000 * 60 * 60 * hours) as Long / (1000 * 60)
-            val sec =
-                (difference - 1000 * 60 * 60 * 24 * days - 1000 * 60 * 60 * hours - 1000 * 60 * min).toInt() / 1000
-            hours = if (hours < 0) -hours else hours
-            println("======= Hours :: $hours   &&&&  $min   &&& $sec")
-            var check: Long = 0
-            var hoursInSec: Long = 0
-            var mintInSec: Long = 0
 
-            if (hours != check) {
-                hoursInSec = hours * 3600
-            }
-            if (min != check) {
-                mintInSec = min * 60
-            }
 
-            var finalTimeDiff = hoursInSec + mintInSec + sec
 
-            println("final time difference in sec is == $finalTimeDiff")
-            Log.d("finalssss time difference in sec is", "$finalTimeDiff")
+// val simpleDateFormat = SimpleDateFormat("HH:mm:ss")
+//            var date1 = simpleDateFormat.parse(lastTimetoGo)
+//            var date2 = simpleDateFormat.parse(currentDate)
+//
+//            val difference: Long = date2.getTime() - date1.getTime()
+//            var days = (difference / (1000 * 60 * 60 * 24)).toInt()
+//            var hours = ((difference - 1000 * 60 * 60 * 24 * days) / (1000 * 60 * 60)) as Long
+//            var min =
+//                (difference - 1000 * 60 * 60 * 24 * days - 1000 * 60 * 60 * hours) as Long / (1000 * 60)
+//            val sec =
+//                (difference - 1000 * 60 * 60 * 24 * days - 1000 * 60 * 60 * hours - 1000 * 60 * min).toInt() / 1000
+//            hours = if (hours < 0) -hours else hours
+//            println("======= Hours :: $hours   &&&&  $min   &&& $sec")
+//            var check: Long = 0
+//            var hoursInSec: Long = 0
+//            var mintInSec: Long = 0
+//
+//            if (hours != check) {
+//                hoursInSec = hours * 3600
+//            }
+//            if (min != check) {
+//                mintInSec = min * 60
+//            }
+//
+//            var finalTimeDiff = hoursInSec + mintInSec + sec
+//
+//            println("final time difference in sec is == $finalTimeDiff")
+//            Log.d("finalssss time difference in sec is", "$finalTimeDiff")
             MyApplication.backPressCheck = 200
 
             //check which time is need to set
@@ -479,7 +491,57 @@ class K {
                 Log.d("connection Exception", "Connect Not Available")
             }
         }
+
+
+        /**
+         * testing Date Setup
+         */
+
+
+        //1 minute = 60 seconds
+        //1 hour = 60 x 60 = 3600
+        //1 day = 3600 x 24 = 86400
+        open fun printDifference(startDate: Date, endDate: Date): Long {
+            //milliseconds
+            var different = endDate.time - startDate.time
+            println("startDate : $startDate")
+            println("endDate : $endDate")
+            println("different : $different")
+            val secondsInMilli: Long = 1000
+            val minutesInMilli = secondsInMilli * 60
+            val hoursInMilli = minutesInMilli * 60
+            val daysInMilli = hoursInMilli * 24
+            val elapsedDays = different / daysInMilli
+            different = different % daysInMilli
+            val elapsedHours = different / hoursInMilli
+            different = different % hoursInMilli
+            val elapsedMinutes = different / minutesInMilli
+            different = different % minutesInMilli
+            val elapsedSeconds = different / secondsInMilli
+            System.out.printf(
+                "%d days, %d hours, %d minutes, %d seconds%n",
+                elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds
+            )
+            Log.d("TESTING_TIME","    $elapsedDays, $elapsedHours, $elapsedMinutes, $elapsedSeconds")
+
+            var hourSEC = elapsedHours * 3600
+            var minutesSEC = elapsedMinutes * 60
+            var finalTimeInSec = hourSEC+ minutesSEC+ elapsedSeconds
+
+            return finalTimeInSec
+        }
+
+        fun getDateFromString(dateStr: String): Date {
+            val formatter: DateFormat = SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
+            return formatter.parse(dateStr) as Date
+        }
+
+
+
+
+
     }
+
 
 
     fun Job.status(): String = when {
@@ -489,6 +551,8 @@ class K {
         isCompleted -> "Completed"
         else -> "New"
     }
+
+
 }
 
 
