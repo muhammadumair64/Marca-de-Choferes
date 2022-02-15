@@ -36,7 +36,7 @@ class CreateNewPasswordScreen : BaseClass() {
     }
 
     fun initView() {
-        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor,binding.SubmitBtn)
+        setGrad(ResendApis.primaryColor, ResendApis.secondaryColor,binding.SubmitBtn)
         createPasswordViewModel.viewsForCreatePassword(context, binding)
          showSoftKeyboard(binding.editPassword)
     }

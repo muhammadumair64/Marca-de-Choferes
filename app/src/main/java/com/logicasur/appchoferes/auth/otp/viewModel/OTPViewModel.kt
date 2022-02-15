@@ -34,6 +34,7 @@ import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.logicasur.appchoferes.splashscreen.SplashScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
@@ -49,7 +50,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
-                                       val mainRepository: MainRepository,val resendApis: ResendApis) : ViewModel() {
+                                       val mainRepository: MainRepository,
+                                       val resendApis: ResendApis, val timeCalculator: TimeCalculator) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
      var fromSplash :Boolean? = null;
@@ -255,10 +257,10 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 
                         if (response.colors.primary.isNotEmpty()) {
                             ResendApis.primaryColor = response.colors.primary ?: "#7A59FC"
-                            ResendApis.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            ResendApis.secondaryColor = response.colors.secondary ?: "#653FFB"
                             Log.d("COLORCHECKTESTING",response.colors.primary )
                             tinyDB.putString("primaryColor",ResendApis.primaryColor)
-                            tinyDB.putString("secondrayColor",ResendApis.secondrayColor)
+                            tinyDB.putString("secondrayColor",ResendApis.secondaryColor)
                         }
 
                         tinyDB.putString("User",userName)
@@ -596,8 +598,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                resendApis.
-                timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 
                 getWorkTime(response)
 
@@ -669,7 +670,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
         }
         tinyDB.putString("goBackTime", workDate)
 
-        resendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
 
 

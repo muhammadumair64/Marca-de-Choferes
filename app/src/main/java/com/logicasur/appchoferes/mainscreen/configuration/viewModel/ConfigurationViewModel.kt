@@ -15,7 +15,6 @@ import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
-import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.FragmentConfigurationBinding
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
@@ -25,7 +24,7 @@ import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.NoInternetException
 import com.logicasur.appchoferes.network.ResponseException
-import com.logicasur.appchoferes.network.logoutResponse.MassageResponse
+import com.logicasur.appchoferes.network.logoutResponse.MessageResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +35,10 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ConfigurationViewModel @Inject constructor(val mainRepository: MainRepository ,val resendApis: ResendApis) : ViewModel() {
+class ConfigurationViewModel @Inject constructor(
+    val mainRepository: MainRepository,
+    val resendApis: ResendApis
+) : ViewModel() {
     var language: Int = 0
     var activityContext: Context? = null
     var dataBinding: FragmentConfigurationBinding? = null
@@ -98,7 +100,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(0, alterDialog) }
 
-               resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
+                resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                     selectedLanguageUplaod(0, alterDialog) {
                         serverAction()
                     }
@@ -115,7 +117,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 //            tinyDB.putString("language", "1")
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(1, alterDialog) }
-                resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
+                resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                     selectedLanguageUplaod(1, alterDialog) {
                         serverAction()
                     }
@@ -135,7 +137,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
             viewModelScope.launch(Dispatchers.IO) {
 //                ServerCheck.serverCheck(null) { selectedLanguageUplaod(2, alterDialog) }
 
-                resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
+                resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                     selectedLanguageUplaod(2, alterDialog) {
                         serverAction()
                     }
@@ -171,7 +173,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                                 Log.d("ConfigurationViewModel", "true")
 //                                ServerCheck.serverCheck(null) { selectedNotifyStateUplaod(true) }
 
-                                resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
+                                resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
 
                                     selectedNotifyStateUplaod(true, serverAction)
                                 }
@@ -206,7 +208,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
 //                                    )
 //                                }
 
-                                resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
+                                resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
 
                                     selectedNotifyStateUplaod(false, serverAction)
                                 }
@@ -304,8 +306,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
-                }
-                catch(e: Exception){
+                } catch (e: Exception) {
                     Log.d("connection Exception", "Connect Not Available")
                 }
             }
@@ -317,7 +318,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
     fun selectedNotifyStateUplaod(notify: Boolean, serverAction: () -> Unit) {
         var Token = tinyDB.getString("Cookie")
 
-        var notifyResponse: MassageResponse? = null
+        var notifyResponse: MessageResponse? = null
 //        var check = 0
 //        val myTimer = Timer()
 //        myTimer!!.schedule(object : TimerTask() {
@@ -403,8 +404,7 @@ class ConfigurationViewModel @Inject constructor(val mainRepository: MainReposit
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
-                }
-                catch(e:Exception){
+                } catch (e: Exception) {
                     Log.d("connection Exception", "Connect Not Available")
                 }
             }

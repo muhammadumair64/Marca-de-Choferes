@@ -146,7 +146,7 @@ class SplashScreen : BaseClass() {
             setGrad(firstColor, secondColor,binding.startButton)
             setBarColor()
         }else{
-            setGrad(ResendApis.primaryColor, ResendApis.secondrayColor,binding.startButton)
+            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor,binding.startButton)
         }
 
 

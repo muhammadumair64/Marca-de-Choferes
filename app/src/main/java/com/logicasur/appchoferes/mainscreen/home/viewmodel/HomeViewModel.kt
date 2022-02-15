@@ -1179,7 +1179,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
- fun stateUploadByAction(
+ private fun stateUploadByAction(
         currentDate: String,
         timeToSend: Int,
         status: State,
@@ -1189,7 +1189,7 @@ class HomeViewModel @Inject constructor(
     {
 
         viewModelScope.launch(Dispatchers.IO) {
-            resendApis.serverCheck.serverCheckMainActivityApi(null){serverAction->
+            resendApis.serverCheck.serverCheckMainActivityApi(true){serverAction->
 
                 updateState(
                     "$currentDate",

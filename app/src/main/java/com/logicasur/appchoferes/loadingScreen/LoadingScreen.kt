@@ -60,7 +60,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
         tinyDB= TinyDB(this)
         ResendApis.primaryColor=tinyDB.getString("primaryColor")!!
-        ResendApis.secondrayColor=tinyDB.getString("secondrayColor")!!
+        ResendApis.secondaryColor=tinyDB.getString("secondrayColor")!!
         initView()
          imageFromServer= tinyDB.getString("loadingBG").toString()
         if(imageFromServer.isNotEmpty()){
@@ -171,7 +171,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
         proceed_btn=PopupView.findViewById(R.id.proceed_btn)
         cancel_btn=PopupView.findViewById(R.id.cancel_btn)
         loadingViewModel.openPopup(networkAlertDialog!!,PopupView,resources)
-        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, proceed_btn)
+        setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
         cancel_btn.setOnClickListener {
             networkAlertDialog!!.dismiss()
 
@@ -209,7 +209,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
         loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
 
-        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, go_back_btn)
+        setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
          go_back_btn.setOnClickListener {
             serverAlertDialog!!.dismiss()
              finish()

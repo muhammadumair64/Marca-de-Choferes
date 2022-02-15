@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
@@ -29,7 +30,9 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class loadingViewModel @Inject constructor(var mainRepository: MainRepository,var tinyDB: TinyDB,var resendApis: ResendApis): ViewModel() {
+class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
+                                           var tinyDB: TinyDB,var resendApis: ResendApis,
+                                           val timeCalculator: TimeCalculator): ViewModel() {
      lateinit var activityContext : Context
     val sdf = SimpleDateFormat("yyyy-MM-dd")
     val currentDate = sdf.format(Date())
@@ -99,7 +102,7 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,va
 
 
                     var defaultBreak=tinyDB.getInt("defaultBreak")
-                    resendApis.timeDifference(tinyDB, activityContext!!, false,defaultBreak)
+                    timeCalculator.timeDifference(tinyDB, activityContext!!, false,defaultBreak)
 
                     getWorkTimeWhenOffline()
                 }
@@ -143,7 +146,7 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,va
             }
             var defaultTime=tinyDB.getInt("defaultWork")
 
-            resendApis.timeDifference(tinyDB, activityContext!!, false,defaultTime)
+            timeCalculator.timeDifference(tinyDB, activityContext!!, false,defaultTime)
             Log.d("TimerTESTING", "Here")
             var intent = Intent(activityContext, MainActivity::class.java)
             ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)

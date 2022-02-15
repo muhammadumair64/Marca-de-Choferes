@@ -9,7 +9,7 @@ import com.logicasur.appchoferes.network.forgotPasswordResponse.ForgotPasswordRe
 import com.logicasur.appchoferes.network.getAvatarResponse.GetAvatarResponse
 import com.logicasur.appchoferes.network.loadingResponse.LoadingResponse
 import com.logicasur.appchoferes.network.loadingResponse.SplashResponse
-import com.logicasur.appchoferes.network.logoutResponse.MassageResponse
+import com.logicasur.appchoferes.network.logoutResponse.MessageResponse
 import com.logicasur.appchoferes.network.retrofitInterfaces.RetrofitInterface
 import com.logicasur.appchoferes.network.signinResponse.*
 import kotlinx.coroutines.Dispatchers
@@ -119,7 +119,7 @@ class AuthRepository @Inject constructor(
     }
 
 
-    suspend fun logoutUser(name:String):MassageResponse{
+    suspend fun logoutUser(name:String):MessageResponse{
 
         return apiRequest { retrofitInterface.userLogout() }
     }
@@ -161,7 +161,7 @@ class AuthRepository @Inject constructor(
         return apiRequest { retrofitInterface.getAvatar(user,Token)}
     }
 
-    suspend fun updateAvatar(avatar:String,Token: String):MassageResponse{
+    suspend fun updateAvatar(avatar:String,Token: String):MessageResponse{
 
         return apiRequest { retrofitInterface.updateAvatar(avatar,Token)}
     }
@@ -212,7 +212,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun updateProfile(name:String,surname:String,Token: String):MassageResponse{
+    suspend fun updateProfile(name:String,surname:String,Token: String):MessageResponse{
 
         return apiRequest { retrofitInterface.updateProfile(name,surname,Token)}
     }
@@ -245,7 +245,7 @@ class AuthRepository @Inject constructor(
                             state:State?,
                           geoPosition: GeoPosition?,
                         vehicle: Vehicle?,
-                       sessionIdAndToken: String):MassageResponse
+                       sessionIdAndToken: String):MessageResponse
     {
         val wrap = Wrap(datetime,totalTime,state!!,geoPosition,vehicle)
         return apiRequest { retrofitInterface.updateStatus(wrap,sessionIdAndToken)}
@@ -257,7 +257,7 @@ class AuthRepository @Inject constructor(
                                activity: Int?,
                             geoPosition: GeoPosition?,
                             vehicle: Vehicle?,
-                            sessionIdAndToken: String):MassageResponse
+                            sessionIdAndToken: String):MessageResponse
     {
         val wrapVehicle = WrapVehicle(datetime,totalTime,activity,geoPosition,vehicle)
         return apiRequest { retrofitInterface.updateActivity(wrapVehicle,sessionIdAndToken)}
@@ -277,7 +277,7 @@ class AuthRepository @Inject constructor(
     }
 
 
-    suspend fun checkServer(token:String):MassageResponse
+    suspend fun checkServer(token:String):MessageResponse
     {
         return apiRequest {retrofitInterface.checkServer(token)}
     }

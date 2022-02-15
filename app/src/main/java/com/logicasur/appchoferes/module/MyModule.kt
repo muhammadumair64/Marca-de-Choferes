@@ -22,6 +22,7 @@ import javax.inject.Singleton
 import javax.net.ssl.*
 import com.logicasur.appchoferes.Extra.NetworkConnectionInterceptor
 import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.localDataBase.unsentApiDao.UnsentApiDao
@@ -161,27 +162,33 @@ class MyModule {
     }
 
 
-
     @Provides
     @Singleton
-    fun provideServerCheck(): ServerCheck {
+    fun provideServerCheck(
+        authRepository: AuthRepository,
+        mainRepository: MainRepository,
+    ): ServerCheck {
 
-        return ServerCheck()
-    }
-
-    @Provides
-    @Singleton
-    fun provideResendApis(authRepository: AuthRepository,
-                          mainRepository: MainRepository,
-                          serverCheck: ServerCheck): ResendApis {
-
-        return ResendApis(authRepository,mainRepository,serverCheck)
+        return ServerCheck(authRepository, mainRepository)
     }
 
 
+    @Provides
+    @Singleton
+    fun provideTimeCalculator(): TimeCalculator {
+
+        return TimeCalculator()
+    }
 
 
+    @Provides
+    @Singleton
+    fun provideResendApis(
+        serverCheck: ServerCheck, tinyDB: TinyDB
+    ): ResendApis {
 
+        return ResendApis(serverCheck, tinyDB)
+    }
 
 
     @Singleton

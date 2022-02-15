@@ -31,6 +31,7 @@ import com.logicasur.appchoferes.network.ResponseException
 import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
@@ -46,7 +47,9 @@ import java.net.SocketException
 import javax.inject.Inject
 
 @HiltViewModel
-class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val mainRepository: MainRepository,val resendApis: ResendApis) : ViewModel() {
+class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
+                                          val mainRepository: MainRepository,
+                                          val resendApis: ResendApis,val timerCalculator: TimeCalculator) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     var Token=""
@@ -197,9 +200,9 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
 
                         if (response.colors.primary.isNotEmpty()) {
                             ResendApis.primaryColor = response.colors.primary ?: "#7A59FC"
-                            ResendApis.secondrayColor = response.colors.secondary ?: "#653FFB"
+                            ResendApis.secondaryColor = response.colors.secondary ?: "#653FFB"
                             tinyDB.putString("primaryColor",ResendApis.primaryColor)
-                            tinyDB.putString("secondrayColor",ResendApis.secondrayColor)
+                            tinyDB.putString("secondrayColor",ResendApis.secondaryColor)
                         }
                         
                         tinyDB.putString("User",userName)
@@ -489,7 +492,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                resendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                timerCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
 
                 getWorkTime(response)
 
@@ -560,7 +563,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        resendApis.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        timerCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
 
 

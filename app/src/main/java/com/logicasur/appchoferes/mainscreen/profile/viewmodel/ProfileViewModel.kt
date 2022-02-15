@@ -127,7 +127,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
                         authRepository.clearData()
                         tinyDB.clear()
                         ResendApis.primaryColor = "#7A59FC"
-                        ResendApis.secondrayColor = "#653FFB"
+                        ResendApis.secondaryColor = "#653FFB"
                         var intent = Intent(activityContext, SignInActivity::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                         (activityContext as MainActivity).finish()

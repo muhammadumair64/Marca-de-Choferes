@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
@@ -101,7 +102,7 @@ class ConfigurationFragment : Fragment() {
 
             lifecycleScope.launch {
                 withContext(Dispatchers.IO){
-                    val check = resendApis.isConnected()
+                    val check = CheckConnection.netCheck(context)
                     withContext(Dispatchers.Main){
                         if(check){
                             alertDialog.setView(contactPopupView)

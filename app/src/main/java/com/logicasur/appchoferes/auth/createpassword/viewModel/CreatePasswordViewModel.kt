@@ -102,7 +102,7 @@ class CreatePasswordViewModel @Inject constructor(val authRepository: AuthReposi
                         var passsword = editPassword.text
                         viewModelScope.launch(Dispatchers.IO) {
 //                            ServerCheck.serverCheck (null){CreateNewPassword(passsword.toString())}
-                           resendApis.serverCheck.serverCheckTesting(null){serverAction ->
+                           resendApis.serverCheck.serverCheckMainActivityApi{serverAction ->
                                 CreateNewPassword(passsword.toString()){serverAction()}
                             }
                         }

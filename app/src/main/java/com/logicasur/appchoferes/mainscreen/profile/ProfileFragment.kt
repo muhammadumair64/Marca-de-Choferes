@@ -273,7 +273,7 @@ class ProfileFragment : Fragment() {
 
         dismiss = contactPopupView.findViewById(R.id.close)
         confirmbtn = contactPopupView.findViewById(R.id.confirm_btn)
-        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, confirmbtn)
+        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, confirmbtn)
         changedName = contactPopupView.findViewById(R.id.popup_Name_Field)
         dismiss.setOnClickListener {
             alertDialog.dismiss()

@@ -5,7 +5,7 @@ import com.logicasur.appchoferes.network.forgotPasswordResponse.ForgotPasswordRe
 import com.logicasur.appchoferes.network.getAvatarResponse.GetAvatarResponse
 import com.logicasur.appchoferes.network.loadingResponse.LoadingResponse
 import com.logicasur.appchoferes.network.loadingResponse.SplashResponse
-import com.logicasur.appchoferes.network.logoutResponse.MassageResponse
+import com.logicasur.appchoferes.network.logoutResponse.MessageResponse
 import com.logicasur.appchoferes.network.signinResponse.*
 import retrofit2.Response
 import retrofit2.http.*
@@ -43,7 +43,7 @@ interface RetrofitInterface {
 
     @POST("auth/logout")
     suspend fun userLogout(
-    ): Response<MassageResponse>
+    ): Response<MessageResponse>
 
 
     @FormUrlEncoded
@@ -89,7 +89,7 @@ interface RetrofitInterface {
     suspend fun updateAvatar(
         @Field("avatar") avatar: String,
         @Header("Cookie") sessionIdAndToken: String
-    ): Response<MassageResponse>
+    ): Response<MessageResponse>
 
 
     @POST("sync")
@@ -103,14 +103,14 @@ interface RetrofitInterface {
     suspend fun updateLanguage(
         @Field("language") language: Int,
         @Header("Cookie") sessionIdAndToken: String
-    ): Response<MassageResponse>
+    ): Response<MessageResponse>
 
 
     @POST("profile/update/notify")
     suspend fun updateNotification(
         @Body  notify: Notify,
         @Header("Cookie") sessionIdAndToken: String
-    ): Response<MassageResponse>
+    ): Response<MessageResponse>
 
 
     @FormUrlEncoded
@@ -119,7 +119,7 @@ interface RetrofitInterface {
         @Field("name") name: String,
         @Field("surname") surname: String,
         @Header("Cookie") sessionIdAndToken: String
-    ): Response<MassageResponse>
+    ): Response<MessageResponse>
 
 
 
@@ -134,14 +134,14 @@ interface RetrofitInterface {
 
         @Body wrap: Wrap,
         @Header("Cookie") sessionIdAndToken: String
-    ): Response<MassageResponse>
+    ): Response<MessageResponse>
 
 
     @POST("activity/set")
     suspend fun updateActivity(
         @Body wrapVehicle: WrapVehicle,
         @Header("Cookie") sessionIdAndToken: String
-    ): Response<MassageResponse>
+    ): Response<MessageResponse>
 
     @POST("config/get/loadingscreen")
     suspend fun  getLoadingScreen(
@@ -156,5 +156,5 @@ interface RetrofitInterface {
     @POST("check")
     suspend fun checkServer(
         @Header("Cookie") sessionIdAndToken: String
-    ): Response<MassageResponse>
+    ): Response<MessageResponse>
 }

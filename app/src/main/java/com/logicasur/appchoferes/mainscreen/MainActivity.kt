@@ -99,10 +99,13 @@ class MainActivity : BaseClass() {
     var timeBreak = 0.0
     var dataBinding: FragmentHomeBinding? = null
     val viewModel: HomeViewModel by viewModels()
-    
+
     @Inject
     lateinit var resendApis: ResendApis
-    
+
+    @Inject
+    lateinit var timeCalculator: TimeCalculator
+
     lateinit var tinyDB: TinyDB
     var WorkTime = 0
     var BreakTime = 0
@@ -123,12 +126,12 @@ class MainActivity : BaseClass() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         Log.d("AVATARTESTING", "IN ON CREATE")
 
-        MyApplication.checKForSyncLoading=false
+        MyApplication.checKForSyncLoading = false
 
         tinyDB = TinyDB(this)
 
         ResendApis.primaryColor = tinyDB.getString("primaryColor")!!
-        ResendApis.secondrayColor = tinyDB.getString("secondrayColor")!!
+        ResendApis.secondaryColor = tinyDB.getString("secondrayColor")!!
 
 //        resendApis.timeDifference(tinyDB)
         tagsForToast()
@@ -178,7 +181,10 @@ class MainActivity : BaseClass() {
     fun NavBar() {
         Log.d("AVATARTESTING", "IN NAV BAR ${ResendApis.primaryColor}")
 
-        binding.menu.setMenuResource(R.menu.navigationbar_menu, Color.parseColor(ResendApis.primaryColor))
+        binding.menu.setMenuResource(
+            R.menu.navigationbar_menu,
+            Color.parseColor(ResendApis.primaryColor)
+        )
         binding.menu.setItemSelected(R.id.home, true)
         binding.menu.setOnItemSelectedListener {
 
@@ -365,7 +371,7 @@ class MainActivity : BaseClass() {
         if (GpsStatus) {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    if (resendApis.isConnected()) {
+                    if (CheckConnection.netCheck(this@MainActivity)) {
                         withContext(Dispatchers.Main) {
                             action()
                             getLocation(context)
@@ -402,7 +408,7 @@ class MainActivity : BaseClass() {
             val task = LocationServices.getSettingsClient(it)
                 .checkLocationSettings(builder.build())
 
-            if (resendApis.isConnected()) {
+            if (CheckConnection.netCheck(this)) {
                 Log.d("PENDINGAPITESTING", "IN GPS POPUP SETTING")
                 MainActivity.action = action
             } else {
@@ -476,7 +482,7 @@ class MainActivity : BaseClass() {
             Log.d("isSuccess GPS PRO", "nvnf ${checkGPS()}")
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
-                    if (resendApis.isConnected()) {
+                    if (CheckConnection.netCheck(this@MainActivity)) {
                         withContext(Dispatchers.Main) {
                             action?.invoke()
                             getLocation(context)
@@ -811,7 +817,7 @@ class MainActivity : BaseClass() {
         stopService(Intent(this, BreakTimerService::class.java))
         var check = tinyDB.getBoolean("PENDINGCHECK")
         if (check) {
-            resendApis.myTimer!!.cancel()
+            resendApis.checkNetTimer!!.cancel()
         }
         finishAffinity()
         finish()
@@ -874,12 +880,15 @@ class MainActivity : BaseClass() {
 
     override fun onResume() {
         Log.d("check_ON_RESUME", "${MyApplication.checkForResume}")
-        binding.menu.setMenuResource(R.menu.navigationbar_menu, Color.parseColor(ResendApis.primaryColor))
+        binding.menu.setMenuResource(
+            R.menu.navigationbar_menu,
+            Color.parseColor(ResendApis.primaryColor)
+        )
         if (MyApplication.checkForResume == 200) {
 
             try {
 //                unregisterReceiver(receiver)
-                resendApis.timeDifference(tinyDB, this, true, MyApplication.TotalBreak)
+                timeCalculator.timeDifference(tinyDB, this, true, MyApplication.TotalBreak)
                 MyApplication.checkForResume = 0
             } catch (e: Exception) {
                 MyApplication.checkForResume = 0
@@ -1198,7 +1207,7 @@ class MainActivity : BaseClass() {
 
         var check = tinyDB.getBoolean("PENDINGCHECK")
         if (check == false) {
-            resendApis.checkNet()
+            resendApis.checkNetAndUpload()
         }
 
         if (checkState == false) {

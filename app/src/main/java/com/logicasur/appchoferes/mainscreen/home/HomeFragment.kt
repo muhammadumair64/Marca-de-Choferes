@@ -92,8 +92,8 @@ class HomeFragment : Fragment(), OnclickItem {
         var context = (activity as MainActivity).context
         mainContext = context
         binding.statusListBtn.visibility = View.GONE
-        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, binding.secondState)
-        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, binding.TakeBreak)
+        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, binding.secondState)
+        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, binding.TakeBreak)
         binding.date.setTextColor(Color.parseColor(ResendApis.primaryColor))
         binding.apply {
             initialState?.setVisibility(View.VISIBLE)
@@ -314,7 +314,7 @@ class HomeFragment : Fragment(), OnclickItem {
             MyApplication.checKForPopup = false
         }
 
-        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondrayColor, proceed_btn)
+        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
         cancel_btn.setOnClickListener {
 
             networkAlertDialog.dismiss()

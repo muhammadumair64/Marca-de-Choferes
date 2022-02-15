@@ -31,7 +31,7 @@ class ForgotPasswordActivity :BaseClass() {
 
     fun initViews(){
         forgotPasswordViewModel.viewsForForgotPasswordActivity(context,binding)
-        setGrad(ResendApis.primaryColor, ResendApis.secondrayColor,binding.SubmitButton)
+        setGrad(ResendApis.primaryColor, ResendApis.secondaryColor,binding.SubmitButton)
         showSoftKeyboard(binding.email)
 
     }
