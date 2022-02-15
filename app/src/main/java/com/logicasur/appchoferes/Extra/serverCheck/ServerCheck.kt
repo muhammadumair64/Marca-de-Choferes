@@ -44,7 +44,11 @@ class ServerCheck {
                         Log.d("NETCHECKTEST", "----working in required")
                         Log.d("NETCHECKTEST", LoadingScreen.OnEndLoadingCallbacks.toString())
                         CoroutineScope(Job()).launch(Dispatchers.Main) {
-                            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                            if (!MyApplication.checKForSyncLoading) {
+                                LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                            }
+
+
                         }
 
 //                        if (onEndLoadingCallbacks != null) {
@@ -86,7 +90,7 @@ class ServerCheck {
                     {
                         Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
                             .show()
-                        LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                        endLoading()
                     }
 //                    serverCheck { action() }
                 } catch (e: SocketException) {
@@ -94,18 +98,18 @@ class ServerCheck {
                     {
                         Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
                             .show()
-                        LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                        endLoading()
                     }
 //                    serverCheck { action() }
                 } catch (e: NoInternetException) {
 //                    LoadingScreen.OnEndLoadingCallbacks!!.openPopup(null)
                     Log.d(TAG, " Exception..${e.localizedMessage}")
-                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
-//                    serverCheck { action() }
+                    endLoading()
+                //                    serverCheck { action() }
                 } catch (e: Exception) {
 
                     Log.d(TAG, " Exception..${e.localizedMessage}")
-                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                    endLoading()
 //                    LoadingScreen.OnEndLoadingCallbacks!!.openPopup(null)
 //                    serverCheck { action() }
                 }
@@ -116,10 +120,9 @@ class ServerCheck {
 
         }
 
-        fun endLoading(){
-            if(MyApplication.checKForSyncLoading){
+        fun endLoading() {
+            if (!MyApplication.checKForSyncLoading) {
                 LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
-                MyApplication.checKForSyncLoading = false
             }
         }
 
@@ -170,7 +173,7 @@ class ServerCheck {
                             UnsentStatusOrUploadActivity(
                                 0,
                                 datetime!!,
-                               null,
+                                null,
                                 null,
                                 activity!!,
                                 totalTime,
@@ -182,7 +185,7 @@ class ServerCheck {
                             )
                         )
                         CoroutineScope(Job()).launch {
-                            Log.d("STATE_TESTING","IN END LOADING")
+                            Log.d("STATE_TESTING", "IN END LOADING")
                             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                         }
 
@@ -202,7 +205,7 @@ class ServerCheck {
                             )
                         )
                         CoroutineScope(Job()).launch {
-                            Log.d("STATE_TESTING","IN END LOADING")
+                            Log.d("STATE_TESTING", "IN END LOADING")
                             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
                         }
                     }

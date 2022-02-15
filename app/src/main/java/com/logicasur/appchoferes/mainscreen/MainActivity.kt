@@ -118,6 +118,7 @@ class MainActivity : BaseClass() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         Log.d("AVATARTESTING", "IN ON CREATE")
 
+        MyApplication.checKForSyncLoading=false
 
         tinyDB = TinyDB(this)
 
