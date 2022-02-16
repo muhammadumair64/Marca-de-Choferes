@@ -1,7 +1,5 @@
 package com.logicasur.appchoferes.Extra.serverCheck
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import com.logicasur.appchoferes.Extra.ResendApis
