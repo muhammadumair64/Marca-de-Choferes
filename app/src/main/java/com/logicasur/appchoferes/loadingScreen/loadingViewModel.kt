@@ -68,8 +68,10 @@ class loadingViewModel @Inject constructor(
     ) {
         serverAlertDialog.setView(PopupView)
         Log.d("POPUP_TESTING", " In VIEW MODEL")
+        if (!(activityContext as Activity).isFinishing) {
+            serverAlertDialog.show()
+        }
 
-        serverAlertDialog.show()
 //        catch (e:Exception){
 //            Log.d("PopupWindowTesting","In Catch Block")
 //        }

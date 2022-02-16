@@ -84,7 +84,7 @@ class ServerCheck constructor(
 
 
             } catch (e: SocketTimeoutException) {
-                Log.d("Exception","SocketTimeOut..${e.localizedMessage}")
+                Log.d("Exception", "SocketTimeOut..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
                     Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
@@ -92,7 +92,7 @@ class ServerCheck constructor(
                     endLoading()
                 }
             } catch (e: SocketException) {
-                Log.d("Exception","Socket..${e.localizedMessage}")
+                Log.d("Exception", "Socket..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
                     Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
@@ -250,9 +250,8 @@ class ServerCheck constructor(
         tagsForToast()
         Log.d(TAG, "Server Check function")
 
-        exceptionSafeCall {
-            mainActivityCall(serverCheckTimer, apiCall)
-        }
+
+        mainActivityCall(serverCheckTimer, apiCall)
 
 
     }
@@ -262,53 +261,68 @@ class ServerCheck constructor(
         serverCheckTimer: Timer,
         apiCall: (serverAction: () -> Unit) -> Unit
     ) {
+        tinyDB.getString("Cookie")?.let { token ->
 
-        CoroutineScope(Job()).launch(Dispatchers.IO) {
-            tinyDB.getString("Cookie")?.let { token ->
-                authRepository.checkServer(token).apply {
-                    Log.d(TAG, "$this")
-                    if (this.checkIfMessageIsOkay()) {
-                        serverCheckTimer.cancel()
-                        serverCheckTimer.purge()
-                        Log.d(TAG, "ServerTesting is working fine")
+                CoroutineScope(Job()).launch(Dispatchers.IO) {
+try {
+    authRepository.checkServer(token).apply {
 
-                        var checkOnApiCall = 0
-                        val inBetweenApiCallTimer = Timer().also { timer ->
-                            timer.schedule(object : TimerTask() {
-                                override fun run() {
-                                    if (checkOnApiCall == 1 || checkOnApiCall == 2) {
+        Log.d(TAG, "$this")
+        if (this.checkIfMessageIsOkay()) {
+            serverCheckTimer.cancel()
+            serverCheckTimer.purge()
+            Log.d(TAG, "ServerTesting is working fine")
 
-                                        exceptionSafeCall {
-                                            CoroutineScope(Job()).launch {
-                                                serverCheckDuringStatus() {}
-                                            }
-                                        }
+            var checkOnApiCall = 0
+            val inBetweenApiCallTimer = Timer().also { timer ->
+                timer.schedule(object : TimerTask() {
+                    override fun run() {
+                        if (checkOnApiCall == 1 || checkOnApiCall == 2) {
 
-                                        checkOnApiCall++
-                                    } else if (checkOnApiCall > 2) {
-                                        Log.d("NETCHECKTEST", "----workingTesting")
-                                        timer.purge()
-                                        timer.cancel()
 
-                                    } else {
-                                        checkOnApiCall++
-                                    }
-
+                            CoroutineScope(Job()).launch {
+                                try{
+                                    serverCheckDuringStatus() {}
+                                }catch (e:Exception){
+                                    Log.d("EXCEPTION_TESTING"," ${e.localizedMessage}")
                                 }
-                            }, 0, 20000)
 
-                        }
-                        apiCall() {
-                            // Server is not well
-                            Log.d(TAG, "Response is received Cancel the timer.")
-                            inBetweenApiCallTimer.cancel()
-                            inBetweenApiCallTimer.purge()
+                            }
 
+
+                            checkOnApiCall++
+                        } else if (checkOnApiCall > 2) {
+                            Log.d("NETCHECKTEST", "----workingTesting")
+                            timer.purge()
+                            timer.cancel()
+
+                        } else {
+                            checkOnApiCall++
                         }
+
                     }
-                }
+                }, 0, 20000)
 
             }
+            apiCall() {
+                // Server is not well
+                Log.d(TAG, "Response is received Cancel the timer.")
+                inBetweenApiCallTimer.cancel()
+                inBetweenApiCallTimer.purge()
+
+            }
+        }
+    }
+}catch (e:Exception){
+    Log.d("EXCEPTION_TESTING"," ${e.localizedMessage}")
+}
+
+
+
+                }
+
+
+
         }
 
     }
@@ -366,31 +380,32 @@ class ServerCheck constructor(
 
 
     /// ///------------- Utils ---------------------
-
-    private fun exceptionSafeCall(functionCall: () -> Unit) {
-        try {
-            functionCall()
-        } catch (e: SocketTimeoutException) {
-
-            Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                .show()
-
-
-        } catch (e: SocketException) {
-
-            Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                .show()
-
-
-        } catch (e: NoInternetException) {
-            Log.d(TAG, " Exception..${e.localizedMessage}")
-
-        } catch (e: Exception) {
-
-            Log.d(TAG, " Exception..${e.localizedMessage}")
-
-        }
-    }
+//
+//    private fun exceptionSafeCall(functionCall: () -> Unit) {
+//        try {
+//            functionCall()
+//        } catch (e: SocketTimeoutException) {
+//            Log.d(TAG, " Exception..${e.localizedMessage}")
+////            Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+////                .show()
+//
+//
+//        } catch (e: SocketException) {
+//
+//            Log.d(TAG, " Exception..${e.localizedMessage}")
+////            Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+////                .show()
+//
+//
+//        } catch (e: NoInternetException) {
+//            Log.d(TAG, " Exception..${e.localizedMessage}")
+//
+//        } catch (e: Exception) {
+//
+//            Log.d(TAG, " Exception..${e.localizedMessage}")
+//
+//        }
+//    }
 
 
     private fun tagsForToast() {

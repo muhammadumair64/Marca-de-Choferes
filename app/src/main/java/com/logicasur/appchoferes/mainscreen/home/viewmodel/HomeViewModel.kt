@@ -1429,7 +1429,7 @@ class HomeViewModel @Inject constructor(
         val resultIntBreak = time
 
         println("$resultIntBreak")
-        val hours = resultIntBreak % 86400 / 3600
+        val hours = resultIntBreak  / 3600
         val minutes = resultIntBreak % 86400 % 3600 / 60
         val seconds = resultIntBreak % 86400 % 3600 % 60
 

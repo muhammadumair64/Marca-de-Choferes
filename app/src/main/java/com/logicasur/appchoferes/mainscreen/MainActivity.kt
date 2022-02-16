@@ -246,13 +246,13 @@ class MainActivity : BaseClass() {
         lifecycleScope.launch {
             viewModel.workTimerupdater(time.roundToInt(), dataBinding, tinyDB)
         }
-        Log.d("Timer ", "$resultInt")
+        Log.d("Timer_Testing", "$resultInt")
         println(" $resultInt")
         WorkTime = resultInt
-        val hours = resultInt % 86400 / 3600
+        val hours = resultInt / 3600
         val minutes = resultInt % 86400 % 3600 / 60
         val seconds = resultInt % 86400 % 3600 % 60
-
+        Log.d("Timer_Testing", "$hours ------ $minutes ------ $seconds")
         return makeTimeString(hours, minutes, seconds)
     }
 
@@ -297,7 +297,7 @@ class MainActivity : BaseClass() {
         }
         println("$resultIntBreak")
         BreakTime = resultIntBreak
-        val hours = resultIntBreak % 86400 / 3600
+        val hours = resultIntBreak / 3600
         val minutes = resultIntBreak % 86400 % 3600 / 60
         val seconds = resultIntBreak % 86400 % 3600 % 60
 
@@ -338,31 +338,6 @@ class MainActivity : BaseClass() {
     }
 
 
-//    fun initPermission(action:()->Unit) {
-//
-//        val permissions =
-//            arrayOf(
-//                Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            )
-//        Permissions.check(
-//            this /*context*/,
-//            permissions,
-//            null /*rationale*/,
-//            null /*options*/,
-//            object : PermissionHandler() {
-//                override fun onGranted() {
-//                    // hideIcon()
-//                    //startService(locationServiceIntent)
-//                    requestBackgroundPermission()
-//                 CheckGpsStatus(action)
-//
-//
-//                }
-//            })
-//
-//
-//    }
 
     fun CheckGpsStatus(action: () -> Unit) {
         var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager

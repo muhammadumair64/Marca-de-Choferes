@@ -501,12 +501,14 @@ class SplashScreenViewModel @Inject constructor(
         }
         Log.d("Dates is ", "$currentDate")
 
-        if (workDate != currentDate) {
-            check = 3
-        } else {
-            check = response.lastVar!!.lastActivity!!
-        }
+//        if (workDate != currentDate) {
+//            check = 3
+//        } else {
+//            check = response.lastVar!!.lastActivity!!
+//        }
 
+
+        check = response.lastVar!!.lastActivity!!
 
         tinyDB.putInt("selectedStateByServer", check!!)
         Log.d("checkByServer", "check $check")
