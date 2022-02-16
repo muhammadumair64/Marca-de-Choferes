@@ -58,12 +58,12 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
 
     fun openServerPopup(serverAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         serverAlertDialog.setView(PopupView)
-        try{
+
             serverAlertDialog.show()
-        }
-        catch (e:Exception){
-            Log.d("PopupWindowTesting","In Catch Block")
-        }
+
+//        catch (e:Exception){
+//            Log.d("PopupWindowTesting","In Catch Block")
+//        }
         val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
         val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
         serverAlertDialog.getWindow()?.setLayout(width, height);
