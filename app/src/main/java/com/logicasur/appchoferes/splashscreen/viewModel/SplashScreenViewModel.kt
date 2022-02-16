@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.Extra.TinyDB
@@ -57,9 +58,6 @@ class SplashScreenViewModel @Inject constructor(
         tinyDB = TinyDB(context)
         tagsForToast()
 
-        ServerCheck.authRepository = authRepository
-        ServerCheck.mainRepository = mainRepository
-
 
     }
 
@@ -76,7 +74,7 @@ class SplashScreenViewModel @Inject constructor(
                     myTimer!!.cancel()
                 } else {
                     Log.d("SYNC_CHECK_TESTING", "In False")
-                    var check = resendApis.isConnected()
+                    var check = activityContext?.let { CheckConnection.netCheck(it) }
                     if (check == false) {
                         MyApplication.checKForPopup = true
                         viewModelScope.launch {

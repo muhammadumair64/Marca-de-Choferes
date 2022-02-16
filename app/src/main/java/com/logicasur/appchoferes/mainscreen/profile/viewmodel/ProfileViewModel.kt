@@ -92,7 +92,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
 //                        logoutUser()
 //                    }
 
-                    resendApis.serverCheck.serverCheckTesting(null){ serverAction ->
+                    resendApis.serverCheck.serverCheckMainActivityApi{ serverAction ->
                         logoutUser(){serverAction()}
                     }
                 }
@@ -189,7 +189,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
 //            ServerCheck.serverCheck(null) {
 //                updateAvatar(encoded,imageInBitmap)
 //            }
-          resendApis.serverCheck.serverCheckTesting(null){serverAction ->
+          resendApis.serverCheck.serverCheckMainActivityApi{serverAction ->
                 updateAvatar(encoded,imageInBitmap){serverAction()}
 
             }

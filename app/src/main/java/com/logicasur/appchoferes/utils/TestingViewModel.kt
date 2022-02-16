@@ -11,6 +11,6 @@ class TestingViewModel@Inject constructor(val authRepository: AuthRepository,val
     fun servercheck123()
     {
         tinyDB.putString("Cookie","choferes=s%3AX2CFlw9SiZO4JZUGp_RNxbhVeo3Ee5No.E1wheEI%2FfEY1KouEF1bVY4VZtJLY1QmO3D%2FnJDeVSa4")
-        ServerCheck.authRepository=authRepository
+//        ServerCheck.authRepository=authRepository
     }
 }

@@ -165,36 +165,39 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
             }
         }
 
-        networkDialogBuilder = AlertDialog.Builder(this)
-        val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
-        networkAlertDialog= networkDialogBuilder.create()
-        proceed_btn=PopupView.findViewById(R.id.proceed_btn)
-        cancel_btn=PopupView.findViewById(R.id.cancel_btn)
-        loadingViewModel.openPopup(networkAlertDialog!!,PopupView,resources)
-        setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
-        cancel_btn.setOnClickListener {
-            networkAlertDialog!!.dismiss()
+        runOnUiThread {
+            networkDialogBuilder = AlertDialog.Builder(this)
+            val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
+            networkAlertDialog= networkDialogBuilder.create()
+            proceed_btn=PopupView.findViewById(R.id.proceed_btn)
+            cancel_btn=PopupView.findViewById(R.id.cancel_btn)
+            loadingViewModel.openPopup(networkAlertDialog!!,PopupView,resources)
+            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
+            cancel_btn.setOnClickListener {
+                networkAlertDialog!!.dismiss()
 
 
-        }
-        proceed_btn.setOnClickListener {
-            if(myTimer!=null){
-                myTimer.cancel()
-                loadingViewModel.getPreviousTimeWhenOffline()
             }
-            else{
-                finish()
-                try{
-                    (activity as MainActivity).updatePendingData(true)
-                } catch (e:Exception){
-                    Log.d("IN Starting main","ERROR")
+            proceed_btn.setOnClickListener {
+                if(myTimer!=null){
+                    myTimer.cancel()
+                    loadingViewModel.getPreviousTimeWhenOffline()
+                }
+                else{
+                    finish()
+                    try{
+                        (activity as MainActivity).updatePendingData(true)
+                    } catch (e:Exception){
+                        Log.d("IN Starting main","ERROR")
+                    }
+
+
                 }
 
-
+                networkAlertDialog!! .dismiss()
             }
-
-            networkAlertDialog!! .dismiss()
         }
+
 
 
 
@@ -202,18 +205,22 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
 
     fun createServerAlertPopup() {
-        serverDialogBuilder = AlertDialog.Builder(this)
-        val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
-        serverAlertDialog= serverDialogBuilder.create()
-        go_back_btn=PopupView.findViewById(R.id.go_back)
-
-        loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
-
-        setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
-         go_back_btn.setOnClickListener {
-            serverAlertDialog!!.dismiss()
-             finish()
+        runOnUiThread {
+            Log.d("POPUP_TESTING","IN SERVER POPUP")
+            serverDialogBuilder = AlertDialog.Builder(this)
+            val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
+            serverAlertDialog= serverDialogBuilder.create()
+            go_back_btn=PopupView.findViewById(R.id.go_back)
+            loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
+            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
+            go_back_btn.setOnClickListener {
+                serverAlertDialog!!.dismiss()
+                finish()
+            }
         }
+
+
+
 
 
 

@@ -298,7 +298,7 @@ class ProfileFragment : Fragment() {
 //                        }
 
                         lifecycleScope.launch(Dispatchers.IO) {
-                       resendApis.serverCheck.serverCheckTesting(null) { serverAction ->
+                       resendApis.serverCheck.serverCheckMainActivityApi{ serverAction ->
                                 profileViewModel.updateProfile(
                                     nameChanges.toString(),
                                     fatherName.toString(),
@@ -315,7 +315,7 @@ class ProfileFragment : Fragment() {
 //                    )
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
-                        resendApis.serverCheck.serverCheckTesting(null){serverAction->
+                        resendApis.serverCheck.serverCheckMainActivityApi{serverAction->
                             profileViewModel.updateProfile(
                                 Name.toString(),
                                 nameChanges.toString(),

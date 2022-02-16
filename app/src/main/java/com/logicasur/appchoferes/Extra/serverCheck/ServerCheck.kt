@@ -1,5 +1,7 @@
 package com.logicasur.appchoferes.Extra.serverCheck
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import com.logicasur.appchoferes.Extra.ResendApis
@@ -204,7 +206,7 @@ class ServerCheck constructor(
     }
 
 
-    fun serverCheckMainActivityApi(
+fun serverCheckMainActivityApi(
         toSaveInDB: Boolean = false, apiCall: (serverAction: () -> Unit) -> Unit
     ) {
         Log.d(TAG, "Server Check Testing function starts")
@@ -215,9 +217,16 @@ class ServerCheck constructor(
                 override fun run() {
                     if (isFirst) {
                         Log.d("NETCHECKTEST", "----working")
-                        LoadingScreen.OnEndLoadingCallbacks?.apply {
-                            if (toSaveInDB) openPopup(null) else openServerPopup()
-                        }
+//                        Handler(Looper.getMainLooper()).post {
+//                            //code that runs in main
+//                        }
+
+
+                            LoadingScreen.OnEndLoadingCallbacks?.also {
+                                if (toSaveInDB) it.openPopup(null) else it.openServerPopup()
+                            }
+
+
 
                         timer.purge()
                         timer.cancel()
