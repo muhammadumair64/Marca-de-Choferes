@@ -233,6 +233,7 @@ class ResendApis constructor(
 
     private fun cancelTimer() {
         checkNetTimer?.let { timer ->
+            tinyDB.putBoolean("PENDINGCHECK",false)
             timer.cancel()
             timer.purge()
         }
