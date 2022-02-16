@@ -175,12 +175,15 @@ class SplashScreenViewModel @Inject constructor(
 
                     }
                 } catch (e: ResponseException) {
+                    repeatSync()
                     println("ErrorResponse")
                 } catch (e: ApiException) {
+                    repeatSync()
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+                    repeatSync()
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             activityContext,
@@ -193,7 +196,8 @@ class SplashScreenViewModel @Inject constructor(
 //                        LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     }
                 } catch (e: SocketTimeoutException) {
-
+                    repeatSync()
+                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             activityContext,
@@ -202,8 +206,10 @@ class SplashScreenViewModel @Inject constructor(
                         ).show()
                     }
                 } catch (e: Exception) {
+                    repeatSync()
                     println("ErrorResponse ${e.localizedMessage}")
                 } catch (e: SocketException) {
+                    repeatSync()
                     Log.d("connection Exception", "Connect Not Available")
                     Timer().schedule(5000) {
                         Log.d("connection Exception", "connection lost")
@@ -220,6 +226,10 @@ class SplashScreenViewModel @Inject constructor(
                 }
             }
         }
+    }
+    fun repeatSync() {
+        tinyDB.putBoolean("SYNC_CHECK",false)
+        checkData()
     }
 
 
