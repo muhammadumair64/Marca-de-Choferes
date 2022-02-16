@@ -23,11 +23,16 @@ import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import android.app.Activity
+
+
+
 
 @HiltViewModel
 class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
@@ -56,10 +61,13 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
     }
 
 
-    fun openServerPopup(serverAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
+  suspend fun openServerPopup(serverAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         serverAlertDialog.setView(PopupView)
+      Log.d("POPUP_TESTING"," In VIEW MODEL")
 
-            serverAlertDialog.show()
+
+
+
 
 //        catch (e:Exception){
 //            Log.d("PopupWindowTesting","In Catch Block")
@@ -72,8 +80,8 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
         val wlp: WindowManager.LayoutParams = window!!.getAttributes()
         wlp.gravity = Gravity.BOTTOM
         window.setAttributes(wlp)
-
     }
+
 
 
   fun getPreviousTimeWhenOffline() {

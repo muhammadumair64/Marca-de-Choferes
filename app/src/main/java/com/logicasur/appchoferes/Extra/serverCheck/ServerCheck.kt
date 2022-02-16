@@ -222,14 +222,23 @@ fun serverCheckMainActivityApi(
 //                        }
 
 
-                            LoadingScreen.OnEndLoadingCallbacks?.also {
-                                if (toSaveInDB) it.openPopup(null) else it.openServerPopup()
+                            LoadingScreen.OnEndLoadingCallbacks?.apply{
+                                Log.d("NETCHECKTEST", "----In Also")
+                                if (toSaveInDB) openPopup(null) else{
+                                    Log.d("NETCHECKTEST", "----In else")
+                                    CoroutineScope(Job()).launch(Dispatchers.Main){
+                                        openServerPopup()
+                                        timer.purge()
+                                        timer.cancel()
+                                    }
+
+                                }
                             }
 
 
 
-                        timer.purge()
-                        timer.cancel()
+
+
                     } else {
                         isFirst = false
                     }

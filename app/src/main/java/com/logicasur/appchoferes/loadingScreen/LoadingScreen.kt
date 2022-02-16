@@ -1,5 +1,6 @@
 package com.logicasur.appchoferes.loadingScreen
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -20,10 +21,15 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.auth.otp.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService.Companion.activity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -123,7 +129,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
          createPopup(myTimer)
     }
 
-    override fun openServerPopup() {
+    override suspend fun openServerPopup() {
 
             createServerAlertPopup()
 
@@ -204,25 +210,29 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
 
-    fun createServerAlertPopup() {
-        runOnUiThread {
-            Log.d("POPUP_TESTING","IN SERVER POPUP")
-            serverDialogBuilder = AlertDialog.Builder(this)
-            val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
-            serverAlertDialog= serverDialogBuilder.create()
-            go_back_btn=PopupView.findViewById(R.id.go_back)
-            loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
-            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
-            go_back_btn.setOnClickListener {
-                serverAlertDialog!!.dismiss()
-                finish()
-            }
-        }
+    suspend fun createServerAlertPopup() {
+           Log.d("POPUP_TESTING","IN SERVER POPUP")
+           serverDialogBuilder = AlertDialog.Builder(this)
+           val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
+           serverAlertDialog = serverDialogBuilder.create()
+           go_back_btn=PopupView.findViewById(R.id.go_back)
+           delay(5000)
+           Log.d("POPUP_TESTING"," In VIEW MODEL After delay")
+         serverAlertDialog?.show()
+           loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
+           setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
+           go_back_btn.setOnClickListener {
+               serverAlertDialog!!.dismiss()
+               finish()
+
+           }
+       }
+
+   }
 
 
 
 
 
 
-    }
-}
+
