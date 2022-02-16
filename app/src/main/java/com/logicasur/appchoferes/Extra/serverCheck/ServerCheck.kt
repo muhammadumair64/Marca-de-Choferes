@@ -84,6 +84,7 @@ class ServerCheck constructor(
 
 
             } catch (e: SocketTimeoutException) {
+                Log.d("Exception","SocketTimeOut..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
                     Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
@@ -91,6 +92,7 @@ class ServerCheck constructor(
                     endLoading()
                 }
             } catch (e: SocketException) {
+                Log.d("Exception","Socket..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
                     Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
@@ -100,12 +102,12 @@ class ServerCheck constructor(
 
             } catch (e: NoInternetException) {
 
-                Log.d(TAG, " Exception..${e.localizedMessage}")
+                Log.d("Exception", "NoInternet..${e.localizedMessage}")
                 endLoading()
 
             } catch (e: Exception) {
 
-                Log.d(TAG, " Exception..${e.localizedMessage}")
+                Log.d("Exception", "Exception..${e.localizedMessage}")
                 endLoading()
             }
 
@@ -206,7 +208,7 @@ class ServerCheck constructor(
     }
 
 
-fun serverCheckMainActivityApi(
+    fun serverCheckMainActivityApi(
         toSaveInDB: Boolean = false, apiCall: (serverAction: () -> Unit) -> Unit
     ) {
         Log.d(TAG, "Server Check Testing function starts")
@@ -215,28 +217,25 @@ fun serverCheckMainActivityApi(
         val serverCheckTimer = Timer().also { timer ->
             timer.schedule(object : TimerTask() {
                 override fun run() {
-                    if (isFirst) {
+                    if (!isFirst) {
                         Log.d("NETCHECKTEST", "----working")
 //                        Handler(Looper.getMainLooper()).post {
 //                            //code that runs in main
 //                        }
 
 
-                            LoadingScreen.OnEndLoadingCallbacks?.apply{
-                                Log.d("NETCHECKTEST", "----In Also")
-                                if (toSaveInDB) openPopup(null) else{
-                                    Log.d("NETCHECKTEST", "----In else")
-                                    CoroutineScope(Job()).launch(Dispatchers.Main){
-                                        openServerPopup()
-                                        timer.purge()
-                                        timer.cancel()
-                                    }
-
+                        LoadingScreen.OnEndLoadingCallbacks?.apply {
+                            Log.d("NETCHECKTEST", "----In Also")
+                            if (toSaveInDB) openPopup(null) else {
+                                Log.d("NETCHECKTEST", "----In else")
+                                CoroutineScope(Job()).launch(Dispatchers.Main) {
+                                    openServerPopup()
+                                    timer.purge()
+                                    timer.cancel()
                                 }
+
                             }
-
-
-
+                        }
 
 
                     } else {
@@ -301,7 +300,7 @@ fun serverCheckMainActivityApi(
                         }
                         apiCall() {
                             // Server is not well
-                            Log.d(ServerCheck.TAG, "Response is received Cancel the timer.")
+                            Log.d(TAG, "Response is received Cancel the timer.")
                             inBetweenApiCallTimer.cancel()
                             inBetweenApiCallTimer.purge()
 

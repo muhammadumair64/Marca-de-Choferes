@@ -32,22 +32,22 @@ import javax.inject.Inject
 import android.app.Activity
 
 
-
-
 @HiltViewModel
-class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
-                                           var tinyDB: TinyDB,var resendApis: ResendApis,
-                                           val timeCalculator: TimeCalculator): ViewModel() {
-     lateinit var activityContext : Context
+class loadingViewModel @Inject constructor(
+    var mainRepository: MainRepository,
+    var tinyDB: TinyDB, var resendApis: ResendApis,
+    val timeCalculator: TimeCalculator
+) : ViewModel() {
+    lateinit var activityContext: Context
     val sdf = SimpleDateFormat("yyyy-MM-dd")
     val currentDate = sdf.format(Date())
 
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
-        try{
+        try {
             networkAlertDialog.show()
-        }catch (e:Exception){
-
+        } catch (e: Exception) {
+            Log.d("LoadingViewModel..", "Exception ${e.localizedMessage}")
         }
         val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
         val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
@@ -61,14 +61,15 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
     }
 
 
-  suspend fun openServerPopup(serverAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
+    fun openServerPopup(
+        serverAlertDialog: AlertDialog,
+        PopupView: View,
+        resources: Resources
+    ) {
         serverAlertDialog.setView(PopupView)
-      Log.d("POPUP_TESTING"," In VIEW MODEL")
+        Log.d("POPUP_TESTING", " In VIEW MODEL")
 
-
-
-
-
+        serverAlertDialog.show()
 //        catch (e:Exception){
 //            Log.d("PopupWindowTesting","In Catch Block")
 //        }
@@ -83,12 +84,11 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
     }
 
 
+    fun getPreviousTimeWhenOffline() {
 
-  fun getPreviousTimeWhenOffline() {
-
-        var breakTime=tinyDB.getInt("breaksendtime")
+        var breakTime = tinyDB.getInt("breaksendtime")
 //        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
-        var activity=tinyDB.getInt("SELECTEDACTIVITY")
+        var activity = tinyDB.getInt("SELECTEDACTIVITY")
         when (activity) {
             0 -> {
                 getWorkTimeWhenOffline()
@@ -97,20 +97,20 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
                 tinyDB.putString("checkTimer", "breakTime")
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-                        var breakDate =mainRepository.getUnsentStartBreakTimeDetails().time
+                        var breakDate = mainRepository.getUnsentStartBreakTimeDetails().time
                         if (breakDate!!.isNotEmpty()) {
                             breakDate = breakDate!!.split("Z").toTypedArray()[0]
-                            breakDate = breakDate!!.replace(","," ")
-                            breakDate = breakDate!!.replace("-","/")
+                            breakDate = breakDate!!.replace(",", " ")
+                            breakDate = breakDate!!.replace("-", "/")
                             Log.d("workDate Is", "date is $breakDate")
                         }
                         tinyDB.putString("goBackTime", breakDate)
-                        tinyDB.putInt("ServerBreakTime",breakTime)
+                        tinyDB.putInt("ServerBreakTime", breakTime)
                     }
 
 
-                    var defaultBreak=tinyDB.getInt("defaultBreak")
-                    timeCalculator.timeDifference(tinyDB, activityContext!!, false,defaultBreak)
+                    var defaultBreak = tinyDB.getInt("defaultBreak")
+                    timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultBreak)
 
                     getWorkTimeWhenOffline()
                 }
@@ -120,10 +120,10 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
                 MyApplication.dayEndCheck = 100
                 getWorkTimeWhenOffline()
             }
-            3->{
+            3 -> {
                 MyApplication.dayEndCheck = 200
                 viewModelScope.launch {
-                    withContext(Dispatchers.IO){
+                    withContext(Dispatchers.IO) {
                         checkStateByDataBase()
                     }
                     var intent = Intent(activityContext, MainActivity::class.java)
@@ -135,6 +135,7 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
 
 
     }
+
     fun getWorkTimeWhenOffline() {
         tinyDB.putString("checkTimer", "workTime")
 
@@ -145,16 +146,16 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
                 var workDate = date.time
                 if (workDate!!.isNotEmpty()) {
                     workDate = workDate!!.split("Z").toTypedArray()[0]
-                    workDate = workDate!!.replace(","," ")
-                    workDate = workDate!!.replace("-","/")
+                    workDate = workDate!!.replace(",", " ")
+                    workDate = workDate!!.replace("-", "/")
 
                     Log.d("workDate Is", "date is $workDate")
                 }
                 tinyDB.putString("goBackTime", workDate)
             }
-            var defaultTime=tinyDB.getInt("defaultWork")
+            var defaultTime = tinyDB.getInt("defaultWork")
 
-            timeCalculator.timeDifference(tinyDB, activityContext!!, false,defaultTime)
+            timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultTime)
             Log.d("TimerTESTING", "Here")
             var intent = Intent(activityContext, MainActivity::class.java)
             ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
@@ -166,7 +167,7 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
 
     suspend fun checkStateByDataBase() {
 
-        var workDate =  mainRepository.getUnsentStartWorkTimeDetails().time
+        var workDate = mainRepository.getUnsentStartWorkTimeDetails().time
         if (workDate != null) {
             workDate = workDate!!.split(",").toTypedArray()[0]
             Log.d("workDate Is", "date is $workDate")
@@ -196,10 +197,6 @@ class loadingViewModel @Inject constructor(var mainRepository: MainRepository,
                 tinyDB.putString("selectedState", "endDay")
             }
         }
-
-
-
-
 
 
     }

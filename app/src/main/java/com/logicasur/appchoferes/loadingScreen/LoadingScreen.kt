@@ -129,7 +129,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
          createPopup(myTimer)
     }
 
-    override suspend fun openServerPopup() {
+    override fun openServerPopup() {
 
             createServerAlertPopup()
 
@@ -210,15 +210,15 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
 
-    suspend fun createServerAlertPopup() {
+     fun createServerAlertPopup() {
            Log.d("POPUP_TESTING","IN SERVER POPUP")
            serverDialogBuilder = AlertDialog.Builder(this)
            val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
            serverAlertDialog = serverDialogBuilder.create()
            go_back_btn=PopupView.findViewById(R.id.go_back)
-           delay(5000)
+
            Log.d("POPUP_TESTING"," In VIEW MODEL After delay")
-         serverAlertDialog?.show()
+
            loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
            go_back_btn.setOnClickListener {
