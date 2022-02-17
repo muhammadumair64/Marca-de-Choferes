@@ -447,15 +447,26 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 
                 } catch (e: ResponseException) {
                     withContext(Dispatchers.Main){
-
+                        var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                        (activityContext as OTP_Activity).finish()
                     }
                     e.printStackTrace()
                 } catch (e: ApiException) {
+                    var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    (activityContext as OTP_Activity).finish()
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
+                    var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    (activityContext as OTP_Activity).finish()
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
+                        var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                        (activityContext as OTP_Activity).finish()
                         Toast.makeText(
                             activityContext,
                             "Comprueba tu conexión a Internet",
@@ -464,6 +475,9 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     }
                 }
                 catch(e: SocketException){
+                    var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    (activityContext as OTP_Activity).finish()
                     LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
