@@ -36,6 +36,12 @@ class CreateNewPasswordScreen : BaseClass() {
     }
 
     fun initView() {
+
+        if(ResendApis.primaryColor.isEmpty() && ResendApis.secondaryColor.isEmpty()){
+            ResendApis.primaryColor = "#7A59FC"
+            ResendApis.secondaryColor ="#653FFB"
+        }
+
         setGrad(ResendApis.primaryColor, ResendApis.secondaryColor,binding.SubmitBtn)
         createPasswordViewModel.viewsForCreatePassword(context, binding)
          showSoftKeyboard(binding.editPassword)

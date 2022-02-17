@@ -310,8 +310,14 @@ class SplashScreenViewModel @Inject constructor(
                     }
 
                 } catch (e: ApiException) {
+                    var intent = Intent(activityContext, MainActivity::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    (activityContext as SplashScreen).finish()
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
+                    var intent = Intent(activityContext, MainActivity::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    (activityContext as SplashScreen).finish()
                     println("position 2")
                     e.printStackTrace()
 
@@ -323,8 +329,14 @@ class SplashScreenViewModel @Inject constructor(
                         ).show()
                     }
                 } catch (e: ResponseException) {
+                    var intent = Intent(activityContext, MainActivity::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    (activityContext as SplashScreen).finish()
                     println("ErrorResponse")
                 } catch (e: SocketException) {
+                    var intent = Intent(activityContext, MainActivity::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    (activityContext as SplashScreen).finish()
 //                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception", "Connect Not Available")
                     withContext(Dispatchers.Main) {

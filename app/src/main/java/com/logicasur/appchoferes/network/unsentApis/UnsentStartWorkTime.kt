@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class UnsentStartWorkTime(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var roomid: Int = 0,
     var time: String?
 )

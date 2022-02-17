@@ -29,7 +29,7 @@ class OTP_Activity : BaseClass(){
 
     fun initViews(){
         otpViewModel.fromSplash = intent.getBooleanExtra(ResendApis.splashToOtp,false)
-        setGrad(ResendApis.primaryColor, ResendApis.secondaryColor,binding.SubmitButton)
+        setGrad("#7A59FC","#653FFB",binding.SubmitButton)
         otpViewModel.viewsForOTPScreen(context,binding)
         showSoftKeyboard(binding.edt1)
     }

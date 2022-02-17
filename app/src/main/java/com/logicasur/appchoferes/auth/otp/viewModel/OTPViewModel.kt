@@ -58,7 +58,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
     fun viewsForOTPScreen(context: Context, binding: ActivityOtpBinding) {
         activityContext = context
         tinyDB = TinyDB(context)
-        binding.arrowBack.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+       binding.arrowBack.setBackgroundColor(Color.parseColor("#7A59FC"))
         binding.edt1.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -614,8 +614,9 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 
 
 
-        var workStartTime=response.lastVar.lastWorkedHoursDateIni
-        var breakStartTime =response.lastVar.lastWorkBreakDateIni
+        var workStartTime  = response.lastVar.lastWorkedHoursDateIni
+        var breakStartTime = response.lastVar.lastWorkBreakDateIni
+        Log.d("NEW_USER_DATA_TESTING","is Here $breakStartTime ..... $workStartTime")
         if(workStartTime != null){
             workStartTime= workStartTime!!.replace("T",",")
             workStartTime= workStartTime!!.split(".").toTypedArray()[0]

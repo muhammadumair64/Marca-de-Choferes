@@ -22,7 +22,6 @@ class ResendApis constructor(
     val serverCheck: ServerCheck,
     val tinyDB: TinyDB
 ) {
-
     companion object {
         var value = false
         var primaryColor = "#7A59FC"
