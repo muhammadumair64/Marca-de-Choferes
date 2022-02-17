@@ -34,7 +34,6 @@ import java.util.*
 
 class UploadRemaingDataService : Service() {
     companion object {
-
         var time: Int = 0
         var activity = 0
         lateinit var authRepository: AuthRepository
@@ -66,7 +65,6 @@ class UploadRemaingDataService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         tinyDB = TinyDB(MyApplication.appContext)
         CoroutineScope(apiJob).launch {
             updateActivity(authRepository, activityContext!!)
@@ -154,7 +152,8 @@ class UploadRemaingDataService : Service() {
             val notification = notificationBuilder.setOngoing(true)
                 .setSmallIcon(R.mipmap.app_icon)
                 .setPriority(PRIORITY_MIN)
-                .setCategory(Notification.CATEGORY_SERVICE)
+                .setCategory(Notification.CATEGORY_PROGRESS)
+                .setProgress(100,20,true)
                 .build()
             startForeground(101, notification)
         } else {
@@ -176,7 +175,9 @@ class UploadRemaingDataService : Service() {
                     .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.app_icon))
                     .setWhen(System.currentTimeMillis())
                     .setAutoCancel(true)
-                    .setContentTitle(res.getString(R.string.app_name))
+                    .setContentTitle(res.getString(R.string.app_name)
+                    )
+
                 val n = builder.build()
                 nm.notify(7, n)
             }
