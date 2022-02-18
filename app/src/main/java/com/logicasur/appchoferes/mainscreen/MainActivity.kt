@@ -62,6 +62,7 @@ import com.logicasur.appchoferes.Extra.HomeWatcher
 import com.google.android.gms.location.*
 import android.os.PowerManager
 import android.provider.Settings
+import com.logicasur.appchoferes.Extra.serviceUploadOfflineActivities.ServiceUploadOfflineActivities
 import com.logicasur.appchoferes.databinding.ActivityMainBinding
 import com.logicasur.appchoferes.databinding.FragmentHomeBinding
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
@@ -1182,7 +1183,12 @@ class MainActivity : BaseClass() {
 
         var check = tinyDB.getBoolean("PENDINGCHECK")
         if (check == false) {
-            resendApis.checkNetAndUpload()
+            Log.d("SERVICE_TESTING","MainActivity")
+            if(!(isMyServiceRunning(ServiceUploadOfflineActivities::class.java)))
+            {
+                resendApis.checkNetAndUpload()
+            }
+
         }
 
         if (checkState == false) {

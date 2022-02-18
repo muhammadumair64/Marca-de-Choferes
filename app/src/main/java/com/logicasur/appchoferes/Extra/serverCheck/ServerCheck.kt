@@ -198,6 +198,7 @@ class ServerCheck constructor(
                 }
 
             }
+            Log.d("SERVICE_TESTING","ServerCheck")
             resendApis.checkNetAndUpload()
 
         }

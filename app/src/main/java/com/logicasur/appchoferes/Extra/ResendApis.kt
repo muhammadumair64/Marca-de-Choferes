@@ -257,6 +257,7 @@ class ResendApis constructor(
             tinyDB.putBoolean("PENDINGCHECK",false)
             timer.cancel()
             timer.purge()
+         checkNetTimer=null
         }
     }
 

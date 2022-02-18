@@ -36,10 +36,9 @@ class ServiceUploadOfflineActivities : Service() {
     private var notificationBuilder: Notification.Builder? = null
     private var notificationBuilderLowerVersion: NotificationCompat.Builder? = null
     var percentageValue = 0.0
-    var sizeOfDbData=0
-    var increaseIndex=0
-
-
+    var sizeOfDbData = 0
+    var increaseIndex = 0
+    var TAG="SERVICE_TESTING"
 
     companion object {
         lateinit var serverCheck: ServerCheck
@@ -59,12 +58,14 @@ class ServiceUploadOfflineActivities : Service() {
     override fun onBind(intent: Intent): IBinder {
         TODO("Return the communication channel to the service.")
     }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
         manager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         CoroutineScope(Job()).launch {
             getNotification(MyApplication.appContext, 101)
         }
-
+        Log.d("SERVICE_TESTING","onStartCommand")
         checkStateAndUploadActivityDB()
         return START_NOT_STICKY
     }
@@ -72,7 +73,7 @@ class ServiceUploadOfflineActivities : Service() {
     override fun onDestroy() {
         super.onDestroy()
         manager?.cancel(101)
-        Log.d("SERVICE_TESTING","IN ON DESTROY")
+        Log.d("SERVICE_TESTING", "IN ON DESTROY")
     }
 
     // -----------------Create Notification----------
@@ -86,7 +87,7 @@ class ServiceUploadOfflineActivities : Service() {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(id, notification)
-        startForeground(101,notification!!)
+        startForeground(101, notification!!)
         return Pair(id, notification!!)
     }
 
@@ -139,8 +140,11 @@ class ServiceUploadOfflineActivities : Service() {
 
 
             if (serverCheck.mainRepository.isExistsUnsentUploadActivityDB()) {
+
                 val getAllDataFromDB = serverCheck.mainRepository.getUnsentUploadActivityDetails()
-                sizeOfDbData=getAllDataFromDB.size
+                sizeOfDbData = getAllDataFromDB.size
+
+                Log.d("SERVICE_TESTING_DB","Size of DB$sizeOfDbData")
 
                 for (unsentActivity in getAllDataFromDB) {
 
@@ -214,15 +218,8 @@ class ServiceUploadOfflineActivities : Service() {
                     token
                 )
                 serverCheck.mainRepository.deleteUnsentUploadActivity(roomId)
-                Log.d("SERVICE_TESTING","IN For activity")
-                increaseIndex++
-                Log.d("SERVICE_TESTING","Index increase  $increaseIndex      -----  $sizeOfDbData")
-                percentageValue=increaseIndex.toDouble().div(sizeOfDbData.toDouble())
-                Log.d("SERVICE_TESTING","before multi $percentageValue")
-                percentageValue *= 100
-                Log.d("SERVICE_TESTING","%%%%%  $percentageValue")
-                notificationBuilder?.setProgress(100,percentageValue.toInt(),false)
-                manager?.notify(101,notification)
+                Log.d("SERVICE_TESTING", "IN For activity")
+                updateProgressBar()
                 println("SuccessResponse $response")
             }
 
@@ -245,6 +242,16 @@ class ServiceUploadOfflineActivities : Service() {
 
     }
 
+    fun updateProgressBar() {
+        increaseIndex++
+        Log.d("SERVICE_TESTING", "Index increase  $increaseIndex      -----  $sizeOfDbData")
+        percentageValue = increaseIndex.toDouble().div(sizeOfDbData.toDouble())
+        Log.d("SERVICE_TESTING", "before multi $percentageValue")
+        percentageValue *= 100
+        Log.d("SERVICE_TESTING", "%%%%%  $percentageValue")
+        notificationBuilder?.setProgress(100, percentageValue.toInt(), false)
+        manager?.notify(101, notification)
+    }
 
     private suspend fun updateState(
         roomId: Int,
@@ -267,12 +274,8 @@ class ServiceUploadOfflineActivities : Service() {
                     token
                 )
                 serverCheck.mainRepository.deleteUnsentUploadActivity(roomId)
-                Log.d("SERVICE_TESTING","IN for state")
-                increaseIndex++
-                percentageValue=(increaseIndex/sizeOfDbData).toDouble()
-                percentageValue *= 100
-                notificationBuilder?.setProgress(100,percentageValue.toInt(),false)
-                manager?.notify(101,notification)
+                Log.d("SERVICE_TESTING", "IN for state")
+                updateProgressBar()
                 println("SuccessResponse $response")
 
 
@@ -302,12 +305,24 @@ class ServiceUploadOfflineActivities : Service() {
 
     private suspend fun checkForRemainingCalls() {
         if (!(serverCheck.mainRepository.isExistsUnsentUploadActivityDB())) {
-
+            Log.d(
+                "SERVICE_TESTING_DB",
+                "Check DB Existance ${serverCheck.mainRepository.isExistsUnsentUploadActivityDB()}"
+            )
             tinyDB.putBoolean("PENDINGCHECK", false)
             tinyDB.putBoolean("SYNC_CHECK", true)
             stopSelf()
         } else {
             serverCheck.serverCheck {
+
+                increaseIndex = 0
+                sizeOfDbData = 0
+                percentageValue = 0.0
+
+                Log.d(
+                    "SERVICE_TESTING",
+                    "checkForRemainingCalls  $percentageValue  ... $sizeOfDbData...$increaseIndex"
+                )
                 checkStateAndUploadActivityDB()
             }
         }

@@ -63,6 +63,7 @@ class SplashScreenViewModel @Inject constructor(
 
     fun checkData() {
         MyApplication.checKForSyncLoading = true
+        Log.d("SERVICE_TESTING","SplashScreen")
         resendApis.checkNetAndUpload()
         myTimer = Timer()
         myTimer!!.schedule(object : TimerTask() {
