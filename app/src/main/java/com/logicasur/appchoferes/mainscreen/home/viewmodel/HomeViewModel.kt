@@ -1296,7 +1296,8 @@ class HomeViewModel @Inject constructor(
 //    }
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
-
+        var intent = Intent(activityContext, LoadingScreen::class.java)
+        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
 //        tinyDB.putInt("SELECTEDACTIVITY",activity)
 //        tinyDB.putInt("TOTALTIMETOSEND",totalTime!!)
@@ -1366,8 +1367,8 @@ class HomeViewModel @Inject constructor(
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
         Log.d("startUpload","activity function.")
         MyApplication.checKForActivityLoading = true
-        var intent = Intent(activityContext, LoadingScreen::class.java)
-        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+//        var intent = Intent(activityContext, LoadingScreen::class.java)
+//        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
         val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
         var currentDate = sdf.format(Date())

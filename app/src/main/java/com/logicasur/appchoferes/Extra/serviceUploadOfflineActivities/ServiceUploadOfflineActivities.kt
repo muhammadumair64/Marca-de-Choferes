@@ -343,7 +343,7 @@ class ServiceUploadOfflineActivities : Service() {
         } else if (language == "1") {
 
 
-            notificationTitle = "Upload Offline activities"
+            notificationTitle = "Upload offline activities"
         } else {
 
             notificationTitle = "Carregar atividades offline"
