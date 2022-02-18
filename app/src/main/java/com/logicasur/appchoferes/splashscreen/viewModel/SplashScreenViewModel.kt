@@ -68,6 +68,8 @@ class SplashScreenViewModel @Inject constructor(
         myTimer!!.schedule(object : TimerTask() {
             override fun run() {
                 var check = tinyDB.getBoolean("SYNC_CHECK")
+
+               check = true
                 if (check == true) {
                     Log.d("SYNC_CHECK_TESTING", "RUN SYNC")
                     syncdata()

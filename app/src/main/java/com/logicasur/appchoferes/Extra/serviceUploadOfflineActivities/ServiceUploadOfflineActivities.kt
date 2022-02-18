@@ -35,7 +35,7 @@ class ServiceUploadOfflineActivities : Service() {
     private var notification: Notification? = null
     private var notificationBuilder: Notification.Builder? = null
     private var notificationBuilderLowerVersion: NotificationCompat.Builder? = null
-    var percentageValue = 0
+    var percentageValue = 0.0
     var sizeOfDbData=0
     var increaseIndex=0
 
@@ -66,12 +66,13 @@ class ServiceUploadOfflineActivities : Service() {
         }
 
         checkStateAndUploadActivityDB()
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
-        manager?.cancelAll()
         super.onDestroy()
+        manager?.cancel(101)
+        Log.d("SERVICE_TESTING","IN ON DESTROY")
     }
 
     // -----------------Create Notification----------
@@ -85,6 +86,7 @@ class ServiceUploadOfflineActivities : Service() {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(id, notification)
+        startForeground(101,notification!!)
         return Pair(id, notification!!)
     }
 
@@ -108,7 +110,7 @@ class ServiceUploadOfflineActivities : Service() {
                 .setSmallIcon(R.mipmap.app_icon)
                 .setContentTitle("Upload Offline activities")
                 .setCategory(Notification.CATEGORY_PROGRESS)
-                .setProgress(100, percentageValue, false)
+                .setProgress(100, percentageValue.toInt(), false)
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
@@ -121,7 +123,7 @@ class ServiceUploadOfflineActivities : Service() {
                 .setContentTitle("Upload Offline activities")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(Notification.CATEGORY_PROGRESS)
-                .setProgress(100, percentageValue, false)
+                .setProgress(100, percentageValue.toInt(), false)
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
@@ -212,9 +214,14 @@ class ServiceUploadOfflineActivities : Service() {
                     token
                 )
                 serverCheck.mainRepository.deleteUnsentUploadActivity(roomId)
+                Log.d("SERVICE_TESTING","IN For activity")
                 increaseIndex++
-                percentageValue=(increaseIndex/sizeOfDbData)*100
-                notificationBuilder?.setProgress(100,percentageValue,false)
+                Log.d("SERVICE_TESTING","Index increase  $increaseIndex      -----  $sizeOfDbData")
+                percentageValue=increaseIndex.toDouble().div(sizeOfDbData.toDouble())
+                Log.d("SERVICE_TESTING","before multi $percentageValue")
+                percentageValue *= 100
+                Log.d("SERVICE_TESTING","%%%%%  $percentageValue")
+                notificationBuilder?.setProgress(100,percentageValue.toInt(),false)
                 manager?.notify(101,notification)
                 println("SuccessResponse $response")
             }
@@ -260,9 +267,11 @@ class ServiceUploadOfflineActivities : Service() {
                     token
                 )
                 serverCheck.mainRepository.deleteUnsentUploadActivity(roomId)
+                Log.d("SERVICE_TESTING","IN for state")
                 increaseIndex++
-                percentageValue=(increaseIndex/sizeOfDbData)*100
-                notificationBuilder?.setProgress(100,percentageValue,false)
+                percentageValue=(increaseIndex/sizeOfDbData).toDouble()
+                percentageValue *= 100
+                notificationBuilder?.setProgress(100,percentageValue.toInt(),false)
                 manager?.notify(101,notification)
                 println("SuccessResponse $response")
 
