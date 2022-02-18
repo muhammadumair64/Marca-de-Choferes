@@ -1020,9 +1020,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun selectState(position: Int) {
-        dataBinding!!.secondState.isClickable = true
-        var text = statusArrayList[position]
-        dataBinding!!.statusSelected.text = text
+        viewModelScope.launch(Dispatchers.Main) {
+            dataBinding!!.secondState.isClickable = true
+            var text = statusArrayList[position]
+            dataBinding!!.statusSelected.text = text
+        }
+
     }
 
 
@@ -1068,7 +1071,10 @@ class HomeViewModel @Inject constructor(
                                  if (response != null) {
                                      var position= tinyDB.getInt("state")
                                      position = position.minus(1)
-                                     selectState(position)
+
+                                         selectState(position)
+
+
                                      action()
                                      (MyApplication.loadingContext as LoadingScreen).finish()
                                  }
@@ -1700,7 +1706,14 @@ class HomeViewModel @Inject constructor(
 
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
-        networkAlertDialog.show()
+        try{
+            networkAlertDialog.show()
+        }catch (e:Exception)
+        {
+            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+            Log.d("OpenPop","Exception ${e.localizedMessage}")
+        }
+
         val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
         val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
         networkAlertDialog.getWindow()?.setLayout(width, height);

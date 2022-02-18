@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.transition.TransitionInflater
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
@@ -32,6 +33,7 @@ import com.logicasur.appchoferes.mainscreen.home.Adapter.SearchAdapter
 import com.logicasur.appchoferes.mainscreen.home.Adapter.StatusAdapter
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
+import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.myApplication.MyApplication
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,19 +50,19 @@ class HomeFragment : Fragment(), OnclickItem {
     lateinit var dailogBuilder: AlertDialog.Builder
     lateinit var statusDailogBuilder: AlertDialog.Builder
     lateinit var networkAlertDialog: AlertDialog
-    lateinit var networkDialogBuilder:AlertDialog.Builder
+    lateinit var networkDialogBuilder: AlertDialog.Builder
     lateinit var alertDialog: AlertDialog
     lateinit var dialog: AlertDialog
     lateinit var binding: FragmentHomeBinding
     lateinit var recyclerView: RecyclerView
     lateinit var statusRecyclerView: RecyclerView
     lateinit var searchView: SearchView
-    lateinit var proceed_btn  :AppCompatButton
+    lateinit var proceed_btn: AppCompatButton
     lateinit var cancel_btn: RelativeLayout
     val viewModel: HomeViewModel by viewModels()
     lateinit var mainViewModel: MainViewModel
     lateinit var tinyDB: TinyDB
-    lateinit var fragment : HomeFragment
+    lateinit var fragment: HomeFragment
     var mainContext: Context? = null
 
     override fun onCreateView(
@@ -92,8 +94,16 @@ class HomeFragment : Fragment(), OnclickItem {
         var context = (activity as MainActivity).context
         mainContext = context
         binding.statusListBtn.visibility = View.GONE
-        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, binding.secondState)
-        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, binding.TakeBreak)
+        (activity as MainActivity).setGrad(
+            ResendApis.primaryColor,
+            ResendApis.secondaryColor,
+            binding.secondState
+        )
+        (activity as MainActivity).setGrad(
+            ResendApis.primaryColor,
+            ResendApis.secondaryColor,
+            binding.TakeBreak
+        )
         binding.date.setTextColor(Color.parseColor(ResendApis.primaryColor))
         binding.apply {
             initialState?.setVisibility(View.VISIBLE)
@@ -116,7 +126,7 @@ class HomeFragment : Fragment(), OnclickItem {
         viewModel.timers()
 
         mainViewModel.popupLiveData.observe(viewLifecycleOwner, Observer {
-            if(it != 0){
+            if (it != 0) {
                 createPopup()
             }
 
@@ -222,7 +232,8 @@ class HomeFragment : Fragment(), OnclickItem {
     fun searchVehicle() {
         var context = (activity as MainActivity).context
 
-        searchAdapter = SearchAdapter(viewModel.searchedArrayList, this,viewModel.vehicleArrayListforUpload)
+        searchAdapter =
+            SearchAdapter(viewModel.searchedArrayList, this, viewModel.vehicleArrayListforUpload)
         recyclerView.adapter = searchAdapter
 
         val typeface = ResourcesCompat.getFont(context, R.font.open_sans_regular)
@@ -268,9 +279,9 @@ class HomeFragment : Fragment(), OnclickItem {
     override fun statusSelection(position: Int) {
         dialog.dismiss()
         var Position = position.plus(1)
-        var previous=tinyDB.getInt("state")
-        if(previous!=0){
-            tinyDB.putInt("previous_state",previous)
+        var previous = tinyDB.getInt("state")
+        if (previous != 0) {
+            tinyDB.putInt("previous_state", previous)
         }
 
 
@@ -293,36 +304,45 @@ class HomeFragment : Fragment(), OnclickItem {
 
     override fun onResume() {
         super.onResume()
-        var position= tinyDB.getInt("state")
-        if(position!=0){
+        var position = tinyDB.getInt("state")
+        if (position != 0) {
             position = position.minus(1)
             viewModel.selectState(position)
         }
         (activity as MainActivity).binding.menu.setItemSelected(R.id.home, true)
     }
 
-    fun createPopup(){
+    fun createPopup() {
         networkDialogBuilder = AlertDialog.Builder(getContext())
         val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
-        networkAlertDialog= networkDialogBuilder.create()
-        proceed_btn=PopupView.findViewById(R.id.proceed_btn)
-        cancel_btn=PopupView.findViewById(R.id.cancel_btn)
-        if(!MyApplication.checKForPopup){
-            viewModel.openPopup(networkAlertDialog,PopupView,resources)
+        networkAlertDialog = networkDialogBuilder.create()
+        proceed_btn = PopupView.findViewById(R.id.proceed_btn)
+        cancel_btn = PopupView.findViewById(R.id.cancel_btn)
+        if (!MyApplication.checKForPopup) {
+            try {
+                viewModel.openPopup(networkAlertDialog, PopupView, resources)
+            } catch (e: Exception) {
+                Log.d("CallingOpenPop", "Exception...${e.localizedMessage}")
+                LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+            }
 
-        }else{
+        } else {
             MyApplication.checKForPopup = false
         }
 
-        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
+        (activity as MainActivity).setGrad(
+            ResendApis.primaryColor,
+            ResendApis.secondaryColor,
+            proceed_btn
+        )
         cancel_btn.setOnClickListener {
 
             networkAlertDialog.dismiss()
-            var stateCheck=  tinyDB.getBoolean("STATEAPI")
-            if(stateCheck){
-                var position=tinyDB.getInt("previous_state")
-                if(position!=0){
-                    tinyDB.putInt("state",position)
+            var stateCheck = tinyDB.getBoolean("STATEAPI")
+            if (stateCheck) {
+                var position = tinyDB.getInt("previous_state")
+                if (position != 0) {
+                    tinyDB.putInt("state", position)
                 }
 
             }
@@ -330,15 +350,15 @@ class HomeFragment : Fragment(), OnclickItem {
         }
         proceed_btn.setOnClickListener {
 
-            var position= tinyDB.getInt("state")
-            if(position!=0){
+            var position = tinyDB.getInt("state")
+            if (position != 0) {
                 position = position.minus(1)
                 viewModel.selectState(position)
             }
-          var stateCheck=  tinyDB.getBoolean("STATEAPI")
-            if(stateCheck){
+            var stateCheck = tinyDB.getBoolean("STATEAPI")
+            if (stateCheck) {
                 (activity as MainActivity).updatePendingData(true)
-            }else{
+            } else {
                 (activity as MainActivity).updatePendingData(false)
             }
 
@@ -346,7 +366,7 @@ class HomeFragment : Fragment(), OnclickItem {
             networkAlertDialog.dismiss()
         }
 
-        if(MyApplication.checKForPopup == true){
+        if (MyApplication.checKForPopup == true) {
             closePopup()
             MyApplication.checKForPopup = false
         }
@@ -354,19 +374,17 @@ class HomeFragment : Fragment(), OnclickItem {
     }
 
 
+    fun closePopup() {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
 
-fun closePopup(){
-            lifecycleScope.launch {
-            withContext(Dispatchers.IO){
-
-if(networkAlertDialog != null){
-    networkAlertDialog.dismiss()
-}
-
+                if (networkAlertDialog != null) {
+                    networkAlertDialog.dismiss()
                 }
+
             }
         }
-
+    }
 
 
 }
