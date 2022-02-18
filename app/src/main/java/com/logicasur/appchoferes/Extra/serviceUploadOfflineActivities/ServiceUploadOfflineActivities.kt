@@ -38,7 +38,10 @@ class ServiceUploadOfflineActivities : Service() {
     var percentageValue = 0.0
     var sizeOfDbData = 0
     var increaseIndex = 0
+    var notificationTitle = ""
     var TAG="SERVICE_TESTING"
+
+
 
     companion object {
         lateinit var serverCheck: ServerCheck
@@ -63,8 +66,12 @@ class ServiceUploadOfflineActivities : Service() {
 
         manager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         CoroutineScope(Job()).launch {
+
             getNotification(MyApplication.appContext, 101)
         }
+
+        notificationTitle()
+
         Log.d("SERVICE_TESTING","onStartCommand")
         checkStateAndUploadActivityDB()
         return START_NOT_STICKY
@@ -109,7 +116,7 @@ class ServiceUploadOfflineActivities : Service() {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationBuilder = Notification.Builder(context, 101.toString())
                 .setSmallIcon(R.mipmap.app_icon)
-                .setContentTitle("Upload Offline activities")
+                .setContentTitle(notificationTitle)
                 .setCategory(Notification.CATEGORY_PROGRESS)
                 .setProgress(100, percentageValue.toInt(), false)
                 .setAutoCancel(false)
@@ -121,7 +128,7 @@ class ServiceUploadOfflineActivities : Service() {
         } else {
             notificationBuilderLowerVersion = NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.app_icon)
-                .setContentTitle("Upload Offline activities")
+                .setContentTitle(notificationTitle)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(Notification.CATEGORY_PROGRESS)
                 .setProgress(100, percentageValue.toInt(), false)
@@ -326,5 +333,21 @@ class ServiceUploadOfflineActivities : Service() {
                 checkStateAndUploadActivityDB()
             }
         }
+    }
+
+    fun notificationTitle(){
+        var language = tinyDB.getString("language")
+        if (language == "0") {
+           notificationTitle = "Cargar actividades sin conexión"
+
+        } else if (language == "1") {
+
+
+            notificationTitle = "Upload Offline activities"
+        } else {
+
+            notificationTitle = "Carregar atividades offline"
+        }
+
     }
 }

@@ -69,8 +69,6 @@ class SplashScreenViewModel @Inject constructor(
         myTimer!!.schedule(object : TimerTask() {
             override fun run() {
                 var check = tinyDB.getBoolean("SYNC_CHECK")
-
-               check = true
                 if (check == true) {
                     Log.d("SYNC_CHECK_TESTING", "RUN SYNC")
                     syncdata()
@@ -95,7 +93,7 @@ class SplashScreenViewModel @Inject constructor(
                     }
                 }
             }
-        }, 0, 10000)
+        }, 0, 4000)
     }
 
 
@@ -112,33 +110,9 @@ class SplashScreenViewModel @Inject constructor(
 
                     if (response != null) {
                         authRepository.clearData()
-
                         authRepository.InsertSigninData(response)
                         val Language = response.profile?.language
                         val notify: Boolean = response.profile?.notify!!
-                        getPreviousTime(response)
-//                        setObj(response)
-                        tinyDB.putInt("defaultWork", response.work!!.workingHours)
-                        tinyDB.putInt("defaultBreak", response.work.workBreak)
-                        tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
-                        tinyDB.putString("language", Language.toString())
-//                        tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
-//                        tinyDB.putString("SplashBG", response.images.splashScreen ?: "")
-                        var max = response.work.workBreak * 60
-                        println("Max Value from Server $max")
-                        tinyDB.putInt("MaxBreakBar", max)
-
-                        var maxWork = response.work!!.workingHours * 60
-                        println("Max Value from Server $maxWork")
-                        tinyDB.putInt("MaxBar", maxWork)
-
-
-                        if (response.lastVar.lastActivity != 3) {
-                            var state = response.lastVar.lastState!!
-                            tinyDB.putInt("state", state + 1)
-                        } else {
-                            tinyDB.putInt("state", 1)
-                        }
 
                         if (response.colors.primary.isNotEmpty()) {
                             ResendApis.primaryColor = response.colors.primary ?: "#7A59FC"
@@ -147,15 +121,52 @@ class SplashScreenViewModel @Inject constructor(
                             tinyDB.putString("primaryColor", ResendApis.primaryColor)
                             tinyDB.putString("secondrayColor", ResendApis.secondaryColor)
                         }
+                        tinyDB.putInt("defaultWork", response.work!!.workingHours)
+                        tinyDB.putInt("defaultBreak", response.work.workBreak)
+                        tinyDB.putString("language", Language.toString())
 
-                        var color = tinyDB.getString("primaryColor")
-                        Log.d("COLORCHECKTESTING22", color!!)
-                        checkStateByServer(response)
+                        var max = response.work.workBreak * 60
+                        println("Max Value from Server $max")
+                        tinyDB.putInt("MaxBreakBar", max)
+
+                        var maxWork = response.work!!.workingHours * 60
+                        println("Max Value from Server $maxWork")
+                        tinyDB.putInt("MaxBar", maxWork)
                         tinyDB.putBoolean("notify", notify)
-                        tinyDB.putInt("againCome", 200)
-                        MyApplication.check = 200
-                        Log.d("LOADINGIMAGETESTING", "here1")
 
+
+
+                        if(resendApis.serverCheck.mainRepository.isExistsUnsentUploadActivityDB()){
+
+                            LoadingScreen.OnEndLoadingCallbacks!!.calculateTimeFromLocalDB()
+
+                        }else{
+                            getPreviousTime(response)
+//                        setObj(response)
+
+
+                            tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
+
+//                        tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
+//                        tinyDB.putString("SplashBG", response.images.splashScreen ?: "")
+                            if (response.lastVar.lastActivity != 3) {
+                                var state = response.lastVar.lastState!!
+                                tinyDB.putInt("state", state + 1)
+                            } else {
+                                tinyDB.putInt("state", 1)
+                            }
+                            var color = tinyDB.getString("primaryColor")
+                            Log.d("COLORCHECKTESTING22", color!!)
+                            checkStateByServer(response)
+                            tinyDB.putInt("againCome", 200)
+                            MyApplication.check = 200
+                        }
+
+
+
+
+
+                        Log.d("LOADINGIMAGETESTING", "here1")
                         var image = response.images.loadingScreen
                         println("hello testing $image")
 //                        Log.d("CheckLoading",image)
@@ -574,20 +585,6 @@ class SplashScreenViewModel @Inject constructor(
     }
 
 
-//    fun setObj(response: SigninResponse) {
-//
-//        var datetime =
-//        var totalTime = 0
-//        var activity= response.lastVar!!.lastActivity
-//        var geoPosition = GeoPosition(response.lastVar!!.lastStateLatitud,response.lastVar.lastStateLongitud)
-//        var vehicle =
-//
-//        var obj = UpdateActivityDataClass(datetime,totalTime,activity,geoPosition,vehicle)
-//
-//        tinyDB.putObject(
-//            "upadteActivity",obj)
-//
-//    }
 
 
 }

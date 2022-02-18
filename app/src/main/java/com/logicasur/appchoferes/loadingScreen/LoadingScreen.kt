@@ -136,6 +136,10 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
     }
 
+    override fun calculateTimeFromLocalDB() {
+        loadingViewModel.getPreviousTimeWhenOffline()
+    }
+
     fun setBarColor(){
 // clear FLAG_TRANSLUCENT_STATUS flag:
 

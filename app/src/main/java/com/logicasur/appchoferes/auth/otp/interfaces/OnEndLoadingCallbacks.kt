@@ -6,4 +6,5 @@ interface OnEndLoadingCallbacks {
     fun endLoading()
     fun openPopup(myTimer: Timer?)
    fun openServerPopup()
+   fun calculateTimeFromLocalDB()
 }
