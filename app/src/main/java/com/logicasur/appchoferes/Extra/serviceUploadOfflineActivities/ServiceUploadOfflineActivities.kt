@@ -11,6 +11,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.logicasur.appchoferes.Extra.CheckConnection
+import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.R
@@ -42,6 +43,7 @@ class ServiceUploadOfflineActivities : Service() {
     var notificationTitle = ""
     var TAG = "SERVICE_TESTING"
     var timerCheckInternet = Timer()
+
 
 
     companion object {
@@ -91,7 +93,8 @@ class ServiceUploadOfflineActivities : Service() {
                 if (!CheckConnection.netCheck(MyApplication.appContext)) {
 
                     timerCancel()
-
+                     var resendApis = ResendApis(serverCheck, tinyDB)
+                    resendApis.checkNetAndUpload()
                     stopSelf()
 
                 }
