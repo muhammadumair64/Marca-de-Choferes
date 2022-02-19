@@ -88,7 +88,7 @@ class HomeViewModel @Inject constructor(
     var longitude = 0.0
     var overTimeCheck = false
     var TAG2 = ""
-lateinit var loadingIntent : Intent
+    lateinit var loadingIntent: Intent
 
     //activity
 
@@ -168,7 +168,7 @@ lateinit var loadingIntent : Intent
 
             }
             "takeBreak" -> {
-                Log.d("HomeViewModel...","Call btn take break")
+                Log.d("HomeViewModel...", "Call btn take break")
                 buttonTakeBreak()
 
             }
@@ -243,7 +243,7 @@ lateinit var loadingIntent : Intent
 
 
         dataBinding?.secondState?.setOnClickListener {
-            Log.d("HomeViewModel...","Click on Second state")
+            Log.d("HomeViewModel...", "Click on Second state")
             tinyDB.putBoolean("STATEAPI", false)
             if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
                 tinyDB.putInt("SELECTEDACTIVITY", 2)
@@ -252,52 +252,42 @@ lateinit var loadingIntent : Intent
             }
 
 
-
-            if (checkGPS(activityContext!!)) {
-                (activityContext as MainActivity).initPermission() { secondStateAction() }
-            } else {
-                (activityContext as MainActivity).initPermission() { secondStateAction() }
-            }
+            MainActivity.action=null
+            (activityContext as MainActivity).initPermission() { secondStateAction() }
 
         }
         dataBinding?.TakeBreak?.setOnClickListener {
-            Log.d("HomeViewModel...","Click on take break.")
+            Log.d("HomeViewModel...", "Click on take break.")
 
             tinyDB.putBoolean("STATEAPI", false)
 
             tinyDB.putInt("SELECTEDACTIVITY", 1)
 
 
-            if (checkGPS(activityContext!!)) {
-                (activityContext as MainActivity).initPermission() { takeBreakAction() }
-            } else {
-                (activityContext as MainActivity).initPermission() { takeBreakAction() }
-            }
+            MainActivity.action = null
+            (activityContext as MainActivity).initPermission() { takeBreakAction() }
+
 
         }
 
         dataBinding?.EndDay?.setOnClickListener {
-            Log.d("HomeViewModel...","Click on End Day.")
+            Log.d("HomeViewModel...", "Click on End Day.")
 
             tinyDB.putBoolean("STATEAPI", false)
             tinyDB.putInt("SELECTEDACTIVITY", 3)
 
 
-            if (checkGPS(activityContext!!)) {
-                (activityContext as MainActivity).initPermission() { endDayAction() }
-            } else {
-                (activityContext as MainActivity).initPermission() { endDayAction() }
-            }
+            MainActivity.action=null
+            (activityContext as MainActivity).initPermission() { endDayAction() }
 
 
         }
         dataBinding?.initialState?.setOnClickListener {
             tinyDB.putBoolean("STATEAPI", false)
-            if (checkGPS(activityContext!!)) {
-                (activityContext as MainActivity).initPermission() { initialStateAction() }
-            } else {
-                (activityContext as MainActivity).initPermission() { initialStateAction() }
-            }
+
+            MainActivity.action=null
+            (activityContext as MainActivity).initPermission() { initialStateAction() }
+
         }
 
 
@@ -312,14 +302,14 @@ lateinit var loadingIntent : Intent
     fun takeBreakAction() {
         var intent = (activityContext as MainActivity)
         MyApplication.check = 0
-        Log.d("HomeViewModel...","Call btn take from takeBreakAction function.")
+        Log.d("HomeViewModel...", "Call btn take from takeBreakAction function.")
         buttonTakeBreak()
 //        intent.stopTimer()
 
         intent.startTimerBreak()
 
         tinyDB.putString("selectedState", "takeBreak")
-        Log.d("HomeViewModel...","Call hit Api Activity(1)")
+        Log.d("HomeViewModel...", "Call hit Api Activity(1)")
         hitActivityAPI(1, MyApplication.BreakToSend)
     }
 
@@ -335,7 +325,7 @@ lateinit var loadingIntent : Intent
         var maxWork = MyApplication.TotalTime * 60
         tinyDB.putInt("MaxBar", maxWork)
         tinyDB.putString("selectedState", "endDay")
-        Log.d("HomeViewModel...","Call hit Api Activity(3)")
+        Log.d("HomeViewModel...", "Call hit Api Activity(3)")
         hitActivityAPI(3, MyApplication.TimeToSend)
     }
 
@@ -483,7 +473,7 @@ lateinit var loadingIntent : Intent
 //            intent.startTimer()
             Log.d("break timer", "${MyApplication.BreakToSend}")
 
-            Log.d("HomeViewModel...","Call hit Api Activity(2)")
+            Log.d("HomeViewModel...", "Call hit Api Activity(2)")
             hitActivityAPI(2, MyApplication.BreakToSend)
             dataBinding!!.statusListBtn.isClickable = true
         } else {
@@ -507,7 +497,7 @@ lateinit var loadingIntent : Intent
             }
 
             goToActivState()
-            Log.d("HomeViewModel...","Call hit Api Activity(0)")
+            Log.d("HomeViewModel...", "Call hit Api Activity(0)")
             hitActivityAPI(0, MyApplication.TimeToSend)
 
         }
@@ -855,7 +845,7 @@ lateinit var loadingIntent : Intent
 
     //Get Location
     fun getLocation(context: Context) {
-Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
+        Log.d("LOADING_ISSUE_TESTING", "IN_LOADING SCREEN")
         //change
         println("location call")
         var locationRequest = LocationRequest()
@@ -900,14 +890,12 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
 //                        println("City Name is $location")
 //                        Toast.makeText(context, "$location", Toast.LENGTH_SHORT).show()
 
-                      Log.d("CurrentLocation"," $longitude and $latitude")
+                        Log.d("CurrentLocation", " $longitude and $latitude")
                         var geoPosition = GeoPosition(latitude, longitude)
 
 
-                        Log.d("LOADING_ISSUE_TESTING","IN location after")
-                            uploadActivity(selectedActivty, totalTimeForActivty, geoPosition)
-
-
+                        Log.d("LOADING_ISSUE_TESTING", "IN location after")
+                        uploadActivity(selectedActivty, totalTimeForActivty, geoPosition)
 
 
                     }
@@ -921,7 +909,6 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
     }
 
     fun getLocationForState(context: Context) {
-
 
 
         println("location call")
@@ -1051,102 +1038,98 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
     }
 
 
-     fun updateState(
+    fun updateState(
         datetime: String?,
         totalTime: Int?,
         state: State?,
         geoPosition: GeoPosition?,
-        vehicle: Vehicle?,action:()->Unit
+        vehicle: Vehicle?, action: () -> Unit
     ) {
 
-         viewModelScope.launch {
-             withContext(Dispatchers.IO){
-                 if (mainRepository.isExistsUnsentUploadActivityDB()){
-                     (activityContext as MainActivity).updatePendingData(true)
-                     var position= tinyDB.getInt("state")
-                     position = position.minus(1)
-                     selectState(position)
-                     action()
-                     (MyApplication.loadingContext as LoadingScreen).finish()
-                 }else{
-                     var Token = tinyDB.getString("Cookie")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if (mainRepository.isExistsUnsentUploadActivityDB()) {
+                    (activityContext as MainActivity).updatePendingData(true)
+                    var position = tinyDB.getInt("state")
+                    position = position.minus(1)
+                    selectState(position)
+                    action()
+                    (MyApplication.loadingContext as LoadingScreen).finish()
+                } else {
+                    var Token = tinyDB.getString("Cookie")
 
-                     viewModelScope.launch {
+                    viewModelScope.launch {
 
-                         withContext(Dispatchers.IO) {
+                        withContext(Dispatchers.IO) {
 
-                             try {
+                            try {
 
-                                 val response = authRepository.updateState(
-                                     datetime,
-                                     totalTime,
-                                     state,
-                                     geoPosition,
-                                     vehicle,
-                                     Token!!
-                                 )
+                                val response = authRepository.updateState(
+                                    datetime,
+                                    totalTime,
+                                    state,
+                                    geoPosition,
+                                    vehicle,
+                                    Token!!
+                                )
 
-                                 println("SuccessResponse $response")
-
-
-
-                                 if (response != null) {
-                                     var position= tinyDB.getInt("state")
-                                     position = position.minus(1)
-
-                                         selectState(position)
-
-
-                                     action()
-                                     (MyApplication.loadingContext as LoadingScreen).finish()
-                                 }
-
-                             } catch (e: ResponseException) {
-                                 (MyApplication.loadingContext as LoadingScreen).finish()
-                                 println("ErrorResponse")
-                             } catch (e: ApiException) {
-                                 (MyApplication.loadingContext as LoadingScreen).finish()
-                                 e.printStackTrace()
-                             } catch (e: NoInternetException) {
-                                 println("position 2")
-                                 e.printStackTrace()
-                                 withContext(Dispatchers.Main) {
-                                     (MyApplication.loadingContext as LoadingScreen).finish()
-                                     Toast.makeText(
-                                         activityContext,
-                                         (activityContext as MainActivity).TAG2,
-                                         Toast.LENGTH_SHORT
-                                     ).show()
-                                 }
-                             } catch (e: SocketTimeoutException) {
-
-                                 withContext(Dispatchers.Main) {
-                                     Toast.makeText(
-                                         activityContext,
-                                         TAG2,
-                                         Toast.LENGTH_SHORT
-                                     ).show()
-                                     (MyApplication.loadingContext as LoadingScreen).finish()
-                                 }
-                             } catch (e: SocketException) {
-                                 LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                                 Log.d("connection Exception", "Connect Not Available")
-                                 withContext(Dispatchers.Main) {
-                                     Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-                                 }
-                             }
-                             catch(e:Exception){
-                                 LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                                 Log.d("connection Exception", "Connect Not Available")
-                             }
-                         }
-                     }
-                 }
-             }
-         }
+                                println("SuccessResponse $response")
 
 
 
+                                if (response != null) {
+                                    var position = tinyDB.getInt("state")
+                                    position = position.minus(1)
+
+                                    selectState(position)
+
+
+                                    action()
+                                    (MyApplication.loadingContext as LoadingScreen).finish()
+                                }
+
+                            } catch (e: ResponseException) {
+                                (MyApplication.loadingContext as LoadingScreen).finish()
+                                println("ErrorResponse")
+                            } catch (e: ApiException) {
+                                (MyApplication.loadingContext as LoadingScreen).finish()
+                                e.printStackTrace()
+                            } catch (e: NoInternetException) {
+                                println("position 2")
+                                e.printStackTrace()
+                                withContext(Dispatchers.Main) {
+                                    (MyApplication.loadingContext as LoadingScreen).finish()
+                                    Toast.makeText(
+                                        activityContext,
+                                        (activityContext as MainActivity).TAG2,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            } catch (e: SocketTimeoutException) {
+
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        activityContext,
+                                        TAG2,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    (MyApplication.loadingContext as LoadingScreen).finish()
+                                }
+                            } catch (e: SocketException) {
+                                LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                                Log.d("connection Exception", "Connect Not Available")
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                                }
+                            } catch (e: Exception) {
+                                LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                                Log.d("connection Exception", "Connect Not Available")
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
 
     }
@@ -1200,24 +1183,29 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
 //                            vehicle)
 //                    }
 
-                    stateUploadByAction(currentDate,MyApplication.TimeToSend,status,geoPosition,vehicle)
+                    stateUploadByAction(
+                        currentDate,
+                        MyApplication.TimeToSend,
+                        status,
+                        geoPosition,
+                        vehicle
+                    )
                 }
 //                updateState("$currentDate", MyApplication.TimeToSend, status, geoPosition, vehicle)
             }
         }
     }
 
- private fun stateUploadByAction(
+    private fun stateUploadByAction(
         currentDate: String,
         timeToSend: Int,
         status: State,
         geoPosition: GeoPosition?,
         vehicle: Vehicle
-    )
-    {
+    ) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            resendApis.serverCheck.serverCheckMainActivityApi(true){serverAction->
+            resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction ->
 
                 updateState(
                     "$currentDate",
@@ -1226,16 +1214,12 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
                     geoPosition,
                     vehicle
                 )
-                {serverAction()}
+                { serverAction() }
             }
         }
 
 
     }
-
-
-
-
 
 
 //    fun updateActivity(
@@ -1319,12 +1303,12 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
 
-        if(!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)){
+        if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
 
             ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
         }
-        Log.d("LOADING_ISSUE_TESTING","IN_ hit activity api")
-        Log.d("HomeviewModel","hitActivityAPI")
+        Log.d("LOADING_ISSUE_TESTING", "IN_ hit activity api")
+        Log.d("HomeviewModel", "hitActivityAPI")
 
 
 //        tinyDB.putInt("SELECTEDACTIVITY",activity)
@@ -1374,27 +1358,19 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
         }
 
 
-        var check = tinyDB.getBoolean("NETCHECK")
-        if (check) {
             totalTimeForActivty = totalTime!!
             selectedActivty = activity
-
             if (CheckConnection.netCheck(activityContext!!)) {
-                Log.d("LOADING_ISSUE_TESTING","In condition")
+                Log.d("LOADING_ISSUE_TESTING", "In condition")
                 getLocation(activityContext!!)
-            } else {
-                Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
             }
-        } else {
-            tinyDB.putBoolean("NETCHECK", true)
-        }
 
 
     }
 
 
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
-        Log.d("startUpload","activity function.")
+        Log.d("startUpload", "activity function.")
         MyApplication.checKForActivityLoading = true
 //        var intent = Intent(activityContext, LoadingScreen::class.java)
 //        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
@@ -1415,13 +1391,15 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
                     totalTime,
                     activity,
                     geoPosition,
-                    vehicle, null,resendApis
+                    vehicle, null, resendApis
                 ) {
-                    updateActivityForAction("$currentDate",
+                    updateActivityForAction(
+                        "$currentDate",
                         totalTime,
                         activity,
                         geoPosition,
-                        vehicle)
+                        vehicle
+                    )
                 }
 
             }
@@ -1435,7 +1413,7 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
         geoPosition: GeoPosition,
         vehicle: Vehicle
     ) {
-        Log.d("UpdateActivity","ForAction")
+        Log.d("UpdateActivity", "ForAction")
         viewModelScope.launch {
             (activityContext as MainActivity).updateActivity(
                 s,
@@ -1465,7 +1443,7 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
         val resultIntBreak = time
 
         println("$resultIntBreak")
-        val hours = resultIntBreak  / 3600
+        val hours = resultIntBreak / 3600
         val minutes = resultIntBreak % 86400 % 3600 / 60
         val seconds = resultIntBreak % 86400 % 3600 % 60
 
@@ -1634,7 +1612,7 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
             } else {
                 dataBinding?.secondState?.text = "Fim do intervalo"
             }
-            Log.d("HomeViewModel...","Call take break from checkserver function.")
+            Log.d("HomeViewModel...", "Call take break from checkserver function.")
             buttonTakeBreak()
         }
     }
@@ -1736,12 +1714,11 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
 
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
-        try{
+        try {
             networkAlertDialog.show()
-        }catch (e:Exception)
-        {
+        } catch (e: Exception) {
             LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-            Log.d("OpenPop","Exception ${e.localizedMessage}")
+            Log.d("OpenPop", "Exception ${e.localizedMessage}")
         }
 
         val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
@@ -1755,11 +1732,11 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
 
     }
 
-    fun breakErrorOverWrite(){
+    fun breakErrorOverWrite() {
         var ref = (activityContext as MainActivity)
         var breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
-        if(dataBinding!!.StateActive.isVisible){
-            if(breakTimerService == true){
+        if (dataBinding!!.StateActive.isVisible) {
+            if (breakTimerService == true) {
                 ref.stopTimerBreak()
                 breakTimerLargeToSmall()
                 workTimerSmallToLarge()
@@ -1769,7 +1746,6 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
         }
 
     }
-
 
 
 }

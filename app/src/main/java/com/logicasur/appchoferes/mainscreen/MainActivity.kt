@@ -339,7 +339,6 @@ class MainActivity : BaseClass() {
     }
 
 
-
     fun CheckGpsStatus(action: () -> Unit) {
         var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
         assert(locationManager != null)
@@ -1181,18 +1180,17 @@ class MainActivity : BaseClass() {
 
         }
 
-        var check = tinyDB.getBoolean("PENDINGCHECK")
-        if (check == false) {
-            Log.d("SERVICE_TESTING","MainActivity")
-            if(!(isMyServiceRunning(ServiceUploadOfflineActivities::class.java)))
-            {
-                resendApis.checkNetAndUpload()
-            }
+        val check = tinyDB.getBoolean("PENDINGCHECK")
+        if (!check ) {
+            Log.d("SERVICE_TESTING", "MainActivity")
+
+            resendApis.checkNetAndUpload()
+
 
         }
 
-        if (checkState == false) {
-            Log.d("MainActivity...","update Pending Data.")
+        if (!checkState) {
+            Log.d("MainActivity...", "update Pending Data.")
             action?.invoke()
         }
 

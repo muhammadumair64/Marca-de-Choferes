@@ -10,11 +10,11 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.auth.repository.AuthRepository
-import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.GeoPosition
@@ -28,6 +28,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.util.*
 
 class ServiceUploadOfflineActivities : Service() {
 
@@ -39,8 +40,8 @@ class ServiceUploadOfflineActivities : Service() {
     var sizeOfDbData = 0
     var increaseIndex = 0
     var notificationTitle = ""
-    var TAG="SERVICE_TESTING"
-
+    var TAG = "SERVICE_TESTING"
+    var timerCheckInternet = Timer()
 
 
     companion object {
@@ -63,7 +64,7 @@ class ServiceUploadOfflineActivities : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
+        timerCheckInternet()
         manager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         CoroutineScope(Job()).launch {
 
@@ -72,17 +73,36 @@ class ServiceUploadOfflineActivities : Service() {
 
         notificationTitle()
 
-        Log.d("SERVICE_TESTING","onStartCommand")
+        Log.d("SERVICE_TESTING", "onStartCommand")
         checkStateAndUploadActivityDB()
         return START_NOT_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        timerCancel()
         manager?.cancel(101)
         Log.d("SERVICE_TESTING", "IN ON DESTROY")
     }
 
+    fun timerCheckInternet() {
+        timerCheckInternet.schedule(object : TimerTask() {
+            override fun run() {
+                if (!CheckConnection.netCheck(MyApplication.appContext)) {
+                    timerCancel()
+                    stopSelf()
+                }
+            }
+        }, 0, 5000)
+    }
+
+    fun timerCancel() {
+        tinyDB.putBoolean("PENDINGCHECK", false)
+        tinyDB.putBoolean("SYNC_CHECK", true)
+        timerCheckInternet.cancel()
+        timerCheckInternet.purge()
+
+    }
     // -----------------Create Notification----------
 
     private fun getNotification(
@@ -151,7 +171,7 @@ class ServiceUploadOfflineActivities : Service() {
                 val getAllDataFromDB = serverCheck.mainRepository.getUnsentUploadActivityDetails()
                 sizeOfDbData = getAllDataFromDB.size
 
-                Log.d("SERVICE_TESTING_DB","Size of DB$sizeOfDbData")
+                Log.d("SERVICE_TESTING_DB", "Size of DB$sizeOfDbData")
 
                 for (unsentActivity in getAllDataFromDB) {
 
@@ -316,8 +336,8 @@ class ServiceUploadOfflineActivities : Service() {
                 "SERVICE_TESTING_DB",
                 "Check DB Existance ${serverCheck.mainRepository.isExistsUnsentUploadActivityDB()}"
             )
-            tinyDB.putBoolean("PENDINGCHECK", false)
-            tinyDB.putBoolean("SYNC_CHECK", true)
+
+            timerCancel()
             stopSelf()
         } else {
             serverCheck.serverCheck {
@@ -335,10 +355,10 @@ class ServiceUploadOfflineActivities : Service() {
         }
     }
 
-    fun notificationTitle(){
+    fun notificationTitle() {
         var language = tinyDB.getString("language")
         if (language == "0") {
-           notificationTitle = "Cargar actividades sin conexión"
+            notificationTitle = "Cargar actividades sin conexión"
 
         } else if (language == "1") {
 
