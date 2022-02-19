@@ -45,17 +45,20 @@ class loadingViewModel @Inject constructor(
         networkAlertDialog.setView(PopupView)
         try {
             networkAlertDialog.show()
+
+            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+            val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+            networkAlertDialog.window?.setLayout(width, height);
+            networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val window: Window? = networkAlertDialog.window
+            val wlp: WindowManager.LayoutParams = window!!.getAttributes()
+            wlp.gravity = Gravity.BOTTOM
+            window.setAttributes(wlp)
+
+
         } catch (e: Exception) {
             Log.d("LoadingViewModel..", "Exception ${e.localizedMessage}")
         }
-        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-        val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-        networkAlertDialog.getWindow()?.setLayout(width, height);
-        networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val window: Window? = networkAlertDialog.getWindow()
-        val wlp: WindowManager.LayoutParams = window!!.getAttributes()
-        wlp.gravity = Gravity.BOTTOM
-        window.setAttributes(wlp)
 
     }
 
@@ -71,17 +74,20 @@ class loadingViewModel @Inject constructor(
 
                 serverAlertDialog.show()
 
+            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+            val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+            serverAlertDialog.getWindow()?.setLayout(width, height);
+            serverAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val window: Window? = serverAlertDialog.getWindow()
+            val wlp: WindowManager.LayoutParams = window!!.getAttributes()
+            wlp.gravity = Gravity.BOTTOM
+            window.setAttributes(wlp)
+
+
         } catch (e: Exception) {
             Log.d("PopupWindowTesting", "In Catch Block")
         }
-        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-        val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-        serverAlertDialog.getWindow()?.setLayout(width, height);
-        serverAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val window: Window? = serverAlertDialog.getWindow()
-        val wlp: WindowManager.LayoutParams = window!!.getAttributes()
-        wlp.gravity = Gravity.BOTTOM
-        window.setAttributes(wlp)
+
     }
 
 
