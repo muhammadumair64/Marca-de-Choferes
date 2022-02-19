@@ -244,6 +244,8 @@ class HomeViewModel @Inject constructor(
                 tinyDB.putInt("SELECTEDACTIVITY", 0)
             }
 
+            var intent = Intent(activityContext, LoadingScreen::class.java)
+            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { secondStateAction() }
@@ -257,7 +259,8 @@ class HomeViewModel @Inject constructor(
 
             tinyDB.putInt("SELECTEDACTIVITY", 1)
 
-
+            var intent = Intent(activityContext, LoadingScreen::class.java)
+            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { takeBreakAction() }
             } else {
@@ -269,6 +272,9 @@ class HomeViewModel @Inject constructor(
         dataBinding?.EndDay?.setOnClickListener {
             tinyDB.putBoolean("STATEAPI", false)
             tinyDB.putInt("SELECTEDACTIVITY", 3)
+            var intent = Intent(activityContext, LoadingScreen::class.java)
+            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { endDayAction() }
             } else {
@@ -1296,8 +1302,8 @@ class HomeViewModel @Inject constructor(
 //    }
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
-        var intent = Intent(activityContext, LoadingScreen::class.java)
-        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+        Log.d("HomeviewModel","hitActivityAPI")
+
 
 //        tinyDB.putInt("SELECTEDACTIVITY",activity)
 //        tinyDB.putInt("TOTALTIMETOSEND",totalTime!!)
