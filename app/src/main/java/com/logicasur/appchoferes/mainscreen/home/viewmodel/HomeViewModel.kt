@@ -88,7 +88,7 @@ class HomeViewModel @Inject constructor(
     var longitude = 0.0
     var overTimeCheck = false
     var TAG2 = ""
-
+lateinit var loadingIntent : Intent
 
     //activity
 
@@ -108,6 +108,11 @@ class HomeViewModel @Inject constructor(
         activityContext = context
         dataBinding = binding
         tinyDB = TinyDB(context)
+
+        loadingIntent = Intent(activityContext, LoadingScreen::class.java)
+
+
+
         getProfile()
         setMaxMini()
         getVehicle()
@@ -1314,9 +1319,10 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
 
-        var intent = Intent(activityContext, LoadingScreen::class.java)
-        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+        if(!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)){
 
+            ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
+        }
         Log.d("LOADING_ISSUE_TESTING","IN_ hit activity api")
         Log.d("HomeviewModel","hitActivityAPI")
 
@@ -1374,6 +1380,7 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
             selectedActivty = activity
 
             if (CheckConnection.netCheck(activityContext!!)) {
+                Log.d("LOADING_ISSUE_TESTING","In condition")
                 getLocation(activityContext!!)
             } else {
                 Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
