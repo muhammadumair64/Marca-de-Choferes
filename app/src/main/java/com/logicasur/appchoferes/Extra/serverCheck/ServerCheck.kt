@@ -2,6 +2,7 @@ package com.logicasur.appchoferes.Extra.serverCheck
 
 import android.util.Log
 import android.widget.Toast
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.repository.AuthRepository
@@ -28,7 +29,7 @@ class ServerCheck constructor(
     companion object {
         var TAG2 = ""
         var tinyDB = TinyDB(MyApplication.appContext)
-        val TAG = "c"
+        val TAG = "ServerCheck"
     }
 
 
@@ -38,7 +39,7 @@ class ServerCheck constructor(
 
         var check = 0
         val myTimer = Timer()
-        myTimer!!.schedule(object : TimerTask() {
+        myTimer.schedule(object : TimerTask() {
             override fun run() {
                 if (check == 1) {
                     Log.d("NETCHECKTEST", "In popUp condition[p")
@@ -46,6 +47,7 @@ class ServerCheck constructor(
                     Log.d("NETCHECKTEST", LoadingScreen.OnEndLoadingCallbacks.toString())
                     CoroutineScope(Job()).launch(Dispatchers.Main) {
                         if (!MyApplication.checKForSyncLoading) {
+                            Log.d(TAG,"Open Server Popup....serverCheck")
                             LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         }
 
@@ -82,6 +84,8 @@ class ServerCheck constructor(
 
 
             } catch (e: SocketTimeoutException) {
+                myTimer.cancel()
+                myTimer.purge()
                 Log.d("Exception", "SocketTimeOut..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
@@ -90,6 +94,8 @@ class ServerCheck constructor(
                     endLoading()
                 }
             } catch (e: SocketException) {
+                myTimer.cancel()
+                myTimer.purge()
                 Log.d("Exception", "Socket..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
@@ -99,12 +105,14 @@ class ServerCheck constructor(
                 }
 
             } catch (e: NoInternetException) {
-
+                myTimer.cancel()
+                myTimer.purge()
                 Log.d("Exception", "NoInternet..${e.localizedMessage}")
                 endLoading()
 
             } catch (e: Exception) {
-
+                myTimer.cancel()
+                myTimer.purge()
                 Log.d("Exception", "Exception..${e.localizedMessage}")
                 endLoading()
             }
@@ -193,7 +201,12 @@ class ServerCheck constructor(
 
                             withContext(Dispatchers.Main) {
                                 if (!MyApplication.checKForSyncLoading) {
-                                    LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                                    if(CheckConnection.netCheck(MyApplication.appContext))
+                                    {
+                                        Log.d(TAG,"Check Connection Check Net")
+                                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                                    }
+
                                 }
                             }
 
@@ -258,6 +271,7 @@ class ServerCheck constructor(
                             if (toSaveInDB) openPopup(null) else {
                                 Log.d("NETCHECKTEST", "----In else")
                                 CoroutineScope(Job()).launch(Dispatchers.Main) {
+                                    Log.d(TAG,"Open Server Popup....serverCheckMainActivityApi")
                                     openServerPopup()
                                     timer.purge()
                                     timer.cancel()

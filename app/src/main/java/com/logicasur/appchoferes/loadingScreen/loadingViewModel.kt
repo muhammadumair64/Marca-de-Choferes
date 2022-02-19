@@ -67,13 +67,13 @@ class loadingViewModel @Inject constructor(
     ) {
         serverAlertDialog.setView(PopupView)
         Log.d("POPUP_TESTING", " In VIEW MODEL")
-        if (!(activityContext as Activity).isFinishing) {
-            serverAlertDialog.show()
-        }
+        try {
 
-//        catch (e:Exception){
-//            Log.d("PopupWindowTesting","In Catch Block")
-//        }
+                serverAlertDialog.show()
+
+        } catch (e: Exception) {
+            Log.d("PopupWindowTesting", "In Catch Block")
+        }
         val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
         val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
         serverAlertDialog.getWindow()?.setLayout(width, height);
@@ -127,8 +127,7 @@ class loadingViewModel @Inject constructor(
                     withContext(Dispatchers.IO) {
                         checkStateByDataBase()
                     }
-                    if(fromWindow)
-                    {
+                    if (fromWindow) {
                         var intent = Intent(activityContext, MainActivity::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                     }

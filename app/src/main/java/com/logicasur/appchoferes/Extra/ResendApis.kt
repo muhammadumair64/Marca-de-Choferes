@@ -45,7 +45,7 @@ class ResendApis constructor(
             override fun run() {
 
                 CoroutineScope(Job()).launch(Dispatchers.IO) {
-                    serverCheck.serverCheck() {
+                    serverCheck.serverCheck {
                         startService()
                     }
 

@@ -93,7 +93,7 @@ class ServiceUploadOfflineActivities : Service() {
                 if (!CheckConnection.netCheck(MyApplication.appContext)) {
 
                     timerCancel()
-                     var resendApis = ResendApis(serverCheck, tinyDB)
+                     val resendApis = ResendApis(serverCheck, tinyDB)
                     resendApis.checkNetAndUpload()
                     stopSelf()
 

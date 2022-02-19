@@ -120,7 +120,7 @@ class TimeCalculator {
     }
 
     fun getDateFromString(dateStr: String): Date {
-        val formatter: DateFormat = SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
+        val formatter: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
         return formatter.parse(dateStr) as Date
     }
 
