@@ -131,111 +131,109 @@ class ServerCheck constructor(
     ) {
         tagsForToast()
         Log.d(TAG, "Server Check function 2nd")
-   CoroutineScope(Job()).launch(Dispatchers.IO) {
+        CoroutineScope(Job()).launch(Dispatchers.IO) {
 
             var firstTimeCome = 0
-       val timeoutForServerCheck = Timer()
-       timeoutForServerCheck!!.schedule(object : TimerTask() {
-           override fun run() {
-               if (firstTimeCome == 1) {
-                   CoroutineScope(Job()).launch(Dispatchers.IO) {
-                       if (state == null) {
-                           mainRepository.insertUnsentStateOrUploadActivity(
-                               UnsentStatusOrUploadActivity(
-                                   0,
-                                   datetime!!,
-                                   null,
-                                   null,
-                                   activity!!,
-                                   totalTime,
-                                   vehicle!!.id,
-                                   vehicle.description,
-                                   vehicle.plateNumber,
-                                   geoPosition!!.latitud,
-                                   geoPosition.longitud
-                               )
-                           )
+            val timeoutForServerCheck = Timer()
+            timeoutForServerCheck!!.schedule(object : TimerTask() {
+                override fun run() {
+                    if (firstTimeCome == 1) {
+                        CoroutineScope(Job()).launch(Dispatchers.IO) {
+                            if (state == null) {
+                                mainRepository.insertUnsentStateOrUploadActivity(
+                                    UnsentStatusOrUploadActivity(
+                                        0,
+                                        datetime!!,
+                                        null,
+                                        null,
+                                        activity!!,
+                                        totalTime,
+                                        vehicle!!.id,
+                                        vehicle.description,
+                                        vehicle.plateNumber,
+                                        geoPosition!!.latitud,
+                                        geoPosition.longitud
+                                    )
+                                )
 
 
-                           runOnMain {
-                               Log.d("LOADING_TESTING","IN_server check end loading")
-                               LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                           }
+                                runOnMain {
+                                    Log.d("LOADING_TESTING", "IN_server check end loading")
+                                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                                }
 
 
-                       }
-                       else {
-                           mainRepository.insertUnsentStateOrUploadActivity(
-                               UnsentStatusOrUploadActivity(
-                                   0,
-                                   datetime!!,
-                                   state.id,
-                                   state.description, null, totalTime,
-                                   vehicle!!.id,
-                                   vehicle.description,
-                                   vehicle.plateNumber,
-                                   geoPosition!!.latitud,
-                                   geoPosition.longitud
-                               )
-                           )
+                            } else {
+                                mainRepository.insertUnsentStateOrUploadActivity(
+                                    UnsentStatusOrUploadActivity(
+                                        0,
+                                        datetime!!,
+                                        state.id,
+                                        state.description, null, totalTime,
+                                        vehicle!!.id,
+                                        vehicle.description,
+                                        vehicle.plateNumber,
+                                        geoPosition!!.latitud,
+                                        geoPosition.longitud
+                                    )
+                                )
 
-                           Log.d("STATE_TESTING", "IN END LOADING")
+                                Log.d("STATE_TESTING", "IN END LOADING")
 
-                           runOnMain {
-                               LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                           }
+                                runOnMain {
+                                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                                }
 
-                       }
-                       Log.d("SERVICE_TESTING","ServerCheck")
-                       resendApis.checkNetAndUpload()
-
-
-
-
-                       withContext(Dispatchers.Main){
-                           if (!MyApplication.checKForSyncLoading) {
-                               LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
-                           }
-                       }
-
-                   }
-                   timeoutForServerCheck.purge()
-                   timeoutForServerCheck.cancel()
-               } else {
-                   firstTimeCome++
-               }
-
-           }
-       }, 0, 8000)
+                            }
+                            Log.d("SERVICE_TESTING", "ServerCheck")
+                            resendApis.checkNetAndUpload()
 
 
 
-       try {
-           tinyDB.getString("Cookie")?.let { token ->
 
-               authRepository.checkServer(token).apply {
-                   Log.d(TAG, "$this")
-                   if (this.checkIfMessageIsOkay()) {
+                            withContext(Dispatchers.Main) {
+                                if (!MyApplication.checKForSyncLoading) {
+                                    LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                                }
+                            }
 
-                       Log.d(TAG, "Server is working fine")
-                       action1()
-                       timeoutForServerCheck.purge()
-                       timeoutForServerCheck.cancel()
-                   }
-               }
+                        }
+                        timeoutForServerCheck.purge()
+                        timeoutForServerCheck.cancel()
+                    } else {
+                        firstTimeCome++
+                    }
+
+                }
+            }, 0, 8000)
 
 
-           }
+
+            try {
+                tinyDB.getString("Cookie")?.let { token ->
+
+                    authRepository.checkServer(token).apply {
+                        Log.d(TAG, "$this")
+                        if (this.checkIfMessageIsOkay()) {
+
+                            Log.d(TAG, "Server is working fine")
+                            action1()
+                            timeoutForServerCheck.purge()
+                            timeoutForServerCheck.cancel()
+                        }
+                    }
 
 
-       }
-       catch (e: Exception) {
+                }
 
-           Log.d(TAG, " Exception..${e.localizedMessage}")
 
-       }
+            } catch (e: Exception) {
 
-   }
+                Log.d(TAG, " Exception..${e.localizedMessage}")
+
+            }
+
+        }
     }
 
 
@@ -294,64 +292,65 @@ class ServerCheck constructor(
     ) {
         tinyDB.getString("Cookie")?.let { token ->
 
-                CoroutineScope(Job()).launch(Dispatchers.IO) {
-try {
-    authRepository.checkServer(token).apply {
+            CoroutineScope(Job()).launch(Dispatchers.IO) {
+                try {
+                    authRepository.checkServer(token).apply {
 
-        Log.d(TAG, "$this")
-        if (this.checkIfMessageIsOkay()) {
-            serverCheckTimer.cancel()
-            serverCheckTimer.purge()
-            Log.d(TAG, "ServerTesting is working fine")
+                        Log.d(TAG, "$this")
+                        if (this.checkIfMessageIsOkay()) {
+                            serverCheckTimer.cancel()
+                            serverCheckTimer.purge()
+                            Log.d(TAG, "ServerTesting is working fine")
 
-            var checkOnApiCall = 0
-            val inBetweenApiCallTimer = Timer().also { timer ->
-                timer.schedule(object : TimerTask() {
-                    override fun run() {
-                        if (checkOnApiCall == 1 || checkOnApiCall == 2) {
+                            var checkOnApiCall = 0
+                            val inBetweenApiCallTimer = Timer().also { timer ->
+                                timer.schedule(object : TimerTask() {
+                                    override fun run() {
+                                        if (checkOnApiCall == 1 || checkOnApiCall == 2) {
 
 
-                            CoroutineScope(Job()).launch {
-                                try{
-                                    serverCheckDuringStatus() {}
-                                }catch (e:Exception){
-                                    Log.d("EXCEPTION_TESTING"," ${e.localizedMessage}")
-                                }
+                                            CoroutineScope(Job()).launch {
+                                                try {
+                                                    serverCheckDuringStatus() {}
+                                                } catch (e: Exception) {
+                                                    Log.d(
+                                                        "EXCEPTION_TESTING",
+                                                        " ${e.localizedMessage}"
+                                                    )
+                                                }
+
+                                            }
+
+
+                                            checkOnApiCall++
+                                        } else if (checkOnApiCall > 2) {
+                                            Log.d("NETCHECKTEST", "----workingTesting")
+                                            timer.purge()
+                                            timer.cancel()
+
+                                        } else {
+                                            checkOnApiCall++
+                                        }
+
+                                    }
+                                }, 0, 20000)
 
                             }
+                            apiCall() {
+                                // Server is not well
+                                Log.d(TAG, "Response is received Cancel the timer.")
+                                inBetweenApiCallTimer.cancel()
+                                inBetweenApiCallTimer.purge()
 
-
-                            checkOnApiCall++
-                        } else if (checkOnApiCall > 2) {
-                            Log.d("NETCHECKTEST", "----workingTesting")
-                            timer.purge()
-                            timer.cancel()
-
-                        } else {
-                            checkOnApiCall++
+                            }
                         }
-
                     }
-                }, 0, 20000)
-
-            }
-            apiCall() {
-                // Server is not well
-                Log.d(TAG, "Response is received Cancel the timer.")
-                inBetweenApiCallTimer.cancel()
-                inBetweenApiCallTimer.purge()
-
-            }
-        }
-    }
-}catch (e:Exception){
-    Log.d("EXCEPTION_TESTING"," ${e.localizedMessage}")
-}
-
-
-
+                } catch (e: Exception) {
+                    Log.d("EXCEPTION_TESTING", " ${e.localizedMessage}")
                 }
 
+
+            }
 
 
         }
@@ -391,16 +390,34 @@ try {
 
 
         tinyDB.getString("Cookie")?.let { token ->
+            try {
+                authRepository.checkServer(token).apply {
+                    Log.d(TAG, "$this")
+                    if (this.checkIfMessageIsOkay()) {
+                        myTimer.cancel()
+                        myTimer.purge()
+                        Log.d(TAG, "Server is working fine")
 
-            authRepository.checkServer(token).apply {
-                Log.d(TAG, "$this")
-                if (this.checkIfMessageIsOkay()) {
-                    myTimer.cancel()
-                    myTimer.purge()
-                    Log.d(TAG, "Server is working fine")
-
-                    statusApiCall()
+                        statusApiCall()
+                    }
                 }
+
+            } catch (e: SocketTimeoutException) {
+                Log.d("Exception", "SocketTimeOut..${e.localizedMessage}")
+
+            } catch (e: SocketException) {
+                Log.d("Exception", "Socket..${e.localizedMessage}")
+
+
+            } catch (e: NoInternetException) {
+
+                Log.d("Exception", "NoInternet..${e.localizedMessage}")
+
+
+            } catch (e: Exception) {
+
+                Log.d("Exception", "Exception..${e.localizedMessage}")
+
             }
 
 

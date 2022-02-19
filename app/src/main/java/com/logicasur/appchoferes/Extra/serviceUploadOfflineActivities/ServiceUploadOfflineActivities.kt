@@ -89,8 +89,11 @@ class ServiceUploadOfflineActivities : Service() {
         timerCheckInternet.schedule(object : TimerTask() {
             override fun run() {
                 if (!CheckConnection.netCheck(MyApplication.appContext)) {
+
                     timerCancel()
+
                     stopSelf()
+
                 }
             }
         }, 0, 5000)
