@@ -23,7 +23,6 @@ import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -86,7 +85,7 @@ class loadingViewModel @Inject constructor(
     }
 
 
-    fun getPreviousTimeWhenOffline() {
+    fun getPreviousTimeWhenOffline(fromWindow: Boolean) {
 
         var breakTime = tinyDB.getInt("breaksendtime")
 //        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
@@ -128,8 +127,12 @@ class loadingViewModel @Inject constructor(
                     withContext(Dispatchers.IO) {
                         checkStateByDataBase()
                     }
-                    var intent = Intent(activityContext, MainActivity::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    if(fromWindow)
+                    {
+                        var intent = Intent(activityContext, MainActivity::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    }
+
                 }
 
             }

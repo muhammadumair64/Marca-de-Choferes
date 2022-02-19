@@ -163,6 +163,7 @@ class HomeViewModel @Inject constructor(
 
             }
             "takeBreak" -> {
+                Log.d("HomeViewModel...","Call btn take break")
                 buttonTakeBreak()
 
             }
@@ -237,6 +238,7 @@ class HomeViewModel @Inject constructor(
 
 
         dataBinding?.secondState?.setOnClickListener {
+            Log.d("HomeViewModel...","Click on Second state")
             tinyDB.putBoolean("STATEAPI", false)
             if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
                 tinyDB.putInt("SELECTEDACTIVITY", 2)
@@ -254,6 +256,8 @@ class HomeViewModel @Inject constructor(
 
         }
         dataBinding?.TakeBreak?.setOnClickListener {
+            Log.d("HomeViewModel...","Click on take break.")
+
             tinyDB.putBoolean("STATEAPI", false)
 
             tinyDB.putInt("SELECTEDACTIVITY", 1)
@@ -268,6 +272,8 @@ class HomeViewModel @Inject constructor(
         }
 
         dataBinding?.EndDay?.setOnClickListener {
+            Log.d("HomeViewModel...","Click on End Day.")
+
             tinyDB.putBoolean("STATEAPI", false)
             tinyDB.putInt("SELECTEDACTIVITY", 3)
 
@@ -301,12 +307,14 @@ class HomeViewModel @Inject constructor(
     fun takeBreakAction() {
         var intent = (activityContext as MainActivity)
         MyApplication.check = 0
+        Log.d("HomeViewModel...","Call btn take from takeBreakAction function.")
         buttonTakeBreak()
 //        intent.stopTimer()
 
         intent.startTimerBreak()
 
         tinyDB.putString("selectedState", "takeBreak")
+        Log.d("HomeViewModel...","Call hit Api Activity(1)")
         hitActivityAPI(1, MyApplication.BreakToSend)
     }
 
@@ -322,6 +330,7 @@ class HomeViewModel @Inject constructor(
         var maxWork = MyApplication.TotalTime * 60
         tinyDB.putInt("MaxBar", maxWork)
         tinyDB.putString("selectedState", "endDay")
+        Log.d("HomeViewModel...","Call hit Api Activity(3)")
         hitActivityAPI(3, MyApplication.TimeToSend)
     }
 
@@ -468,6 +477,8 @@ class HomeViewModel @Inject constructor(
             dataBinding!!.statusListBtn.visibility = View.VISIBLE
 //            intent.startTimer()
             Log.d("break timer", "${MyApplication.BreakToSend}")
+
+            Log.d("HomeViewModel...","Call hit Api Activity(2)")
             hitActivityAPI(2, MyApplication.BreakToSend)
             dataBinding!!.statusListBtn.isClickable = true
         } else {
@@ -491,6 +502,7 @@ class HomeViewModel @Inject constructor(
             }
 
             goToActivState()
+            Log.d("HomeViewModel...","Call hit Api Activity(0)")
             hitActivityAPI(0, MyApplication.TimeToSend)
 
         }
@@ -1615,7 +1627,7 @@ Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
             } else {
                 dataBinding?.secondState?.text = "Fim do intervalo"
             }
-
+            Log.d("HomeViewModel...","Call take break from checkserver function.")
             buttonTakeBreak()
         }
     }

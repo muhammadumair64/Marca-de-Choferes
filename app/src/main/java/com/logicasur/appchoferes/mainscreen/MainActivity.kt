@@ -1192,6 +1192,7 @@ class MainActivity : BaseClass() {
         }
 
         if (checkState == false) {
+            Log.d("MainActivity...","update Pending Data.")
             action?.invoke()
         }
 

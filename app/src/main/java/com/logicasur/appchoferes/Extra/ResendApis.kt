@@ -62,10 +62,12 @@ class ResendApis constructor(
         CoroutineScope(Job()).launch(Dispatchers.IO) {
             cancelTimer()
             tinyDB.putBoolean("SYNC_CHECK", true)
-            if (serverCheck.mainRepository.isExistsUnsentUploadActivityDB() && isMyServiceRunning(
+            if (serverCheck.mainRepository.isExistsUnsentUploadActivityDB() && !isMyServiceRunning(
                     ServiceUploadOfflineActivities::class.java
                 )
             ) {
+                Log.d("ResendApis","start Service")
+
                 startForegroundService(
                     MyApplication.appContext,
                     ServiceUploadOfflineActivities.getStartIntent(

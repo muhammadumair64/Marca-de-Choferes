@@ -1,6 +1,5 @@
 package com.logicasur.appchoferes.loadingScreen
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -21,15 +20,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
-import androidx.lifecycle.lifecycleScope
 import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.auth.otp.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.mainscreen.home.timerServices.UploadRemaingDataService.Companion.activity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -137,7 +131,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
     override fun calculateTimeFromLocalDB() {
-        loadingViewModel.getPreviousTimeWhenOffline()
+        loadingViewModel.getPreviousTimeWhenOffline(false)
     }
 
     fun setBarColor(){
@@ -191,7 +185,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
             proceed_btn.setOnClickListener {
                 if(myTimer!=null){
                     myTimer.cancel()
-                    loadingViewModel.getPreviousTimeWhenOffline()
+                    loadingViewModel.getPreviousTimeWhenOffline(true)
                 }
                 else{
                     finish()
