@@ -131,79 +131,111 @@ class ServerCheck constructor(
     ) {
         tagsForToast()
         Log.d(TAG, "Server Check function 2nd")
+   CoroutineScope(Job()).launch(Dispatchers.IO) {
+
+            var firstTimeCome = 0
+       val timeoutForServerCheck = Timer()
+       timeoutForServerCheck!!.schedule(object : TimerTask() {
+           override fun run() {
+               if (firstTimeCome == 1) {
+                   CoroutineScope(Job()).launch(Dispatchers.IO) {
+                       if (state == null) {
+                           mainRepository.insertUnsentStateOrUploadActivity(
+                               UnsentStatusOrUploadActivity(
+                                   0,
+                                   datetime!!,
+                                   null,
+                                   null,
+                                   activity!!,
+                                   totalTime,
+                                   vehicle!!.id,
+                                   vehicle.description,
+                                   vehicle.plateNumber,
+                                   geoPosition!!.latitud,
+                                   geoPosition.longitud
+                               )
+                           )
 
 
-        try {
-            tinyDB.getString("Cookie")?.let { token ->
-
-                authRepository.checkServer(token).apply {
-                    Log.d(TAG, "$this")
-                    if (this.checkIfMessageIsOkay()) {
-
-                        Log.d(TAG, "Server is working fine")
-                        action1()
-                    }
-                }
+                           runOnMain {
+                               Log.d("LOADING_TESTING","IN_server check end loading")
+                               LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                           }
 
 
-            }
+                       }
+                       else {
+                           mainRepository.insertUnsentStateOrUploadActivity(
+                               UnsentStatusOrUploadActivity(
+                                   0,
+                                   datetime!!,
+                                   state.id,
+                                   state.description, null, totalTime,
+                                   vehicle!!.id,
+                                   vehicle.description,
+                                   vehicle.plateNumber,
+                                   geoPosition!!.latitud,
+                                   geoPosition.longitud
+                               )
+                           )
+
+                           Log.d("STATE_TESTING", "IN END LOADING")
+
+                           runOnMain {
+                               LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                           }
+
+                       }
+                       Log.d("SERVICE_TESTING","ServerCheck")
+                       resendApis.checkNetAndUpload()
 
 
-        } catch (e: Exception) {
-
-            Log.d(TAG, " Exception..${e.localizedMessage}")
-
-            if (state == null) {
-                mainRepository.insertUnsentStateOrUploadActivity(
-                    UnsentStatusOrUploadActivity(
-                        0,
-                        datetime!!,
-                        null,
-                        null,
-                        activity!!,
-                        totalTime,
-                        vehicle!!.id,
-                        vehicle.description,
-                        vehicle.plateNumber,
-                        geoPosition!!.latitud,
-                        geoPosition.longitud
-                    )
-                )
 
 
-                runOnMain {
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                }
+                       withContext(Dispatchers.Main){
+                           if (!MyApplication.checKForSyncLoading) {
+                               LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                           }
+                       }
+
+                   }
+                   timeoutForServerCheck.purge()
+                   timeoutForServerCheck.cancel()
+               } else {
+                   firstTimeCome++
+               }
+
+           }
+       }, 0, 8000)
 
 
-            } else {
-                mainRepository.insertUnsentStateOrUploadActivity(
-                    UnsentStatusOrUploadActivity(
-                        0,
-                        datetime!!,
-                        state.id,
-                        state.description, null, totalTime,
-                        vehicle!!.id,
-                        vehicle.description,
-                        vehicle.plateNumber,
-                        geoPosition!!.latitud,
-                        geoPosition.longitud
-                    )
-                )
 
-                Log.d("STATE_TESTING", "IN END LOADING")
+       try {
+           tinyDB.getString("Cookie")?.let { token ->
 
-                runOnMain {
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                }
+               authRepository.checkServer(token).apply {
+                   Log.d(TAG, "$this")
+                   if (this.checkIfMessageIsOkay()) {
 
-            }
-            Log.d("SERVICE_TESTING","ServerCheck")
-            resendApis.checkNetAndUpload()
-
-        }
+                       Log.d(TAG, "Server is working fine")
+                       action1()
+                       timeoutForServerCheck.purge()
+                       timeoutForServerCheck.cancel()
+                   }
+               }
 
 
+           }
+
+
+       }
+       catch (e: Exception) {
+
+           Log.d(TAG, " Exception..${e.localizedMessage}")
+
+       }
+
+   }
     }
 
 

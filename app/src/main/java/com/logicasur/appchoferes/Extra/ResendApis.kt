@@ -1,6 +1,8 @@
 package com.logicasur.appchoferes.Extra
 
+import android.app.ActivityManager
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startForegroundService
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
@@ -44,7 +46,8 @@ class ResendApis constructor(
 
                 CoroutineScope(Job()).launch(Dispatchers.IO) {
                     serverCheck.serverCheck() {
-                        startService() }
+                        startService()
+                    }
 
 
                     endIfLoadingIsStarted()
@@ -55,23 +58,26 @@ class ResendApis constructor(
         }, 0, 10000)
     }
 
-   fun startService()
-   {
-       CoroutineScope(Job()).launch(Dispatchers.IO) {
-           cancelTimer()
-            tinyDB.putBoolean("SYNC_CHECK",true)
-           if (serverCheck.mainRepository.isExistsUnsentUploadActivityDB()) {
-               startForegroundService(
-                   MyApplication.appContext,
-                   ServiceUploadOfflineActivities.getStartIntent(
-                       serverCheck,
-                       tinyDB
-                   ))
-           }
-   }
+    fun startService() {
+        CoroutineScope(Job()).launch(Dispatchers.IO) {
+            cancelTimer()
+            tinyDB.putBoolean("SYNC_CHECK", true)
+            if (serverCheck.mainRepository.isExistsUnsentUploadActivityDB() && isMyServiceRunning(
+                    ServiceUploadOfflineActivities::class.java
+                )
+            ) {
+                startForegroundService(
+                    MyApplication.appContext,
+                    ServiceUploadOfflineActivities.getStartIntent(
+                        serverCheck,
+                        tinyDB
+                    )
+                )
+            }
+        }
 
 
-   }
+    }
 
 
 //    fun checkStateAndUploadActivityDB() {
@@ -244,21 +250,15 @@ class ResendApis constructor(
 //    }
 
 
-
-
-
-
-
-
 ////////////---------------- Utils ----------------------------------
 
 
     private fun cancelTimer() {
         checkNetTimer?.let { timer ->
-            tinyDB.putBoolean("PENDINGCHECK",false)
+            tinyDB.putBoolean("PENDINGCHECK", false)
             timer.cancel()
             timer.purge()
-         checkNetTimer=null
+            checkNetTimer = null
         }
     }
 
@@ -278,6 +278,17 @@ class ResendApis constructor(
         isCancelled -> "Cancelling"
         isCompleted -> "Completed"
         else -> "New"
+    }
+
+    fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager =
+            MyApplication.appContext.getSystemService(AppCompatActivity.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 
 

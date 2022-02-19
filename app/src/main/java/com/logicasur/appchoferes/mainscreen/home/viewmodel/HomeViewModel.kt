@@ -244,8 +244,7 @@ class HomeViewModel @Inject constructor(
                 tinyDB.putInt("SELECTEDACTIVITY", 0)
             }
 
-            var intent = Intent(activityContext, LoadingScreen::class.java)
-            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
 
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { secondStateAction() }
@@ -259,8 +258,7 @@ class HomeViewModel @Inject constructor(
 
             tinyDB.putInt("SELECTEDACTIVITY", 1)
 
-            var intent = Intent(activityContext, LoadingScreen::class.java)
-            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { takeBreakAction() }
             } else {
@@ -272,8 +270,7 @@ class HomeViewModel @Inject constructor(
         dataBinding?.EndDay?.setOnClickListener {
             tinyDB.putBoolean("STATEAPI", false)
             tinyDB.putInt("SELECTEDACTIVITY", 3)
-            var intent = Intent(activityContext, LoadingScreen::class.java)
-            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
 
             if (checkGPS(activityContext!!)) {
                 (activityContext as MainActivity).initPermission() { endDayAction() }
@@ -841,7 +838,7 @@ class HomeViewModel @Inject constructor(
 
     //Get Location
     fun getLocation(context: Context) {
-
+Log.d("LOADING_ISSUE_TESTING","IN_LOADING SCREEN")
         //change
         println("location call")
         var locationRequest = LocationRequest()
@@ -889,6 +886,8 @@ class HomeViewModel @Inject constructor(
                       Log.d("CurrentLocation"," $longitude and $latitude")
                         var geoPosition = GeoPosition(latitude, longitude)
 
+
+                        Log.d("LOADING_ISSUE_TESTING","IN location after")
                             uploadActivity(selectedActivty, totalTimeForActivty, geoPosition)
 
 
@@ -1302,6 +1301,11 @@ class HomeViewModel @Inject constructor(
 //    }
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
+
+        var intent = Intent(activityContext, LoadingScreen::class.java)
+        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
+        Log.d("LOADING_ISSUE_TESTING","IN_ hit activity api")
         Log.d("HomeviewModel","hitActivityAPI")
 
 
