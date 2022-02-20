@@ -44,7 +44,10 @@ class loadingViewModel @Inject constructor(
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
         try {
-            networkAlertDialog.show()
+            if(!networkAlertDialog.isShowing){
+                networkAlertDialog.show()
+            }
+
 
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
             val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
@@ -72,8 +75,10 @@ class loadingViewModel @Inject constructor(
         serverAlertDialog.setView(PopupView)
         Log.d("POPUP_TESTING", " In VIEW MODEL")
         try {
+if(!serverAlertDialog.isShowing){
+    serverAlertDialog.show()
+}
 
-                serverAlertDialog.show()
 
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
             val height = (resources.displayMetrics.heightPixels * 0.60).toInt()

@@ -82,6 +82,7 @@ class SplashScreenViewModel @Inject constructor(
                             withContext(Dispatchers.Main) {
                                 delay(3000)
                                 LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                                myTimer!!.cancel()
                             }
                         }
 

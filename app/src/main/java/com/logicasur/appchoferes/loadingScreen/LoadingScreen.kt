@@ -178,8 +178,13 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
             loadingViewModel.openPopup(networkAlertDialog!!,PopupView,resources)
             setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
             cancel_btn.setOnClickListener {
+
                 networkAlertDialog!!.dismiss()
 
+                if(myTimer != null){
+                    finishAffinity()
+                }
+                   finish()
 
             }
             proceed_btn.setOnClickListener {
