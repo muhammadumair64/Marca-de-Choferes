@@ -80,7 +80,7 @@ class SplashScreenViewModel @Inject constructor(
                         MyApplication.checKForPopup = true
                         viewModelScope.launch {
                             withContext(Dispatchers.Main) {
-                                delay(2000)
+                                delay(3000)
                                 LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
                             }
                         }

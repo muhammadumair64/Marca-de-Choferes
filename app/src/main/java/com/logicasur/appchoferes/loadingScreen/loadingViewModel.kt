@@ -48,7 +48,8 @@ class loadingViewModel @Inject constructor(
 
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
             val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-            networkAlertDialog.window?.setLayout(width, height);
+            networkAlertDialog.window?.setLayout(width, height)
+            networkAlertDialog.setCancelable(false)
             networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val window: Window? = networkAlertDialog.window
             val wlp: WindowManager.LayoutParams = window!!.getAttributes()
@@ -76,7 +77,8 @@ class loadingViewModel @Inject constructor(
 
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
             val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-            serverAlertDialog.getWindow()?.setLayout(width, height);
+            serverAlertDialog.getWindow()?.setLayout(width, height)
+            serverAlertDialog.setCancelable(false)
             serverAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val window: Window? = serverAlertDialog.getWindow()
             val wlp: WindowManager.LayoutParams = window!!.getAttributes()

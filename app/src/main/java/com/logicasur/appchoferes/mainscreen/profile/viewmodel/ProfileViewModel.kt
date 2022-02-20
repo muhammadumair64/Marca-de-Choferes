@@ -88,18 +88,27 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
 
             Logout.setOnClickListener {
                 viewModelScope.launch(Dispatchers.IO) {
-//                    ServerCheck.serverCheck(null) {
-//                        logoutUser()
-//                    }
 
-                    resendApis.serverCheck.serverCheckMainActivityApi{ serverAction ->
-                        logoutUser(){serverAction()}
+                    if (CheckConnection.netCheck(activityContext!!)) {
+
+                        resendApis.serverCheck.serverCheckMainActivityApi{ serverAction ->
+                            logoutUser(){serverAction()}
+                        }
+                    } else {
+                        withContext(Dispatchers.Main)
+                        {
+                            Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
+                        }
+
                     }
+
+
+
                 }
 
-//                logoutUser()
-                var intent = Intent(context, LoadingScreen::class.java)
-                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+
+//                var intent = Intent(context, LoadingScreen::class.java)
+//                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
             }
         }
 
