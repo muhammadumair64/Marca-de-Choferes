@@ -2,6 +2,7 @@ package com.logicasur.appchoferes.mainscreen.home
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -21,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -125,7 +127,7 @@ class HomeFragment : Fragment(), OnclickItem {
         intent.viewsOfFragment(binding)
         viewModel.timers()
 
-        mainViewModel.popupLiveData.observe(viewLifecycleOwner, Observer {
+        mainViewModel.popupLiveData.observe(viewLifecycleOwner, {
             if (it != 0) {
                 createPopup()
             }
@@ -277,13 +279,13 @@ class HomeFragment : Fragment(), OnclickItem {
 
 
     override fun statusSelection(position: Int) {
+        viewModel.checkNetConnection()
         dialog.dismiss()
         var Position = position.plus(1)
         var previous = tinyDB.getInt("state")
         if (previous != 0) {
             tinyDB.putInt("previous_state", previous)
         }
-
 
         tinyDB.putInt("state", Position)
 //        viewModel.selectState(position)
@@ -313,7 +315,7 @@ class HomeFragment : Fragment(), OnclickItem {
     }
 
     fun createPopup() {
-        networkDialogBuilder = AlertDialog.Builder(getContext())
+        networkDialogBuilder = AlertDialog.Builder(context)
         val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
         networkAlertDialog = networkDialogBuilder.create()
         proceed_btn = PopupView.findViewById(R.id.proceed_btn)
@@ -359,6 +361,12 @@ class HomeFragment : Fragment(), OnclickItem {
             if (stateCheck) {
                 (activity as MainActivity).updatePendingData(true)
             } else {
+                if (!(activity as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
+                    val intent =
+                        Intent((activity as MainActivity).context, LoadingScreen::class.java)
+                    startActivity(intent)
+
+                }
                 (activity as MainActivity).updatePendingData(false)
             }
 

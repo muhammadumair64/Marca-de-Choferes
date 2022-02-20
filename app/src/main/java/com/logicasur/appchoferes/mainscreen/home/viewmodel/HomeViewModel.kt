@@ -250,9 +250,8 @@ class HomeViewModel @Inject constructor(
             } else {
                 tinyDB.putInt("SELECTEDACTIVITY", 0)
             }
-
-
-            MainActivity.action=null
+            checkNetConnection()
+            MainActivity.action = null
             (activityContext as MainActivity).initPermission() { secondStateAction() }
 
         }
@@ -262,6 +261,8 @@ class HomeViewModel @Inject constructor(
             tinyDB.putBoolean("STATEAPI", false)
 
             tinyDB.putInt("SELECTEDACTIVITY", 1)
+
+            checkNetConnection()
 
 
             MainActivity.action = null
@@ -276,8 +277,8 @@ class HomeViewModel @Inject constructor(
             tinyDB.putBoolean("STATEAPI", false)
             tinyDB.putInt("SELECTEDACTIVITY", 3)
 
-
-            MainActivity.action=null
+            checkNetConnection()
+            MainActivity.action = null
             (activityContext as MainActivity).initPermission() { endDayAction() }
 
 
@@ -285,7 +286,7 @@ class HomeViewModel @Inject constructor(
         dataBinding?.initialState?.setOnClickListener {
             tinyDB.putBoolean("STATEAPI", false)
 
-            MainActivity.action=null
+            MainActivity.action = null
             (activityContext as MainActivity).initPermission() { initialStateAction() }
 
         }
@@ -1156,8 +1157,8 @@ class HomeViewModel @Inject constructor(
 
 
     fun uploadState(position: Int, geoPosition: GeoPosition?) {
-        var intent = Intent(activityContext, LoadingScreen::class.java)
-        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+//        var intent = Intent(activityContext, LoadingScreen::class.java)
+//        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
         val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
         var currentDate = sdf.format(Date())
         currentDate = currentDate + "Z"
@@ -1222,7 +1223,7 @@ class HomeViewModel @Inject constructor(
     }
 
 
-//    fun updateActivity(
+    //    fun updateActivity(
 //        datetime: String?,
 //        totalTime: Int?,
 //        activity: Int?,
@@ -1300,13 +1301,20 @@ class HomeViewModel @Inject constructor(
 //
 //
 //    }
+    fun checkNetConnection() {
+        if (CheckConnection.netCheck(activityContext!!)) {
+            if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
+
+                ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
+            }
+        }
+
+
+    }
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
 
-        if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
 
-            ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
-        }
         Log.d("LOADING_ISSUE_TESTING", "IN_ hit activity api")
         Log.d("HomeviewModel", "hitActivityAPI")
 
@@ -1358,12 +1366,12 @@ class HomeViewModel @Inject constructor(
         }
 
 
-            totalTimeForActivty = totalTime!!
-            selectedActivty = activity
-            if (CheckConnection.netCheck(activityContext!!)) {
-                Log.d("LOADING_ISSUE_TESTING", "In condition")
-                getLocation(activityContext!!)
-            }
+        totalTimeForActivty = totalTime!!
+        selectedActivty = activity
+        if (CheckConnection.netCheck(activityContext!!)) {
+            Log.d("LOADING_ISSUE_TESTING", "In condition")
+            getLocation(activityContext!!)
+        }
 
 
     }

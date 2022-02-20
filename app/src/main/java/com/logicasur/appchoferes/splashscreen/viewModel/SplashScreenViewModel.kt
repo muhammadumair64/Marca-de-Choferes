@@ -75,7 +75,7 @@ class SplashScreenViewModel @Inject constructor(
                     myTimer!!.cancel()
                 } else {
                     Log.d("SYNC_CHECK_TESTING", "In False")
-                    var check = activityContext?.let { CheckConnection.netCheck(it) }
+                    val check = activityContext?.let { CheckConnection.netCheck(it) }
                     if (check == false) {
                         MyApplication.checKForPopup = true
                         viewModelScope.launch {
@@ -161,9 +161,6 @@ class SplashScreenViewModel @Inject constructor(
                             tinyDB.putInt("againCome", 200)
                             MyApplication.check = 200
                         }
-
-
-
 
 
                         Log.d("LOADINGIMAGETESTING", "here1")
