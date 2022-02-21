@@ -142,10 +142,10 @@ class ProfileFragment : Fragment() {
     fun startImagePicker() {
         com.github.dhaval2404.imagepicker.ImagePicker.with(this)
             //Crop image(Optional), Check Customization for more option
-            .compress(100)            //Final image size will be less than 1 MB(Optional)
+            .compress(40)            //Final image size will be less than 1 MB(Optional)
             .maxResultSize(
-                480,
-                480
+                360,
+                360
             )    //Final image resolution will be less than 1080 x 1080(Optional)
             .start()
     }
