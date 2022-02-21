@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import android.app.Activity
+import com.logicasur.appchoferes.Extra.CheckConnection
 
 
 @HiltViewModel
@@ -174,8 +175,11 @@ if(!serverAlertDialog.isShowing){
 
             timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultTime)
             Log.d("TimerTESTING", "Here")
-            var intent = Intent(activityContext, MainActivity::class.java)
-            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+            if(!CheckConnection.netCheck(activityContext)){
+                var intent = Intent(activityContext, MainActivity::class.java)
+                ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+            }
+       
 
         }
 
