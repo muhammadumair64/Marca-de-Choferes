@@ -51,7 +51,7 @@ class HomeFragment : Fragment(), OnclickItem {
     lateinit var statusAdapter: StatusAdapter
     lateinit var dailogBuilder: AlertDialog.Builder
     lateinit var statusDailogBuilder: AlertDialog.Builder
-    lateinit var networkAlertDialog: AlertDialog
+    var networkAlertDialog: AlertDialog? = null
     lateinit var networkDialogBuilder: AlertDialog.Builder
     lateinit var alertDialog: AlertDialog
     lateinit var dialog: AlertDialog
@@ -317,67 +317,81 @@ class HomeFragment : Fragment(), OnclickItem {
     fun createPopup() {
         networkDialogBuilder = AlertDialog.Builder(context)
         val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
-        networkAlertDialog = networkDialogBuilder.create()
-        proceed_btn = PopupView.findViewById(R.id.proceed_btn)
-        cancel_btn = PopupView.findViewById(R.id.cancel_btn)
-        if (!MyApplication.checKForPopup) {
-            try {
-                viewModel.openPopup(networkAlertDialog, PopupView, resources)
-            } catch (e: Exception) {
-                Log.d("CallingOpenPop", "Exception...${e.localizedMessage}")
-                LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-            }
 
-        } else {
-            MyApplication.checKForPopup = false
-        }
 
-        (activity as MainActivity).setGrad(
-            ResendApis.primaryColor,
-            ResendApis.secondaryColor,
-            proceed_btn
-        )
-        cancel_btn.setOnClickListener {
+        if (networkAlertDialog == null) {
+            networkAlertDialog = networkDialogBuilder.create()
 
-            networkAlertDialog.dismiss()
-            var stateCheck = tinyDB.getBoolean("STATEAPI")
-            if (stateCheck) {
-                var position = tinyDB.getInt("previous_state")
-                if (position != 0) {
-                    tinyDB.putInt("state", position)
+            proceed_btn = PopupView.findViewById(R.id.proceed_btn)
+            cancel_btn = PopupView.findViewById(R.id.cancel_btn)
+            if (!MyApplication.checKForPopup) {
+                try {
+                    viewModel.openPopup(networkAlertDialog!!, PopupView, resources)
+                } catch (e: Exception) {
+                    Log.d("CallingOpenPop", "Exception...${e.localizedMessage}")
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                 }
 
-            }
-
-        }
-        proceed_btn.setOnClickListener {
-
-            var position = tinyDB.getInt("state")
-            if (position != 0) {
-                position = position.minus(1)
-                viewModel.selectState(position)
-            }
-            var stateCheck = tinyDB.getBoolean("STATEAPI")
-            if (stateCheck) {
-                (activity as MainActivity).updatePendingData(true)
             } else {
-                if (!(activity as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
-                    val intent =
-                        Intent((activity as MainActivity).context, LoadingScreen::class.java)
-                    startActivity(intent)
-
-                }
-                (activity as MainActivity).updatePendingData(false)
+                MyApplication.checKForPopup = false
             }
 
+            (activity as MainActivity).setGrad(
+                ResendApis.primaryColor,
+                ResendApis.secondaryColor,
+                proceed_btn
+            )
+            cancel_btn.setOnClickListener {
+                Log.d("HomeFragment", "Inside acncel btn listner")
 
-            networkAlertDialog.dismiss()
+                var stateCheck = tinyDB.getBoolean("STATEAPI")
+                if (stateCheck) {
+                    var position = tinyDB.getInt("previous_state")
+                    if (position != 0) {
+                        tinyDB.putInt("state", position)
+                    }
+
+                }
+                networkAlertDialog!!.dismiss()
+                networkAlertDialog=null
+
+            }
+            proceed_btn.setOnClickListener {
+
+                var position = tinyDB.getInt("state")
+                if (position != 0) {
+                    position = position.minus(1)
+                    viewModel.selectState(position)
+                }
+                var stateCheck = tinyDB.getBoolean("STATEAPI")
+                if (stateCheck) {
+                    (activity as MainActivity).updatePendingData(true)
+                }
+                else {
+//                    if (!(activity as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
+//                        val intent =
+//                            Intent((activity as MainActivity).context, LoadingScreen::class.java)
+//                        startActivity(intent)
+//
+//                    }
+                    (activity as MainActivity).updatePendingData(false)
+                }
+
+
+                networkAlertDialog!!.dismiss()
+                networkAlertDialog=null
+            }
         }
 
-        if (MyApplication.checKForPopup == true) {
+
+
+
+
+        if (MyApplication.checKForPopup) {
             closePopup()
             MyApplication.checKForPopup = false
         }
+
 
     }
 
@@ -387,7 +401,8 @@ class HomeFragment : Fragment(), OnclickItem {
             withContext(Dispatchers.IO) {
 
                 if (networkAlertDialog != null) {
-                    networkAlertDialog.dismiss()
+                    networkAlertDialog!!.dismiss()
+                    networkAlertDialog=null
                 }
 
             }

@@ -1161,6 +1161,7 @@ class MainActivity : BaseClass() {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     var apiData = getActivityAPIData()
+
                     var objActivity = UnsentStatusOrUploadActivity(
                         0,
                         apiData.datetime!!,

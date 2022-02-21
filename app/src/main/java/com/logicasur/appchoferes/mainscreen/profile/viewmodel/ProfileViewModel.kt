@@ -134,6 +134,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
                         (activityContext as MainActivity).stopTimerBreak()
 
                         authRepository.clearData()
+                        authRepository.clearWholeDB()
                         tinyDB.clear()
                         ResendApis.primaryColor = "#7A59FC"
                         ResendApis.secondaryColor = "#653FFB"

@@ -282,4 +282,8 @@ class AuthRepository @Inject constructor(
         return apiRequest {retrofitInterface.checkServer(token)}
     }
 
+    suspend fun clearWholeDB()
+    {
+        localDataBase.clearAllTables()
+    }
 }

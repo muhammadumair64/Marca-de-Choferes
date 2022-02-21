@@ -1723,21 +1723,27 @@ class HomeViewModel @Inject constructor(
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
         try {
-            networkAlertDialog.show()
+            if(!networkAlertDialog.isShowing)
+            {
+                networkAlertDialog.show()
+                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+                networkAlertDialog.window?.setLayout(width, height)
+                networkAlertDialog.setCancelable(false)
+                networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                val window: Window? = networkAlertDialog.window
+                val wlp: WindowManager.LayoutParams = window!!.attributes
+                wlp.gravity = Gravity.BOTTOM
+                window.attributes = wlp
+            }
+
+
         } catch (e: Exception) {
             LoadingScreen.OnEndLoadingCallbacks?.endLoading()
             Log.d("OpenPop", "Exception ${e.localizedMessage}")
         }
 
-        val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-        val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-        networkAlertDialog.getWindow()?.setLayout(width, height)
-        networkAlertDialog.setCancelable(false)
-        networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val window: Window? = networkAlertDialog.getWindow()
-        val wlp: WindowManager.LayoutParams = window!!.getAttributes()
-        wlp.gravity = Gravity.BOTTOM
-        window.setAttributes(wlp)
+
 
     }
 
