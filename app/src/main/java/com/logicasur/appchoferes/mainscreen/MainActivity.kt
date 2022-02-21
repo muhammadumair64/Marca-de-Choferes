@@ -349,7 +349,7 @@ class MainActivity : BaseClass() {
                     if (CheckConnection.netCheck(this@MainActivity)) {
                         withContext(Dispatchers.Main) {
                             action()
-//                            getLocation(context)
+                            getLocation(context)
                         }
 
                     } else {
@@ -460,7 +460,7 @@ class MainActivity : BaseClass() {
                     if (CheckConnection.netCheck(this@MainActivity)) {
                         withContext(Dispatchers.Main) {
                             action?.invoke()
-//                            getLocation(context)
+                            getLocation(context)
                         }
 
                     } else {
