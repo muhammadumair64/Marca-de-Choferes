@@ -91,6 +91,9 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
 
                     if (CheckConnection.netCheck(activityContext!!)) {
 
+                        var intent = Intent(activityContext, LoadingScreen::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
                         resendApis.serverCheck.serverCheckMainActivityApi{ serverAction ->
                             logoutUser(){serverAction()}
                         }
@@ -107,8 +110,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
                 }
 
 
-//                var intent = Intent(context, LoadingScreen::class.java)
-//                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
+
             }
         }
 
@@ -116,6 +118,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
     }
 
     fun logoutUser(action: () -> Unit) {
+
 
         viewModelScope.launch {
 
@@ -133,7 +136,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
                         (activityContext as MainActivity).stopTimer()
                         (activityContext as MainActivity).stopTimerBreak()
 
-                        authRepository.clearData()
+//                        authRepository.clearData()
                         authRepository.clearWholeDB()
                         tinyDB.clear()
                         ResendApis.primaryColor = "#7A59FC"

@@ -314,12 +314,17 @@ class HomeFragment : Fragment(), OnclickItem {
         (activity as MainActivity).binding.menu.setItemSelected(R.id.home, true)
     }
 
+
+
+
     fun createPopup() {
         networkDialogBuilder = AlertDialog.Builder(context)
         val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
 
-
+        Log.d("CallingOpenPop2", "before---")
         if (networkAlertDialog == null) {
+
+            Log.d("CallingOpenPop2", "after---")
             networkAlertDialog = networkDialogBuilder.create()
 
             proceed_btn = PopupView.findViewById(R.id.proceed_btn)
@@ -333,6 +338,7 @@ class HomeFragment : Fragment(), OnclickItem {
                 }
 
             } else {
+                networkAlertDialog=null
                 MyApplication.checKForPopup = false
             }
 
@@ -402,6 +408,7 @@ class HomeFragment : Fragment(), OnclickItem {
 
                 if (networkAlertDialog != null) {
                     networkAlertDialog!!.dismiss()
+                    Log.d("CallingOpenPop2", "Self dismiss")
                     networkAlertDialog=null
                 }
 
