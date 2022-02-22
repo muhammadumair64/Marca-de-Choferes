@@ -3,10 +3,7 @@ package com.logicasur.appchoferes.mainscreen
 import android.Manifest
 import android.app.ActivityManager
 import android.app.AlertDialog
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.os.Bundle
 import com.logicasur.appchoferes.R
 import androidx.activity.viewModels
@@ -24,7 +21,6 @@ import kotlinx.coroutines.launch
 
 import android.location.LocationManager
 
-import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Geocoder
@@ -1182,7 +1178,7 @@ class MainActivity : BaseClass() {
         }
 
         val check = tinyDB.getBoolean("PENDINGCHECK")
-        if (!check ) {
+        if (!check) {
             Log.d("SERVICE_TESTING", "MainActivity")
 
             resendApis.checkNetAndUpload()
@@ -1196,6 +1192,67 @@ class MainActivity : BaseClass() {
         }
 
 
+    }
+
+
+    override fun onTrimMemory(level: Int) {
+
+        // Determine which lifecycle or system event was raised.
+        when (level) {
+
+            ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN -> {
+                /*
+                   Release any UI objects that currently hold memory.
+
+                   The user interface has moved to the background.
+                */
+            }
+
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE,
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> {
+                /*
+                   Release any memory that your app doesn't need to run.
+
+                   The device is running low on memory while the app is running.
+                   The event raised indicates the severity of the memory-related event.
+                   If the event is TRIM_MEMORY_RUNNING_CRITICAL, then the system will
+                   begin killing background processes.
+                */
+
+
+
+
+
+                Log.d("MARCA_MEMORY", "Memory running critical")
+            }
+
+            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND -> {
+                Log.d("MARCA_MEMORY", "Memory running Background")
+            }
+            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
+            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
+                /*
+                   Release as much memory as the process can.
+
+                   The app is on the LRU list and the system is running low on memory.
+                   The event raised indicates where the app sits within the LRU list.
+                   If the event is TRIM_MEMORY_COMPLETE, the process will be one of
+                   the first to be terminated.
+                */
+                Log.d("MARCA_MEMORY", "Memory running Danger")
+
+            }
+
+            else -> {
+                /*
+                  Release any non-critical data structures.
+
+                  The app received an unrecognized memory level value
+                  from the system. Treat this as a generic low-memory message.
+                */
+            }
+        }
     }
 
 
