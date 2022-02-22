@@ -28,7 +28,7 @@ class SignInActivity : BaseClass() {
 
     fun initViews(){
 
-        setGrad(ResendApis.primaryColor, ResendApis.secondaryColor,binding.signInBtn)
+        //setGrad(ResendApis.primaryColor, ResendApis.secondaryColor,binding.signInBtn)
         signinViewModel.viewsOfActivitySignin(context,binding)
     }
 
