@@ -28,8 +28,6 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import android.app.Activity
-import com.logicasur.appchoferes.Extra.CheckConnection
 
 
 @HiltViewModel
@@ -106,7 +104,7 @@ if(!serverAlertDialog.isShowing){
         var activity = tinyDB.getInt("SELECTEDACTIVITY")
         when (activity) {
             0 -> {
-                getWorkTimeWhenOffline()
+                getWorkTimeWhenOffline(fromWindow)
             }
             1 -> {
                 tinyDB.putString("checkTimer", "breakTime")
@@ -127,13 +125,13 @@ if(!serverAlertDialog.isShowing){
                     var defaultBreak = tinyDB.getInt("defaultBreak")
                     timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultBreak)
 
-                    getWorkTimeWhenOffline()
+                    getWorkTimeWhenOffline(fromWindow)
                 }
 
             }
             2 -> {
                 MyApplication.dayEndCheck = 100
-                getWorkTimeWhenOffline()
+                getWorkTimeWhenOffline(fromWindow)
             }
             3 -> {
                 MyApplication.dayEndCheck = 200
@@ -154,7 +152,7 @@ if(!serverAlertDialog.isShowing){
 
     }
 
-    fun getWorkTimeWhenOffline() {
+    fun getWorkTimeWhenOffline(fromWindow: Boolean) {
         tinyDB.putString("checkTimer", "workTime")
 
         viewModelScope.launch {
@@ -175,7 +173,7 @@ if(!serverAlertDialog.isShowing){
 
             timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultTime)
             Log.d("TimerTESTING", "Here")
-            if(!CheckConnection.netCheck(activityContext)){
+            if (fromWindow) {
                 var intent = Intent(activityContext, MainActivity::class.java)
                 ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
             }

@@ -460,7 +460,6 @@ class HomeViewModel @Inject constructor(
         if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
             goToSecondState()
 
-
             var overBreakTime = tinyDB.getBoolean("overBreakTime")
             if (overBreakTime) {
                 dataBinding!!.breakBar.progressBarColor =
@@ -1304,8 +1303,16 @@ class HomeViewModel @Inject constructor(
     fun checkNetConnection() {
         if (CheckConnection.netCheck(activityContext!!)) {
             if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
+    viewModelScope.launch(Dispatchers.IO) {
+    if(!mainRepository!!.isExistsUnsentUploadActivityDB()){
+        withContext(Dispatchers.Main){
+            ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
+        }
 
-                ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
+    }
+}
+
+
             }
         }
 
