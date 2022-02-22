@@ -184,6 +184,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
     }
 
     fun Base64ToBitmap(base64: String) {
+        Log.d("ImageUploadAvatar","Inside Base64ToBitmap function.")
         val imageBytes = Base64.decode(base64, 0)
         val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         dataBinding.profileImage.setImageBitmap(image)
@@ -192,6 +193,7 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
     }
 
     fun bitmapToBase64(bitmapImage: Bitmap) {
+        Log.d("ImageUploadAvatar","Inside bitmapToBase64 function.")
         imageInBitmap = bitmapImage
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
@@ -202,6 +204,9 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
 //            ServerCheck.serverCheck(null) {
 //                updateAvatar(encoded,imageInBitmap)
 //            }
+
+
+            Log.d("ImageUploadAvatar","Before Calling Function.")
           resendApis.serverCheck.serverCheckMainActivityApi{serverAction ->
                 updateAvatar(encoded,imageInBitmap){serverAction()}
 
@@ -214,6 +219,8 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
     }
 
     fun updateAvatar(avatar: String, imageInBitmap: Bitmap,action:()->Unit) {
+
+        Log.d("ImageUploadAvatar","Inside Avatar Function.")
         var Token = tinyDB.getString("Cookie")
         viewModelScope.launch {
 
@@ -224,13 +231,14 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
 
                     val response = authRepository.updateAvatar(avatar, Token!!)
 
-                    println("SuccessResponse $response")
+                    Log.d("ImageUploadAvatar","Get response of avatar $response")
 
 
 
                     if (response != null) {
                         action()
                         withContext(Dispatchers.Main){
+                            Log.d("ImageUploadAvatar","Update image in UI")
                             dataBinding.profileImage.setImageBitmap(imageInBitmap)
                             tinyDB.putString("Avatar", avatar)
                             (MyApplication.loadingContext as LoadingScreen).finish()
@@ -239,28 +247,32 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
                     }
 
                 } catch (e: ResponseException) {
+                    Log.d("ImageUploadAvatar","Error Response")
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     println("ErrorResponse")
 
                 } catch (e: ApiException) {
+                    Log.d("ImageUploadAvatar","ApiException")
                     (MyApplication.loadingContext as LoadingScreen).finish()
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
+                    Log.d("ImageUploadAvatar","NoInternetException")
                     (MyApplication.loadingContext as LoadingScreen).finish()
-                    println("position 2")
+
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: SocketException) {
+                    Log.d("ImageUploadAvatar","SocketException")
                     LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                    Log.d("connection Exception", "Connect Not Available")
+                    Log.d("ImageUploadAvatar", "Connect Not Available")
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                     }
                 }
                 catch(e:Exception){
-                    Log.d("connection Exception", "Connect Not Available")
+                    Log.d("ImageUploadAvatar", "Exception")
                 }
             }
         }

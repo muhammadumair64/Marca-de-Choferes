@@ -185,7 +185,7 @@ class ProfileFragment : Fragment() {
             //Image Uri will not be null for RESULT_OK
             var uri: Uri = data?.data!!
             val bitmapImage = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
-
+            Log.d("ImageUploadAvatar","Before Calling bitmapToBase64 function.")
             profileViewModel.bitmapToBase64(bitmapImage)
 
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
