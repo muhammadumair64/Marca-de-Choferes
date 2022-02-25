@@ -195,12 +195,12 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
 
 
 
-                        if (response.colors.primary.isNotEmpty()) {
-                            K.primaryColor = response.colors.primary ?: "#7A59FC"
-                            K.secondrayColor = response.colors.secondary ?: "#653FFB"
-                            tinyDB.putString("primaryColor",K.primaryColor)
-                            tinyDB.putString("secondrayColor",K.secondrayColor)
-                        }
+//                        if (response.colors.primary.isNotEmpty()) {
+//                            K.primaryColor = response.colors.primary ?: "#7A59FC"
+//                            K.secondrayColor = response.colors.secondary ?: "#653FFB"
+//                            tinyDB.putString("primaryColor",K.primaryColor)
+//                            tinyDB.putString("secondrayColor",K.secondrayColor)
+//                        }
                         
                         tinyDB.putString("User",userName)
                         MyApplication.check=200
