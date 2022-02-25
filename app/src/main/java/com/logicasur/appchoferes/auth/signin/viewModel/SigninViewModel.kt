@@ -201,7 +201,10 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,val
 //                            tinyDB.putString("primaryColor",K.primaryColor)
 //                            tinyDB.putString("secondrayColor",K.secondrayColor)
 //                        }
-                        
+
+                        tinyDB.putString("primaryColor","#7A59FC")
+                        tinyDB.putString("secondrayColor","#653FFB")
+
                         tinyDB.putString("User",userName)
                         MyApplication.check=200
                         var temp=  tinyDB.getString("User")
