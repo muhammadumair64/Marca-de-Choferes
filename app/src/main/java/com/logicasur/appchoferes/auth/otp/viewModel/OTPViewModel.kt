@@ -157,10 +157,12 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                 if(CheckConnection.netCheck(context)){
                     viewModelScope.launch(Dispatchers.IO) {
                         MyApplication.authCheck = true
-                        serverCheck.serverCheck {
-                            otpAuth(user!!, otp.toInt())                        }
+//                        serverCheck.serverCheck {
+//                            otpAuth(user!!, otp.toInt())                        }
                     }
-                    var intent = Intent(activityContext,LoadingScreen::class.java)
+
+                        otpAuth(user!!, otp.toInt())
+                        var intent = Intent(activityContext,LoadingScreen::class.java)
                     ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                 }
                 else{
@@ -291,7 +293,8 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     tinyDB.putString("User", "")
                     val response = convertErrorBody(e.response)
                     withContext(Dispatchers.Main){
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
 //                        (activityContext as OTP_Activity).finish()
 //                        var intent = Intent(activityContext, OTP_Activity::class.java)
 //                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
@@ -308,6 +311,8 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         Toast.makeText(
                             activityContext,
                             "verifica tu conexión de red",
@@ -316,9 +321,11 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     }
                 }
                 catch(e: SocketException){
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -410,8 +417,10 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+
                     withContext(Dispatchers.Main){
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -420,9 +429,11 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 
                 }
                 catch(e: SocketException){
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -460,26 +471,20 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 
                 } catch (e: ResponseException) {
                     withContext(Dispatchers.Main){
-                        var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
-                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                        (activityContext as OTP_Activity).finish()
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                     }
                     e.printStackTrace()
                 } catch (e: ApiException) {
-                    var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                    (activityContext as OTP_Activity).finish()
+
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
-                    var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                    (activityContext as OTP_Activity).finish()
+
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
-                        var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
-                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                        (activityContext as OTP_Activity).finish()
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         Toast.makeText(
                             activityContext,
                             "Comprueba tu conexión a Internet",
@@ -488,12 +493,12 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     }
                 }
                 catch(e: SocketException){
-                    var intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                    (activityContext as OTP_Activity).finish()
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+
+
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }

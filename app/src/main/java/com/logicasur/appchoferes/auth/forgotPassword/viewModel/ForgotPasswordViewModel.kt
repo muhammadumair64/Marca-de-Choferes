@@ -58,9 +58,10 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     if(CheckConnection.netCheck(context)){
                         viewModelScope.launch(Dispatchers.IO) {
                             MyApplication.authCheck = true
-                            serverCheck.serverCheck {
-                                userforgotPassword(emailCheck)
-                            }
+//                            serverCheck.serverCheck {
+//                                userforgotPassword(emailCheck)
+//                            }
+                            userforgotPassword(emailCheck)
                         }
                         var intent = Intent(activityContext,LoadingScreen::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
@@ -103,11 +104,12 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     }
 
                 } catch (e: ResponseException) {
-                    (activityContext as ForgotPasswordActivity).finish()
-                    println("ErrorResponse")
-                    var intent= Intent(activityContext, ForgotPasswordActivity::class.java)
-                    startActivity(activityContext!!,intent, Bundle.EMPTY)
-                    Toast.makeText(activityContext, "Fallida", Toast.LENGTH_SHORT).show()
+                    withContext(Dispatchers.Main){
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
                 catch (e: ApiException) {
                     e.printStackTrace()
@@ -116,14 +118,19 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     println("position 2")
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
+
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
 
                 }
                 catch(e: SocketException){
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }            }
