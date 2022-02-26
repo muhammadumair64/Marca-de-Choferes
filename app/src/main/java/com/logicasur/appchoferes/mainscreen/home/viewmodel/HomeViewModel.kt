@@ -1158,8 +1158,9 @@ class HomeViewModel @Inject constructor(
     fun uploadState(position: Int, geoPosition: GeoPosition?) {
 //        var intent = Intent(activityContext, LoadingScreen::class.java)
 //        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-        val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
+        currentDate= currentDate.replace(" ","T")
         currentDate = currentDate + "Z"
         System.out.println(" C DATE is  " + currentDate)
 
@@ -1390,8 +1391,9 @@ class HomeViewModel @Inject constructor(
 //        var intent = Intent(activityContext, LoadingScreen::class.java)
 //        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
 
-        val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
+         currentDate= currentDate.replace(" ","T")
         tinyDB.putString("ActivityDate", currentDate)
         currentDate = currentDate + "Z"
         System.out.println(" startUpload" + currentDate)

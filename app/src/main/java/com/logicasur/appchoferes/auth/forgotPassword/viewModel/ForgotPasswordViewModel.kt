@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import com.logicasur.appchoferes.auth.otp.OTP_Activity
@@ -15,11 +16,14 @@ import com.logicasur.appchoferes.databinding.ActivityForgotPasswordBinding
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.auth.forgotPassword.ForgotPasswordActivity
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
+import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.ApiException
 import com.logicasur.appchoferes.network.NoInternetException
 import com.logicasur.appchoferes.network.ResponseException
@@ -32,7 +36,7 @@ import java.util.*
 
 
 @HiltViewModel
-class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthRepository):ViewModel() {
+class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthRepository,val serverCheck: ServerCheck):ViewModel() {
 
     var activityContext:Context?= null
     lateinit var tinyDB: TinyDB
@@ -51,9 +55,21 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
             else {
                 if (validater) {
 
-                    userforgotPassword(emailCheck)
-                    var intent = Intent(activityContext, LoadingScreen::class.java)
-                    startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    if(CheckConnection.netCheck(context)){
+                        viewModelScope.launch(Dispatchers.IO) {
+                            MyApplication.authCheck = true
+                            serverCheck.serverCheck {
+                                userforgotPassword(emailCheck)
+                            }
+                        }
+                        var intent = Intent(activityContext,LoadingScreen::class.java)
+                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    }
+                    else{
+                        Toast.makeText(activityContext,"Comprueba tu conexión a Internet" , Toast.LENGTH_SHORT).show()
+                    }
+
+
                 } else {
                     Toast.makeText(activityContext, "Invalid Email", Toast.LENGTH_SHORT).show()
                 }

@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:paddingStart="@dimen/_2sdp"
             android:id="@+id/topText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

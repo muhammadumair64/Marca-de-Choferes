@@ -46,6 +46,6 @@
     <string name="proceed">Continuar</string>
     <string name="cancel">Cancelar</string>
     <string name="go_back">Volte</string>
-    <string name="go_back_top_text">Não consigo conectar com o servidor</string>
+    <string name="go_back_top_text"> Não consigo conectar com o servidor</string>
     <string name="go_back_sub_text">Tente depois</string>
 </resources>

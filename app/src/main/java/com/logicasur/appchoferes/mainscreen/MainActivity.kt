@@ -1061,8 +1061,9 @@ class MainActivity : BaseClass() {
     fun getActivityAPIData(): UpdateActivityDataClass {
         var vehicle = tinyDB.getObject("VehicleForBackgroundPush", Vehicle::class.java)
         var geoPosition = tinyDB.getObject("GeoPosition", GeoPosition::class.java)
-        val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
+        currentDate= currentDate.replace(" ","T")
         currentDate = currentDate + "Z"
         var activity = tinyDB.getInt("SELECTEDACTIVITY")
         var time = 0
@@ -1090,8 +1091,9 @@ class MainActivity : BaseClass() {
     fun getAPIDataForState(): UpdateActivityDataClass {
         var vehicle = tinyDB.getObject("VehicleForBackgroundPush", Vehicle::class.java)
         var geoPosition = tinyDB.getObject("GeoPosition", GeoPosition::class.java)
-        val sdf = SimpleDateFormat("yyyy-MM-dd:HH:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
+        currentDate= currentDate.replace(" ","T")
         currentDate = currentDate + "Z"
         var activity = tinyDB.getInt("SELECTEDACTIVITY")
         var time = 0

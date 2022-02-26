@@ -34,7 +34,9 @@ import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.logicasur.appchoferes.splashscreen.SplashScreen
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.TimeCalculator
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
@@ -51,7 +53,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                                        val mainRepository: MainRepository,
-                                       val resendApis: ResendApis, val timeCalculator: TimeCalculator) : ViewModel() {
+                                       val resendApis: ResendApis, val timeCalculator: TimeCalculator ,val serverCheck: ServerCheck) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
      var fromSplash :Boolean? = null;
@@ -151,9 +153,20 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     "${binding.edt1.text}${binding.edt2.text}${binding.edt3.text}${binding.edt4.text}".trim()
                 println("otp is ${otp.toInt()}")
                 var user = tinyDB.getString("UserOTP")
-                otpAuth(user!!, otp.toInt())
-                var intent = Intent(activityContext, LoadingScreen::class.java)
-                ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+
+                if(CheckConnection.netCheck(context)){
+                    viewModelScope.launch(Dispatchers.IO) {
+                        MyApplication.authCheck = true
+                        serverCheck.serverCheck {
+                            otpAuth(user!!, otp.toInt())                        }
+                    }
+                    var intent = Intent(activityContext,LoadingScreen::class.java)
+                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                }
+                else{
+                    Toast.makeText(activityContext,"Comprueba tu conexión a Internet" , Toast.LENGTH_SHORT).show()
+                }
+
             }
 
         }

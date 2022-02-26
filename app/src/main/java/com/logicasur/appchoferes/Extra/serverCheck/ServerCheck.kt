@@ -48,6 +48,9 @@ class ServerCheck constructor(
                     CoroutineScope(Job()).launch(Dispatchers.Main) {
                         if (!MyApplication.checKForSyncLoading) {
                             Log.d(TAG,"Open Server Popup....serverCheck")
+                            if(MyApplication.authCheck){
+                                MyApplication.authCheck = false
+                            }
                             LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                         }
 
@@ -89,9 +92,15 @@ class ServerCheck constructor(
                 Log.d("Exception", "SocketTimeOut..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
-                    Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                        .show()
-                    endLoading()
+                    if(MyApplication.authCheck){
+                        MyApplication.authCheck = false
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                    }else{
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                        endLoading()
+                    }
+
                 }
             } catch (e: SocketException) {
                 myTimer.cancel()
@@ -99,22 +108,46 @@ class ServerCheck constructor(
                 Log.d("Exception", "Socket..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
-                    Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                        .show()
-                    endLoading()
+                    if(MyApplication.authCheck){
+                        MyApplication.authCheck = false
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                    }else{
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                        endLoading()
+                    }
                 }
 
             } catch (e: NoInternetException) {
                 myTimer.cancel()
                 myTimer.purge()
                 Log.d("Exception", "NoInternet..${e.localizedMessage}")
-                endLoading()
-
+                withContext(Dispatchers.Main)
+                {
+                    if (MyApplication.authCheck) {
+                        MyApplication.authCheck = false
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                    } else {
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                        endLoading()
+                    }
+                }
             } catch (e: Exception) {
                 myTimer.cancel()
                 myTimer.purge()
                 Log.d("Exception", "Exception..${e.localizedMessage}")
-                endLoading()
+                withContext(Dispatchers.Main)
+                {
+                    if (MyApplication.authCheck) {
+                        MyApplication.authCheck = false
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                    } else {
+                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+                            .show()
+                        endLoading()
+                    }
+                }
             }
 
 

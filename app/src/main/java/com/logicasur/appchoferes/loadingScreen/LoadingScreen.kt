@@ -213,6 +213,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
 
+
      fun createServerAlertPopup() {
            Log.d("POPUP_TESTING","IN SERVER POPUP")
            serverDialogBuilder = AlertDialog.Builder(this)
@@ -223,7 +224,12 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
            Log.d("POPUP_TESTING"," In VIEW MODEL After delay")
 
            loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
-           setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
+         try{
+             setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
+         }catch (e:Exception){
+             e.localizedMessage
+         }
+
            go_back_btn.setOnClickListener {
                serverAlertDialog!!.dismiss()
                finish()

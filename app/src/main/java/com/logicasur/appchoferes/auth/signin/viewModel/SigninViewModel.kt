@@ -21,7 +21,6 @@ import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.auth.forgotPassword.ForgotPasswordActivity
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.auth.signin.SignInActivity
-import com.logicasur.appchoferes.databinding.ActivitySignInBinding
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.myApplication.MyApplication
@@ -31,7 +30,10 @@ import com.logicasur.appchoferes.network.ResponseException
 import com.logicasur.appchoferes.network.signinResponse.SigninResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.TimeCalculator
+import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
+import com.logicasur.appchoferes.databinding.ActivitySignInBinding
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartBreakTime
 import com.logicasur.appchoferes.network.unsentApis.UnsentStartWorkTime
@@ -49,7 +51,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                                           val mainRepository: MainRepository,
-                                          val resendApis: ResendApis,val timerCalculator: TimeCalculator) : ViewModel() {
+                                          val resendApis: ResendApis,val timerCalculator: TimeCalculator,    val serverCheck: ServerCheck
+) : ViewModel() {
     var activityContext: Context? = null
     lateinit var tinyDB: TinyDB
     var Token=""
@@ -89,10 +92,19 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                 }
                 else{
                     if(validater==true && passwordCheck.length>=4){
-
-                        signinAuth(emailCheck,passwordCheck)
-                        var intent = Intent(activityContext,LoadingScreen::class.java)
-                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                        if(CheckConnection.netCheck(context)){
+                            viewModelScope.launch(Dispatchers.IO) {
+                                MyApplication.authCheck = true
+                                serverCheck.serverCheck {
+                                    signinAuth(emailCheck,passwordCheck)
+                                }
+                            }
+                            var intent = Intent(activityContext,LoadingScreen::class.java)
+                            ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                        }
+                       else{
+                            Toast.makeText(activityContext,"Comprueba tu conexión a Internet" , Toast.LENGTH_SHORT).show()
+                        }
 
                     }else if(validater==false){
                         Toast.makeText(activityContext, "Invalid Email", Toast.LENGTH_SHORT).show()
@@ -157,6 +169,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
 
             withContext(Dispatchers.IO) {
                 try {
+
                     val response =
                         authRepository.userSignin(
                             name, password, idApp!!,
@@ -174,8 +187,14 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                             isVirtual!!
                         )
 
+
+
                     println("SuccessResponse $response")
                     authRepository.InsertSigninData(response)
+
+
+
+
                     if(response!=null) {
                         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
                         tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
