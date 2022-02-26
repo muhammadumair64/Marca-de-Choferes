@@ -30,6 +30,7 @@ import com.logicasur.appchoferes.network.ResponseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 import java.net.SocketException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -142,7 +143,21 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
 //                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
-                }            }
+                }
+            catch(e:Exception){
+                withContext(Dispatchers.Main) {
+                    MyApplication.authCheck = true
+                    LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                }
+            }
+
+
+            }
         }
 
 

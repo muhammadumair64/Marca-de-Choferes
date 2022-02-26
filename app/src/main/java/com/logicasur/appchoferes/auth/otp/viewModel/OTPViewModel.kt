@@ -47,6 +47,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.Reader
+import java.lang.Exception
 import java.net.SocketException
 import javax.inject.Inject
 
@@ -338,6 +339,17 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 //                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
+                catch (e:Exception){
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
+                }
 
             }
         }
@@ -464,6 +476,17 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 //                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }
+                catch (e:Exception){
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
+                }
             }
         }
 
@@ -536,6 +559,17 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                         MyApplication.authCheck = true
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
 //                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch (e:Exception){
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
                     }
                 }
             }
