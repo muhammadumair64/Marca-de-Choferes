@@ -43,7 +43,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
     fun viewsForForgotPasswordActivity(context: Context,binding: ActivityForgotPasswordBinding){
         activityContext= context
         tinyDB= TinyDB(context)
-        binding.arrowBack.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.arrowBack.setBackgroundColor(Color.parseColor("#7A59FC"))
         binding.SubmitButton.setOnClickListener {
 
                 val emailCheck: String = binding.email.text.toString()
