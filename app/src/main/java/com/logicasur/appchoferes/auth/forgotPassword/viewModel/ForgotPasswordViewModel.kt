@@ -107,7 +107,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     withContext(Dispatchers.Main){
                         MyApplication.authCheck = true
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
-                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
 
                 }
@@ -122,7 +122,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                         MyApplication.authCheck = true
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
 
-                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
 
                 }
@@ -131,7 +131,7 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
                     withContext(Dispatchers.Main){
                         MyApplication.authCheck = true
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
-                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
                     }
                 }            }
         }
