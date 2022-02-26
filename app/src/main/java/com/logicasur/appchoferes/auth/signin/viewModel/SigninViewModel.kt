@@ -95,9 +95,10 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                         if(CheckConnection.netCheck(context)){
                             viewModelScope.launch(Dispatchers.IO) {
                                 MyApplication.authCheck = true
-                                serverCheck.serverCheck {
-                                    signinAuth(emailCheck,passwordCheck)
-                                }
+//                                serverCheck.serverCheck {
+//                                    signinAuth(emailCheck,passwordCheck)
+//                                }
+                                signinAuth(emailCheck,passwordCheck)
                             }
                             var intent = Intent(activityContext,LoadingScreen::class.java)
                             ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
