@@ -43,7 +43,5 @@ class OTP_Activity : BaseClass(){
         }
     }
 
-    override fun onBackPressed() {
-       // super.onBackPressed()
-    }
+
 }
