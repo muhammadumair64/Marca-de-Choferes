@@ -351,11 +351,29 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                 }
                 catch (e: ApiException) {
                     e.printStackTrace()
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     Log.d("LoadingImage","API EXCEPTION ${e.localizedMessage}")
                 }
                 catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     Log.d("LoadingImage","No Internet EXCEPTION ${e.localizedMessage}")
 
 //                    withContext(Dispatchers.Main){
@@ -364,17 +382,43 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                 }
                 catch (e: ResponseException) {
                     println("ErrorResponse")
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     Log.d("LoadingImage","Response Exception ${e.localizedMessage}")
 
                 }
                 catch(e: SocketException){
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     Log.d("connection Exception","Connect Not Available")
 //                    withContext(Dispatchers.Main){
 //                        Toast.makeText(activityContext, "Comprueba tu conexión a Internet", Toast.LENGTH_SHORT).show()
 //                    }
                 }
                 catch(e:Exception){
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     Log.d("connection Exception", "Connect Not Available")
                 }
 
@@ -412,9 +456,19 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
 
                 }
                 catch (e: ApiException) {
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     e.printStackTrace()
                 }
               catch (e: NoInternetException) {
+
                 println("position 2")
                      e.printStackTrace()
 
@@ -425,6 +479,15 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                   }
                      }
                 catch (e: ResponseException) {
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     println("ErrorResponse")
                 }
                 catch(e: SocketException){
