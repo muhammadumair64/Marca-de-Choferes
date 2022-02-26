@@ -306,6 +306,15 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     }
                     println("ErrorResponse $response")
                 } catch (e: ApiException) {
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
                     println("position 2")
@@ -412,6 +421,15 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 
                 }
                 catch (e: ApiException) {
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     e.printStackTrace()
                 }
                 catch (e: NoInternetException) {
@@ -425,6 +443,15 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     }
                 }
                 catch (e: ResponseException) {
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     println("ErrorResponse")
 
                 }
@@ -476,6 +503,15 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                     }
                     e.printStackTrace()
                 } catch (e: ApiException) {
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
 
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
