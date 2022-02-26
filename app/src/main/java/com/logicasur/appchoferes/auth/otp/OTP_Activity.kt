@@ -23,6 +23,8 @@ class OTP_Activity : BaseClass(){
         super.onCreate(savedInstanceState)
         val language=Language()
         language.setLanguage(baseContext)
+        ResendApis.primaryColor="#7A59FC"
+        ResendApis.secondaryColor="#653FFB"
         binding = DataBindingUtil.setContentView(this,R.layout.activity_otp)
         initViews()
     }
