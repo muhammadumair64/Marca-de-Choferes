@@ -257,6 +257,15 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                     println("ErrorResponse $response")
                 }
                 catch (e: ApiException) {
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     e.printStackTrace()
                 }
                 catch (e: NoInternetException) {
@@ -283,6 +292,15 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                     }
                 }
                 catch(e: Exception){
+                    withContext(Dispatchers.Main) {
+                        MyApplication.authCheck = true
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+//                        Toast.makeText(
+//                            activityContext,
+//                            "Comprueba tu conexión a Internet" ,
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+                    }
                     Log.d("connection Exception", "Connect Not Available")
                 }
             }
