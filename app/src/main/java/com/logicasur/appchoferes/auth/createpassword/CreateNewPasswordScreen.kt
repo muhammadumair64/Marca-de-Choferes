@@ -15,7 +15,6 @@ import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.databinding.ActivityCreateNewPasswordScreenBinding
 import com.logicasur.appchoferes.mainscreen.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @AndroidEntryPoint

@@ -19,16 +19,18 @@ class TimeCalculator {
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
         var currentDate = sdf.format(Date())
         Log.d("check_the_time_i_store ", "$currentDate")
-        var datetest2 = getDateFromString(currentDate)
+        var currentTime = getDateFromString(currentDate)
 
 
         var lastTimetoGo = tinyDB.getString("goBackTime")
-        var datetest1 = getDateFromString(lastTimetoGo.toString())
+        var lastTime = getDateFromString(lastTimetoGo.toString())
 
         Log.d("check_the_time_i_store ", "$lastTimetoGo")
-        var finalTimeDiff = printDifference(datetest1, datetest2)
+        var finalTimeDiff = printDifference(lastTime, currentTime)
         Log.d("TIME_TESTING", " final test $finalTimeDiff")
-
+        if(finalTimeDiff < 0){
+            finalTimeDiff=Math.abs(finalTimeDiff)
+        }
         MyApplication.backPressCheck = 200
 
 

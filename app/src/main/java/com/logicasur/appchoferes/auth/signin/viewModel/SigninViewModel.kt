@@ -83,8 +83,9 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
             }
 
             signInBtn.setOnClickListener {
-                val emailCheck: String = email.text.toString()
+                var emailCheck: String = email.text.toString()
                 val passwordCheck= editPassword.text.toString()
+                emailCheck = emailCheck.trim()
                 val validater= emailCheck.isValidEmail()
 
                 if(emailCheck.isEmpty()){
@@ -98,7 +99,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
 //                                serverCheck.serverCheck {
 //                                    signinAuth(emailCheck,passwordCheck)
 //                                }
-                                signinAuth(emailCheck,passwordCheck)
+                                signinAuth(emailCheck.trim(),passwordCheck)
+                                Log.d("EmailTesting","SIGN IN EMAIL ${emailCheck.trim()}")
                             }
                             var intent = Intent(activityContext,LoadingScreen::class.java)
                             ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)

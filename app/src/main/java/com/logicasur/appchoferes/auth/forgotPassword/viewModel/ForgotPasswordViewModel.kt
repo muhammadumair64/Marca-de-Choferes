@@ -17,10 +17,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
-import com.logicasur.appchoferes.auth.forgotPassword.ForgotPasswordActivity
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.myApplication.MyApplication
@@ -47,7 +45,8 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
         binding.arrowBack.setBackgroundColor(Color.parseColor("#7A59FC"))
         binding.SubmitButton.setOnClickListener {
 
-                val emailCheck: String = binding.email.text.toString()
+                var emailCheck: String = binding.email.text.toString()
+                emailCheck = emailCheck.trim()
                  val validater= emailCheck.isValidEmail()
 
             if(emailCheck.isEmpty()){
@@ -90,9 +89,9 @@ class ForgotPasswordViewModel @Inject constructor(val authRepository: AuthReposi
             withContext(Dispatchers.IO) {
 
                 try {
-
+                    Log.d("EmailTesting","EmailWithOutSpaces--- ${name.trim()}")
                     val response =
-                        authRepository.retrofitInterface.forgotPassword(name!!)
+                        authRepository.retrofitInterface.forgotPassword(name.trim()!!)
 
                     println("SuccessResponse $response")
 

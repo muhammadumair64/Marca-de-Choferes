@@ -257,7 +257,7 @@ class ServiceUploadOfflineActivities : Service() {
             }
 
         } catch (e: ResponseException) {
-
+            serverCheck.mainRepository.deleteUnsentUploadActivity(roomId)
             println("ErrorResponse")
         } catch (e: ApiException) {
             e.printStackTrace()
@@ -313,7 +313,7 @@ class ServiceUploadOfflineActivities : Service() {
 
 
             } catch (e: ResponseException) {
-
+                serverCheck.mainRepository.deleteUnsentUploadActivity(roomId)
                 println("ErrorResponse")
             } catch (e: ApiException) {
                 e.printStackTrace()

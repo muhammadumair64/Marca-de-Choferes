@@ -12,7 +12,6 @@ import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.Extra.TinyDB
-import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.mainscreen.MainActivity

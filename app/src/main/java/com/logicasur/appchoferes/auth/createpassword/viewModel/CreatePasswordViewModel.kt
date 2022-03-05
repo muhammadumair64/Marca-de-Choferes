@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
-import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.auth.createpassword.CreateNewPasswordScreen

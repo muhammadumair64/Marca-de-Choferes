@@ -53,19 +53,19 @@
         </intent-filter>
         </activity>
         <activity
-            android:name=".auth.createpassword.CreateNewPasswordScreen"
+            android:name="com.logicasur.appchoferes.auth.createpassword.CreateNewPasswordScreen"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".auth.otp.OTP_Activity"
+            android:name="com.logicasur.appchoferes.auth.otp.OTP_Activity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".auth.forgotPassword.ForgotPasswordActivity"
+            android:name="com.logicasur.appchoferes.auth.forgotPassword.ForgotPasswordActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".auth.signin.SignInActivity"
+            android:name="com.logicasur.appchoferes.auth.signin.SignInActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity

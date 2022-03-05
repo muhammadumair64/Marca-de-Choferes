@@ -29,6 +29,8 @@ class OTP_Activity : BaseClass(){
         initViews()
     }
 
+
+
     fun initViews(){
         otpViewModel.fromSplash = intent.getBooleanExtra(ResendApis.splashToOtp,false)
         setGrad("#7A59FC","#653FFB",binding.SubmitButton)
