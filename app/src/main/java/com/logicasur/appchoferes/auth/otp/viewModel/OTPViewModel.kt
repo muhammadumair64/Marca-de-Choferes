@@ -249,6 +249,16 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
 
                     if (response != null ) {
                         tinyDB.putString("User",name)
+                        val lastUser= tinyDB.getString("LastUser")
+                        if(lastUser != null){
+                            if(name.trim() != lastUser.trim()){
+                                tinyDB.putString("ActivityDate","")
+                                tinyDB.putString("BreakDate","")
+                                tinyDB.putString("LastUser","")
+                            }
+
+                        }
+
                         authRepository.InsertSigninData(response)
                         Log.d("workinghour","${response.lastVar?.lastWorkedHoursTotal}")
                         tinyDB.putInt("lasttimework", response.lastVar?.lastWorkedHoursTotal ?: 0)

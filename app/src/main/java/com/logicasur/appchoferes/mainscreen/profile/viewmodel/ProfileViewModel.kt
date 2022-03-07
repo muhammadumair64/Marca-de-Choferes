@@ -140,9 +140,11 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
 
                         var lastworkDate= tinyDB.getString("ActivityDate")
                         var lastBreakDate = tinyDB.getString("BreakDate")
+                        var user = tinyDB.getString("User")
                         tinyDB.clear()
                         tinyDB.putString("ActivityDate",lastworkDate)
                         tinyDB.putString("BreakDate",lastBreakDate)
+                        tinyDB.putString("LastUser",user)
                         ResendApis.primaryColor = "#7A59FC"
                         ResendApis.secondaryColor = "#653FFB"
                         var intent = Intent(activityContext, SignInActivity::class.java)

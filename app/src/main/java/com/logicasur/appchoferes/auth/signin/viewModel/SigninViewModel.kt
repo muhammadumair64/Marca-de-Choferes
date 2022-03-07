@@ -199,6 +199,16 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
 
 
                     if(response!=null) {
+                       val lastUser= tinyDB.getString("LastUser")
+                        if(lastUser != null){
+                            if(userName.trim() != lastUser.trim()){
+                                tinyDB.putString("ActivityDate","")
+                                tinyDB.putString("BreakDate","")
+                                tinyDB.putString("LastUser","")
+                            }
+
+                        }
+
                         tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
                         tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
                         tinyDB.putInt("defaultWork",response.work!!.workingHours)
