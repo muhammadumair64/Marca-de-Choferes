@@ -134,6 +134,12 @@ class AuthRepository @Inject constructor(
         localDataBase.localDBDao().deleteState()
         localDataBase.localDBDao().deleteVehicle()
         localDataBase.localDBDao().deleteWork()
+
+
+        println("Room Data is Clear Now")
+    }
+
+    suspend fun clearUnsend(){
         localDataBase.unsentApiDao().apply {
             deleteAllUUnsentStateUpdateDetails()
             deleteAllUnsentLanguageUpdationDetails()
@@ -142,8 +148,6 @@ class AuthRepository @Inject constructor(
             deleteAllUnsentUploadActivityDetails()
             deleteAllUnsendApis()
         }
-
-        println("Room Data is Clear Now")
     }
 
     suspend fun forgotPassword(name: String): ForgotPasswordResponse {

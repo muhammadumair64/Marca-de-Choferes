@@ -674,6 +674,8 @@ class MainActivity : BaseClass() {
             override fun onHomePressed() {
 //                MyApplication.checkForResume=200
                 performSomeActionOnBackPress()
+                var check = tinyDB.getInt("SELECTEDACTIVITY")
+                Log.d("BreakComeTesting","$check")
                 // do something here...
 //                Toast.makeText(this@MainActivity, "Home is pressed", Toast.LENGTH_SHORT).show()
 //                finish()

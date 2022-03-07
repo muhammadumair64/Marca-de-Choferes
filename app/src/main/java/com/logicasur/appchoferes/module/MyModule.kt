@@ -175,7 +175,7 @@ class MyModule {
 
     @Provides
     @Singleton
-    fun provideTimeCalculator( mainRepository: MainRepository): TimeCalculator {
+    fun provideTimeCalculator(mainRepository: MainRepository): TimeCalculator {
 
         return TimeCalculator(mainRepository)
     }

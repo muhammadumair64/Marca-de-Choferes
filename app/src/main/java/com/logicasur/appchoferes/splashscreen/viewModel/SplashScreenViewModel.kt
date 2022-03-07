@@ -139,15 +139,16 @@ class SplashScreenViewModel @Inject constructor(
                         tinyDB.putInt("MaxBar", maxWork)
                         tinyDB.putBoolean("notify", notify)
 
-
-
-                        if(resendApis.serverCheck.mainRepository.isExistsUnsentUploadActivityDB()){
-
+                     val dataBaseCheck = resendApis.serverCheck.mainRepository.isExistsUnsentUploadActivityDB()
+                        println("IN CALCULATION BLOCK $dataBaseCheck")
+                        if(MyApplication.isExistInDB == true){
+                             println("IN CALCULATION BLOCK starting")
                             LoadingScreen.OnEndLoadingCallbacks!!.calculateTimeFromLocalDB()
 
+                            MyApplication.isExistInDB = false
                         }else{
                             getPreviousTime(response)
-//                        setObj(response)
+//                          setObj(response)
 
 
                             tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)

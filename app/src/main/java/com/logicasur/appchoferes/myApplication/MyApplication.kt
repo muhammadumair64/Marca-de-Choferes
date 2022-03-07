@@ -27,7 +27,7 @@ class MyApplication : Application() {
         checKForActivityLoading = false
         checKForSyncLoading = false
         authCheck = false
-
+        isExistInDB = false
     }
 
     companion object {
@@ -50,6 +50,7 @@ class MyApplication : Application() {
         var checKForActivityLoading by Delegates.notNull<Boolean>()
         var checKForSyncLoading by Delegates.notNull<Boolean>()
         var authCheck by Delegates.notNull<Boolean>()
+        var isExistInDB by Delegates.notNull<Boolean>()
     }
 
 

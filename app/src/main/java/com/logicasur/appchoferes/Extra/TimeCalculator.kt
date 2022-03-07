@@ -42,14 +42,14 @@ class TimeCalculator constructor(var mainRepository: MainRepository) {
         if (finalTimeDiff < 0) {
             Log.d("TimeTesting", "in Negative")
             if(response != null){
-                storeWrongData(response)
+                storeWrongData(response,tinyDB)
             }
 
             var checkTimer = tinyDB.getString("checkTimer")
             if (checkTimer == "workTime") {
-                var lastActivityDate = tinyDB.getString("ActivityDate")
-                if(lastActivityDate != null){
-                   lastActivityDate= lastActivityDate.replace("-","/")
+                var lastActivityDate = tinyDB.getString("WorkDate")
+                if(lastActivityDate != ""){
+                   lastActivityDate= lastActivityDate!!.replace("-","/")
                     var time = getDateFromString(lastActivityDate)
                     finalTimeDiff = printDifference(time, currentTime)
                 }else{
@@ -59,8 +59,8 @@ class TimeCalculator constructor(var mainRepository: MainRepository) {
             } else {
 
                 var lastActivityDate = tinyDB.getString("BreakDate")
-                if(lastActivityDate != null ){
-                    lastActivityDate= lastActivityDate.replace("-","/")
+                if(lastActivityDate != "" ){
+                    lastActivityDate= lastActivityDate!!.replace("-","/")
                     var time = getDateFromString(lastActivityDate)
                     finalTimeDiff = printDifference(time, currentTime)
                 }else{
@@ -165,29 +165,31 @@ class TimeCalculator constructor(var mainRepository: MainRepository) {
     }
 
 
-    fun storeWrongData(response: SigninResponse?) {
+    fun storeWrongData(response: SigninResponse?,tinyDB: TinyDB) {
         CoroutineScope(Job()).launch(Dispatchers.IO) {
             if (response?.lastVar != null) {
                 response.lastVar.apply {
-                    var lastVar = wrongDataReport(
-                        0, response.profile!!.name,
-                        LastWorkBreaklatitud,
-                        lastActivity,
-                        lastState,
-                        lastStateDate,
-                        lastStateLatitud,
-                        lastStateLongitud,
-                        lastWorkBreakDateEnd,
-                        lastWorkBreakDateIni,
-                        lastWorkBreakLongitud,
-                        lastWorkBreakTotal,
-                        lastWorkedHoursDateEnd,
-                        lastWorkedHoursDateIni,
-                        lastWorkedHoursLatitud,
-                        lastWorkedHoursLongitud,
-                        lastWorkedHoursTotal
-                    )
-                    mainRepository.insertWrongDataReport(lastVar)
+                    var lastVar = tinyDB.getString("User")?.let {
+                        wrongDataReport(
+                            0, it,
+                            LastWorkBreaklatitud,
+                            lastActivity,
+                            lastState,
+                            lastStateDate,
+                            lastStateLatitud,
+                            lastStateLongitud,
+                            lastWorkBreakDateEnd,
+                            lastWorkBreakDateIni,
+                            lastWorkBreakLongitud,
+                            lastWorkBreakTotal,
+                            lastWorkedHoursDateEnd,
+                            lastWorkedHoursDateIni,
+                            lastWorkedHoursLatitud,
+                            lastWorkedHoursLongitud,
+                            lastWorkedHoursTotal
+                        )
+                    }
+                    mainRepository.insertWrongDataReport(lastVar!!)
                 }
 
             }

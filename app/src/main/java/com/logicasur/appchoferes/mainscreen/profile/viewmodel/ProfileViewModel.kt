@@ -136,13 +136,14 @@ class ProfileViewModel @Inject constructor(val authRepository: AuthRepository,va
                         (activityContext as MainActivity).stopTimerBreak()
 
                         authRepository.clearData()
+                        authRepository.clearUnsend()
 //                        authRepository.clearWholeDB()
 
-                        var lastworkDate= tinyDB.getString("ActivityDate")
+                        var lastworkDate= tinyDB.getString("WorkDate")
                         var lastBreakDate = tinyDB.getString("BreakDate")
                         var user = tinyDB.getString("User")
                         tinyDB.clear()
-                        tinyDB.putString("ActivityDate",lastworkDate)
+                        tinyDB.putString("WorkDate",lastworkDate)
                         tinyDB.putString("BreakDate",lastBreakDate)
                         tinyDB.putString("LastUser",user)
                         ResendApis.primaryColor = "#7A59FC"

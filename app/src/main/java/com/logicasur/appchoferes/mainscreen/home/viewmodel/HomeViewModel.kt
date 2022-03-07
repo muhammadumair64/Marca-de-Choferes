@@ -254,6 +254,7 @@ class HomeViewModel @Inject constructor(
             (activityContext as MainActivity).initPermission() { secondStateAction() }
 
         }
+
         dataBinding?.TakeBreak?.setOnClickListener {
             Log.d("HomeViewModel...", "Click on take break.")
 
@@ -1338,7 +1339,8 @@ class HomeViewModel @Inject constructor(
                         if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
                             mainRepository.deleteAllUnsentStartWorkTime()
                         }
-                        mainRepository!!.insertUnsentStartWorkTime(
+                        Log.d("DATABASEATESTING"," IN TAKE work")
+                        mainRepository.insertUnsentStartWorkTime(
                             UnsentStartWorkTime(
                                 0,
                                 currentDate
@@ -1356,7 +1358,9 @@ class HomeViewModel @Inject constructor(
                         if (mainRepository.getUnsentStartBreakTimeDetails() != null) {
                             mainRepository.deleteAllUnsentStartBreakTime()
                         }
-                        mainRepository!!.insertUnsentStartBreakTime(
+
+                        Log.d("DATABASEATESTING"," IN TAKE BREAK")
+                        mainRepository.insertUnsentStartBreakTime(
                             UnsentStartBreakTime(
                                 0,
                                 currentDate
@@ -1393,11 +1397,12 @@ class HomeViewModel @Inject constructor(
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
         when(activity){
-           0-> tinyDB.putString("ActivityDate", currentDate)
+            0-> tinyDB.putString("WorkDate", currentDate)
             1-> tinyDB.putString("BreakDate", currentDate)
         }
 
-         currentDate= currentDate.replace(" ","T")
+        currentDate= currentDate.replace(" ","T")
+        tinyDB.putString("ActivityDate", currentDate)
         currentDate = currentDate + "Z"
         System.out.println(" startUpload" + currentDate)
         viewModelScope.launch {

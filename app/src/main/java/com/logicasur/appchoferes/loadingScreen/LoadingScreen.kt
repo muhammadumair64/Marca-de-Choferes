@@ -131,6 +131,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
     override fun calculateTimeFromLocalDB() {
+       println("IN CALCULATION BLOCK")
         loadingViewModel.getPreviousTimeWhenOffline(false)
     }
 

@@ -102,6 +102,8 @@ if(!serverAlertDialog.isShowing){
         var breakTime = tinyDB.getInt("breaksendtime")
 //        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
         var activity = tinyDB.getInt("SELECTEDACTIVITY")
+        Log.d("BreakComeTesting","when in loading $activity")
+
         when (activity) {
             0 -> {
                 getWorkTimeWhenOffline(fromWindow)
@@ -158,8 +160,9 @@ if(!serverAlertDialog.isShowing){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 checkStateByDataBase()
-                var date = mainRepository.getUnsentStartWorkTimeDetails()
-                var workDate = date.time
+
+
+                var workDate = mainRepository.getUnsentStartWorkTimeDetails().time
                 if (workDate!!.isNotEmpty()) {
                     workDate = workDate!!.split("Z").toTypedArray()[0]
                     workDate = workDate!!.replace(",", " ")
@@ -173,7 +176,7 @@ if(!serverAlertDialog.isShowing){
 
             timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultTime,null)
             Log.d("TimerTESTING", "Here")
-            if (fromWindow) {
+            if(fromWindow) {
                 var intent = Intent(activityContext, MainActivity::class.java)
                 ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
             }
@@ -186,16 +189,16 @@ if(!serverAlertDialog.isShowing){
 
     suspend fun checkStateByDataBase() {
 
-        var workDate = mainRepository.getUnsentStartWorkTimeDetails().time
-        if (workDate != null) {
-            workDate = workDate!!.split(",").toTypedArray()[0]
-            Log.d("workDate Is", "date is $workDate")
-        }
+//        var workDate = mainRepository.getUnsentStartWorkTimeDetails().time
+//        if (workDate != null) {
+//            workDate = workDate!!.split(",").toTypedArray()[0]
+//            Log.d("workDate Is", "date is $workDate")
+//        }
         Log.d("Dates is ", "$currentDate")
         var check = tinyDB.getInt("SELECTEDACTIVITY")
-        if (workDate != currentDate) {
-            check = 3
-        }
+//        if (workDate != currentDate) {
+//            check = 3
+//        }
 
 
         tinyDB.putInt("selectedStateByServer", check!!)
