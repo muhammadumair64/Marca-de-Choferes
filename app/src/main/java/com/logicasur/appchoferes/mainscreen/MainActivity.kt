@@ -858,7 +858,7 @@ class MainActivity : BaseClass() {
 
             try {
 //                unregisterReceiver(receiver)
-                timeCalculator.timeDifference(tinyDB, this, true, MyApplication.TotalBreak)
+                timeCalculator.timeDifference(tinyDB, this, true, MyApplication.TotalBreak,null)
                 MyApplication.checkForResume = 0
             } catch (e: Exception) {
                 MyApplication.checkForResume = 0

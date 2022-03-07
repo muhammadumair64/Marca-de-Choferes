@@ -606,7 +606,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                timerCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                timerCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak,response)
 
                 getWorkTime(response)
 
@@ -677,7 +677,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        timerCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        timerCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak,response)
     }
 
     fun getToken(){

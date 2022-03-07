@@ -4,8 +4,10 @@ import com.logicasur.appchoferes.localDataBase.LocalDataBase
 import com.logicasur.appchoferes.network.SafeApiRequest
 import com.logicasur.appchoferes.network.logoutResponse.MessageResponse
 import com.logicasur.appchoferes.network.retrofitInterfaces.RetrofitInterface
+import com.logicasur.appchoferes.network.signinResponse.LastVar
 import com.logicasur.appchoferes.network.signinResponse.Notify
 import com.logicasur.appchoferes.network.unsentApis.*
+import com.logicasur.appchoferes.network.wrongData.wrongDataReport
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -142,6 +144,10 @@ class MainRepository @Inject constructor(
     }
 
 
+    suspend fun deleteAllApis(){
+        localDataBase.unsentApiDao().deleteAllUnsendApis()
+    }
+
 
     suspend fun deleteAllUnsentStartWorkTime()
     {
@@ -162,6 +168,11 @@ class MainRepository @Inject constructor(
     suspend fun getUnsentStartBreakTimeDetails(): UnsentStartBreakTime
     {
         return localDataBase.unsentApiDao().getUnsentStartBreakTimeDetails()
+    }
+
+
+    suspend fun insertWrongDataReport(lastVar:wrongDataReport){
+        localDataBase.unsentApiDao().insertWorngDataReport(lastVar)
     }
 
 }

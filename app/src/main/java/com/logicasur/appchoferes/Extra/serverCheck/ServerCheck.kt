@@ -96,8 +96,8 @@ class ServerCheck constructor(
                         MyApplication.authCheck = false
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                     }else{
-                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                            .show()
+//                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+//                            .show()
                         endLoading()
                     }
 
@@ -112,8 +112,8 @@ class ServerCheck constructor(
                         MyApplication.authCheck = false
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                     }else{
-                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                            .show()
+//                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+//                            .show()
                         endLoading()
                     }
                 }
@@ -128,8 +128,8 @@ class ServerCheck constructor(
                         MyApplication.authCheck = false
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                     } else {
-                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                            .show()
+//                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+//                            .show()
                         endLoading()
                     }
                 }
@@ -143,8 +143,8 @@ class ServerCheck constructor(
                         MyApplication.authCheck = false
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
                     } else {
-                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
-                            .show()
+//                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
+//                            .show()
                         endLoading()
                     }
                 }

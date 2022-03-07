@@ -61,9 +61,7 @@ class SplashScreenViewModel @Inject constructor(
         activityContext = context
         tinyDB = TinyDB(context)
         tagsForToast()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            timetesting()
-        }
+
 
     }
 
@@ -458,7 +456,7 @@ class SplashScreenViewModel @Inject constructor(
                     tinyDB,
                     activityContext!!,
                     false,
-                    response.work!!.workBreak
+                    response.work!!.workBreak,response
                 )
 
                 getWorkTime(response)
@@ -529,7 +527,7 @@ class SplashScreenViewModel @Inject constructor(
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak,response)
     }
 
 
@@ -589,16 +587,6 @@ class SplashScreenViewModel @Inject constructor(
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun timetesting(){
-//        val f = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss")
-//        f.timeZone = TimeZone.getTimeZone("UTC")
-//        println("Hello world Pakistan Times "+f.format(Date()))
-
-        val now: OffsetDateTime = OffsetDateTime.now(ZoneOffset.UTC)
-        var time =Instant.now().toString()
-        println("Hello world Pakistan Times $time   ... $now")
-    }
 
 
 

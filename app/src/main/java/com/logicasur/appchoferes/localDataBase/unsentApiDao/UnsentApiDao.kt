@@ -3,7 +3,9 @@ package com.logicasur.appchoferes.localDataBase.unsentApiDao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.logicasur.appchoferes.network.signinResponse.LastVar
 import com.logicasur.appchoferes.network.unsentApis.*
+import com.logicasur.appchoferes.network.wrongData.wrongDataReport
 
 @Dao
 interface UnsentApiDao {
@@ -68,8 +70,8 @@ interface UnsentApiDao {
     @Query("DELETE FROM UnsentStatusOrUploadActivity WHERE roomDBId = :id")
     fun deleteUnsentUploadActivity(id: Int)
 
-
-
+    @Query("DELETE FROM UnsentStatusOrUploadActivity")
+    fun deleteAllUnsendApis()
 
     // Check Exists
 
@@ -116,6 +118,11 @@ interface UnsentApiDao {
 
     @Query("SELECT * from UnsentStartBreakTime")
     fun getUnsentStartBreakTimeDetails(): UnsentStartBreakTime
+
+
+
+@Insert
+fun insertWorngDataReport(lastVar :wrongDataReport)
 
 
 }

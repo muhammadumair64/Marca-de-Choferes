@@ -3,19 +3,30 @@ package com.logicasur.appchoferes.Extra
 import android.content.Context
 import android.util.Log
 import com.logicasur.appchoferes.mainscreen.MainActivity
+import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
+import com.logicasur.appchoferes.network.signinResponse.LastVar
+import com.logicasur.appchoferes.network.signinResponse.SigninResponse
+import com.logicasur.appchoferes.network.wrongData.wrongDataReport
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.schedule
 
-class TimeCalculator {
+class TimeCalculator constructor(var mainRepository: MainRepository) {
 
 
-
-    fun timeDifference(tinyDB: TinyDB, context: Context, resumeCheck: Boolean, workBreak: Int) {
-
-
+    fun timeDifference(
+        tinyDB: TinyDB,
+        context: Context,
+        resumeCheck: Boolean,
+        workBreak: Int,
+        response: SigninResponse?
+    ) {
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
         var currentDate = sdf.format(Date())
         Log.d("check_the_time_i_store ", "$currentDate")
@@ -28,9 +39,37 @@ class TimeCalculator {
         Log.d("check_the_time_i_store ", "$lastTimetoGo")
         var finalTimeDiff = printDifference(lastTime, currentTime)
         Log.d("TIME_TESTING", " final test $finalTimeDiff")
-//        if(finalTimeDiff < 0){
-//            finalTimeDiff=Math.abs(finalTimeDiff)
-//        }
+        if (finalTimeDiff < 0) {
+            Log.d("TimeTesting", "in Negative")
+            if(response != null){
+                storeWrongData(response)
+            }
+
+            var checkTimer = tinyDB.getString("checkTimer")
+            if (checkTimer == "workTime") {
+                var lastActivityDate = tinyDB.getString("ActivityDate")
+                if(lastActivityDate != null){
+                   lastActivityDate= lastActivityDate.replace("-","/")
+                    var time = getDateFromString(lastActivityDate)
+                    finalTimeDiff = printDifference(time, currentTime)
+                }else{
+                    finalTimeDiff = 0
+                }
+
+            } else {
+
+                var lastActivityDate = tinyDB.getString("BreakDate")
+                if(lastActivityDate != null ){
+                    lastActivityDate= lastActivityDate.replace("-","/")
+                    var time = getDateFromString(lastActivityDate)
+                    finalTimeDiff = printDifference(time, currentTime)
+                }else{
+                    finalTimeDiff = 0
+                }
+
+            }
+
+        }
         MyApplication.backPressCheck = 200
 
 
@@ -81,7 +120,6 @@ class TimeCalculator {
 
     }
 
-
     //1 minute = 60 seconds
     //1 hour = 60 x 60 = 3600
     //1 day = 3600 x 24 = 86400
@@ -126,4 +164,35 @@ class TimeCalculator {
         return formatter.parse(dateStr) as Date
     }
 
+
+    fun storeWrongData(response: SigninResponse?) {
+        CoroutineScope(Job()).launch(Dispatchers.IO) {
+            if (response?.lastVar != null) {
+                response.lastVar.apply {
+                    var lastVar = wrongDataReport(
+                        0, response.profile!!.name,
+                        LastWorkBreaklatitud,
+                        lastActivity,
+                        lastState,
+                        lastStateDate,
+                        lastStateLatitud,
+                        lastStateLongitud,
+                        lastWorkBreakDateEnd,
+                        lastWorkBreakDateIni,
+                        lastWorkBreakLongitud,
+                        lastWorkBreakTotal,
+                        lastWorkedHoursDateEnd,
+                        lastWorkedHoursDateIni,
+                        lastWorkedHoursLatitud,
+                        lastWorkedHoursLongitud,
+                        lastWorkedHoursTotal
+                    )
+                    mainRepository.insertWrongDataReport(lastVar)
+                }
+
+            }
+
+
+        }
+    }
 }

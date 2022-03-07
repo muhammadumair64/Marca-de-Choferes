@@ -123,7 +123,7 @@ if(!serverAlertDialog.isShowing){
 
 
                     var defaultBreak = tinyDB.getInt("defaultBreak")
-                    timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultBreak)
+                    timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultBreak,null)
 
                     getWorkTimeWhenOffline(fromWindow)
                 }
@@ -171,7 +171,7 @@ if(!serverAlertDialog.isShowing){
             }
             var defaultTime = tinyDB.getInt("defaultWork")
 
-            timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultTime)
+            timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultTime,null)
             Log.d("TimerTESTING", "Here")
             if (fromWindow) {
                 var intent = Intent(activityContext, MainActivity::class.java)

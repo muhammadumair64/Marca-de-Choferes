@@ -1392,8 +1392,12 @@ class HomeViewModel @Inject constructor(
 
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
+        when(activity){
+           0-> tinyDB.putString("ActivityDate", currentDate)
+            1-> tinyDB.putString("BreakDate", currentDate)
+        }
+
          currentDate= currentDate.replace(" ","T")
-        tinyDB.putString("ActivityDate", currentDate)
         currentDate = currentDate + "Z"
         System.out.println(" startUpload" + currentDate)
         viewModelScope.launch {

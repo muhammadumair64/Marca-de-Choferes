@@ -700,7 +700,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
                 }
                 tinyDB.putString("goBackTime", breakDate)
                 tinyDB.putInt("ServerBreakTime", response.lastVar.lastWorkBreakTotal!!)
-                timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+                timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak,response)
 
                 getWorkTime(response)
 
@@ -773,7 +773,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
         }
         tinyDB.putString("goBackTime", workDate)
 
-        timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
+        timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak,response)
     }
 
 
