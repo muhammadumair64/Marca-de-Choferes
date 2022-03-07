@@ -207,7 +207,7 @@ class OTPViewModel @Inject constructor(val authRepository: AuthRepository,
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "2"
+        var appVersion: String? = "3"
         var appBuild: String? = Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER

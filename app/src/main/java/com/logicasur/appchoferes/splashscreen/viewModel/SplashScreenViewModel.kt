@@ -2,9 +2,11 @@ package com.logicasur.appchoferes.splashscreen.viewModel
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,6 +34,9 @@ import kotlinx.coroutines.withContext
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
@@ -56,7 +61,9 @@ class SplashScreenViewModel @Inject constructor(
         activityContext = context
         tinyDB = TinyDB(context)
         tagsForToast()
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            timetesting()
+        }
 
     }
 
@@ -581,6 +588,17 @@ class SplashScreenViewModel @Inject constructor(
 
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun timetesting(){
+//        val f = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss")
+//        f.timeZone = TimeZone.getTimeZone("UTC")
+//        println("Hello world Pakistan Times "+f.format(Date()))
+
+        val now: OffsetDateTime = OffsetDateTime.now(ZoneOffset.UTC)
+        var time =Instant.now().toString()
+        println("Hello world Pakistan Times $time   ... $now")
+    }
 
 
 

@@ -154,7 +154,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         var model: String? = Build.MODEL
         var operatingSystem: String? = "android"
         var osVersion: String? = getAndroidVersion()
-        var appVersion: String? = "2"
+        var appVersion: String? = "3"
         var appBuild: String? =  Build.ID
         var platform: String? = "Android"
         var manufacturer: String? = Build.MANUFACTURER
@@ -679,7 +679,6 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         tinyDB.putString("goBackTime", workDate)
         timerCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak)
     }
-
 
     fun getToken(){
         var Token = MyFirebaseMessagingService.getToken(activityContext!!)

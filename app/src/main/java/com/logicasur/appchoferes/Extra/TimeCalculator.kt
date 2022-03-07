@@ -28,9 +28,9 @@ class TimeCalculator {
         Log.d("check_the_time_i_store ", "$lastTimetoGo")
         var finalTimeDiff = printDifference(lastTime, currentTime)
         Log.d("TIME_TESTING", " final test $finalTimeDiff")
-        if(finalTimeDiff < 0){
-            finalTimeDiff=Math.abs(finalTimeDiff)
-        }
+//        if(finalTimeDiff < 0){
+//            finalTimeDiff=Math.abs(finalTimeDiff)
+//        }
         MyApplication.backPressCheck = 200
 
 
