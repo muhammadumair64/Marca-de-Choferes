@@ -141,7 +141,7 @@ class SplashScreenViewModel @Inject constructor(
 
                      val dataBaseCheck = resendApis.serverCheck.mainRepository.isExistsUnsentUploadActivityDB()
                         println("IN CALCULATION BLOCK $dataBaseCheck")
-                        if(MyApplication.isExistInDB == true){
+                        if(dataBaseCheck){
                              println("IN CALCULATION BLOCK starting")
                             Log.d("IN CALCULATION BLOCK starting","in true block")
                             LoadingScreen.OnEndLoadingCallbacks!!.calculateTimeFromLocalDB()
