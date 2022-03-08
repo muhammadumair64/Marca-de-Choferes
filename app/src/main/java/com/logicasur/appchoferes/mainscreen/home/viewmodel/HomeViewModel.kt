@@ -64,6 +64,7 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import kotlin.concurrent.schedule
+import android.provider.Settings.Global.getString
 
 
 @HiltViewModel
@@ -283,6 +284,7 @@ class HomeViewModel @Inject constructor(
 
 
         }
+
         dataBinding?.initialState?.setOnClickListener {
             tinyDB.putBoolean("STATEAPI", false)
 
@@ -495,6 +497,9 @@ class HomeViewModel @Inject constructor(
                 Log.d("BREAKTIMERTEST", "3")
                 intent.stopTimerBreak()
             }
+            val myStatus: String = activityContext!!.getResources().getString(com.logicasur.appchoferes.R.string.select_status)
+            dataBinding?.statusSelected!!.text= myStatus
+
 
             goToActivState()
             Log.d("HomeViewModel...", "Call hit Api Activity(0)")
