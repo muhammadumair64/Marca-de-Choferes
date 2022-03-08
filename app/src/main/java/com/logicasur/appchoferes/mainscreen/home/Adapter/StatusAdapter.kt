@@ -36,17 +36,17 @@ class StatusAdapter (var statusArrayList: ArrayList<String>, val onclickItem: On
 ///     holder.statusBinding.close.setBackgroundResource(R.drawable.ic_check_circle)
         holder.statusBinding.searchedText.setTextColor(Color.parseColor("#C6C6C6"))
         holder.statusBinding.closebg.setBackgroundColor(Color.parseColor("#979797"))
-
+//        holder.statusBinding.status.isClickable = true
        var selected=tinyDB.getInt("state")
          selected = selected.minus(1)
         if(selected==position){
             holder.statusBinding.searchedText.setTextColor(Color.BLACK)
             holder.statusBinding.closebg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+
         }
 
 
         holder.statusBinding.status.setOnClickListener {
-
             holder.statusBinding.searchedText.setTextColor(Color.BLACK)
             holder.statusBinding.closebg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
             onclickItem.statusSelection(position)

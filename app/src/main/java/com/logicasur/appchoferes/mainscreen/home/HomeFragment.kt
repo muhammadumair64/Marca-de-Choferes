@@ -279,19 +279,25 @@ class HomeFragment : Fragment(), OnclickItem {
 
 
     override fun statusSelection(position: Int) {
-        viewModel.checkNetConnection()
-        dialog.dismiss()
-        var Position = position.plus(1)
-        var previous = tinyDB.getInt("state")
-        if (previous != 0) {
-            tinyDB.putInt("previous_state", previous)
-        }
 
-        tinyDB.putInt("state", Position)
+
+        var selected=tinyDB.getInt("state")
+        selected = selected.minus(1)
+        Log.d("StatusTesting","---- $selected-----$position")
+        if(selected != position) {
+            dialog.dismiss()
+            viewModel.checkNetConnection()
+            var Position = position.plus(1)
+            var previous = tinyDB.getInt("state")
+            if (previous != 0) {
+                tinyDB.putInt("previous_state", previous)
+            }
+
+            tinyDB.putInt("state", Position)
 //        viewModel.selectState(position)
-        viewModel.hitStateAPI(position)
-        (activity as MainActivity).getLocation(requireContext())
-
+            viewModel.hitStateAPI(position)
+            (activity as MainActivity).getLocation(requireContext())
+        }
     }
 
 
