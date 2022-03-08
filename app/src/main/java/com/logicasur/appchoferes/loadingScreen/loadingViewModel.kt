@@ -43,7 +43,7 @@ class loadingViewModel @Inject constructor(
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
         try {
-            if(!networkAlertDialog.isShowing){
+            if (!networkAlertDialog.isShowing) {
                 networkAlertDialog.show()
             }
 
@@ -74,9 +74,9 @@ class loadingViewModel @Inject constructor(
         serverAlertDialog.setView(PopupView)
         Log.d("POPUP_TESTING", " In VIEW MODEL")
         try {
-if(!serverAlertDialog.isShowing){
-    serverAlertDialog.show()
-}
+            if (!serverAlertDialog.isShowing) {
+                serverAlertDialog.show()
+            }
 
 
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
@@ -102,7 +102,7 @@ if(!serverAlertDialog.isShowing){
         var breakTime = tinyDB.getInt("breaksendtime")
 //        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
         var activity = tinyDB.getInt("SELECTEDACTIVITY")
-        Log.d("BreakComeTesting","when in loading $activity")
+        Log.d("BreakComeTesting", "when in loading $activity")
 
         when (activity) {
             0 -> {
@@ -125,7 +125,13 @@ if(!serverAlertDialog.isShowing){
 
 
                     var defaultBreak = tinyDB.getInt("defaultBreak")
-                    timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultBreak,null)
+                    timeCalculator.timeDifference(
+                        tinyDB,
+                        activityContext!!,
+                        false,
+                        defaultBreak,
+                        null
+                    )
 
                     getWorkTimeWhenOffline(fromWindow)
                 }
@@ -174,13 +180,13 @@ if(!serverAlertDialog.isShowing){
             }
             var defaultTime = tinyDB.getInt("defaultWork")
 
-            timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultTime,null)
+            timeCalculator.timeDifference(tinyDB, activityContext!!, false, defaultTime, null)
             Log.d("TimerTESTING", "Here")
-            if(fromWindow) {
+            if (fromWindow) {
                 var intent = Intent(activityContext, MainActivity::class.java)
                 ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
             }
-       
+
 
         }
 

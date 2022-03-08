@@ -143,6 +143,7 @@ class SplashScreenViewModel @Inject constructor(
                         println("IN CALCULATION BLOCK $dataBaseCheck")
                         if(MyApplication.isExistInDB == true){
                              println("IN CALCULATION BLOCK starting")
+                            Log.d("IN CALCULATION BLOCK starting","in true block")
                             LoadingScreen.OnEndLoadingCallbacks!!.calculateTimeFromLocalDB()
 
                             MyApplication.isExistInDB = false
@@ -150,7 +151,7 @@ class SplashScreenViewModel @Inject constructor(
                             getPreviousTime(response)
 //                          setObj(response)
 
-
+                            Log.d("IN CALCULATION BLOCK starting","in else block")
                             tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
 
 //                        tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
