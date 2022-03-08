@@ -34,7 +34,7 @@ class TimeCalculator constructor(var mainRepository: MainRepository) {
 
 
         var lastTimetoGo = tinyDB.getString("goBackTime")
-        var lastTime = getDateFromString(lastTimetoGo.toString())
+        var lastTime = getDateFromString("2022/03/09 12:22:35")
 
         Log.d("check_the_time_i_store ", "$lastTimetoGo")
         var finalTimeDiff = printDifference(lastTime, currentTime)
