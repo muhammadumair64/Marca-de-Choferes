@@ -136,7 +136,7 @@ class ServerCheck constructor(
             } catch (e: Exception) {
                 myTimer.cancel()
                 myTimer.purge()
-                Log.d("Exception", "Exception..${e.localizedMessage}")
+                Log.d("Exception", "first place Exception..${e.localizedMessage}")
                 withContext(Dispatchers.Main)
                 {
                     if (MyApplication.authCheck) {
@@ -275,7 +275,7 @@ class ServerCheck constructor(
 
             } catch (e: Exception) {
 
-                Log.d(TAG, " Exception..${e.localizedMessage}")
+                Log.d(TAG, "2nd place  Exception..${e.localizedMessage}")
 
             }
 
@@ -463,7 +463,7 @@ class ServerCheck constructor(
 
             } catch (e: Exception) {
 
-                Log.d("Exception", "Exception..${e.localizedMessage}")
+                Log.d("Exception", " last Place Exception..${e.localizedMessage}")
 
             }
 

@@ -1316,7 +1316,7 @@ class HomeViewModel @Inject constructor(
         }
 
     }
-//        ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
+
 
 }
 

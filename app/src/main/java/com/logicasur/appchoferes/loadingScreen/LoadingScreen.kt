@@ -158,7 +158,18 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
     override fun onDestroy() {
+        try{
+            networkAlertDialog?.dismiss()
+            serverAlertDialog?.dismiss()
+
+
+        }catch (e:Exception){
+            e.localizedMessage
+        }
         super.onDestroy()
+
+
+
         Log.d("LOADING_TESTING","Yes")
     }
 
@@ -171,6 +182,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
         }
 
         runOnUiThread {
+            Log.d("STATUS_TESTING","IN WINDOW")
             networkDialogBuilder = AlertDialog.Builder(this)
             val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
             networkAlertDialog= networkDialogBuilder.create()
@@ -194,13 +206,13 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
                     loadingViewModel.getPreviousTimeWhenOffline(true)
                 }
                 else{
-                    finish()
+
                     try{
                         (activity as MainActivity).updatePendingData(true)
                     } catch (e:Exception){
                         Log.d("IN Starting main","ERROR")
                     }
-
+                    finish()
 
                 }
 
