@@ -1,12 +1,12 @@
 package com.logicasur.appchoferes.Extra.serverCheck
 
 import android.util.Log
-import android.widget.Toast
 import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
+import com.logicasur.appchoferes.mainscreen.MainActivity
 import com.logicasur.appchoferes.mainscreen.repository.MainRepository
 import com.logicasur.appchoferes.myApplication.MyApplication
 import com.logicasur.appchoferes.network.GeoPosition
@@ -100,6 +100,13 @@ class ServerCheck constructor(
 //                            .show()
                         endLoading()
                     }
+                    if(MyApplication.syncCheck){
+                        delay(3000)
+                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                        MyApplication.syncCheck = false
+
+
+                    }
 
                 }
             } catch (e: SocketException) {
@@ -115,6 +122,13 @@ class ServerCheck constructor(
 //                        Toast.makeText(MyApplication.appContext, TAG2, Toast.LENGTH_SHORT)
 //                            .show()
                         endLoading()
+                    }
+                    if(MyApplication.syncCheck){
+                        delay(3000)
+                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                        MyApplication.syncCheck = false
+
+
                     }
                 }
 
@@ -132,6 +146,15 @@ class ServerCheck constructor(
 //                            .show()
                         endLoading()
                     }
+                    if(MyApplication.syncCheck){
+                        CoroutineScope(Job()).launch {
+                            withContext(Dispatchers.Main) {
+                                delay(3000)
+                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                                MyApplication.syncCheck = false
+                            }
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 myTimer.cancel()
@@ -147,6 +170,15 @@ class ServerCheck constructor(
 //                            .show()
                         endLoading()
                     }
+
+                    if(MyApplication.syncCheck){
+                        delay(3000)
+                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                                MyApplication.syncCheck = false
+
+
+                    }
+
                 }
             }
 
@@ -219,7 +251,7 @@ class ServerCheck constructor(
                                     )
                                 )
 
-                                Log.d("STATE_TESTING", "IN END LOADING")
+                                Log.d("STATE_TESTING", "IN END LOeADING")
 
                                 runOnMain {
                                     LoadingScreen.OnEndLoadingCallbacks?.endLoading()
@@ -327,7 +359,7 @@ class ServerCheck constructor(
         Log.d(TAG, "Server Check function")
 
 
-        mainActivityCall(serverCheckTimer, apiCall)
+        mainActivityCall(serverCheckTimer, apiCall,toSaveInDB)
 
 
     }
@@ -335,7 +367,8 @@ class ServerCheck constructor(
 
     private fun mainActivityCall(
         serverCheckTimer: Timer,
-        apiCall: (serverAction: () -> Unit) -> Unit
+        apiCall: (serverAction: () -> Unit) -> Unit,
+        toSaveInDB: Boolean
     ) {
         tinyDB.getString("Cookie")?.let { token ->
 
@@ -393,6 +426,10 @@ class ServerCheck constructor(
                         }
                     }
                 } catch (e: Exception) {
+                    serverCheckTimer.cancel()
+                  if(toSaveInDB){
+                      (MyApplication.activityContext as MainActivity).updatePendingData(true)
+                  }
                     Log.d("EXCEPTION_TESTING", " ${e.localizedMessage}")
                 }
 

@@ -294,7 +294,7 @@ class HomeFragment : Fragment(), OnclickItem {
             }
 
             tinyDB.putInt("state", Position)
-//        viewModel.selectState(position)
+             viewModel.selectState(position)
             viewModel.hitStateAPI(position)
             (activity as MainActivity).getLocation(requireContext())
         }
@@ -312,6 +312,7 @@ class HomeFragment : Fragment(), OnclickItem {
 
     override fun onResume() {
         super.onResume()
+        Log.d("STATE_TESTING","In On Resume")
         var position = tinyDB.getInt("state")
         if (position != 0) {
             position = position.minus(1)
@@ -360,7 +361,8 @@ class HomeFragment : Fragment(), OnclickItem {
                 if (stateCheck) {
                     var position = tinyDB.getInt("previous_state")
                     if (position != 0) {
-                        tinyDB.putInt("state", position)
+                       tinyDB.putInt("state", position)
+                        viewModel.selectState(position-1)
                     }
 
                 }

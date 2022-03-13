@@ -60,7 +60,7 @@ class ResendApis constructor(
                 )
             ) {
                 Log.d("ResendApis", "start Service")
-                MyApplication.isExistInDB = true
+
                 startForegroundService(
                     MyApplication.appContext,
                     ServiceUploadOfflineActivities.getStartIntent(
@@ -68,8 +68,6 @@ class ResendApis constructor(
                         tinyDB
                     )
                 )
-            }else{
-MyApplication.isExistInDB = false
             }
         }
 

@@ -208,6 +208,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
                 else{
 
                     try{
+                        Log.d("STATUS_TESTING","Before entring DaTa base")
                         (activity as MainActivity).updatePendingData(true)
                     } catch (e:Exception){
                         Log.d("IN Starting main","ERROR")

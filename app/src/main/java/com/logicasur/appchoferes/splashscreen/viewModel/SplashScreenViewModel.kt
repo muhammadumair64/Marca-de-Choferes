@@ -67,6 +67,8 @@ class SplashScreenViewModel @Inject constructor(
 
     fun checkData() {
         MyApplication.checKForSyncLoading = true
+
+        MyApplication.syncCheck = true
         Log.d("SERVICE_TESTING","SplashScreen")
         resendApis.checkNetAndUpload()
         myTimer = Timer()
@@ -146,7 +148,7 @@ class SplashScreenViewModel @Inject constructor(
                             Log.d("IN CALCULATION BLOCK starting","in true block")
                             LoadingScreen.OnEndLoadingCallbacks!!.calculateTimeFromLocalDB()
 
-                            MyApplication.isExistInDB = false
+
                         }else{
                             getPreviousTime(response)
 //                          setObj(response)
@@ -408,6 +410,9 @@ class SplashScreenViewModel @Inject constructor(
                 } catch (e: SocketException) {
                     Log.d("connection Exception", "Connect Not Available")
                     LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                }
+                catch (e:Exception){
+                    Log.d("connection Exception", "Connect Not Available")
                 }
             }
         }

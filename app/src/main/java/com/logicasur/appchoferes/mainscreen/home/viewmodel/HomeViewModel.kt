@@ -1050,7 +1050,6 @@ class HomeViewModel @Inject constructor(
         geoPosition: GeoPosition?,
         vehicle: Vehicle?, action: () -> Unit
     ) {
-
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 if (mainRepository.isExistsUnsentUploadActivityDB()) {
@@ -1308,9 +1307,10 @@ class HomeViewModel @Inject constructor(
 //    }
     fun checkNetConnection() {
         if (CheckConnection.netCheck(activityContext!!)) {
+            Log.d("StatusTesting","IN FUNCTION HOME VIEW MODEL LINE 1311")
             if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
-    viewModelScope.launch(Dispatchers.IO) {
-    if(!mainRepository!!.isExistsUnsentUploadActivityDB()){
+       viewModelScope.launch(Dispatchers.IO) {
+       if(!mainRepository!!.isExistsUnsentUploadActivityDB()){
         withContext(Dispatchers.Main){
             ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
         }
