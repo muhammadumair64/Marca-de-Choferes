@@ -38,7 +38,7 @@ class MyModule {
 
     var context: Context? = null
 
-    val baseUrl = "https://logicasuro.com:27123/app/v1/"
+    val baseUrl = "https://logicasur.com:27123/app/v1/"
 
     @Singleton
     @Provides
