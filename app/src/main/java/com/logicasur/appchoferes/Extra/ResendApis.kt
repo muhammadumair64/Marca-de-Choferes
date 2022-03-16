@@ -13,6 +13,7 @@ import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.*
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
+import java.lang.Exception
 
 
 class ResendApis constructor(
@@ -32,6 +33,14 @@ class ResendApis constructor(
 
     fun checkNetAndUpload() {
         tinyDB.putBoolean("PENDINGCHECK", true)
+        if(checkNetTimer != null){
+            try {
+                checkNetTimer?.cancel()
+                checkNetTimer?.purge()
+            }catch (e : Exception){
+                Log.d("SERVICE_TESTING","Exception in cancelling timer "+e.localizedMessage)
+            }
+        }
         checkNetTimer = Timer()
         checkNetTimer?.schedule(object : TimerTask() {
             override fun run() {
