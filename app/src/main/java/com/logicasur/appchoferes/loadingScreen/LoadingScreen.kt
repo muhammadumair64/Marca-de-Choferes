@@ -174,7 +174,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
 
-    fun createPopup(myTimer: Timer?) {
+       fun createPopup(myTimer: Timer?) {
         if(networkAlertDialog != null){
             if(networkAlertDialog!!.isShowing){
                 networkAlertDialog!!.dismiss()

@@ -63,7 +63,7 @@ class ServerCheck constructor(
                 }
 
             }
-        }, 0, 12000)
+        }, 0, 5000)
 
         tagsForToast()
         Log.d(TAG, "Server Check function")
@@ -351,7 +351,7 @@ class ServerCheck constructor(
                     }
 
                 }
-            }, 0, 10000)
+            }, 0, 3000)
         }
 
 
@@ -413,7 +413,7 @@ class ServerCheck constructor(
                                         }
 
                                     }
-                                }, 0, 20000)
+                                }, 0, 13000)
 
                             }
                             apiCall() {
