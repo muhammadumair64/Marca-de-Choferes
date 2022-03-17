@@ -175,11 +175,11 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
 
        fun createPopup(myTimer: Timer?) {
-        if(networkAlertDialog != null){
-            if(networkAlertDialog!!.isShowing){
-                networkAlertDialog!!.dismiss()
-            }
-        }
+//        if(networkAlertDialog != null){
+//            if(networkAlertDialog!!.isShowing){
+//                networkAlertDialog!!.dismiss()
+//            }
+//        }
 
         runOnUiThread {
             Log.d("STATUS_TESTING","IN WINDOW")
