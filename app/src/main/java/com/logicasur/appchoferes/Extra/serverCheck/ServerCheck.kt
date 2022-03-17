@@ -81,7 +81,6 @@ class ServerCheck constructor(
                     myTimer.cancel()
                     myTimer.purge()
                     Log.d(TAG, "Server is working fine")
-
                     action()
                 }
 
