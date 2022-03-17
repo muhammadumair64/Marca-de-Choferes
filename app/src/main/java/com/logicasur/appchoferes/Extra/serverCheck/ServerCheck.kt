@@ -427,7 +427,14 @@ class ServerCheck constructor(
                 } catch (e: Exception) {
                     serverCheckTimer.cancel()
                   if(toSaveInDB){
-                      (MyApplication.activityContext as MainActivity).updatePendingData(true)
+                      if(tinyDB.getBoolean("STATEAPI")){
+                          (MyApplication.activityContext as MainActivity).updatePendingData(true)
+
+                      }else{
+                          (MyApplication.activityContext as MainActivity).updatePendingData(false)
+
+                      }
+
                   }
                     Log.d("EXCEPTION_TESTING", " ${e.localizedMessage}")
                 }
