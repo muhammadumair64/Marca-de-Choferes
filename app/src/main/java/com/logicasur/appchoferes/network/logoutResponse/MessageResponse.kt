@@ -1,12 +1,12 @@
 package com.logicasur.appchoferes.network.logoutResponse
 
 data class MessageResponse(
-    val message: String
+    val msg: String
 ){
 
 
     fun checkIfMessageIsOkay(): Boolean{
-        return message == "ok"
+        return msg == "ok"
     }
 
 }

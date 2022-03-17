@@ -152,10 +152,8 @@ interface RetrofitInterface {
     suspend fun  getSplashScreen(
     ):Response<SplashResponse>
 
-
-//    @POST("check")
-
-    @POST("http://localhost:3000/serverCheck")
+    //    @POST("http://localhost:4000/serverCheck")
+    @POST("check")
     suspend fun checkServer(
         @Header("Cookie") sessionIdAndToken: String
     ): Response<MessageResponse>

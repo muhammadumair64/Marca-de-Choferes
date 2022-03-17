@@ -34,10 +34,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.ResendApis
-import com.logicasur.appchoferes.Extra.MyBroadastReceivers
-import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.auth.repository.AuthRepository
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import com.logicasur.appchoferes.mainscreen.home.timerServices.BreakTimerService
@@ -65,6 +61,7 @@ import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import kotlin.concurrent.schedule
 import android.provider.Settings.Global.getString
+import com.logicasur.appchoferes.Extra.*
 
 
 @HiltViewModel
@@ -1174,6 +1171,10 @@ class HomeViewModel @Inject constructor(
                 var vehicle = vehicleArrayListforUpload[vehiclePosition - 1]
                 var status = statusArrayListforUpload[position]
                 println("status is $status")
+
+
+
+
                 viewModelScope.launch(Dispatchers.IO) {
 //                    ServerCheck.serverCheckActivityOrStatus(
 //                        "$currentDate",
@@ -1210,17 +1211,31 @@ class HomeViewModel @Inject constructor(
     ) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction ->
+        /**
+            *  changes
+               */
+            if (mainRepository.isExistsUnsentUploadActivityDB()) {
+                (activityContext as MainActivity).updatePendingData(true)
+                var position = tinyDB.getInt("state")
+                position = position.minus(1)
+                selectState(position)
+//                action()
+                (MyApplication.loadingContext as LoadingScreen).finish()
+            } else{
+                resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction ->
 
-                updateState(
-                    "$currentDate",
-                    timeToSend,
-                    status,
-                    geoPosition,
-                    vehicle
-                )
-                { serverAction() }
+                    updateState(
+                        "$currentDate",
+                        timeToSend,
+                        status,
+                        geoPosition,
+                        vehicle
+                    )
+                    { serverAction() }
+                }
             }
+
+
         }
 
 
@@ -1305,6 +1320,7 @@ class HomeViewModel @Inject constructor(
 //
 //
 //    }
+
     fun checkNetConnection() {
         if (CheckConnection.netCheck(activityContext!!)) {
             Log.d("StatusTesting","IN FUNCTION HOME VIEW MODEL LINE 1311")
@@ -1327,6 +1343,7 @@ class HomeViewModel @Inject constructor(
 
 
     }
+
 
     fun hitActivityAPI(activity: Int, totalTime: Int?) {
 
@@ -1419,21 +1436,44 @@ class HomeViewModel @Inject constructor(
                 vehiclePosition = vehiclePosition.minus(1)
                 Log.d("positionOfVehicle ", "$vehiclePosition")
                 var vehicle = vehicleArrayListforUpload[vehiclePosition]
-                resendApis.serverCheck.serverCheckActivityOrStatus(
-                    "$currentDate",
-                    totalTime,
-                    activity,
-                    geoPosition,
-                    vehicle, null, resendApis
-                ) {
-                    updateActivityForAction(
-                        "$currentDate",
-                        totalTime,
-                        activity,
-                        geoPosition,
-                        vehicle
-                    )
+
+
+                /**
+                 * My Changes
+                 *
+                 */
+                if (mainRepository!!.isExistsUnsentUploadActivityDB()) {
+                    Log.d("ACTIVITY_BY_DATABASE", "IN INSERT MODE")
+                    if (activity == 2) {
+                        if (totalTime != null) {
+                            tinyDB.putInt("lasttimebreak", totalTime)
+                        }
+                    }
+                    tinyDB.putInt("ActivityCheck", activity!!)
+                    var obj =
+                        UpdateActivityDataClass(currentDate , totalTime, activity, geoPosition, vehicle, null)
+                    Log.d("PENDINGDATATESTING", "DATA IS IN MAIN____ $obj")
+                    tinyDB.putObject("upadteActivity", obj)
+                    tinyDB.putObject("GeoPosition", geoPosition)
+                    (activityContext as MainActivity).updatePendingData(false)
+                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+//            MyApplication.checKForActivityLoading = false
+
+                }else{
+                    resendApis.serverCheck.serverCheckMainActivityApi(true) {
+                        updateActivityForAction(
+                            "$currentDate",
+                            totalTime,
+                            activity,
+                            geoPosition,
+                            vehicle
+                        )
+                    }
                 }
+
+
+
+
 
             }
         }

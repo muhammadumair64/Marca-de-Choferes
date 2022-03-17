@@ -42,7 +42,7 @@ class ServerCheck constructor(
         myTimer.schedule(object : TimerTask() {
             override fun run() {
                 if (check == 1) {
-                    Log.d("NETCHECKTEST", "In popUp condition[p")
+                    Log.d("NETCHECKTEST", "In popUp condition")
                     Log.d("NETCHECKTEST", "----working in required")
                     Log.d("NETCHECKTEST", LoadingScreen.OnEndLoadingCallbacks.toString())
                     CoroutineScope(Job()).launch(Dispatchers.Main) {
@@ -554,6 +554,7 @@ class ServerCheck constructor(
         }
 
     }
+
 
     private suspend fun runOnMain(function: () -> Unit) {
         withContext(Dispatchers.Main) {
