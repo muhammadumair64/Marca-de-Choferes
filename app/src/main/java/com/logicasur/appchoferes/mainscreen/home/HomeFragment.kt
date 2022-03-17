@@ -379,9 +379,13 @@ class HomeFragment : Fragment(), OnclickItem {
                 }
                 var stateCheck = tinyDB.getBoolean("STATEAPI")
                 if (stateCheck) {
+
+
+                        Log.d("APIDATATESTING","IN IF BLOCK")
                     (activity as MainActivity).updatePendingData(true)
                 }
                 else {
+                    Log.d("APIDATATESTING","IN Else")
 //                    if (!(activity as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
 //                        val intent =
 //                            Intent((activity as MainActivity).context, LoadingScreen::class.java)
