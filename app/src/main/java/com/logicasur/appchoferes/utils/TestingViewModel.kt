@@ -2,7 +2,7 @@ package com.logicasur.appchoferes.utils
 
 import androidx.lifecycle.ViewModel
 import com.logicasur.appchoferes.Extra.TinyDB
-import com.logicasur.appchoferes.auth.repository.AuthRepository
+import com.logicasur.appchoferes.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 @HiltViewModel

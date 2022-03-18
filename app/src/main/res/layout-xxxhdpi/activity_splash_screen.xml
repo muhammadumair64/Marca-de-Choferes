@@ -19,7 +19,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".splashscreen.SplashScreen"
+            tools:context=".beforeAuth.splashscreen.SplashScreen"
             android:paddingEnd="@dimen/_15sdp"
             android:paddingStart="@dimen/_15sdp">
             <ImageView

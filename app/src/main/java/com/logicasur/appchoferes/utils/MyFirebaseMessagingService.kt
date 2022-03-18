@@ -10,10 +10,9 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.logicasur.appchoferes.R
-import com.logicasur.appchoferes.splashscreen.SplashScreen
+import com.logicasur.appchoferes.beforeAuth.splashscreen.SplashScreen
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import java.util.*
 
 class MyFirebaseMessagingService  : FirebaseMessagingService() {
     val TAG = "FirebaseMessagingService"

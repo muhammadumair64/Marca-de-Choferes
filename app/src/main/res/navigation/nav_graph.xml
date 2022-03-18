@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.logicasur.appchoferes.mainscreen.home.HomeFragment"
+        android:name="com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.logicasur.appchoferes.mainscreen.profile.ProfileFragment"
+        android:name="com.logicasur.appchoferes.afterAuth.mainscreen.fragments.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/configurationFragment"
-        android:name="com.logicasur.appchoferes.mainscreen.configuration.ConfigurationFragment"
+        android:name="com.logicasur.appchoferes.afterAuth.mainscreen.fragments.configuration.ConfigurationFragment"
         android:label="fragment_configuration"
         tools:layout="@layout/fragment_configuration" >
         <action

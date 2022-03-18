@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".myApplication.MyApplication"
+        android:name="com.logicasur.appchoferes.utils.myApplication.MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
@@ -26,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MarcaDeChoferes">
         <service
-            android:name=".Extra.serviceUploadOfflineActivities.ServiceUploadOfflineActivities"
+            android:name="com.logicasur.appchoferes.common.serviceUploadOfflineActivities.ServiceUploadOfflineActivities"
             android:enabled="true"
             android:exported="true"></service>
 
@@ -36,13 +36,13 @@
 
         </activity>
         <activity
-            android:name=".loadingScreen.LoadingScreen"
+            android:name="com.logicasur.appchoferes.common.loadingScreen.LoadingScreen"
             android:exported="true"
             android:hardwareAccelerated="false"
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".splashscreen.SplashScreen"
+            android:name="com.logicasur.appchoferes.beforeAuth.splashscreen.SplashScreen"
             android:exported="true"
             android:hardwareAccelerated="false"
             android:screenOrientation="portrait">
@@ -53,41 +53,41 @@
         </intent-filter>
         </activity>
         <activity
-            android:name="com.logicasur.appchoferes.auth.createpassword.CreateNewPasswordScreen"
+            android:name="com.logicasur.appchoferes.beforeAuth.createPasswordScreen.CreateNewPasswordScreen"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.logicasur.appchoferes.auth.otp.OTP_Activity"
+            android:name="com.logicasur.appchoferes.beforeAuth.otpScreen.OtpActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.logicasur.appchoferes.auth.forgotPassword.ForgotPasswordActivity"
+            android:name="com.logicasur.appchoferes.beforeAuth.forgotPasswordScreen.ForgotPasswordActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.logicasur.appchoferes.auth.signin.SignInActivity"
+            android:name="com.logicasur.appchoferes.beforeAuth.signInScreen.SignInActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".mainscreen.MainActivity"
+            android:name="com.logicasur.appchoferes.afterAuth.mainscreen.MainActivity"
             android:alwaysRetainTaskState="true"
             android:exported="true"
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".mainscreen.home.timerServices.TimerService"
+            android:name="com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.timerServices.TimerService"
             android:exported="true"
             android:stopWithTask="false" />
         <service
-            android:name=".mainscreen.home.timerServices.BreakTimerService"
+            android:name="com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.timerServices.BreakTimerService"
             android:enabled="true"
             android:exported="false"
             android:stopWithTask="false" />
         <service
-            android:name=".mainscreen.home.timerServices.UploadRemaingDataService"
+            android:name="com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.timerServices.UploadRemaingDataService"
             android:exported="true" />
         <service
-            android:name=".mainscreen.home.timerServices.WatcherService"
+            android:name="com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.timerServices.WatcherService"
             android:stopWithTask="false" />
         <service
             android:name=".Extra.MyJobScheduler"

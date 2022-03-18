@@ -3,8 +3,8 @@ package com.logicasur.appchoferes.Extra
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.logicasur.appchoferes.myApplication.MyApplication
-import com.logicasur.appchoferes.network.NoInternetException
+import com.logicasur.appchoferes.utils.myApplication.MyApplication
+import com.logicasur.appchoferes.data.network.NoInternetException
 
 import okhttp3.Interceptor
 import okhttp3.Response

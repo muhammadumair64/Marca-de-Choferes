@@ -10,7 +10,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.logicasur.appchoferes.myApplication.MyApplication
+import com.logicasur.appchoferes.utils.myApplication.MyApplication
 
 
 class MyJobScheduler : JobService() {

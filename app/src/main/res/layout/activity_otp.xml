@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".auth.otp.OTP_Activity"
+        tools:context=".beforeAuth.otpScreen.OtpActivity"
         android:paddingStart="@dimen/_15sdp"
         android:paddingEnd="@dimen/_15sdp"
         android:background="@color/white">

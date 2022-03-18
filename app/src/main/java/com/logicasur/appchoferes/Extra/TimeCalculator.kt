@@ -2,12 +2,11 @@ package com.logicasur.appchoferes.Extra
 
 import android.content.Context
 import android.util.Log
-import com.logicasur.appchoferes.mainscreen.MainActivity
-import com.logicasur.appchoferes.mainscreen.repository.MainRepository
-import com.logicasur.appchoferes.myApplication.MyApplication
-import com.logicasur.appchoferes.network.signinResponse.LastVar
-import com.logicasur.appchoferes.network.signinResponse.SigninResponse
-import com.logicasur.appchoferes.network.wrongData.wrongDataReport
+import com.logicasur.appchoferes.afterAuth.mainscreen.MainActivity
+import com.logicasur.appchoferes.data.repository.MainRepository
+import com.logicasur.appchoferes.utils.myApplication.MyApplication
+import com.logicasur.appchoferes.data.network.signinResponse.SigninResponse
+import com.logicasur.appchoferes.data.network.wrongData.wrongDataReport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

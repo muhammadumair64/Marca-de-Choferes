@@ -4,15 +4,12 @@ import android.app.ActivityManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startForegroundService
-import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
-import com.logicasur.appchoferes.Extra.serviceUploadOfflineActivities.ServiceUploadOfflineActivities
-import com.logicasur.appchoferes.myApplication.MyApplication
-import com.logicasur.appchoferes.network.signinResponse.Vehicle
+import com.logicasur.appchoferes.common.serverCheck.ServerCheck
+import com.logicasur.appchoferes.common.serviceUploadOfflineActivities.ServiceUploadOfflineActivities
+import com.logicasur.appchoferes.utils.myApplication.MyApplication
 import kotlinx.coroutines.*
-import java.net.SocketException
-import java.net.SocketTimeoutException
 import java.util.*
-import com.logicasur.appchoferes.loadingScreen.LoadingScreen
+import com.logicasur.appchoferes.common.loadingScreen.LoadingScreen
 import java.lang.Exception
 
 

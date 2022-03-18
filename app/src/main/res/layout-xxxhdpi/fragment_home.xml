@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:paddingStart="@dimen/_15sdp"
         android:paddingEnd="@dimen/_15sdp"
-        tools:context=".mainscreen.home.HomeFragment">
+        tools:context=".afterAuth.mainscreen.fragments.home.HomeFragment">
         <RelativeLayout
             android:id="@+id/upper_layout"
             android:layout_marginTop="@dimen/_15sdp"

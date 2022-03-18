@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".mainscreen.configuration.ConfigurationFragment">
+        tools:context=".afterAuth.mainscreen.fragments.configuration.ConfigurationFragment">
 
         <LinearLayout
             android:layout_margin="@dimen/_30sdp"

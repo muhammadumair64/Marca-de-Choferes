@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".mainscreen.MainActivity">
+        tools:context=".afterAuth.mainscreen.MainActivity">
 
         <FrameLayout
             android:layout_width="match_parent"

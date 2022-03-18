@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".auth.signin.SignInActivity"
+        tools:context=".beforeAuth.signInScreen.SignInActivity"
         android:paddingStart="@dimen/_15sdp"
         android:paddingEnd="@dimen/_15sdp"
         android:background="@color/white">

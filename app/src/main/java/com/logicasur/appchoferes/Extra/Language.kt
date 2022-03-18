@@ -2,7 +2,7 @@ package com.logicasur.appchoferes.Extra
 
 import android.content.Context
 import android.content.res.Configuration
-import com.logicasur.appchoferes.myApplication.MyApplication
+import com.logicasur.appchoferes.utils.myApplication.MyApplication
 import java.util.*
 
 class Language {
