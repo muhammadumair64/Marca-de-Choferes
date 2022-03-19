@@ -62,6 +62,7 @@ import java.text.SimpleDateFormat
 import kotlin.concurrent.schedule
 import com.logicasur.appchoferes.Extra.*
 import com.logicasur.appchoferes.databinding.FragmentHomeBinding
+import com.logicasur.appchoferes.utils.ResendApis
 
 
 @HiltViewModel
@@ -107,9 +108,6 @@ class HomeViewModel @Inject constructor(
         tinyDB = TinyDB(context)
 
         loadingIntent = Intent(activityContext, LoadingScreen::class.java)
-
-
-
         getProfile()
         setMaxMini()
         getVehicle()
@@ -120,176 +118,10 @@ class HomeViewModel @Inject constructor(
         tagsForToast()
         (context as MainActivity).initRepo(authRepository, mainRepository)
         MyBroadastReceivers.authRepository = authRepository
-        binding.cardColor.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
-        binding.arrowdownbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
-        binding.arrowbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
-        binding.iconCarbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
-
+        changeBackgroundColor()
         MyApplication.TotalTime = tinyDB.getInt("defaultWork")
-
-        println("total Work Given ")
         MyApplication.TotalBreak = tinyDB.getInt("defaultBreak")
-
-
-        var DefaultTOShow = MyApplication.TotalTime * 60
-        var time = getTimeStringFromDouble(DefaultTOShow)
-        println("time is thie $time")
-        binding.maxTimer.text = time
-        val sdf = SimpleDateFormat("dd MMM")
-        val currentDate = sdf.format(Date())
-        System.out.println(" C DATE is  " + currentDate)
-
-        binding.date.text = "$currentDate"
-        dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
-        var Choice = tinyDB.getString("selectedState")
-
-        when (Choice) {
-
-            "initialState" -> {
-                buttonInitailState()
-            }
-            "goToActiveState" -> {
-                goToActivState()
-
-            }
-            "goTosecondState" -> {
-                viewModelScope.launch {
-                    withContext(Dispatchers.Main) {
-                        checkByServer()
-//                        goToSecondState()
-
-                    }
-
-                }
-
-
-            }
-            "takeBreak" -> {
-                Log.d("HomeViewModel...", "Call btn take break")
-                buttonTakeBreak()
-
-            }
-            "endDay" -> {
-                buttonEndDay()
-
-            }
-
-
-        }
-        Timer().schedule(200) {
-            viewModelScope.launch {
-                withContext(Dispatchers.Main) {
-                    forgroundCheck()
-                }
-            }
-
-        }
-        Timer().schedule(300) {
-
-            viewModelScope.launch {
-                withContext(Dispatchers.Main) {
-                    checkBreakBaColor()
-                }
-            }
-
-
-        }
-
-
-    }
-
-
-    fun Workbar() {
-        dataBinding!!.bar.apply {
-            var default = tinyDB.getInt("defaultWork")
-            dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
-            default = default * 60
-            var maxTime = default
-            progressMax = maxTime.toFloat()
-            roundBorder = true
-            progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
-        }
-
-    }
-
-    fun Breakbar() {
-        dataBinding!!.breakBar.apply {
-
-//            setProgressWithAnimation(50f, 1000) // =1s
-            var default = tinyDB.getInt("defaultBreak")
-
-            default = default * 60
-            var maxBreakTime = default
-
-            // Set Progress Max
-            progressMax = maxBreakTime.toFloat()
-
-            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
-
-            backgroundProgressBarColor = Color.TRANSPARENT
-
-
-            roundBorder = true
-            progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
-        }
-
-
-    }
-
-    fun timers() {
-
-
-        dataBinding?.secondState?.setOnClickListener {
-            Log.d("HomeViewModel...", "Click on Second state")
-            tinyDB.putBoolean("STATEAPI", false)
-            if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
-                tinyDB.putInt("SELECTEDACTIVITY", 2)
-            } else {
-                tinyDB.putInt("SELECTEDACTIVITY", 0)
-            }
-            checkNetConnection()
-            MainActivity.action = null
-            (activityContext as MainActivity).initPermission() { secondStateAction() }
-
-        }
-
-        dataBinding?.TakeBreak?.setOnClickListener {
-            Log.d("HomeViewModel...", "Click on take break.")
-
-            tinyDB.putBoolean("STATEAPI", false)
-
-            tinyDB.putInt("SELECTEDACTIVITY", 1)
-
-            checkNetConnection()
-
-
-            MainActivity.action = null
-            (activityContext as MainActivity).initPermission() { takeBreakAction() }
-
-
-        }
-
-        dataBinding?.EndDay?.setOnClickListener {
-            Log.d("HomeViewModel...", "Click on End Day.")
-
-            tinyDB.putBoolean("STATEAPI", false)
-            tinyDB.putInt("SELECTEDACTIVITY", 3)
-
-            checkNetConnection()
-            MainActivity.action = null
-            (activityContext as MainActivity).initPermission() { endDayAction() }
-
-
-        }
-
-        dataBinding?.initialState?.setOnClickListener {
-            tinyDB.putBoolean("STATEAPI", false)
-
-            MainActivity.action = null
-            (activityContext as MainActivity).initPermission() { initialStateAction() }
-
-        }
-
+        updateSomeUiComponents()
 
     }
 
@@ -494,8 +326,9 @@ class HomeViewModel @Inject constructor(
                 Log.d("BREAKTIMERTEST", "3")
                 intent.stopTimerBreak()
             }
-            val myStatus: String = activityContext!!.getResources().getString(com.logicasur.appchoferes.R.string.select_status)
-            dataBinding?.statusSelected!!.text= myStatus
+            val myStatus: String = activityContext!!.getResources()
+                .getString(com.logicasur.appchoferes.R.string.select_status)
+            dataBinding?.statusSelected!!.text = myStatus
 
 
             goToActivState()
@@ -1161,7 +994,7 @@ class HomeViewModel @Inject constructor(
 //        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
-        currentDate= currentDate.replace(" ","T")
+        currentDate = currentDate.replace(" ", "T")
         currentDate = currentDate + "Z"
         System.out.println(" C DATE is  " + currentDate)
 
@@ -1211,9 +1044,9 @@ class HomeViewModel @Inject constructor(
     ) {
 
         viewModelScope.launch(Dispatchers.IO) {
-        /**
-            *  changes
-               */
+            /**
+             *  changes
+             */
             if (mainRepository.isExistsUnsentUploadActivityDB()) {
                 (activityContext as MainActivity).updatePendingData(true)
                 var position = tinyDB.getInt("state")
@@ -1221,7 +1054,7 @@ class HomeViewModel @Inject constructor(
                 selectState(position)
 //                action()
                 (MyApplication.loadingContext as LoadingScreen).finish()
-            } else{
+            } else {
                 resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction ->
 
                     updateState(
@@ -1323,19 +1156,22 @@ class HomeViewModel @Inject constructor(
 
     fun checkNetConnection() {
         if (CheckConnection.netCheck(activityContext!!)) {
-            Log.d("StatusTesting","IN FUNCTION HOME VIEW MODEL LINE 1311")
+            Log.d("StatusTesting", "IN FUNCTION HOME VIEW MODEL LINE 1311")
             if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
-       viewModelScope.launch(Dispatchers.IO) {
-       if(!mainRepository!!.isExistsUnsentUploadActivityDB()){
-        withContext(Dispatchers.Main){
-            ContextCompat.startActivity(activityContext!!, loadingIntent, Bundle.EMPTY)
-        }
+                viewModelScope.launch(Dispatchers.IO) {
+                    if (!mainRepository!!.isExistsUnsentUploadActivityDB()) {
+                        withContext(Dispatchers.Main) {
+                            ContextCompat.startActivity(
+                                activityContext!!,
+                                loadingIntent,
+                                Bundle.EMPTY
+                            )
+                        }
 
-    }
+                    }
 
 
-}
-
+                }
 
 
             }
@@ -1364,7 +1200,7 @@ class HomeViewModel @Inject constructor(
                         if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
                             mainRepository.deleteAllUnsentStartWorkTime()
                         }
-                        Log.d("DATABASEATESTING"," IN TAKE work")
+                        Log.d("DATABASEATESTING", " IN TAKE work")
                         mainRepository.insertUnsentStartWorkTime(
                             UnsentStartWorkTime(
                                 0,
@@ -1384,7 +1220,7 @@ class HomeViewModel @Inject constructor(
                             mainRepository.deleteAllUnsentStartBreakTime()
                         }
 
-                        Log.d("DATABASEATESTING"," IN TAKE BREAK")
+                        Log.d("DATABASEATESTING", " IN TAKE BREAK")
                         mainRepository.insertUnsentStartBreakTime(
                             UnsentStartBreakTime(
                                 0,
@@ -1421,12 +1257,12 @@ class HomeViewModel @Inject constructor(
 
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
-        when(activity){
-            0-> tinyDB.putString("WorkDate", currentDate)
-            1-> tinyDB.putString("BreakDate", currentDate)
+        when (activity) {
+            0 -> tinyDB.putString("WorkDate", currentDate)
+            1 -> tinyDB.putString("BreakDate", currentDate)
         }
 
-        currentDate= currentDate.replace(" ","T")
+        currentDate = currentDate.replace(" ", "T")
         tinyDB.putString("ActivityDate", currentDate)
         currentDate = currentDate + "Z"
         System.out.println(" startUpload" + currentDate)
@@ -1451,7 +1287,14 @@ class HomeViewModel @Inject constructor(
                     }
                     tinyDB.putInt("ActivityCheck", activity!!)
                     var obj =
-                        UpdateActivityDataClass(currentDate , totalTime, activity, geoPosition, vehicle, null)
+                        UpdateActivityDataClass(
+                            currentDate,
+                            totalTime,
+                            activity,
+                            geoPosition,
+                            vehicle,
+                            null
+                        )
                     Log.d("PENDINGDATATESTING", "DATA IS IN MAIN____ $obj")
                     tinyDB.putObject("upadteActivity", obj)
                     tinyDB.putObject("GeoPosition", geoPosition)
@@ -1459,21 +1302,18 @@ class HomeViewModel @Inject constructor(
                     LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
 //            MyApplication.checKForActivityLoading = false
 
-                }else{
-                    resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction->
+                } else {
+                    resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction ->
                         updateActivityForAction(
                             "$currentDate",
                             totalTime,
                             activity,
                             geoPosition,
                             vehicle
-                        ){serverAction()}
+                        ) { serverAction() }
 
                     }
                 }
-
-
-
 
 
             }
@@ -1675,59 +1515,251 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    private fun checkByServer() {
-        var check = tinyDB.getInt("selectedStateByServer")
-        if (check == 1) {
-            var language = tinyDB.getString("language")
-            if (language == "0") {
-                dataBinding?.secondState?.text = "Fin del descanso"
 
-            } else if (language == "1") {
 
-                dataBinding?.secondState?.text = "End Break"
-            } else {
-                dataBinding?.secondState?.text = "Fim do intervalo"
+
+
+
+    fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
+        networkAlertDialog.setView(PopupView)
+        try {
+            if (!networkAlertDialog.isShowing) {
+                networkAlertDialog.show()
+                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+                networkAlertDialog.window?.setLayout(width, height)
+                networkAlertDialog.setCancelable(false)
+                networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                val window: Window? = networkAlertDialog.window
+                val wlp: WindowManager.LayoutParams = window!!.attributes
+                wlp.gravity = Gravity.BOTTOM
+                window.attributes = wlp
             }
-            Log.d("HomeViewModel...", "Call take break from checkserver function.")
-            buttonTakeBreak()
+
+
+        } catch (e: Exception) {
+            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+            Log.d("OpenPop", "Exception ${e.localizedMessage}")
         }
+
+
     }
 
-    fun tagsForToast() {
-        var language = tinyDB.getString("language")
-        if (language == "0") {
-            TAG2 = "Comprueba tu conexión a Internet"
 
-        } else if (language == "1") {
+    //----------------------------------------------UI Functions --------------------
+  fun updateSomeUiComponents() {
+        val DefaultTOShow = MyApplication.TotalTime * 60
+        val time = getTimeStringFromDouble(DefaultTOShow)
+        dataBinding!!.maxTimer.text = time
+        val sdf = SimpleDateFormat("dd MMM")
+        val currentDate = sdf.format(Date())
+        dataBinding!!.date.text = currentDate
+        dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
+        val Choice = tinyDB.getString("selectedState")
+
+        when (Choice) {
+            "initialState" -> {
+                buttonInitailState()
+            }
+            "goToActiveState" -> {
+                goToActivState()
+
+            }
+            "goTosecondState" -> {
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main) {
+                        checkByServer()
+
+                    }
+
+                }
 
 
-            TAG2 = "Check Your Internet Connection"
-        } else {
+            }
+            "takeBreak" -> {
+                Log.d("HomeViewModel...", "Call btn take break")
+                buttonTakeBreak()
 
-            TAG2 = "Verifique a sua conexão com a internet"
+            }
+            "endDay" -> {
+                buttonEndDay()
+
+            }
+        }
+        Timer().schedule(200) {
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    forgroundCheck()
+                }
+            }
+
+        }
+        Timer().schedule(300) {
+
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    checkBreakBaColor()
+                }
+            }
+
+
         }
 
+    }
+
+     fun initWorkBar() {
+        dataBinding!!.bar.apply {
+            var default = tinyDB.getInt("defaultWork")
+            dataBinding?.bar?.progressBarColor = Color.parseColor(ResendApis.primaryColor)
+            default = default * 60
+            val maxTime = default
+            progressMax = maxTime.toFloat()
+            roundBorder = true
+            progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
+        }
+
+    }
+
+   fun initBreakBar() {
+        dataBinding!!.breakBar.apply {
+
+//            setProgressWithAnimation(50f, 1000) // =1s
+            var default = tinyDB.getInt("defaultBreak")
+
+            default *= 60
+            var maxBreakTime = default
+
+            // Set Progress Max
+            progressMax = maxBreakTime.toFloat()
+
+            dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD6D9")
+
+            backgroundProgressBarColor = Color.TRANSPARENT
+
+
+            roundBorder = true
+            progressDirection = CircularProgressBar.ProgressDirection.TO_RIGHT
+        }
+
+
+    }
+
+    fun clickListnersForActivityButtons() {
+        dataBinding?.secondState?.setOnClickListener {
+            Log.d("HomeViewModel...", "Click on Second state")
+            tinyDB.putBoolean("STATEAPI", false)
+            if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
+                tinyDB.putInt("SELECTEDACTIVITY", 2)
+            } else {
+                tinyDB.putInt("SELECTEDACTIVITY", 0)
+            }
+            checkNetConnection()
+            MainActivity.action = null
+            (activityContext as MainActivity).initPermission() { secondStateAction() }
+
+        }
+
+        dataBinding?.TakeBreak?.setOnClickListener {
+            Log.d("HomeViewModel...", "Click on take break.")
+
+            tinyDB.putBoolean("STATEAPI", false)
+
+            tinyDB.putInt("SELECTEDACTIVITY", 1)
+
+            checkNetConnection()
+
+
+            MainActivity.action = null
+            (activityContext as MainActivity).initPermission() { takeBreakAction() }
+
+
+        }
+
+        dataBinding?.EndDay?.setOnClickListener {
+            Log.d("HomeViewModel...", "Click on End Day.")
+
+            tinyDB.putBoolean("STATEAPI", false)
+            tinyDB.putInt("SELECTEDACTIVITY", 3)
+
+            checkNetConnection()
+            MainActivity.action = null
+            (activityContext as MainActivity).initPermission() { endDayAction() }
+
+
+        }
+
+        dataBinding?.initialState?.setOnClickListener {
+            tinyDB.putBoolean("STATEAPI", false)
+
+            MainActivity.action = null
+            (activityContext as MainActivity).initPermission() { initialStateAction() }
+
+        }
+
+
+    }
+
+    fun breakErrorOverWrite() {
+        val ref = (activityContext as MainActivity)
+        val breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
+        if (dataBinding!!.StateActive.isVisible) {
+            if (breakTimerService) {
+                ref.stopTimerBreak()
+                breakTimerLargeToSmall()
+                workTimerSmallToLarge()
+
+            }
+
+        }
+
+    }
+
+    fun overtimeBarColor(breakTimerService: Boolean) {
+        if (dataBinding!!.secondState.isVisible) {
+            val overTime = tinyDB.getBoolean("overTime")
+            val overTimeBreak = tinyDB.getBoolean("overBreakTime")
+            if (overTime) {
+                dataBinding!!.bar.progressBarColor = Color.parseColor("#7ECAFF")
+            } else {
+                fadeColor()
+            }
+
+            Timer().schedule(100) {
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main) {
+                        if (overTimeBreak) {
+                            dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFD6D9") //
+                        } else {
+                            if (!breakTimerService) {
+                                dataBinding!!.breakBar.progressBarColor =
+                                    Color.parseColor("#FFD297")
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
+
+        }
+        breakErrorOverWrite()
     }
 
     fun checkBreakBaColor() {
-        var ref = (activityContext as MainActivity)
-        var timerServiceCheck = ref.isMyServiceRunning(TimerService::class.java)
-        var breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
+        val ref = (activityContext as MainActivity)
+        val timerServiceCheck = ref.isMyServiceRunning(TimerService::class.java)
+        val breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
 
         if (breakTimerService) {
-//            fadeColor()
             dataBinding?.breakBar?.progressBarColor =
                 Color.parseColor("#FFA023")   //change to orange
         } else {
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD297")
         }
-
-
-        if (timerServiceCheck == false && breakTimerService == false) {
+        if (!timerServiceCheck && !breakTimerService) {
             ref.startTimer()
             ref.startTimerBreak()
-//            dataBinding!!.bar.progress = (MyApplication.TotalTime / 2).toFloat()
-//            dataBinding!!.breakBar.progress = (MyApplication.TotalBreak / 2).toFloat()
 
             ref.stopTimer()
             ref.stopTimerBreak()
@@ -1755,80 +1787,33 @@ class HomeViewModel @Inject constructor(
 
     }
 
-
-    fun overtimeBarColor(breakTimerService: Boolean) {
-        if (dataBinding!!.secondState.isVisible) {
-            var overTime = tinyDB.getBoolean("overTime")
-            var overTimeBreak = tinyDB.getBoolean("overBreakTime")
-            if (overTime) {
-                dataBinding!!.bar.progressBarColor = Color.parseColor("#7ECAFF")
-            } else {
-                fadeColor()
-            }
-
-            Timer().schedule(100) {
-                viewModelScope.launch {
-                    withContext(Dispatchers.Main) {
-                        if (overTimeBreak) {
-                            dataBinding!!.breakBar.progressBarColor = Color.parseColor("#FFD6D9") //
-                        } else {
-                            if (breakTimerService == false) {
-                                dataBinding!!.breakBar.progressBarColor =
-                                    Color.parseColor("#FFD297")
-                            }
-
-                        }
-                    }
-                }
-
-            }
-
-
-        }
-        breakErrorOverWrite()
-    }
-
-    fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
-        networkAlertDialog.setView(PopupView)
-        try {
-            if(!networkAlertDialog.isShowing)
-            {
-                networkAlertDialog.show()
-                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-                val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-                networkAlertDialog.window?.setLayout(width, height)
-                networkAlertDialog.setCancelable(false)
-                networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                val window: Window? = networkAlertDialog.window
-                val wlp: WindowManager.LayoutParams = window!!.attributes
-                wlp.gravity = Gravity.BOTTOM
-                window.attributes = wlp
-            }
-
-
-        } catch (e: Exception) {
-            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-            Log.d("OpenPop", "Exception ${e.localizedMessage}")
-        }
-
-
-
-    }
-
-    fun breakErrorOverWrite() {
-        var ref = (activityContext as MainActivity)
-        var breakTimerService = ref.isMyServiceRunning(BreakTimerService::class.java)
-        if (dataBinding!!.StateActive.isVisible) {
-            if (breakTimerService == true) {
-                ref.stopTimerBreak()
-                breakTimerLargeToSmall()
-                workTimerSmallToLarge()
-
-            }
-
+    //---------------------------------------------------Utils----------------------------
+    private fun changeBackgroundColor() {
+        dataBinding!!.apply {
+            cardColor.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+            arrowdownbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+            arrowbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+            iconCarbg.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         }
 
     }
+
+    fun tagsForToast() {
+        var language = tinyDB.getString("language")
+        if (language == "0") {
+            TAG2 = "Comprueba tu conexión a Internet"
+
+        } else if (language == "1") {
+
+
+            TAG2 = "Check Your Internet Connection"
+        } else {
+
+            TAG2 = "Verifique a sua conexão com a internet"
+        }
+
+    }
+
 
 
 }

@@ -33,7 +33,7 @@ import com.logicasur.appchoferes.afterAuth.mainscreen.fragments.profile.viewmode
 import com.logicasur.appchoferes.afterAuth.mainscreen.viewModel.MainViewModel
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.common.loadingScreen.LoadingScreen
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions

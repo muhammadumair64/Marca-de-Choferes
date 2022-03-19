@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import javax.net.ssl.*
 import com.logicasur.appchoferes.Extra.NetworkConnectionInterceptor
-import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.common.serverCheck.ServerCheck
 import com.logicasur.appchoferes.data.repository.AuthRepository

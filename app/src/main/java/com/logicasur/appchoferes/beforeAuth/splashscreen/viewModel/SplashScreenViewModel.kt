@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.data.repository.AuthRepository
@@ -34,7 +34,6 @@ import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.concurrent.schedule
 
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(
@@ -56,28 +55,24 @@ class SplashScreenViewModel @Inject constructor(
         activityContext = context
         tinyDB = TinyDB(context)
         tagsForToast()
-
-
     }
 
     fun checkData() {
         MyApplication.checKForSyncLoading = true
-
         MyApplication.syncCheck = true
-        Log.d("SERVICE_TESTING","SplashScreen")
         resendApis.checkNetAndUpload()
         myTimer = Timer()
         myTimer!!.schedule(object : TimerTask() {
             override fun run() {
-                var check = tinyDB.getBoolean("SYNC_CHECK")
-                if (check == true) {
+                val check = tinyDB.getBoolean("SYNC_CHECK")
+                if (check) {
                     Log.d("SYNC_CHECK_TESTING", "RUN SYNC")
-                    syncdata()
+                    syncData()
                     myTimer!!.cancel()
                 } else {
                     Log.d("SYNC_CHECK_TESTING", "In False")
-                    val check = activityContext?.let { CheckConnection.netCheck(it) }
-                    if (check == false) {
+                    val netCheck = activityContext?.let { CheckConnection.netCheck(it) }
+                    if (netCheck == false) {
                         MyApplication.checKForPopup = true
                         viewModelScope.launch {
                             withContext(Dispatchers.Main) {
@@ -86,12 +81,6 @@ class SplashScreenViewModel @Inject constructor(
                                 myTimer!!.cancel()
                             }
                         }
-
-                        //changed
-                        //<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>
-                        //  Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-
-
                     }
                 }
             }
@@ -99,93 +88,23 @@ class SplashScreenViewModel @Inject constructor(
     }
 
 
-    fun syncdata() {
-        var Token = tinyDB.getString("Cookie")
+    fun syncData() {
+        val token = tinyDB.getString("Cookie")
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
                 try {
                     val response =
-                        authRepository.userSync(Token!!)
+                        authRepository.userSync(token!!)
 
                     println("SuccessResponse $response")
 
                     if (response != null) {
                         authRepository.clearData()
                         authRepository.InsertSigninData(response)
-                        val Language = response.profile?.language
-                        val notify: Boolean = response.profile?.notify!!
-
-                        if (response.colors.primary.isNotEmpty()) {
-                            ResendApis.primaryColor = response.colors.primary ?: "#7A59FC"
-                            ResendApis.secondaryColor = response.colors.secondary ?: "#653FFB"
-                            Log.d("COLORCHECKTESTING", response.colors.primary)
-                            tinyDB.putString("primaryColor", ResendApis.primaryColor)
-                            tinyDB.putString("secondrayColor", ResendApis.secondaryColor)
-                        }
-                        tinyDB.putInt("defaultWork", response.work!!.workingHours)
-                        tinyDB.putInt("defaultBreak", response.work.workBreak)
-                        tinyDB.putString("language", Language.toString())
-
-                        var max = response.work.workBreak * 60
-                        println("Max Value from Server $max")
-                        tinyDB.putInt("MaxBreakBar", max)
-
-                        var maxWork = response.work!!.workingHours * 60
-                        println("Max Value from Server $maxWork")
-                        tinyDB.putInt("MaxBar", maxWork)
-                        tinyDB.putBoolean("notify", notify)
-
-                     val dataBaseCheck = resendApis.serverCheck.mainRepository.isExistsUnsentUploadActivityDB()
-                        println("IN CALCULATION BLOCK $dataBaseCheck")
-                        if(dataBaseCheck){
-                             println("IN CALCULATION BLOCK starting")
-                            Log.d("IN CALCULATION BLOCK starting","in true block")
-                            LoadingScreen.OnEndLoadingCallbacks!!.calculateTimeFromLocalDB()
-
-
-                        }else{
-                            getPreviousTime(response)
-//                          setObj(response)
-
-                            Log.d("IN CALCULATION BLOCK starting","in else block")
-                            tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
-
-//                        tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
-//                        tinyDB.putString("SplashBG", response.images.splashScreen ?: "")
-                            if (response.lastVar.lastActivity != 3) {
-                                var state = response.lastVar.lastState!!
-                                tinyDB.putInt("state", state + 1)
-                            } else {
-                                tinyDB.putInt("state", 1)
-                            }
-                            var color = tinyDB.getString("primaryColor")
-                            Log.d("COLORCHECKTESTING22", color!!)
-                            checkStateByServer(response)
-                            tinyDB.putInt("againCome", 200)
-                            MyApplication.check = 200
-                        }
-
-
-                        Log.d("LOADINGIMAGETESTING", "here1")
-                        var image = response.images.loadingScreen
-                        println("hello testing $image")
-//                        Log.d("CheckLoading",image)
-                        //changed
-                        val imageCheck = tinyDB.getString("LOADINGIMAGE")
-                        Log.d("LOADINGIMAGETESTING", "-------> $imageCheck")
-                        if (response.images.loadingScreen != imageCheck || response.images.loadingScreen == "") {
-                            println("LOADING IMAGE IS HERE ")
-                            tinyDB.putString("LOADINGIMAGE", response.images.loadingScreen)
-                            getLoadingScreenImage()
-
-
-                        } else {
-                            println("LOADING IMAGE IS HERE IN ELSE")
-                            getAvatar()
-                        }
-
-                        println("LOADING IMAGE IS HERE NO WHERE")
+                        saveDataInTinyDatabase(response)
+                        checkLocalBaseAndPassData(response)
+                        checkLoadingScreenImage(response)
 
 
                     }
@@ -199,52 +118,24 @@ class SplashScreenViewModel @Inject constructor(
                     println("position 2")
                     e.printStackTrace()
                     repeatSync()
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            TAG2,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    Timer().schedule(5000) {
-                        Log.d("connection Exception", "connection lost")
-//                        LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                    }
+                    showToast()
+
                 } catch (e: SocketTimeoutException) {
                     repeatSync()
                     LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            TAG2,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    showToast()
                 } catch (e: Exception) {
                     repeatSync()
                     println("ErrorResponse ${e.localizedMessage}")
                 } catch (e: SocketException) {
                     repeatSync()
                     Log.d("connection Exception", "Connect Not Available")
-                    Timer().schedule(5000) {
-                        Log.d("connection Exception", "connection lost")
-//                        LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                    }
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            TAG2,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    showToast()
+
 
                 }
             }
         }
-    }
-    fun repeatSync() {
-        tinyDB.putBoolean("SYNC_CHECK",false)
-        checkData()
     }
 
 
@@ -260,7 +151,6 @@ class SplashScreenViewModel @Inject constructor(
                 Log.d("LoadingImage", "The response is null")
             }
 
-            println("SuccessResponse $response")
             getAvatar()
 
 
@@ -272,13 +162,7 @@ class SplashScreenViewModel @Inject constructor(
             e.printStackTrace()
             Log.d("LoadingImage", "No Internet EXCEPTION ${e.localizedMessage}")
 
-            withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    activityContext,
-                    "Comprueba tu conexión a Internet",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            showToast()
         } catch (e: ResponseException) {
             println("ErrorResponse")
             Log.d("LoadingImage", "Response Exception ${e.localizedMessage}")
@@ -286,26 +170,19 @@ class SplashScreenViewModel @Inject constructor(
         } catch (e: SocketException) {
             LoadingScreen.OnEndLoadingCallbacks?.endLoading()
             Log.d("connection Exception", "Connect Not Available")
-            withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    activityContext,
-                    "Comprueba tu conexión a Internet",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            showToast()
         }
 
 
     }
 
     fun getAvatar() {
-        Log.d("AvtarImage", "IN Avtar API")
         viewModelScope.launch {
-            var Token = tinyDB.getString("Cookie")
+            val Token = tinyDB.getString("Cookie")
             withContext(Dispatchers.IO) {
 
                 try {
-                    var user = tinyDB.getString("User")
+                    val user = tinyDB.getString("User")
 
                     val response = authRepository.getUserAvatar(user!!, Token!!)
 
@@ -317,50 +194,27 @@ class SplashScreenViewModel @Inject constructor(
 
                         tinyDB.putString("Avatar", response.avatar)
 
-                        var intent = Intent(activityContext, MainActivity::class.java)
-                        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                        (activityContext as SplashScreen).finish()
+                        moveToMainScreen()
 
 
                     }
 
                 } catch (e: ApiException) {
-                    var intent = Intent(activityContext, MainActivity::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                    (activityContext as SplashScreen).finish()
+                    moveToMainScreen()
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
-                    var intent = Intent(activityContext, MainActivity::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                    (activityContext as SplashScreen).finish()
+                    moveToMainScreen()
                     println("position 2")
                     e.printStackTrace()
 
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            "Comprueba tu conexión a Internet",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    showToast()
                 } catch (e: ResponseException) {
-                    var intent = Intent(activityContext, MainActivity::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                    (activityContext as SplashScreen).finish()
+                    moveToMainScreen()
                     println("ErrorResponse")
                 } catch (e: SocketException) {
-                    var intent = Intent(activityContext, MainActivity::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
-                    (activityContext as SplashScreen).finish()
-//                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
+                    moveToMainScreen()
                     Log.d("connection Exception", "Connect Not Available")
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            activityContext,
-                            "Comprueba tu conexión a Internet",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    showToast()
                 }
 
             }
@@ -368,7 +222,6 @@ class SplashScreenViewModel @Inject constructor(
 
 
     }
-
 
     fun getSplashScreen() {
 
@@ -385,8 +238,8 @@ class SplashScreenViewModel @Inject constructor(
 
 
                     if (response != null) {
-                        var image = response.splashScreen
-                        tinyDB.putString("SplashBG", response.splashScreen ?: "")
+                        val image = response.splashScreen
+                        tinyDB.putString("SplashBG", response.splashScreen)
                         withContext(Dispatchers.Main) {
                             (activityContext as SplashScreen).base64ToBitmap(image)
                         }
@@ -405,8 +258,7 @@ class SplashScreenViewModel @Inject constructor(
                 } catch (e: SocketException) {
                     Log.d("connection Exception", "Connect Not Available")
                     LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
-                }
-                catch (e:Exception){
+                } catch (e: Exception) {
                     Log.d("connection Exception", "Connect Not Available")
                 }
             }
@@ -414,28 +266,11 @@ class SplashScreenViewModel @Inject constructor(
 
 
     }
-
-
     private fun getPreviousTime(response: SigninResponse) {
 
         Log.d("NEGATIVE_TESTING", "in function")
-
-//        var workDate = tinyDB.getString("ActivityDate")
-//        var workDate = response.lastVar!!.lastWorkedHoursDateIni
-//        if(workDate!!.isNotEmpty()){
-//            workDate = workDate!!.split("T").toTypedArray()[0]
-//            Log.d("workDate Is","date is $workDate")
-//        }
-////        if(workDate != currentDate){
-//            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-//        }else if(workDate == currentDate && response.lastVar!!.lastActivity != 0)
-//        {
-//            tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-//        }
-
-
         tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+        tinyDB.putInt("lasttimework", response.lastVar.lastWorkedHoursTotal!!)
 
         when (response.lastVar.lastActivity) {
             0 -> {
@@ -445,11 +280,11 @@ class SplashScreenViewModel @Inject constructor(
             1 -> {
                 Log.d("NEGATIVE_TESTING", "in function break")
                 tinyDB.putString("checkTimer", "breakTime")
-                var breakDate = response.lastVar!!.lastWorkBreakDateIni
+                var breakDate = response.lastVar.lastWorkBreakDateIni
                 if (breakDate!!.isNotEmpty()) {
-                    breakDate = breakDate!!.split(".").toTypedArray()[0]
-                    breakDate = breakDate!!.replace("T", " ")
-                    breakDate = breakDate!!.replace("-", "/")
+                    breakDate = breakDate.split(".").toTypedArray()[0]
+                    breakDate = breakDate.replace("T", " ")
+                    breakDate = breakDate.replace("-", "/")
                     Log.d("workDate Is", "date is $breakDate")
                 }
                 tinyDB.putString("goBackTime", breakDate)
@@ -458,7 +293,7 @@ class SplashScreenViewModel @Inject constructor(
                     tinyDB,
                     activityContext!!,
                     false,
-                    response.work!!.workBreak,response
+                    response.work!!.workBreak, response
                 )
 
                 getWorkTime(response)
@@ -473,84 +308,120 @@ class SplashScreenViewModel @Inject constructor(
             }
         }
 
-
-        var workStartTime = response.lastVar.lastWorkedHoursDateIni
-        var breakStartTime = response.lastVar.lastWorkBreakDateIni
-        if (workStartTime != null) {
-            workStartTime = workStartTime!!.replace("T", ",")
-            workStartTime = workStartTime!!.split(".").toTypedArray()[0]
-            workStartTime = workStartTime + "Z"
-
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
-                        mainRepository.deleteAllUnsentStartWorkTime()
-                    }
-                    mainRepository!!.insertUnsentStartWorkTime(
-                        UnsentStartWorkTime(
-                            0,
-                            workStartTime
-                        )
-                    )
-                }
-            }
-        }
-        if (breakStartTime != null) {
-            breakStartTime = breakStartTime!!.replace("T", ",")
-            breakStartTime = breakStartTime!!.split(".").toTypedArray()[0]
-            breakStartTime = breakStartTime + "Z"
-
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    if (mainRepository.getUnsentStartBreakTimeDetails() != null) {
-                        mainRepository.deleteAllUnsentStartBreakTime()
-                    }
-                    mainRepository!!.insertUnsentStartBreakTime(
-                        UnsentStartBreakTime(
-                            0,
-                            breakStartTime
-                        )
-                    )
-                }
-            }
-        }
+        insertDataInDataBase(response)
 
 
     }
-
     fun getWorkTime(response: SigninResponse) {
         Log.d("NEGATIVE_TESTING", "in function 3")
         tinyDB.putString("checkTimer", "workTime")
         var workDate = response.lastVar!!.lastWorkedHoursDateIni
         if (workDate!!.isNotEmpty()) {
-            workDate = workDate!!.split(".").toTypedArray()[0]
-            workDate = workDate!!.replace("T", " ")
-            workDate = workDate!!.replace("-", "/")
+            workDate = workDate.split(".").toTypedArray()[0]
+            workDate = workDate.replace("T", " ")
+            workDate = workDate.replace("-", "/")
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)
-        timeCalculator.timeDifference(tinyDB, activityContext!!, false, response.work!!.workBreak,response)
+        timeCalculator.timeDifference(
+            tinyDB,
+            activityContext!!,
+            false,
+            response.work!!.workBreak,
+            response
+        )
     }
 
+
+//--------------------------------------------Utils------------
+
+    private suspend fun checkLocalBaseAndPassData(response: SigninResponse) {
+        if (resendApis.serverCheck.mainRepository.isExistsUnsentUploadActivityDB()) {
+            LoadingScreen.OnEndLoadingCallbacks!!.calculateTimeFromLocalDB()
+        } else {
+            getPreviousTime(response)
+            tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
+            if (response.lastVar.lastActivity != 3) {
+                val state = response.lastVar.lastState!!
+                tinyDB.putInt("state", state + 1)
+            } else {
+                tinyDB.putInt("state", 1)
+            }
+            checkStateByServer(response)
+            tinyDB.putInt("againCome", 200)
+            MyApplication.check = 200
+        }
+    }
+
+    suspend fun checkLoadingScreenImage(response: SigninResponse) {
+        val imageCheck = tinyDB.getString("LOADINGIMAGE")
+        Log.d("LOADINGIMAGETESTING", "-------> $imageCheck")
+        if (response.images.loadingScreen != imageCheck || response.images.loadingScreen == "") {
+            tinyDB.putString("LOADINGIMAGE", response.images.loadingScreen)
+            getLoadingScreenImage()
+
+
+        } else {
+            getAvatar()
+        }
+    }
+
+    private fun saveDataInTinyDatabase(response: SigninResponse) {
+        val language = response.profile?.language
+        val notify: Boolean = response.profile?.notify!!
+
+        if (response.colors.primary.isNotEmpty()) {
+            ResendApis.primaryColor = response.colors.primary
+            ResendApis.secondaryColor = response.colors.secondary
+            Log.d("COLORCHECKTESTING", response.colors.primary)
+            tinyDB.putString("primaryColor", ResendApis.primaryColor)
+            tinyDB.putString("secondrayColor", ResendApis.secondaryColor)
+        }
+        tinyDB.putInt("defaultWork", response.work!!.workingHours)
+        tinyDB.putInt("defaultBreak", response.work.workBreak)
+        tinyDB.putString("language", language.toString())
+
+        val max = response.work.workBreak * 60
+        println("Max Value from Server $max")
+        tinyDB.putInt("MaxBreakBar", max)
+
+        val maxWork = response.work.workingHours * 60
+        println("Max Value from Server $maxWork")
+        tinyDB.putInt("MaxBar", maxWork)
+        tinyDB.putBoolean("notify", notify)
+    }
+
+    fun repeatSync() {
+        tinyDB.putBoolean("SYNC_CHECK", false)
+        checkData()
+    }
+
+    private fun tagsForToast() {
+        val language = tinyDB.getString("language")
+        if (language == "0") {
+
+            TAG2 = "Comprueba tu conexión a Internet"
+
+        } else if (language == "1") {
+
+
+            TAG2 = "Check Your Internet Connection"
+        } else {
+            TAG2 = "Verifique a sua conexão com a internet"
+        }
+
+    }
 
     private fun checkStateByServer(response: SigninResponse) {
         var workDate = response.lastVar!!.lastWorkedHoursDateIni
         if (workDate!!.isNotEmpty()) {
-            workDate = workDate!!.split("T").toTypedArray()[0]
+            workDate = workDate.split("T").toTypedArray()[0]
             Log.d("workDate Is", "date is $workDate")
         }
-        Log.d("Dates is ", "$currentDate")
+        Log.d("Dates is ", currentDate)
+        check = response.lastVar.lastActivity!!
 
-//        if (workDate != currentDate) {
-//            check = 3
-//        } else {
-//            check = response.lastVar!!.lastActivity!!
-//        }
-
-
-        check = response.lastVar!!.lastActivity!!
-
-        tinyDB.putInt("selectedStateByServer", check!!)
+        tinyDB.putInt("selectedStateByServer", check)
         Log.d("checkByServer", "check $check")
         when (check) {
             0 -> {
@@ -572,24 +443,62 @@ class SplashScreenViewModel @Inject constructor(
 
     }
 
-    fun tagsForToast() {
-        var language = tinyDB.getString("language")
-        if (language == "0") {
+    private fun insertDataInDataBase(response: SigninResponse) {
+        var workStartTime = response.lastVar?.lastWorkedHoursDateIni
+        var breakStartTime = response.lastVar?.lastWorkBreakDateIni
+        if (workStartTime != null) {
+            workStartTime = workStartTime.replace("T", ",")
+            workStartTime = workStartTime.split(".").toTypedArray()[0]
+            workStartTime += "Z"
 
-            TAG2 = "Comprueba tu conexión a Internet"
-
-        } else if (language == "1") {
-
-
-            TAG2 = "Check Your Internet Connection"
-        } else {
-            TAG2 = "Verifique a sua conexão com a internet"
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    mainRepository.deleteAllUnsentStartWorkTime()
+                    mainRepository.insertUnsentStartWorkTime(
+                        UnsentStartWorkTime(
+                            0,
+                            workStartTime
+                        )
+                    )
+                }
+            }
         }
 
+
+        if (breakStartTime != null) {
+            breakStartTime = breakStartTime.replace("T", ",")
+            breakStartTime = breakStartTime.split(".").toTypedArray()[0]
+            breakStartTime = breakStartTime + "Z"
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    if (mainRepository.getUnsentStartBreakTimeDetails() != null){
+                        mainRepository.deleteAllUnsentStartBreakTime()
+                    }
+                    mainRepository.insertUnsentStartBreakTime(
+                        UnsentStartBreakTime(
+                            0,
+                            breakStartTime
+                        )
+                    )
+                }
+            }
+        }
     }
 
+    private suspend fun showToast() {
+        withContext(Dispatchers.Main) {
+            Toast.makeText(
+                activityContext,
+                TAG2,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
-
-
-
+    private fun moveToMainScreen() {
+        val intent = Intent(activityContext, MainActivity::class.java)
+        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+        (activityContext as SplashScreen).finish()
+    }
 }
