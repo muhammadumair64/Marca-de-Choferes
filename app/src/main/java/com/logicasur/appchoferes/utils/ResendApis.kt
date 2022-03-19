@@ -1,9 +1,10 @@
-package com.logicasur.appchoferes.Extra
+package com.logicasur.appchoferes.utils
 
 import android.app.ActivityManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startForegroundService
+import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.common.serverCheck.ServerCheck
 import com.logicasur.appchoferes.common.serviceUploadOfflineActivities.ServiceUploadOfflineActivities
 import com.logicasur.appchoferes.utils.myApplication.MyApplication

@@ -28,7 +28,7 @@ import android.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
 import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.utils.myApplication.MyApplication
 import com.logicasur.appchoferes.data.network.ApiException
 import com.logicasur.appchoferes.data.network.NoInternetException

@@ -26,7 +26,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.afterAuth.mainscreen.viewModel.MainViewModel
 import com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.adapters.SearchAdapter
 import com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.adapters.StatusAdapter
@@ -119,11 +119,11 @@ class HomeFragment : Fragment(), OnclickItem {
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         mainViewModel.valueReset()
         viewModel.viewsForHomeFragment(context, binding)
-        viewModel.Breakbar()
-        viewModel.Workbar()
+        viewModel.initBreakBar()
+        viewModel.initWorkBar()
         var intent = (activity as MainActivity)
         intent.viewsOfFragment(binding)
-        viewModel.timers()
+        viewModel.clickListnersForActivityButtons()
 
         mainViewModel.popupLiveData.observe(viewLifecycleOwner, {
             if (it != 0) {

@@ -27,10 +27,7 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.os.Looper
-import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.Menu
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -63,6 +60,7 @@ import com.logicasur.appchoferes.databinding.FragmentHomeBinding
 import com.logicasur.appchoferes.data.repository.MainRepository
 import com.logicasur.appchoferes.data.network.signinResponse.State
 import com.logicasur.appchoferes.data.network.unsentApis.UnsentStatusOrUploadActivity
+import com.logicasur.appchoferes.utils.ResendApis
 import java.text.SimpleDateFormat
 
 import java.lang.Exception
@@ -128,24 +126,15 @@ class MainActivity : BaseClass() {
 
         ResendApis.primaryColor = tinyDB.getString("primaryColor")!!
         ResendApis.secondaryColor = tinyDB.getString("secondrayColor")!!
-
-//        resendApis.timeDifference(tinyDB)
         tagsForToast()
-        serviceIntent = Intent(applicationContext, TimerService::class.java)
-        registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
-        serviceIntentB = Intent(applicationContext, BreakTimerService::class.java)
-        registerReceiver(updateTimeBreak, IntentFilter(BreakTimerService.TIMER_UPDATED_B))
+        registerReceiver()
         binding.menu.setItemSelected(R.id.home, true)
 
         initView()
         setTimer()
         getWidth()
         initPermission() { nullFunction() }
-
-        // invalidateOptionsMenu()
-//        batteryOptimizing()
-        NavBar()
-
+        navigationBar()
         homepress()
     }
 
@@ -155,27 +144,22 @@ class MainActivity : BaseClass() {
         wakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWake:Lock")
         MyApplication.backPressCheck = 200
         MyApplication.checkForResume = 0
-//        var intent=Intent(this,WatcherService::class.java)
-//        startService(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.navigationbar_menu, menu)
-        layoutInflater.setFactory(object : LayoutInflater.Factory {
-            override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-                Log.d("NAV_BAR", "Called")
-                (menu!!.getItem(R.id.home) as com.ismaeldivita.chipnavigation.model.MenuItem).backgroundColor =
-                    Color.parseColor("#000000")
-                return null
-            }
-        })
+        layoutInflater.setFactory { _, _, attrs ->
+            Log.d("NAV_BAR", "Called")
+            (menu!!.getItem(R.id.home) as com.ismaeldivita.chipnavigation.model.MenuItem).backgroundColor =
+                Color.parseColor("#000000")
+            null
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
 
-    fun NavBar() {
-        Log.d("AVATARTESTING", "IN NAV BAR ${ResendApis.primaryColor}")
+    fun navigationBar() {
 
         binding.menu.setMenuResource(
             R.menu.navigationbar_menu,
@@ -187,9 +171,6 @@ class MainActivity : BaseClass() {
             when (it) {
                 R.id.home -> {
                     mainViewModel.updateValueTo1()
-//                    binding.menu.setMenuResource(R.menu.navigationbar_menu)
-
-
                 }
                 R.id.User -> {
                     println("clicked")
@@ -225,35 +206,16 @@ class MainActivity : BaseClass() {
         tinyDB.putInt("lasttimework", time.toInt())
         stopService(serviceIntent)
         timerStarted = false
-
-//        wakeLock.release()
     }
 
-    private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
+     private val updateTime: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             time = intent.getDoubleExtra(TimerService.TIME_EXTRA, 0.0)
             dataBinding?.workTimer?.text = getTimeStringFromDouble(time)
         }
     }
 
-    private fun getTimeStringFromDouble(time: Double): String {
 
-        val resultInt = time.roundToInt()
-        lifecycleScope.launch {
-            viewModel.workTimerupdater(time.roundToInt(), dataBinding, tinyDB)
-        }
-        Log.d("Timer_Testing", "$resultInt")
-        println(" $resultInt")
-        WorkTime = resultInt
-        val hours = resultInt / 3600
-        val minutes = resultInt % 86400 % 3600 / 60
-        val seconds = resultInt % 86400 % 3600 % 60
-        Log.d("Timer_Testing", "$hours ------ $minutes ------ $seconds")
-        return makeTimeString(hours, minutes, seconds)
-    }
-
-    private fun makeTimeString(hour: Int, min: Int, sec: Int): String =
-        String.format("%02d:%02d", hour, min)
 
     fun viewsOfFragment(binding: FragmentHomeBinding) {
         dataBinding = binding
@@ -297,47 +259,15 @@ class MainActivity : BaseClass() {
         val minutes = resultIntBreak % 86400 % 3600 / 60
         val seconds = resultIntBreak % 86400 % 3600 % 60
 
-        return makeTimeStringBreak(hours, minutes, seconds)
-    }
-
-    private fun makeTimeStringBreak(hour: Int, min: Int, sec: Int): String =
-        String.format("%02d:%02d", hour, min)
-
-
-//    override fun onUserLeaveHint() {
-////        Toast.makeText(applicationContext, "Home Button is Pressed", Toast.LENGTH_SHORT).show()
-//        finish()
-//        super.onUserLeaveHint()
-//    }
-
-
-//    override fun onBackPressed() {
-//
-////        super.onBackPressed()
-////
-////        var intent = Intent(this, MainActivity::class.java)
-////        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-////        finish()
-//        onUserLeaveHint()
-//    }
-//
-//    override fun onUserLeaveHint() {
-//        super.onUserLeaveHint()
-//    }
-
-    fun getWidth() {
-        val displayMetrics = resources.displayMetrics
-        dpHeight = displayMetrics.heightPixels / displayMetrics.density
-        dpWidth = displayMetrics.widthPixels / displayMetrics.density
-        Log.d("MyHeight", dpHeight.toString() + "")
-        Log.d("MyWidth", dpWidth.toString() + "")
+        return makeTimeString(hours, minutes, seconds)
     }
 
 
-    fun CheckGpsStatus(action: () -> Unit) {
-        var locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
-        assert(locationManager != null)
-        var GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+
+    fun checkGpsStatus(action: () -> Unit) {
+        val locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+        val GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (GpsStatus) {
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
@@ -350,8 +280,8 @@ class MainActivity : BaseClass() {
                     } else {
                         withContext(Dispatchers.Main) {
                             mainViewModel.updatePopupValue()
-                            var check = tinyDB.getBoolean("STATEAPI")
-                            if (check != true) {
+                            val check = tinyDB.getBoolean("STATEAPI")
+                            if (!check) {
                                 MainActivity.action = action
                             }
                         }
@@ -366,7 +296,7 @@ class MainActivity : BaseClass() {
     }
 
 
-    fun showEnableLocationSetting(action: () -> Unit) {
+    private fun showEnableLocationSetting(action: () -> Unit) {
 
         this.let {
             val locationRequest = LocationRequest.create()
@@ -409,11 +339,7 @@ class MainActivity : BaseClass() {
     }
 
 
-    fun restartActivity() {
-        val intent = intent
-        finish()
-        startActivity(intent)
-    }
+
 
     fun setTimer() {
         var workTime = tinyDB.getInt("lasttimework")
@@ -495,28 +421,16 @@ class MainActivity : BaseClass() {
             }
             this.authRepository = authRepository
             tinyDB.putInt("ActivityCheck", activity!!)
-            var obj =
-                UpdateActivityDataClass(datetime, totalTime, activity, geoPosition, vehicle, null)
+            var obj = UpdateActivityDataClass(datetime, totalTime, activity, geoPosition, vehicle, null)
             Log.d("PENDINGDATATESTING", "DATA IS IN MAIN____ $obj")
             tinyDB.putObject("upadteActivity", obj)
             tinyDB.putObject("GeoPosition", geoPosition)
             updatePendingData(false)
             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
-//            MyApplication.checKForActivityLoading = false
             stopInBetweenServerCheck()
 
         } else {
             Log.d("END_DAY_TESTING", "StartLoading")
-//            var intent = Intent(this, LoadingScreen::class.java)
-//            lifecycleScope.launch {
-//                withContext(Dispatchers.Main) {
-//                    if (activity == 3) {
-//                        startActivity(intent)
-//                    }
-//                }
-//
-//            }
-
             if (activity == 2) {
 
                 if (totalTime != null) {
@@ -525,14 +439,13 @@ class MainActivity : BaseClass() {
             }
             this.authRepository = authRepository
             tinyDB.putInt("ActivityCheck", activity!!)
-            var obj =
-                UpdateActivityDataClass(datetime, totalTime, activity, geoPosition, vehicle, null)
+            val obj = UpdateActivityDataClass(datetime, totalTime, activity, geoPosition, vehicle, null)
             Log.d("PENDINGDATATESTING", "DATA IS IN MAIN____ $obj")
             tinyDB.putObject("upadteActivity", obj)
             tinyDB.putObject("GeoPosition", geoPosition)
 
 
-            var Token = tinyDB.getString("Cookie")
+            val Token = tinyDB.getString("Cookie")
             lifecycleScope.launch {
 
                 withContext(Dispatchers.IO) {
@@ -558,57 +471,20 @@ class MainActivity : BaseClass() {
                         }
 
                     } catch (e: ResponseException) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                context,
-                                TAG1,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            updatePendingData(false)
-                            (MyApplication.loadingContext as LoadingScreen).finish()
-                        }
+                        showToastOrSaveDate()
                         println("ErrorResponse")
                     } catch (e: ApiException) {
-                        updatePendingData(false)
-                        (MyApplication.loadingContext as LoadingScreen).finish()
+                        showToastOrSaveDate()
                         e.printStackTrace()
                     } catch (e: NoInternetException) {
-                        updatePendingData(false)
-                        println("position 2")
-                        e.printStackTrace()
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                context,
-                                TAG2,
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            (MyApplication.loadingContext as LoadingScreen).finish()
+                        showToastOrSaveDate()
                         }
-                    } catch (e: SocketTimeoutException) {
-                        updatePendingData(false)
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                context,
-                                TAG2,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            (MyApplication.loadingContext as LoadingScreen).finish()
-                        }
+                     catch (e: SocketTimeoutException) {
+                         showToastOrSaveDate()
                     } catch (e: SocketException) {
-                        updatePendingData(false)
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(
-                                context,
-                                TAG2,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        (MyApplication.loadingContext as LoadingScreen).finish()
-                        Log.d("connection Exception", "Connect Not Available")
+                        showToastOrSaveDate()
                     } catch (e: Exception) {
-                        (MyApplication.loadingContext as LoadingScreen).finish()
+                        showToastOrSaveDate()
                         Log.d("connection Exception", "Connect Not Available")
                     }
                 }
@@ -618,52 +494,6 @@ class MainActivity : BaseClass() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onDestroy() {
-
-//        var languageCheck = MyApplication.checkForLanguageChange
-////        languageCheck=tinyDB.getInt("languageCheck")
-////        Log.d("checkLanguageValue", languageCheck.toString())
-//
-//
-//
-//        tinyDB.putInt("lasttimebreak", BreakTime)
-//        if(languageCheck != 200){
-//            stopService(Intent(this,TimerService::class.java))
-//            stopService(Intent(this,BreakTimerService::class.java))
-//            var check =tinyDB.getInt("ActivityCheck")
-//
-//            if(isMyServiceRunning(BreakTimerService::class.java)){
-//                check = 1
-//            }
-//            var TimeForUplaod=0
-//            when(check){
-//                0->{
-//                    TimeForUplaod=WorkTime
-//
-//                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,0,authRepository!!,this))
-//                }
-//                1->{
-//                    TimeForUplaod=BreakTime
-//
-//                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,1,authRepository!!,this))
-//                }
-//                2->{
-//                    TimeForUplaod=WorkTime
-//
-//                    context.startForegroundService(UploadRemaingDataService.getStartIntent(TimeForUplaod,0,authRepository!!,this))
-//                }
-//                3->{
-//
-//                }
-//
-//            }
-//        }
-//        else{
-//            MyApplication.checkForLanguageChange = 0
-//        }
-        super.onDestroy()
-    }
 
     fun initRepo(authRepository: AuthRepository, mainRepository: MainRepository) {
         this.mainRepository = mainRepository
@@ -675,36 +505,29 @@ class MainActivity : BaseClass() {
         val mHomeWatcher = HomeWatcher(this)
         mHomeWatcher.setOnHomePressedListener(object : OnHomePressedListener {
             override fun onHomePressed() {
-//                MyApplication.checkForResume=200
+
                 performSomeActionOnBackPress()
                 var check = tinyDB.getInt("SELECTEDACTIVITY")
                 Log.d("BreakComeTesting","$check")
-                // do something here...
-//                Toast.makeText(this@MainActivity, "Home is pressed", Toast.LENGTH_SHORT).show()
-//                finish()
             }
 
             override fun onHomeLongPressed() {
-                //MyApplication.checkForResume=200
+
                 performSomeActionOnBackPress()
 
-//                finish()
             }
         })
         mHomeWatcher.startWatch()
     }
 
     override fun onBackPressed() {
-        // MyApplication.checkForResume=200
         performSomeActionOnBackPress()
-
-
         Log.d("CDA", "onBackPressed Called")
         val setIntent = Intent(Intent.ACTION_MAIN)
         setIntent.addCategory(Intent.CATEGORY_HOME)
         setIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(setIntent)
-//        finish()
+
     }
 
 
@@ -773,18 +596,7 @@ class MainActivity : BaseClass() {
         println("Current Location $longitude and $latitude")
     }
 
-    fun batteryOptimizing() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val intent = Intent()
-            val packageName = packageName
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivity(intent)
-            }
-        }
-    }
+
 
 
     fun performSomeActionOnBackPress() {
@@ -796,61 +608,10 @@ class MainActivity : BaseClass() {
         }
         finishAffinity()
         finish()
-
-//        if( MyApplication.backPressCheck==200){
-//
-//            var timerService = isMyServiceRunning(TimerService::class.java)
-//            var breakService = isMyServiceRunning(BreakTimerService::class.java)
-//            if(timerService && breakService == false){
-//                try {
-//
-////                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
-//                    MyApplication.checkForResume = 200
-//                    tinyDB.putString("checkTimer","workTime")
-//                    MyBroadastReceivers.time = WorkTime
-//                    performTask()
-//                }catch (e  : Exception){
-//                    MyApplication.checkForResume = 100
-//                    Log.d("MyBroadCast","Error ${e.localizedMessage}")
-//                }
-//
-//
-//            }else if(breakService){
-//                try{
-////                    this.registerReceiver(receiver,IntentFilter(Intent.ACTION_TIME_TICK))
-//                    MyApplication.checkForResume = 200
-//                    tinyDB.putString("checkTimer","breakTime")
-//                    MyBroadastReceivers.time = BreakTime
-//                    MyBroadastReceivers.activiy=1
-//                    performTask()
-//                }catch (e: Exception){
-//                    MyApplication.checkForResume = 100
-//                    Log.d("MyBroadCast","Error ${e.localizedMessage}")
-//                }
-//
-//            }
-//
-//
-//
-//        }
-
     }
 
 
-    fun performTask() {
-        MyBroadastReceivers.receivers = receiver
-        tinyDB.putInt("lasttimework", WorkTime)
-        tinyDB.putInt("lasttimebreak", BreakTime)
-        stopService(Intent(this, TimerService::class.java))
-        stopService(Intent(this, BreakTimerService::class.java))
-        val sdf = SimpleDateFormat("HH:mm:ss")
-        val currentDate = sdf.format(Date())
-        tinyDB.putString("goBackTime", currentDate)
-        MyApplication.backPressCheck = 0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            hitWhenleaveScreen()
-        }
-    }
+
 
 
     override fun onResume() {
@@ -862,7 +623,6 @@ class MainActivity : BaseClass() {
         if (MyApplication.checkForResume == 200) {
 
             try {
-//                unregisterReceiver(receiver)
                 timeCalculator.timeDifference(tinyDB, this, true, MyApplication.TotalBreak,null)
                 MyApplication.checkForResume = 0
             } catch (e: Exception) {
@@ -883,28 +643,6 @@ class MainActivity : BaseClass() {
             finish()
         }
     }
-
-
-//    @RequiresApi(Build.VERSION_CODES.N)
-//    private fun scheduleJobFirebaseToRoomDataUpdate() {
-//        val jobScheduler = applicationContext
-//            .getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-//        val componentName = ComponentName(
-//            this,
-//            MyJobScheduler::class.java
-//        )
-//        val jobInfo = JobInfo.Builder(123, componentName)
-//            .setMinimumLatency(10000)
-//            .setRequiredNetworkType(
-//                 JobInfo.NETWORK_TYPE_NOT_ROAMING
-//            )
-//            .setPersisted(true)
-//        var result= jobScheduler.schedule(jobInfo.build())
-//        if(result==JobScheduler.RESULT_SUCCESS){
-//            Toast.makeText(this, "Job Start", Toast.LENGTH_SHORT).show()
-//        }
-//
-//    }
 
 
     fun initPermission(action: () -> Unit) {
@@ -928,7 +666,7 @@ class MainActivity : BaseClass() {
                         requestBackgroundPermission()
                     }
 
-                    CheckGpsStatus(action)
+                    checkGpsStatus(action)
 
 
                 }
@@ -977,82 +715,12 @@ class MainActivity : BaseClass() {
     }
 
 
-    fun tagsForToast() {
-        var language = tinyDB.getString("language")
-        if (language == "0") {
-            TAG1 = "Fallida"
-            TAG2 = "Comprueba tu conexión a Internet"
-
-        } else if (language == "1") {
-
-            TAG1 = "Failed"
-            TAG2 = "Check Your Internet Connection"
-        } else {
-            TAG1 = "Fracassada"
-            TAG2 = "Verifique a sua conexão com a internet"
-        }
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun hitWhenleaveScreen() {
-        var check = tinyDB.getInt("ActivityCheck")
-
-        if (isMyServiceRunning(BreakTimerService::class.java)) {
-            check = 1
-        }
-        var TimeForUplaod = 0
-        when (check) {
-            0 -> {
-                TimeForUplaod = WorkTime
-
-                context.startForegroundService(
-                    UploadRemaingDataService.getStartIntent(
-                        TimeForUplaod,
-                        0,
-                        authRepository!!,
-                        this
-                    )
-                )
-            }
-            1 -> {
-                TimeForUplaod = BreakTime
-
-                context.startForegroundService(
-                    UploadRemaingDataService.getStartIntent(
-                        TimeForUplaod,
-                        1,
-                        authRepository!!,
-                        this
-                    )
-                )
-            }
-            2 -> {
-                TimeForUplaod = WorkTime
-
-                context.startForegroundService(
-                    UploadRemaingDataService.getStartIntent(
-                        TimeForUplaod,
-                        0,
-                        authRepository!!,
-                        this
-                    )
-                )
-            }
-            3 -> {
-
-            }
-        }
-    }
 
 
-    fun checkScreen() {
-        Log.d("SCREENOFFCHECK", "TRUE")
-        val isScreenOn: Boolean = mgr.isInteractive()
-        if (isScreenOn == false) {
-            tinyDB.putBoolean("SCREENOFF", true)
-        }
-    }
+
+
+
+
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -1063,12 +731,12 @@ class MainActivity : BaseClass() {
     }
 
     fun getActivityAPIData(): UpdateActivityDataClass {
-        var vehicle = tinyDB.getObject("VehicleForBackgroundPush", Vehicle::class.java)
-        var geoPosition = tinyDB.getObject("GeoPosition", GeoPosition::class.java)
+        val vehicle = tinyDB.getObject("VehicleForBackgroundPush", Vehicle::class.java)
+        val geoPosition = tinyDB.getObject("GeoPosition", GeoPosition::class.java)
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
         currentDate= currentDate.replace(" ","T")
-        currentDate = currentDate + "Z"
+        currentDate += "Z"
         var activity = tinyDB.getInt("SELECTEDACTIVITY")
         var time = 0
         when (activity) {
@@ -1088,18 +756,18 @@ class MainActivity : BaseClass() {
         }
 
 
-        var obj = UpdateActivityDataClass(currentDate, time, activity, geoPosition, vehicle, null)
+        val obj = UpdateActivityDataClass(currentDate, time, activity, geoPosition, vehicle, null)
         return obj
     }
 
     fun getAPIDataForState(): UpdateActivityDataClass {
-        var vehicle = tinyDB.getObject("VehicleForBackgroundPush", Vehicle::class.java)
-        var geoPosition = tinyDB.getObject("GeoPosition", GeoPosition::class.java)
+        val vehicle = tinyDB.getObject("VehicleForBackgroundPush", Vehicle::class.java)
+        val geoPosition = tinyDB.getObject("GeoPosition", GeoPosition::class.java)
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         var currentDate = sdf.format(Date())
         currentDate= currentDate.replace(" ","T")
         currentDate = currentDate + "Z"
-        var activity = tinyDB.getInt("SELECTEDACTIVITY")
+        val activity = tinyDB.getInt("SELECTEDACTIVITY")
         var time = 0
         when (activity) {
             0 -> {
@@ -1122,21 +790,127 @@ class MainActivity : BaseClass() {
         return obj
     }
 
+
+
+
+
+
+
+
+    //--------------------------------------Utils-----------------------------
+    private fun registerReceiver(){
+        serviceIntent = Intent(applicationContext, TimerService::class.java)
+        registerReceiver(updateTime, IntentFilter(TimerService.TIMER_UPDATED))
+        serviceIntentB = Intent(applicationContext, BreakTimerService::class.java)
+        registerReceiver(updateTimeBreak, IntentFilter(BreakTimerService.TIMER_UPDATED_B))
+    }
+    fun getWidth() {
+        val displayMetrics = resources.displayMetrics
+        dpHeight = displayMetrics.heightPixels / displayMetrics.density
+        dpWidth = displayMetrics.widthPixels / displayMetrics.density
+        Log.d("MyHeight", dpHeight.toString() + "")
+        Log.d("MyWidth", dpWidth.toString() + "")
+    }
+    private fun getTimeStringFromDouble(time: Double): String {
+
+        val resultInt = time.roundToInt()
+        lifecycleScope.launch {
+            viewModel.workTimerupdater(time.roundToInt(), dataBinding, tinyDB)
+        }
+        Log.d("Timer_Testing", "$resultInt")
+        println(" $resultInt")
+        WorkTime = resultInt
+        val hours = resultInt / 3600
+        val minutes = resultInt % 86400 % 3600 / 60
+        val seconds = resultInt % 86400 % 3600 % 60
+        Log.d("Timer_Testing", "$hours ------ $minutes ------ $seconds")
+        return makeTimeString(hours, minutes, seconds)
+    }
+
+    private fun makeTimeString(hour: Int, min: Int, sec: Int): String =
+        String.format("%02d:%02d", hour, min)
+    fun restartActivity() {
+        val intent = intent
+        finish()
+        startActivity(intent)
+    }
+    fun tagsForToast() {
+        val language = tinyDB.getString("language")
+        if (language == "0") {
+            TAG1 = "Fallida"
+            TAG2 = "Comprueba tu conexión a Internet"
+
+        } else if (language == "1") {
+
+            TAG1 = "Failed"
+            TAG2 = "Check Your Internet Connection"
+        } else {
+            TAG1 = "Fracassada"
+            TAG2 = "Verifique a sua conexão com a internet"
+        }
+
+    }
+    override fun onTrimMemory(level: Int) {
+
+        // Determine which lifecycle or system event was raised.
+        when (level) {
+
+            ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN -> {
+                /*
+                   Release any UI objects that currently hold memory.
+
+                   The user interface has moved to the background.
+                */
+            }
+
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE,
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> {
+                /*
+                   Release any memory that your app doesn't need to run.
+
+                   The device is running low on memory while the app is running.
+                   The event raised indicates the severity of the memory-related event.
+                   If the event is TRIM_MEMORY_RUNNING_CRITICAL, then the system will
+                   begin killing background processes.
+                */
+
+
+
+
+
+                Log.d("MARCA_MEMORY", "Memory running critical")
+            }
+
+            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND -> {
+                Log.d("MARCA_MEMORY", "Memory running Background")
+            }
+            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
+            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
+                /*
+                   Release as much memory as the process can.
+
+                   The app is on the LRU list and the system is running low on memory.
+                   The event raised indicates where the app sits within the LRU list.
+                   If the event is TRIM_MEMORY_COMPLETE, the process will be one of
+                   the first to be terminated.
+                */
+                Log.d("MARCA_MEMORY", "Memory running Danger")
+
+            }
+
+            else -> {
+                /*
+                  Release any non-critical data structures.
+
+                  The app received an unrecognized memory level value
+                  from the system. Treat this as a generic low-memory message.
+                */
+            }
+        }
+    }
     fun updatePendingData(checkState: Boolean) {
         tinyDB.putBoolean("NETCHECK", false)
-
-//        if(checkState){
-////            var obj = getAPIDataForState()
-////            arrayList= tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
-////            arrayList.add(obj)
-//        }else{
-//            var obj = getActivityAPIData()
-//            arrayList= tinyDB.getListObject("PENDINGDATALIST",UpdateActivityDataClass::class.java) as ArrayList<UpdateActivityDataClass>
-//            arrayList.add(obj)
-//        }
-//        tinyDB.putListObject("PENDINGDATALIST",arrayList as ArrayList<Object>)
-
-
         if (checkState) {
             Log.d("STATE_TESTING", "NOT good")
             lifecycleScope.launch {
@@ -1199,67 +973,22 @@ class MainActivity : BaseClass() {
 
 
     }
-
-
-    override fun onTrimMemory(level: Int) {
-
-        // Determine which lifecycle or system event was raised.
-        when (level) {
-
-            ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN -> {
-                /*
-                   Release any UI objects that currently hold memory.
-
-                   The user interface has moved to the background.
-                */
-            }
-
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE,
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> {
-                /*
-                   Release any memory that your app doesn't need to run.
-
-                   The device is running low on memory while the app is running.
-                   The event raised indicates the severity of the memory-related event.
-                   If the event is TRIM_MEMORY_RUNNING_CRITICAL, then the system will
-                   begin killing background processes.
-                */
-
-
-
-
-
-                Log.d("MARCA_MEMORY", "Memory running critical")
-            }
-
-            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND -> {
-                Log.d("MARCA_MEMORY", "Memory running Background")
-            }
-            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
-            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
-                /*
-                   Release as much memory as the process can.
-
-                   The app is on the LRU list and the system is running low on memory.
-                   The event raised indicates where the app sits within the LRU list.
-                   If the event is TRIM_MEMORY_COMPLETE, the process will be one of
-                   the first to be terminated.
-                */
-                Log.d("MARCA_MEMORY", "Memory running Danger")
-
-            }
-
-            else -> {
-                /*
-                  Release any non-critical data structures.
-
-                  The app received an unrecognized memory level value
-                  from the system. Treat this as a generic low-memory message.
-                */
-            }
+    fun checkScreen() {
+        Log.d("SCREENOFFCHECK", "TRUE")
+        val isScreenOn: Boolean = mgr.isInteractive
+        if (!isScreenOn) {
+            tinyDB.putBoolean("SCREENOFF", true)
         }
     }
-
-
+    private suspend fun  showToastOrSaveDate(){
+        withContext(Dispatchers.Main) {
+            Toast.makeText(
+                context,
+                TAG1,
+                Toast.LENGTH_SHORT
+            ).show()
+            updatePendingData(false)
+            (MyApplication.loadingContext as LoadingScreen).finish()
+        }
+    }
 }

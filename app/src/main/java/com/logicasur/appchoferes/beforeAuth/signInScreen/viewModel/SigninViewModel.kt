@@ -1,5 +1,6 @@
 package com.logicasur.appchoferes.beforeAuth.signInScreen.viewModel
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -17,7 +18,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.beforeAuth.forgotPasswordScreen.ForgotPasswordActivity
@@ -51,17 +52,15 @@ import java.net.SocketException
 import javax.inject.Inject
 
 @HiltViewModel
-class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
+class SigninViewModel @Inject constructor(val authRepository: AuthRepository, val tinyDB: TinyDB,
                                           val mainRepository: MainRepository,
                                           val resendApis: ResendApis, val timerCalculator: TimeCalculator, val serverCheck: ServerCheck
 ) : ViewModel() {
     lateinit var activityContext: Context
-    lateinit var tinyDB: TinyDB
     var Token=""
 
 
     fun viewsOfActivitySign(context: Context, binding: ActivitySignInBinding) {
-        tinyDB= TinyDB(context)
         activityContext = context
         binding.apply {
             showPassBtn.setOnClickListener {
@@ -99,11 +98,12 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
     }
 
     private fun moveToForgetPassword() {
-        var intent = Intent(activityContext, ForgotPasswordActivity::class.java)
+        val intent = Intent(activityContext, ForgotPasswordActivity::class.java)
         ContextCompat.startActivity(activityContext, intent, Bundle.EMPTY)
     }
 
 
+    @SuppressLint("HardwareIds")
     private fun sigInAuthApi(userName:String, userPassword:String) {
         val iPath: File = Environment.getDataDirectory()
         val iStat = StatFs(iPath.path)
@@ -118,22 +118,22 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         val name = userName
         val password = userPassword
         val idApp: String? = MyFirebaseMessagingService.getToken(activityContext)
-        val memUsed: String? = usedSpace
-        val diskFree: String? = iAvailableSpace
-        val diskTotal: String? =iTotalSpace
+        val memUsed: String = usedSpace
+        val diskFree: String = iAvailableSpace
+        val diskTotal: String =iTotalSpace
         val model: String? = Build.MODEL
-        val operatingSystem: String? = "android"
+        val operatingSystem = "android"
         val osVersion: String? = getAndroidVersion()
-        val appVersion: String? = "5"
+        val appVersion = "5"
         val appBuild: String? =  Build.ID
-        val platform: String? = "Android"
+        val platform = "Android"
         val manufacturer: String? = Build.MANUFACTURER
         val uuid: String? = Settings.Secure.getString(
-            activityContext?.getContentResolver(),
+            activityContext.getContentResolver(),
             Settings.Secure.ANDROID_ID
         )
 
-        var isVirtual: String? = isEmulator().toString()
+        val isVirtual: String = isEmulator().toString()
 
 
 
@@ -146,75 +146,24 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                     val response =
                         authRepository.userSignin(
                             name, password, idApp!!,
-                            memUsed!!,
-                            diskFree!!,
-                            diskTotal!!,
+                            memUsed,
+                            diskFree,
+                            diskTotal,
                             model!!,
-                            operatingSystem!!,
+                            operatingSystem,
                             osVersion!!,
-                            appVersion!!,
+                            appVersion,
                             appBuild!!,
-                            platform!!,
+                            platform,
                             manufacturer!!,
                             uuid!!,
-                            isVirtual!!
+                            isVirtual
                         )
-
-
-
-                    println("SuccessResponse $response")
                     authRepository.InsertSigninData(response)
-
-
-                    val lastUser= tinyDB.getString("LastUser")
-                    if(lastUser != null){
-                        if(userName.trim() != lastUser.trim()){
-                            tinyDB.putString("WorkDate","")
-                            tinyDB.putString("BreakDate","")
-                            tinyDB.putString("LastUser","")
-                        }
-
-                    }
-
-                    tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
-                    tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-                    tinyDB.putInt("defaultWork",response.work!!.workingHours)
-                    tinyDB.putInt("defaultBreak",response.work.workBreak)
-                    tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
-                    var max = response.work.workBreak * 60
-                    println("Max Value from Server $max")
-                    tinyDB.putInt("MaxBreakBar",max)
-
-
-                    var maxWork = response.work!!.workingHours * 60
-                    println("Max Value from Server $maxWork")
-                    tinyDB.putInt("MaxBar",maxWork)
-
-                    if(response.lastVar.lastActivity != 3){
-                        var state=response.lastVar.lastState!!
-                        tinyDB.putInt("state", state+1)
-                    }
-
-
-
-                    if (response.colors.primary.isNotEmpty()) {
-                        ResendApis.primaryColor = response.colors.primary ?: "#7A59FC"
-                        ResendApis.secondaryColor = response.colors.secondary ?: "#653FFB"
-                        tinyDB.putString("primaryColor",ResendApis.primaryColor)
-                        tinyDB.putString("secondrayColor",ResendApis.secondaryColor)
-                    }
-
-                    tinyDB.putString("User",userName)
-                    MyApplication.check=200
-                    var temp=  tinyDB.getString("User")
-                    Log.d("total time ","tem $temp")
-                    val Language =response.profile?.language
-                    val notify:Boolean =response.profile?.notify!!
-                    tinyDB.putString("language", Language.toString())
-                    tinyDB.putBoolean("notify",notify)
+                    saveDataInTinyDataBase(response,userName)
                     checkStateByServer(response)
                     Token = tinyDB.getString("Cookie").toString()
-                    Log.d("TOKENTESTING","$Token")
+                    Log.d("TOKENTESTING", Token)
                     getPreviousTime(response)
                     getLoadingScreenImage()
 
@@ -338,7 +287,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
             withContext(Dispatchers.IO) {
 
                 try {
-                   var user=tinyDB.getString("User")
+                   val user=tinyDB.getString("User")
 
                     val response = authRepository.getUserAvatar(user!!,Token)
 
@@ -403,7 +352,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
 
 
     private fun checkStateByServer(response: SigninResponse) {
-        var check = response.lastVar!!.lastActivity
+        val check = response.lastVar!!.lastActivity
         tinyDB.putInt("selectedStateByServer", check!!)
         when(check){
             0->{
@@ -432,7 +381,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
 
 
         tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+        tinyDB.putInt("lasttimework", response.lastVar.lastWorkedHoursTotal!!)
 
         when (response.lastVar.lastActivity) {
             0 -> {
@@ -442,11 +391,11 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
             1 -> {
                 Log.d("NEGATIVE_TESTING", "in function break")
                 tinyDB.putString("checkTimer", "breakTime")
-                var breakDate = response.lastVar!!.lastWorkBreakDateIni
+                var breakDate = response.lastVar.lastWorkBreakDateIni
                 if (breakDate!!.isNotEmpty()) {
-                    breakDate = breakDate!!.split(".").toTypedArray()[0]
-                    breakDate = breakDate!!.replace("T"," ")
-                    breakDate = breakDate!!.replace("-","/")
+                    breakDate = breakDate.split(".").toTypedArray()[0]
+                    breakDate = breakDate.replace("T"," ")
+                    breakDate = breakDate.replace("-","/")
                     Log.d("workDate Is", "date is $breakDate")
                 }
                 tinyDB.putString("goBackTime", breakDate)
@@ -470,16 +419,16 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         var workStartTime=response.lastVar.lastWorkedHoursDateIni
         var breakStartTime =response.lastVar.lastWorkBreakDateIni
         if(workStartTime != null){
-            workStartTime= workStartTime!!.replace("T",",")
-            workStartTime= workStartTime!!.split(".").toTypedArray()[0]
-            workStartTime = workStartTime+"Z"
+            workStartTime= workStartTime.replace("T",",")
+            workStartTime= workStartTime.split(".").toTypedArray()[0]
+            workStartTime += "Z"
 
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
                         mainRepository.deleteAllUnsentStartWorkTime()
                     }
-                    mainRepository!!.insertUnsentStartWorkTime(
+                    mainRepository.insertUnsentStartWorkTime(
                         UnsentStartWorkTime(
                             0,
                             workStartTime
@@ -489,8 +438,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
             }
         }
         if(breakStartTime != null){
-            breakStartTime= breakStartTime!!.replace("T",",")
-            breakStartTime= breakStartTime!!.split(".").toTypedArray()[0]
+            breakStartTime= breakStartTime.replace("T",",")
+            breakStartTime= breakStartTime.split(".").toTypedArray()[0]
             breakStartTime = breakStartTime+"Z"
 
             viewModelScope.launch {
@@ -498,7 +447,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                     if (mainRepository.getUnsentStartBreakTimeDetails() != null) {
                         mainRepository.deleteAllUnsentStartBreakTime()
                     }
-                    mainRepository!!.insertUnsentStartBreakTime(
+                    mainRepository.insertUnsentStartBreakTime(
                         UnsentStartBreakTime(
                             0,
                             breakStartTime
@@ -517,6 +466,49 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
 
     // -------------------------- Utils --------------------------------
 
+
+    private fun saveDataInTinyDataBase(response: SigninResponse, userName: String){
+        val lastUser= tinyDB.getString("LastUser")
+        if(lastUser != null){
+            if(userName.trim() != lastUser.trim()){
+                tinyDB.putString("WorkDate","")
+                tinyDB.putString("BreakDate","")
+                tinyDB.putString("LastUser","")
+            }
+
+        }
+        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+        tinyDB.putInt("lasttimebreak", response.lastVar.lastWorkBreakTotal!!)
+        tinyDB.putInt("defaultWork",response.work!!.workingHours)
+        tinyDB.putInt("defaultBreak",response.work.workBreak)
+        tinyDB.putInt("lastVehicleid", response.lastVar.lastIdVehicle!!.id!!)
+        val max = response.work.workBreak * 60
+        println("Max Value from Server $max")
+        tinyDB.putInt("MaxBreakBar",max)
+        val maxWork = response.work.workingHours * 60
+        println("Max Value from Server $maxWork")
+        tinyDB.putInt("MaxBar",maxWork)
+
+        if(response.lastVar.lastActivity != 3){
+            val state=response.lastVar.lastState!!
+            tinyDB.putInt("state", state+1)
+        }
+        if (response.colors.primary.isNotEmpty()) {
+            ResendApis.primaryColor = response.colors.primary
+            ResendApis.secondaryColor = response.colors.secondary
+            tinyDB.putString("primaryColor", ResendApis.primaryColor)
+            tinyDB.putString("secondrayColor", ResendApis.secondaryColor)
+        }
+
+        tinyDB.putString("User",userName)
+        MyApplication.check=200
+        val temp=  tinyDB.getString("User")
+        Log.d("total time ","tem $temp")
+        val Language =response.profile?.language
+        val notify:Boolean =response.profile?.notify!!
+        tinyDB.putString("language", Language.toString())
+        tinyDB.putBoolean("notify",notify)
+    }
 
     private fun checkDeviceNetActiveAndNotify(): Boolean{
         if(!CheckConnection.netCheck(activityContext)){
@@ -575,7 +567,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         return "Android SDK: $sdkVersion ($release)"
     }
 
-    private fun formatSize(size: Long): String? {
+    private fun formatSize(size: Long): String {
         println("orignal size $size")
         var size = size
         var suffix: String? = null
@@ -629,9 +621,9 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         tinyDB.putString("checkTimer", "workTime")
         var workDate = response.lastVar!!.lastWorkedHoursDateIni
         if (workDate!!.isNotEmpty()) {
-            workDate = workDate!!.split(".").toTypedArray()[0]
-            workDate = workDate!!.replace("T"," ")
-            workDate = workDate!!.replace("-","/")
+            workDate = workDate.split(".").toTypedArray()[0]
+            workDate = workDate.replace("T"," ")
+            workDate = workDate.replace("-","/")
             Log.d("workDate Is", "date is $workDate")
         }
         tinyDB.putString("goBackTime", workDate)

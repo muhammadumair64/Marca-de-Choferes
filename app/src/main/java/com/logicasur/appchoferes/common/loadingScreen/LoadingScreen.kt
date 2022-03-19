@@ -21,7 +21,7 @@ import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
 import com.logicasur.appchoferes.Extra.BaseClass
-import com.logicasur.appchoferes.Extra.ResendApis
+import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.beforeAuth.otpScreen.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.timerServices.UploadRemaingDataService.Companion.activity
 import java.util.*
