@@ -64,11 +64,11 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         binding.apply {
             showPassBtn.setOnClickListener {
                 if (editPassword.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
-                    editPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance())
+                    editPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
                     editPassword.setSelection(editPassword.getText().length);
                     showPassBtn.setImageResource(R.drawable.hide_password)
                 } else {
-                    editPassword.setTransformationMethod(PasswordTransformationMethod.getInstance())
+                    editPassword.transformationMethod = PasswordTransformationMethod.getInstance()
                        editPassword.setSelection(editPassword.getText().length);
                     showPassBtn.setImageResource(R.drawable.ic_icon_visibility)
                 }
@@ -86,13 +86,13 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                 var emailCheck: String = email.text.toString()
                 val passwordCheck= editPassword.text.toString()
                 emailCheck = emailCheck.trim()
-                val validater= emailCheck.isValidEmail()
+                val validator= emailCheck.isValidEmail()
 
                 if(emailCheck.isEmpty()){
                     Toast.makeText(activityContext, "Enter Email", Toast.LENGTH_SHORT).show()
                 }
                 else{
-                    if(validater && passwordCheck.length>=4){
+                    if(validator && passwordCheck.length>=4){
                         if(CheckConnection.netCheck(context)){
                             viewModelScope.launch(Dispatchers.IO) {
                                 MyApplication.authCheck = true
@@ -109,7 +109,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
                             Toast.makeText(activityContext,"Comprueba tu conexión a Internet" , Toast.LENGTH_SHORT).show()
                         }
 
-                    }else if(validater==false){
+                    }else if(!validator){
                         Toast.makeText(activityContext, "Invalid Email", Toast.LENGTH_SHORT).show()
 
                     }
@@ -607,7 +607,6 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
     fun getToken(){
         var Token = MyFirebaseMessagingService.getToken(activityContext)
         Log.d("FCM_TOKEN_","$Token")
-
     }
 }
 
