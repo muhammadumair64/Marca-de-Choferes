@@ -480,7 +480,8 @@ class MainActivity : BaseClass() {
         activity: Int?,
         geoPosition: GeoPosition?,
         vehicle: Vehicle?,
-        authRepository: AuthRepository
+        authRepository: AuthRepository,
+        stopInBetweenServerCheck: () -> Unit
 
     ) {
         Log.d("updateActivity", "Function")
@@ -502,6 +503,7 @@ class MainActivity : BaseClass() {
             updatePendingData(false)
             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
 //            MyApplication.checKForActivityLoading = false
+            stopInBetweenServerCheck()
 
         } else {
             Log.d("END_DAY_TESTING", "StartLoading")
@@ -549,6 +551,7 @@ class MainActivity : BaseClass() {
 
 
                         if (response != null) {
+                            stopInBetweenServerCheck()
                             withContext(Dispatchers.Main) {
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                             }

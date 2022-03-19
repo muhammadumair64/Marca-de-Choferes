@@ -1460,14 +1460,15 @@ class HomeViewModel @Inject constructor(
 //            MyApplication.checKForActivityLoading = false
 
                 }else{
-                    resendApis.serverCheck.serverCheckMainActivityApi(true) {
+                    resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction->
                         updateActivityForAction(
                             "$currentDate",
                             totalTime,
                             activity,
                             geoPosition,
                             vehicle
-                        )
+                        ){serverAction()}
+
                     }
                 }
 
@@ -1484,7 +1485,8 @@ class HomeViewModel @Inject constructor(
         totalTime: Int?,
         activity: Int,
         geoPosition: GeoPosition,
-        vehicle: Vehicle
+        vehicle: Vehicle,
+        stopInBetweenServerCheck: () -> Unit
     ) {
         Log.d("UpdateActivity", "ForAction")
         viewModelScope.launch {
@@ -1494,7 +1496,8 @@ class HomeViewModel @Inject constructor(
                 activity,
                 geoPosition,
                 vehicle,
-                authRepository
+                authRepository,
+                stopInBetweenServerCheck
             )
         }
     }

@@ -66,7 +66,7 @@ class ServerCheck constructor(
         }, 0, 5000)
 
         tagsForToast()
-        Log.d(TAG, "Server Check function")
+        Log.d(TAG, "Server Check function 1st")
 
         CoroutineScope(Job()).launch(Dispatchers.IO) {
             try {
@@ -350,12 +350,12 @@ class ServerCheck constructor(
                     }
 
                 }
-            }, 0, 3000)
+            }, 0, 5000)
         }
 
 
         tagsForToast()
-        Log.d(TAG, "Server Check function")
+        Log.d(TAG, "Server Check function 3rd")
 
 
         mainActivityCall(serverCheckTimer, apiCall,toSaveInDB)
@@ -476,7 +476,7 @@ class ServerCheck constructor(
 
 
         tagsForToast()
-        Log.d(TAG, "Server Check function")
+        Log.d(TAG, "Server Check function 4th")
 
 
         tinyDB.getString("Cookie")?.let { token ->
