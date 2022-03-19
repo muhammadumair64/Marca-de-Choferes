@@ -11,6 +11,8 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.util.Patterns
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
@@ -63,74 +65,46 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         activityContext = context
         binding.apply {
             showPassBtn.setOnClickListener {
-                if (editPassword.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
-                    editPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-                    editPassword.setSelection(editPassword.getText().length);
-                    showPassBtn.setImageResource(R.drawable.hide_password)
-                } else {
-                    editPassword.transformationMethod = PasswordTransformationMethod.getInstance()
-                       editPassword.setSelection(editPassword.getText().length);
-                    showPassBtn.setImageResource(R.drawable.ic_icon_visibility)
-                }
-
-
+                hideOrUnhidePassword(showPassBtn,editPassword)
             }
 
             forgotPassword.setOnClickListener {
-                var intent = Intent(context, ForgotPasswordActivity::class.java)
-                ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-
+                moveToForgetPassword()
             }
 
             signInBtn.setOnClickListener {
-                var emailCheck: String = email.text.toString()
-                val passwordCheck= editPassword.text.toString()
-                emailCheck = emailCheck.trim()
-                val validator= emailCheck.isValidEmail()
 
-                if(emailCheck.isEmpty()){
-                    Toast.makeText(activityContext, "Enter Email", Toast.LENGTH_SHORT).show()
-                }
-                else{
-                    if(validator && passwordCheck.length>=4){
-                        if(CheckConnection.netCheck(context)){
-                            viewModelScope.launch(Dispatchers.IO) {
-                                MyApplication.authCheck = true
-//                                serverCheck.serverCheck {
-//                                    signinAuth(emailCheck,passwordCheck)
-//                                }
-                                signinAuth(emailCheck.trim(),passwordCheck)
-                                Log.d("EmailTesting","SIGN IN EMAIL ${emailCheck.trim()}")
-                            }
-                            var intent = Intent(activityContext,LoadingScreen::class.java)
-                            ContextCompat.startActivity(activityContext, intent, Bundle.EMPTY)
+                if(validateEmailAndPassword(email,editPassword)){
+                    if(checkDeviceNetActiveAndNotify()){
+                        viewModelScope.launch(Dispatchers.IO) {
+                            MyApplication.authCheck = true
+                            sigInAuthApi(email.text.toString().trim(),editPassword.text.toString().trim())
                         }
-                       else{
-                            Toast.makeText(activityContext,"Comprueba tu conexión a Internet" , Toast.LENGTH_SHORT).show()
-                        }
-
-                    }else if(!validator){
-                        Toast.makeText(activityContext, "Invalid Email", Toast.LENGTH_SHORT).show()
-
+                        showLoadingScreen()
                     }
-                    else{
-                        Toast.makeText(activityContext, "Invalid password", Toast.LENGTH_SHORT).show()
 
-                    }
                 }
-
-
 
             }
 
-            getToken()
+            logToken()
 
 
         }
     }
 
+    private fun showLoadingScreen() {
+        val intent = Intent(activityContext,LoadingScreen::class.java)
+        ContextCompat.startActivity(activityContext, intent, Bundle.EMPTY)
+    }
 
-    private fun signinAuth(userName:String, userPassword:String) {
+    private fun moveToForgetPassword() {
+        var intent = Intent(activityContext, ForgotPasswordActivity::class.java)
+        ContextCompat.startActivity(activityContext, intent, Bundle.EMPTY)
+    }
+
+
+    private fun sigInAuthApi(userName:String, userPassword:String) {
         val iPath: File = Environment.getDataDirectory()
         val iStat = StatFs(iPath.path)
         val iBlockSize = iStat.blockSizeLong
@@ -290,47 +264,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         }
     }
 
-    fun convertErrorBody(responseString: Reader?): SigninResponse {
-        val gson = Gson()
-        val type = object : TypeToken<SigninResponse>() {}.type
-        val errorResponse: SigninResponse? = gson.fromJson(responseString, type)
-        return errorResponse!!
-    }
 
-    private fun formatSize(size: Long): String? {
-        println("orignal size $size")
-        var size = size
-        var suffix: String? = null
-        if (size >= 1024) {
-            suffix = "KB"
-            size /= 1024
-            if (size >= 1024) {
-                suffix = "MB"
-                size /= 1024
-                if (size >= 1024) {
-                    suffix = "GB"
-                    size /= 1024
-
-
-                }
-            }
-        }
-        val resultBuffer = StringBuilder(java.lang.Long.toString(size))
-        var commaOffset = resultBuffer.length - 3
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',')
-            commaOffset -= 3
-        }
-        if (suffix != null) resultBuffer.append(suffix)
-
-        return resultBuffer.toString()
-
-
-    }
-
-    fun String.isValidEmail(): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(this).matches()
-    }
 
 
     suspend fun getLoadingScreenImage(){
@@ -464,22 +398,9 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
     }
 
 
-    fun isEmulator(): Boolean {
-        return (Build.FINGERPRINT.startsWith("generic")
-                || Build.FINGERPRINT.startsWith("unknown")
-                || Build.MODEL.contains("google_sdk")
-                || Build.MODEL.contains("Emulator")
-                || Build.MODEL.contains("Android SDK built for x86")
-                || Build.MANUFACTURER.contains("Genymotion")
-                || Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
-                || "google_sdk" == Build.PRODUCT)
-    }
 
-    fun getAndroidVersion(): String? {
-        val release = Build.VERSION.RELEASE
-        val sdkVersion = Build.VERSION.SDK_INT
-        return "Android SDK: $sdkVersion ($release)"
-    }
+
+
 
     private fun checkStateByServer(response: SigninResponse) {
         var check = response.lastVar!!.lastActivity
@@ -590,7 +511,120 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
 
 
     }
-    fun getWorkTime(response: SigninResponse) {
+
+
+
+
+    // -------------------------- Utils --------------------------------
+
+
+    private fun checkDeviceNetActiveAndNotify(): Boolean{
+        if(!CheckConnection.netCheck(activityContext)){
+            Toast.makeText(activityContext,"Comprueba tu conexión a Internet" , Toast.LENGTH_SHORT).show()
+        }
+        else{
+           return true
+        }
+        return false
+    }
+
+    private fun validateEmailAndPassword(emailET: EditText,passwordET : EditText) : Boolean{
+        val emailCheck: String = emailET.text.toString().trim()
+        val passwordCheck= passwordET.text.toString()
+        val validator= emailCheck.isValidEmail()
+
+        if(emailCheck.isEmpty()){
+            Toast.makeText(activityContext, "Enter Email", Toast.LENGTH_SHORT).show()
+        }
+        else{
+            if(validator && passwordCheck.length>=4){
+                Log.d("EmailTesting","SIGN IN EMAIL $emailCheck and password is $passwordCheck")
+                return true
+            }else if(!validator){
+                Toast.makeText(activityContext, "Invalid Email", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(activityContext, "Invalid password", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+
+       return false
+    }
+
+    fun isEmulator(): Boolean {
+        return (Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
+                || "google_sdk" == Build.PRODUCT)
+    }
+    private fun convertErrorBody(responseString: Reader?): SigninResponse {
+        val gson = Gson()
+        val type = object : TypeToken<SigninResponse>() {}.type
+        val errorResponse: SigninResponse? = gson.fromJson(responseString, type)
+        return errorResponse!!
+    }
+
+    fun getAndroidVersion(): String? {
+        val release = Build.VERSION.RELEASE
+        val sdkVersion = Build.VERSION.SDK_INT
+        return "Android SDK: $sdkVersion ($release)"
+    }
+
+    private fun formatSize(size: Long): String? {
+        println("orignal size $size")
+        var size = size
+        var suffix: String? = null
+        if (size >= 1024) {
+            suffix = "KB"
+            size /= 1024
+            if (size >= 1024) {
+                suffix = "MB"
+                size /= 1024
+                if (size >= 1024) {
+                    suffix = "GB"
+                    size /= 1024
+
+
+                }
+            }
+        }
+        val resultBuffer = StringBuilder(java.lang.Long.toString(size))
+        var commaOffset = resultBuffer.length - 3
+        while (commaOffset > 0) {
+            resultBuffer.insert(commaOffset, ',')
+            commaOffset -= 3
+        }
+        if (suffix != null) resultBuffer.append(suffix)
+
+        return resultBuffer.toString()
+
+
+    }
+
+    private fun String.isValidEmail(): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(this).matches()
+    }
+
+    private fun hideOrUnhidePassword(iconImage : ImageView, editText: EditText){
+        hideBehaviourOnET(editText)
+        if (editText.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
+            iconImage.setImageResource(R.drawable.hide_password)
+        } else {
+            iconImage.setImageResource(R.drawable.ic_icon_visibility)
+        }
+    }
+
+    private fun hideBehaviourOnET(editText: EditText){
+        editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+        editText.setSelection(editText.text.length)
+    }
+
+    private fun getWorkTime(response: SigninResponse) {
         Log.d("NEGATIVE_TESTING", "in function 3")
         tinyDB.putString("checkTimer", "workTime")
         var workDate = response.lastVar!!.lastWorkedHoursDateIni
@@ -604,9 +638,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository,
         timerCalculator.timeDifference(tinyDB, activityContext, false, response.work!!.workBreak,response)
     }
 
-    fun getToken(){
-        var Token = MyFirebaseMessagingService.getToken(activityContext)
-        Log.d("FCM_TOKEN_","$Token")
+    private fun logToken(){
+        Log.d("FCM_TOKEN_","${MyFirebaseMessagingService.getToken(activityContext)}")
     }
 }
 
