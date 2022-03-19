@@ -2,7 +2,6 @@ package com.logicasur.appchoferes.mainscreen.home
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -22,10 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -93,7 +90,7 @@ class HomeFragment : Fragment(), OnclickItem {
     }
 
     fun initViews() {
-        var context = (activity as MainActivity).context
+        val context = (activity as MainActivity).context
         mainContext = context
         binding.statusListBtn.visibility = View.GONE
         (activity as MainActivity).setGrad(
@@ -108,8 +105,8 @@ class HomeFragment : Fragment(), OnclickItem {
         )
         binding.date.setTextColor(Color.parseColor(ResendApis.primaryColor))
         binding.apply {
-            initialState?.setVisibility(View.VISIBLE)
-            secondState?.setVisibility(View.GONE)
+            initialState.setVisibility(View.VISIBLE)
+            secondState.setVisibility(View.GONE)
         }
         val animation = TransitionInflater.from(requireContext()).inflateTransition(
             R.transition.example_1
@@ -123,7 +120,7 @@ class HomeFragment : Fragment(), OnclickItem {
         viewModel.viewsForHomeFragment(context, binding)
         viewModel.Breakbar()
         viewModel.Workbar()
-        var intent = (activity as MainActivity)
+        val intent = (activity as MainActivity)
         intent.viewsOfFragment(binding)
         viewModel.timers()
 
@@ -179,9 +176,9 @@ class HomeFragment : Fragment(), OnclickItem {
         alertDialog = dailogBuilder.create()
         dialog = statusDailogBuilder.create()
         binding.vehicleListBtn.setOnClickListener {
-            if (binding.StateActive.isVisible) {
+            if(binding.StateActive.isVisible) {
 
-            } else if (binding.secondState.text == "End Break" || binding.secondState.text == "Fin del descanso" || binding.secondState.text == "Fim do intervalo") {
+            } else if(binding.secondState.text == "End Break" || binding.secondState.text == "Fin del descanso" || binding.secondState.text == "Fim do intervalo") {
 
             } else {
                 searchAdapter.notifyDataSetChanged()
@@ -232,7 +229,7 @@ class HomeFragment : Fragment(), OnclickItem {
     }
 
     fun searchVehicle() {
-        var context = (activity as MainActivity).context
+        val context = (activity as MainActivity).context
 
         searchAdapter =
             SearchAdapter(viewModel.searchedArrayList, this, viewModel.vehicleArrayListforUpload)
@@ -270,7 +267,7 @@ class HomeFragment : Fragment(), OnclickItem {
 
     override fun vehicleSelected(position: Int) {
         println("position of holder $position")
-        var Position = position.plus(1)
+        val Position = position.plus(1)
         tinyDB.putInt("vehicle", Position)
 
         alertDialog.dismiss()
@@ -287,8 +284,8 @@ class HomeFragment : Fragment(), OnclickItem {
         if(selected != position) {
             dialog.dismiss()
             viewModel.checkNetConnection()
-            var Position = position.plus(1)
-            var previous = tinyDB.getInt("state")
+            val Position = position.plus(1)
+            val previous = tinyDB.getInt("state")
             if (previous != 0) {
                 tinyDB.putInt("previous_state", previous)
             }
@@ -357,9 +354,9 @@ class HomeFragment : Fragment(), OnclickItem {
             cancel_btn.setOnClickListener {
                 Log.d("HomeFragment", "Inside acncel btn listner")
 
-                var stateCheck = tinyDB.getBoolean("STATEAPI")
+                val stateCheck = tinyDB.getBoolean("STATEAPI")
                 if (stateCheck) {
-                    var position = tinyDB.getInt("previous_state")
+                    val position = tinyDB.getInt("previous_state")
                     if (position != 0) {
                        tinyDB.putInt("state", position)
                         viewModel.selectState(position-1)
@@ -377,7 +374,7 @@ class HomeFragment : Fragment(), OnclickItem {
                     position = position.minus(1)
                     viewModel.selectState(position)
                 }
-                var stateCheck = tinyDB.getBoolean("STATEAPI")
+                val stateCheck = tinyDB.getBoolean("STATEAPI")
                 if (stateCheck) {
 
 

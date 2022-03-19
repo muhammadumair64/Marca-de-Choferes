@@ -74,7 +74,7 @@ class SplashScreenViewModel @Inject constructor(
         myTimer = Timer()
         myTimer!!.schedule(object : TimerTask() {
             override fun run() {
-                var check = tinyDB.getBoolean("SYNC_CHECK")
+                val check = tinyDB.getBoolean("SYNC_CHECK")
                 if (check == true) {
                     Log.d("SYNC_CHECK_TESTING", "RUN SYNC")
                     syncdata()
@@ -105,7 +105,7 @@ class SplashScreenViewModel @Inject constructor(
 
 
     fun syncdata() {
-        var Token = tinyDB.getString("Cookie")
+        val Token = tinyDB.getString("Cookie")
         viewModelScope.launch {
 
             withContext(Dispatchers.IO) {
@@ -132,11 +132,11 @@ class SplashScreenViewModel @Inject constructor(
                         tinyDB.putInt("defaultBreak", response.work.workBreak)
                         tinyDB.putString("language", Language.toString())
 
-                        var max = response.work.workBreak * 60
+                        val max = response.work.workBreak * 60
                         println("Max Value from Server $max")
                         tinyDB.putInt("MaxBreakBar", max)
 
-                        var maxWork = response.work!!.workingHours * 60
+                        val maxWork = response.work.workingHours * 60
                         println("Max Value from Server $maxWork")
                         tinyDB.putInt("MaxBar", maxWork)
                         tinyDB.putBoolean("notify", notify)
@@ -159,12 +159,12 @@ class SplashScreenViewModel @Inject constructor(
 //                        tinyDB.putString("loadingBG", response.images.loadinScreen ?: "")
 //                        tinyDB.putString("SplashBG", response.images.splashScreen ?: "")
                             if (response.lastVar.lastActivity != 3) {
-                                var state = response.lastVar.lastState!!
+                                val state = response.lastVar.lastState!!
                                 tinyDB.putInt("state", state + 1)
                             } else {
                                 tinyDB.putInt("state", 1)
                             }
-                            var color = tinyDB.getString("primaryColor")
+                            val color = tinyDB.getString("primaryColor")
                             Log.d("COLORCHECKTESTING22", color!!)
                             checkStateByServer(response)
                             tinyDB.putInt("againCome", 200)
@@ -173,7 +173,7 @@ class SplashScreenViewModel @Inject constructor(
 
 
                         Log.d("LOADINGIMAGETESTING", "here1")
-                        var image = response.images.loadingScreen
+                        val image = response.images.loadingScreen
                         println("hello testing $image")
 //                        Log.d("CheckLoading",image)
                         //changed
@@ -306,11 +306,11 @@ class SplashScreenViewModel @Inject constructor(
     fun getAvatar() {
         Log.d("AvtarImage", "IN Avtar API")
         viewModelScope.launch {
-            var Token = tinyDB.getString("Cookie")
+            val Token = tinyDB.getString("Cookie")
             withContext(Dispatchers.IO) {
 
                 try {
-                    var user = tinyDB.getString("User")
+                    val user = tinyDB.getString("User")
 
                     val response = authRepository.getUserAvatar(user!!, Token!!)
 
@@ -322,7 +322,7 @@ class SplashScreenViewModel @Inject constructor(
 
                         tinyDB.putString("Avatar", response.avatar)
 
-                        var intent = Intent(activityContext, MainActivity::class.java)
+                        val intent = Intent(activityContext, MainActivity::class.java)
                         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                         (activityContext as SplashScreen).finish()
 
@@ -330,12 +330,12 @@ class SplashScreenViewModel @Inject constructor(
                     }
 
                 } catch (e: ApiException) {
-                    var intent = Intent(activityContext, MainActivity::class.java)
+                    val intent = Intent(activityContext, MainActivity::class.java)
                     ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                     (activityContext as SplashScreen).finish()
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
-                    var intent = Intent(activityContext, MainActivity::class.java)
+                    val intent = Intent(activityContext, MainActivity::class.java)
                     ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                     (activityContext as SplashScreen).finish()
                     println("position 2")
@@ -349,12 +349,12 @@ class SplashScreenViewModel @Inject constructor(
                         ).show()
                     }
                 } catch (e: ResponseException) {
-                    var intent = Intent(activityContext, MainActivity::class.java)
+                    val intent = Intent(activityContext, MainActivity::class.java)
                     ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                     (activityContext as SplashScreen).finish()
                     println("ErrorResponse")
                 } catch (e: SocketException) {
-                    var intent = Intent(activityContext, MainActivity::class.java)
+                    val intent = Intent(activityContext, MainActivity::class.java)
                     ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                     (activityContext as SplashScreen).finish()
 //                    LoadingScreen.onEndLoadingCallbacks?.endLoading()
@@ -390,7 +390,7 @@ class SplashScreenViewModel @Inject constructor(
 
 
                     if (response != null) {
-                        var image = response.splashScreen
+                        val image = response.splashScreen
                         tinyDB.putString("SplashBG", response.splashScreen ?: "")
                         withContext(Dispatchers.Main) {
                             (activityContext as SplashScreen).base64ToBitmap(image)
@@ -440,7 +440,7 @@ class SplashScreenViewModel @Inject constructor(
 
 
         tinyDB.putInt("lasttimebreak", response.lastVar!!.lastWorkBreakTotal!!)
-        tinyDB.putInt("lasttimework", response.lastVar!!.lastWorkedHoursTotal!!)
+        tinyDB.putInt("lasttimework", response.lastVar.lastWorkedHoursTotal!!)
 
         when (response.lastVar.lastActivity) {
             0 -> {
@@ -450,11 +450,11 @@ class SplashScreenViewModel @Inject constructor(
             1 -> {
                 Log.d("NEGATIVE_TESTING", "in function break")
                 tinyDB.putString("checkTimer", "breakTime")
-                var breakDate = response.lastVar!!.lastWorkBreakDateIni
+                var breakDate = response.lastVar.lastWorkBreakDateIni
                 if (breakDate!!.isNotEmpty()) {
-                    breakDate = breakDate!!.split(".").toTypedArray()[0]
-                    breakDate = breakDate!!.replace("T", " ")
-                    breakDate = breakDate!!.replace("-", "/")
+                    breakDate = breakDate.split(".").toTypedArray()[0]
+                    breakDate = breakDate.replace("T", " ")
+                    breakDate = breakDate.replace("-", "/")
                     Log.d("workDate Is", "date is $breakDate")
                 }
                 tinyDB.putString("goBackTime", breakDate)
@@ -482,8 +482,8 @@ class SplashScreenViewModel @Inject constructor(
         var workStartTime = response.lastVar.lastWorkedHoursDateIni
         var breakStartTime = response.lastVar.lastWorkBreakDateIni
         if (workStartTime != null) {
-            workStartTime = workStartTime!!.replace("T", ",")
-            workStartTime = workStartTime!!.split(".").toTypedArray()[0]
+            workStartTime = workStartTime.replace("T", ",")
+            workStartTime = workStartTime.split(".").toTypedArray()[0]
             workStartTime = workStartTime + "Z"
 
             viewModelScope.launch {
@@ -491,7 +491,7 @@ class SplashScreenViewModel @Inject constructor(
                     if (mainRepository.getUnsentStartWorkTimeDetails() != null) {
                         mainRepository.deleteAllUnsentStartWorkTime()
                     }
-                    mainRepository!!.insertUnsentStartWorkTime(
+                    mainRepository.insertUnsentStartWorkTime(
                         UnsentStartWorkTime(
                             0,
                             workStartTime
@@ -501,8 +501,8 @@ class SplashScreenViewModel @Inject constructor(
             }
         }
         if (breakStartTime != null) {
-            breakStartTime = breakStartTime!!.replace("T", ",")
-            breakStartTime = breakStartTime!!.split(".").toTypedArray()[0]
+            breakStartTime = breakStartTime.replace("T", ",")
+            breakStartTime = breakStartTime.split(".").toTypedArray()[0]
             breakStartTime = breakStartTime + "Z"
 
             viewModelScope.launch {
@@ -541,7 +541,7 @@ class SplashScreenViewModel @Inject constructor(
     private fun checkStateByServer(response: SigninResponse) {
         var workDate = response.lastVar!!.lastWorkedHoursDateIni
         if (workDate!!.isNotEmpty()) {
-            workDate = workDate!!.split("T").toTypedArray()[0]
+            workDate = workDate.split("T").toTypedArray()[0]
             Log.d("workDate Is", "date is $workDate")
         }
         Log.d("Dates is ", "$currentDate")
@@ -553,9 +553,9 @@ class SplashScreenViewModel @Inject constructor(
 //        }
 
 
-        check = response.lastVar!!.lastActivity!!
+        check = response.lastVar.lastActivity!!
 
-        tinyDB.putInt("selectedStateByServer", check!!)
+        tinyDB.putInt("selectedStateByServer", check)
         Log.d("checkByServer", "check $check")
         when (check) {
             0 -> {
@@ -578,7 +578,7 @@ class SplashScreenViewModel @Inject constructor(
     }
 
     fun tagsForToast() {
-        var language = tinyDB.getString("language")
+        val language = tinyDB.getString("language")
         if (language == "0") {
 
             TAG2 = "Comprueba tu conexión a Internet"
