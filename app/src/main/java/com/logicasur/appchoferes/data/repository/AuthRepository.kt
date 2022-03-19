@@ -15,10 +15,12 @@ import com.logicasur.appchoferes.data.network.signinResponse.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 class AuthRepository @Inject constructor(
     val retrofitInterface: RetrofitInterface,
-    val localDataBase: LocalDataBase
+    val localDataBase: LocalDataBase,
+    @Named("interfaceWithTime") val  retrofitInterfaceWithTime :  RetrofitInterface
 ) : SafeApiRequest() {
     suspend fun userSignin(
         name: String,
@@ -295,7 +297,7 @@ class AuthRepository @Inject constructor(
 
 
     suspend fun checkServer(token: String): MessageResponse {
-        return apiRequest { retrofitInterface.checkServer(token) }
+        return apiRequest { retrofitInterfaceWithTime.checkServer(token) }
     }
 
     suspend fun clearWholeDB() {

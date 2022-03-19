@@ -35,7 +35,7 @@ class ServerCheck constructor(
 
     suspend fun serverCheck(action: () -> Unit) {
 
-        var checkServerResponse: MessageResponse? = null
+        var checkServerResponse: MessageResponse?
 
         var check = 0
         val myTimer = Timer()

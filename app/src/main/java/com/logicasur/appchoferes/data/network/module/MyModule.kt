@@ -30,6 +30,7 @@ import com.logicasur.appchoferes.data.repository.MainRepository
 import com.logicasur.appchoferes.utils.myApplication.MyApplication
 
 import okhttp3.*
+import javax.inject.Named
 
 
 @Module
@@ -71,6 +72,7 @@ class MyModule {
 
     @Provides
     @Singleton
+
     fun provideUnsafeOkHttpClient(
         okHttpLoggingInterceptor: HttpLoggingInterceptor,
         networkConnectionInterceptor: NetworkConnectionInterceptor
@@ -127,10 +129,69 @@ class MyModule {
     }
 
 
+
+    @Provides
+    @Singleton
+    @Named("httpWithTimeLimit")
+    fun provideUnsafeOkHttpClientWith5Sec(
+        okHttpLoggingInterceptor: HttpLoggingInterceptor,
+        networkConnectionInterceptor: NetworkConnectionInterceptor
+    ): OkHttpClient {
+        return try {
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts = arrayOf<TrustManager>(
+                object : X509TrustManager {
+                    @Throws(CertificateException::class)
+                    override fun checkClientTrusted(
+                        chain: Array<X509Certificate?>?,
+                        authType: String?
+                    ) {
+                    }
+
+                    @Throws(CertificateException::class)
+                    override fun checkServerTrusted(
+                        chain: Array<X509Certificate?>?,
+                        authType: String?
+                    ) {
+                    }
+
+                    override fun getAcceptedIssuers(): Array<X509Certificate?>? {
+                        return arrayOf()
+                    }
+                }
+            )
+
+            // Install the all-trusting trust manager
+            //val sslContext = SSLContext.getInstance("SSL")
+            // sslContext.init(null, trustAllCerts, SecureRandom())
+            // Create an ssl socket factory with our all-trusting manager
+
+            val trustManager = trustAllCerts.get(0) as X509TrustManager
+            val sslContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, arrayOf<TrustManager>(trustManager), null)
+
+//                .addInterceptor(networkConnectionInterceptor)
+//         .addInterceptor(okHttpLoggingInterceptor)
+
+
+            val sslSocketFactory = sslContext.socketFactory
+            OkHttpClient.Builder()
+                .addInterceptor(networkConnectionInterceptor)
+                .connectTimeout(2, TimeUnit.SECONDS)
+                .readTimeout(2, TimeUnit.SECONDS)
+                .writeTimeout(2, TimeUnit.SECONDS)
+                .sslSocketFactory(sslSocketFactory, trustManager)
+                .hostnameVerifier(HostnameVerifier { hostname, session -> true })
+                .build()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
     @Provides
     @Singleton
     fun provideRetrofit(
-        okHttpLoggingInterceptor: HttpLoggingInterceptor, okHttpClient: OkHttpClient
+        okHttpLoggingInterceptor: HttpLoggingInterceptor,okHttpClient: OkHttpClient
     ): Retrofit {
 
 
@@ -154,9 +215,46 @@ class MyModule {
     }
 
 
+
+    @Provides
+    @Singleton
+    @Named("retrofitWithTime")
+    fun provideRetrofitWithTimeLimit(
+        okHttpLoggingInterceptor: HttpLoggingInterceptor, @Named("httpWithTimeLimit") okHttpClient: OkHttpClient
+    ): Retrofit {
+
+
+        okHttpLoggingInterceptor.apply {
+            okHttpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        }
+
+//        val okkHttpclient = OkHttpClient.Builder()
+//            .addInterceptor(okHttpLoggingInterceptor)
+//            .connectTimeout(1, TimeUnit.MINUTES)
+//            .readTimeout(40, TimeUnit.SECONDS)
+//            .writeTimeout(30, TimeUnit.SECONDS)
+//            .build()
+
+
+        return Retrofit.Builder()
+            .client(okHttpClient)
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
     @Provides
     @Singleton
     fun provideAuth(retrofit: Retrofit): RetrofitInterface {
+
+        return retrofit.create(RetrofitInterface::class.java)
+    }
+
+
+    @Provides
+    @Singleton
+    @Named("interfaceWithTime")
+    fun provideAuthWithTime(@Named("retrofitWithTime") retrofit: Retrofit): RetrofitInterface {
 
         return retrofit.create(RetrofitInterface::class.java)
     }
