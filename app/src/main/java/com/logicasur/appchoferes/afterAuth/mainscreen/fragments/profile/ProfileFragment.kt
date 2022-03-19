@@ -54,7 +54,7 @@ class ProfileFragment : Fragment() {
     lateinit var changedName: EditText
     lateinit var binding: FragmentProfileBinding
     lateinit var confirmbtn: AppCompatButton
-    val profileViewModel: ProfileViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
     lateinit var mainViewModel: MainViewModel
 
     @Inject
@@ -72,21 +72,19 @@ class ProfileFragment : Fragment() {
             inflater, R.layout.fragment_profile, container, false
         )
 
-
-        var viewBinding = binding.root
         initViews()
         openPopupWindow()
         setButtonColor()
-        return viewBinding
+        return binding.root
     }
 
-    fun initViews() {
-        var context = (activity as MainActivity).context
+    private fun initViews() {
+        val context = (activity as MainActivity).context
 
 
         profileViewModel.viewsForFragment(context, binding)
 
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         val animation = TransitionInflater.from(requireContext()).inflateTransition(
             R.transition.example_1
         )
@@ -117,18 +115,12 @@ class ProfileFragment : Fragment() {
 
         binding.editProfile.setOnClickListener {
             lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-//                    val check = ResendApis.isConnected()
-                    withContext(Dispatchers.Main) {
                         if (CheckConnection.netCheck(context)) {
                             initPermission()
                         } else {
                             Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
                                 .show()
                         }
-                    }
-
-                }
 
             }
 
@@ -150,7 +142,7 @@ class ProfileFragment : Fragment() {
             .start()
     }
 
-    fun initPermission() {
+    private fun initPermission() {
 
         val permissions =
             arrayOf(
@@ -180,42 +172,43 @@ class ProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK) {
-            //Image Uri will not be null for RESULT_OK
-            var uri: Uri = data?.data!!
-            val bitmapImage = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
-            Log.d("ImageUploadAvatar","Before Calling bitmapToBase64 function.")
-            profileViewModel.bitmapToBase64(bitmapImage)
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                //Image Uri will not be null for RESULT_OK
+                val uri: Uri = data?.data!!
+                val bitmapImage = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
+                Log.d("ImageUploadAvatar", "Before Calling bitmapToBase64 function.")
+                profileViewModel.bitmapToBase64(bitmapImage)
 
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(context, "Task Cancelled", Toast.LENGTH_SHORT).show()
+            }
+            ImagePicker.RESULT_ERROR -> {
+                Toast.makeText(context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                Toast.makeText(context, "Task Cancelled", Toast.LENGTH_SHORT).show()
+            }
         }
 
     }
 
-    fun openPopupWindow() {
+    private fun openPopupWindow() {
         dailogBuilder = AlertDialog.Builder(getContext())
         val contactPopupView: View = layoutInflater.inflate(R.layout.name_change_popup_window, null)
         alertDialog = dailogBuilder.create()
         title = contactPopupView.findViewById(R.id.popupTitleName)
         var option = 1
-        var context = (activity as MainActivity).context
+        val context = (activity as MainActivity).context
 
 
         binding.editName.setOnClickListener {
 
             lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-//                    val check = ResendApis.isConnected()
-                    withContext(Dispatchers.Main) {
                         if (CheckConnection.netCheck(context)) {
 
                             option = 1
                             alertDialog.setView(contactPopupView)
                             title.text = getResources().getString(R.string.firstname)
-                            var name = binding.TitleName.text
+                            val name = binding.TitleName.text
                             println("showable name is $name")
                             changedName.setText("$name", TextView.BufferType.EDITABLE);
                             alertDialog.show()
@@ -229,9 +222,8 @@ class ProfileFragment : Fragment() {
                             Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
                                 .show()
                         }
-                    }
 
-                }
+
 
             }
 
@@ -240,15 +232,12 @@ class ProfileFragment : Fragment() {
 
 
             lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-//                    val check = ResendApis.isConnected()
-                    withContext(Dispatchers.Main) {
                         if (CheckConnection.netCheck(context)) {
 
                             option = 2
                             alertDialog.setView(contactPopupView)
                             title.text = getResources().getString(R.string.father_name)
-                            var name = binding.FatherName.text
+                            val name = binding.FatherName.text
                             println("showable name is $name")
                             changedName.setText("$name", TextView.BufferType.EDITABLE);
                             alertDialog.show()
@@ -262,9 +251,9 @@ class ProfileFragment : Fragment() {
                             Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
                                 .show()
                         }
-                    }
 
-                }
+
+
 
             }
 
@@ -273,69 +262,51 @@ class ProfileFragment : Fragment() {
 
         dismiss = contactPopupView.findViewById(R.id.close)
         confirmbtn = contactPopupView.findViewById(R.id.confirm_btn)
-        (activity as MainActivity).setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, confirmbtn)
+        (activity as MainActivity).setGrad(
+            ResendApis.primaryColor,
+            ResendApis.secondaryColor,
+            confirmbtn
+        )
         changedName = contactPopupView.findViewById(R.id.popup_Name_Field)
         dismiss.setOnClickListener {
             alertDialog.dismiss()
         }
 
         confirmbtn.setOnClickListener {
-            var intent = Intent(context, LoadingScreen::class.java)
+            val intent = Intent(context, LoadingScreen::class.java)
             startActivity(intent)
-            var nameChanges = changedName.text
+            val nameChanges = changedName.text
             if ((nameChanges.length >= 3)) {
-                var fatherName = binding.FatherName.text
-                var Name = binding.TitleName.text
-                Log.d("input Parameters", "$nameChanges  $fatherName  $Name")
+                val fatherName = binding.FatherName.text
+                val name = binding.TitleName.text
+                Log.d("input Parameters", "$nameChanges  $fatherName  $name")
                 if (option == 1) {
-//                    lifecycleScope.launch(Dispatchers.IO) {
-//                        ServerCheck.serverCheck(null) {
-//                            profileViewModel.updateProfile(
-//                                nameChanges.toString(),
-//                                fatherName.toString(),
-//                                alertDialog
-//                            )
-//                        }
 
-                        lifecycleScope.launch(Dispatchers.IO) {
-                       resendApis.serverCheck.serverCheckMainActivityApi{ serverAction ->
-                                profileViewModel.updateProfile(
-                                    nameChanges.toString(),
-                                    fatherName.toString(),
-                                    alertDialog
-                                ) { serverAction() }
-                            }
 
-                        }
-
-//                    profileViewModel.updateProfile(
-//                        nameChanges.toString(),
-//                        fatherName.toString(),
-//                        alertDialog
-//                    )
-                } else {
                     lifecycleScope.launch(Dispatchers.IO) {
-                        resendApis.serverCheck.serverCheckMainActivityApi{serverAction->
+                        resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                             profileViewModel.updateProfile(
-                                Name.toString(),
                                 nameChanges.toString(),
+                                fatherName.toString(),
                                 alertDialog
-                            ){serverAction()}
+                            ) { serverAction() }
                         }
-//                        ServerCheck.serverCheck(null) {
-//                            profileViewModel.updateProfile(
-//                                Name.toString(),
-//                                nameChanges.toString(),
-//                                alertDialog
-//                            )
-//                        }
 
                     }
-//                    profileViewModel.updateProfile(
-//                        Name.toString(),
-//                        nameChanges.toString(),
-//                        alertDialog
-//                    )
+
+                } else {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
+                            profileViewModel.updateProfile(
+                                name.toString(),
+                                nameChanges.toString(),
+                                alertDialog
+                            ) { serverAction() }
+                        }
+
+
+                    }
+
                 }
             }
         }
@@ -344,14 +315,14 @@ class ProfileFragment : Fragment() {
     }
 
 
-    fun setButtonColor() {
+    private fun setButtonColor() {
 
         binding.editSurname.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         binding.editName.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         binding.edit.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
         binding.editProfile.setCardBackgroundColor(Color.parseColor(ResendApis.primaryColor))
-        binding.upperLayoutFrount!!.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
-        binding.upperLayoutFrount!!.alpha = 0.73F
+        binding.upperLayoutFrount.setBackgroundColor(Color.parseColor(ResendApis.primaryColor))
+        binding.upperLayoutFrount.alpha = 0.73F
     }
 
     override fun onResume() {
