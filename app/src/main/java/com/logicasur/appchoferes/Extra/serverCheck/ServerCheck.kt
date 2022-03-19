@@ -101,7 +101,7 @@ class ServerCheck constructor(
                     }
                     if(MyApplication.syncCheck){
                         delay(3000)
-                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer)
                         MyApplication.syncCheck = false
 
 
@@ -124,7 +124,7 @@ class ServerCheck constructor(
                     }
                     if(MyApplication.syncCheck){
                         delay(3000)
-                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer)
                         MyApplication.syncCheck = false
 
 
@@ -149,7 +149,7 @@ class ServerCheck constructor(
                         CoroutineScope(Job()).launch {
                             withContext(Dispatchers.Main) {
                                 delay(3000)
-                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer)
                                 MyApplication.syncCheck = false
                             }
                         }
@@ -172,7 +172,7 @@ class ServerCheck constructor(
 
                     if(MyApplication.syncCheck){
                         delay(3000)
-                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer)
                                 MyApplication.syncCheck = false
 
 
@@ -207,7 +207,7 @@ class ServerCheck constructor(
 
             var firstTimeCome = 0
             val timeoutForServerCheck = Timer()
-            timeoutForServerCheck!!.schedule(object : TimerTask() {
+            timeoutForServerCheck.schedule(object : TimerTask() {
                 override fun run() {
                     if (firstTimeCome == 1) {
                         CoroutineScope(Job()).launch(Dispatchers.IO) {
@@ -456,7 +456,7 @@ class ServerCheck constructor(
 
         var isFirst = true
         val myTimer = Timer()
-        myTimer?.apply {
+        myTimer.apply {
             this.schedule(object : TimerTask() {
                 override fun run() {
                     if (isFirst) {
@@ -548,7 +548,7 @@ class ServerCheck constructor(
 
 
     private fun tagsForToast() {
-        var language = tinyDB.getString("language")
+        val language = tinyDB.getString("language")
         TAG2 = when (language) {
             "0" -> {
                 "El servidor está caído"

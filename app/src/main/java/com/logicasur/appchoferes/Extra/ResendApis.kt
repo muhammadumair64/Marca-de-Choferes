@@ -7,10 +7,7 @@ import androidx.core.content.ContextCompat.startForegroundService
 import com.logicasur.appchoferes.Extra.serverCheck.ServerCheck
 import com.logicasur.appchoferes.Extra.serviceUploadOfflineActivities.ServiceUploadOfflineActivities
 import com.logicasur.appchoferes.myApplication.MyApplication
-import com.logicasur.appchoferes.network.signinResponse.Vehicle
 import kotlinx.coroutines.*
-import java.net.SocketException
-import java.net.SocketTimeoutException
 import java.util.*
 import com.logicasur.appchoferes.loadingScreen.LoadingScreen
 import java.lang.Exception
