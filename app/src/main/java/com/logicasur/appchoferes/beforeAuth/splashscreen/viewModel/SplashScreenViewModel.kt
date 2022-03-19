@@ -77,7 +77,7 @@ class SplashScreenViewModel @Inject constructor(
                         viewModelScope.launch {
                             withContext(Dispatchers.Main) {
                                 delay(3000)
-                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!, false)
                                 myTimer!!.cancel()
                             }
                         }
@@ -122,7 +122,7 @@ class SplashScreenViewModel @Inject constructor(
 
                 } catch (e: SocketTimeoutException) {
                     repeatSync()
-                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!)
+                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!, false)
                     showToast()
                 } catch (e: Exception) {
                     repeatSync()

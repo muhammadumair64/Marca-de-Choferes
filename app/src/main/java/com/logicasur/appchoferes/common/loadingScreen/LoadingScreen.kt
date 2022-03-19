@@ -1,7 +1,6 @@
 package com.logicasur.appchoferes.common.loadingScreen
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
@@ -101,8 +100,8 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
         finish()
     }
 
-    override fun openPopup(myTimer: Timer?) {
-         createPopup(myTimer)
+    override fun openPopup(myTimer: Timer?, boolean: Boolean) {
+         createPopup(myTimer,boolean)
     }
 
     override fun openServerPopup() {
@@ -162,7 +161,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
            }
        }
-    private fun createPopup(myTimer: Timer?) {
+    private fun createPopup(myTimer: Timer?, boolean: Boolean) {
 
         runOnUiThread {
             Log.d("STATUS_TESTING","IN WINDOW")
@@ -184,8 +183,10 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
             }
             proceed_btn.setOnClickListener {
-                if(myTimer!=null){
-                    myTimer.cancel()
+                if(myTimer!=null || boolean){
+                    if(boolean){
+                        myTimer?.cancel()
+                    }
                     loadingViewModel.getPreviousTimeWhenOffline(true)
                 }
                 else{
