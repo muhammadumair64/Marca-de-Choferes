@@ -74,33 +74,15 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
    fun initView(){
        setBarColor()
-//       createServerAlertPopup()
        MyApplication.loadingContext = this
-//       createPopup()
+
          imageBackground=findViewById(R.id.loadingBackground)
 
 
-//       extra.liveData.observeForever(Observer {
-//           println("i am observing")
-//           if(it=="1"){
-//               MoveToMain()
-//           }
-//       })
-//
-//
-////     extra.liveData.observe(this, {
-////
-////
-////})
+
 
     }
 
-    fun MoveToMain(){
-        var intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
-        finish()
-    }
 
     override fun onBackPressed() {
 
@@ -135,27 +117,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
         loadingViewModel.getPreviousTimeWhenOffline(false)
     }
 
-    fun setBarColor(){
-// clear FLAG_TRANSLUCENT_STATUS flag:
 
-// clear FLAG_TRANSLUCENT_STATUS flag:
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-
-// finally change the color
-
-// finally change the color
-
-        val color = tinyDB.getString("primaryColor")
-        if(color?.isNotEmpty() == true){
-            window.setStatusBarColor(Color.parseColor(color))
-        }
-
-    }
 
     override fun onDestroy() {
         try{
@@ -174,12 +136,33 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
 
-       fun createPopup(myTimer: Timer?) {
-//        if(networkAlertDialog != null){
-//            if(networkAlertDialog!!.isShowing){
-//                networkAlertDialog!!.dismiss()
-//            }
-//        }
+
+
+
+//-------------------------------------------------Utils----------------------------------------------
+    private fun createServerAlertPopup() {
+           Log.d("POPUP_TESTING","IN SERVER POPUP")
+           serverDialogBuilder = AlertDialog.Builder(this)
+           val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
+           serverAlertDialog = serverDialogBuilder.create()
+           go_back_btn=PopupView.findViewById(R.id.go_back)
+
+           Log.d("POPUP_TESTING"," In VIEW MODEL After delay")
+
+           loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
+         try{
+             setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
+         }catch (e:Exception){
+             e.localizedMessage
+         }
+
+           go_back_btn.setOnClickListener {
+               serverAlertDialog!!.dismiss()
+               finish()
+
+           }
+       }
+    private fun createPopup(myTimer: Timer?) {
 
         runOnUiThread {
             Log.d("STATUS_TESTING","IN WINDOW")
@@ -197,7 +180,7 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
                 if(myTimer != null){
                     finishAffinity()
                 }
-                   finish()
+                finish()
 
             }
             proceed_btn.setOnClickListener {
@@ -225,31 +208,21 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
 
 
     }
+    private fun setBarColor(){
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
 
 
-     fun createServerAlertPopup() {
-           Log.d("POPUP_TESTING","IN SERVER POPUP")
-           serverDialogBuilder = AlertDialog.Builder(this)
-           val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
-           serverAlertDialog = serverDialogBuilder.create()
-           go_back_btn=PopupView.findViewById(R.id.go_back)
+        val color = tinyDB.getString("primaryColor")
+        if(color?.isNotEmpty() == true){
+            window.setStatusBarColor(Color.parseColor(color))
+        }
 
-           Log.d("POPUP_TESTING"," In VIEW MODEL After delay")
-
-           loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
-         try{
-             setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
-         }catch (e:Exception){
-             e.localizedMessage
-         }
-
-           go_back_btn.setOnClickListener {
-               serverAlertDialog!!.dismiss()
-               finish()
-
-           }
-       }
+    }
 
    }
 

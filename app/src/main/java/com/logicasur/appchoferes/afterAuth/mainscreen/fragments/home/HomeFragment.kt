@@ -72,12 +72,10 @@ class HomeFragment : Fragment(), OnclickItem {
         // Inflate the layout for this fragment
 
         val language = Language()
-//        checkLanguage()
         language.setLanguage((activity as MainActivity).baseContext)
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
-
         val viewBinding = binding.root
         initViews()
         vehiclePopupWindow()
@@ -90,24 +88,14 @@ class HomeFragment : Fragment(), OnclickItem {
 
     }
 
-    fun initViews() {
-        var context = (activity as MainActivity).context
+    private fun initViews() {
+        val context = (activity as MainActivity).context
         mainContext = context
         binding.statusListBtn.visibility = View.GONE
-        (activity as MainActivity).setGrad(
-            ResendApis.primaryColor,
-            ResendApis.secondaryColor,
-            binding.secondState
-        )
-        (activity as MainActivity).setGrad(
-            ResendApis.primaryColor,
-            ResendApis.secondaryColor,
-            binding.TakeBreak
-        )
-        binding.date.setTextColor(Color.parseColor(ResendApis.primaryColor))
+        setColors()
         binding.apply {
-            initialState?.setVisibility(View.VISIBLE)
-            secondState?.setVisibility(View.GONE)
+            initialState.visibility = View.VISIBLE
+            secondState.visibility = View.GONE
         }
         val animation = TransitionInflater.from(requireContext()).inflateTransition(
             R.transition.example_1
@@ -121,10 +109,267 @@ class HomeFragment : Fragment(), OnclickItem {
         viewModel.viewsForHomeFragment(context, binding)
         viewModel.initBreakBar()
         viewModel.initWorkBar()
-        var intent = (activity as MainActivity)
+        val intent = (activity as MainActivity)
         intent.viewsOfFragment(binding)
         viewModel.clickListnersForActivityButtons()
+        animators()
 
+    }
+
+
+    //--------------------------------------------Vehicle and status lists---------------------------------
+    private fun searchVehicle() {
+        val context = (activity as MainActivity).context
+
+        searchAdapter =
+            SearchAdapter(viewModel.searchedArrayList, this, viewModel.vehicleArrayListforUpload)
+        recyclerView.adapter = searchAdapter
+
+        val typeface = ResourcesCompat.getFont(context, R.font.open_sans_regular)
+        val id: Int = searchView.getContext().getResources()
+            .getIdentifier("android:id/search_src_text", null, null)
+        val textView = searchView.findViewById(id) as TextView
+        textView.hint = getString(R.string.search_here)
+        textView.textSize = 20f
+        textView.typeface = typeface
+
+        searchView.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                searchAdapter.getFilter().filter(newText)
+                println("New text${newText.length}")
+                return false
+            }
+        })
+
+
+    }
+
+    private fun statusShow() {
+        statusAdapter = StatusAdapter(viewModel.statusArrayList, this)
+        statusRecyclerView.adapter = statusAdapter
+
+    }
+
+    override fun vehicleSelected(position: Int) {
+        println("position of holder $position")
+        val Position = position.plus(1)
+        tinyDB.putInt("vehicle", Position)
+
+        alertDialog.dismiss()
+        viewModel.selectVehicle(position)
+    }
+
+    override fun statusSelection(position: Int) {
+
+
+        var selected = tinyDB.getInt("state")
+        selected = selected.minus(1)
+        Log.d("StatusTesting", "---- $selected-----$position")
+        if (selected != position) {
+            dialog.dismiss()
+            viewModel.checkNetConnection()
+            val Position = position.plus(1)
+            val previous = tinyDB.getInt("state")
+            if (previous != 0) {
+                tinyDB.putInt("previous_state", previous)
+            }
+
+            tinyDB.putInt("state", Position)
+            viewModel.selectState(position)
+            viewModel.getDataForStateApi(position)
+            (activity as MainActivity).getLocation(requireContext())
+        }
+    }
+
+
+//-------------------------------------------------- popups windows   ----------------------------------------------
+
+
+    private fun createPopup() {
+        networkDialogBuilder = AlertDialog.Builder(context)
+        val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
+
+        Log.d("CallingOpenPop2", "before---")
+        if (networkAlertDialog == null) {
+
+            Log.d("CallingOpenPop2", "after---")
+            networkAlertDialog = networkDialogBuilder.create()
+
+            proceed_btn = PopupView.findViewById(R.id.proceed_btn)
+            cancel_btn = PopupView.findViewById(R.id.cancel_btn)
+            if (!MyApplication.checKForPopup) {
+                try {
+                    viewModel.openPopup(networkAlertDialog!!, PopupView, resources)
+                } catch (e: Exception) {
+                    Log.d("CallingOpenPop", "Exception...${e.localizedMessage}")
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                }
+
+            } else {
+                networkAlertDialog = null
+                MyApplication.checKForPopup = false
+            }
+
+            (activity as MainActivity).setGrad(
+                ResendApis.primaryColor,
+                ResendApis.secondaryColor,
+                proceed_btn
+            )
+            cancel_btn.setOnClickListener {
+                Log.d("HomeFragment", "Inside acncel btn listner")
+
+                val stateCheck = tinyDB.getBoolean("STATEAPI")
+                if (stateCheck) {
+                    val position = tinyDB.getInt("previous_state")
+                    if (position != 0) {
+                        tinyDB.putInt("state", position)
+                        viewModel.selectState(position - 1)
+                    }
+
+                }
+                networkAlertDialog!!.dismiss()
+                networkAlertDialog = null
+
+            }
+            proceed_btn.setOnClickListener {
+
+                var position = tinyDB.getInt("state")
+                if (position != 0) {
+                    position = position.minus(1)
+                    viewModel.selectState(position)
+                }
+                val stateCheck = tinyDB.getBoolean("STATEAPI")
+                if (stateCheck) {
+
+
+                    Log.d("APIDATATESTING", "IN IF BLOCK")
+                    (activity as MainActivity).updatePendingData(true)
+                } else {
+                    Log.d("APIDATATESTING", "IN Else")
+                    (activity as MainActivity).updatePendingData(false)
+                }
+
+
+                networkAlertDialog!!.dismiss()
+                networkAlertDialog = null
+            }
+        }
+
+
+
+
+
+        if (MyApplication.checKForPopup) {
+            closePopup()
+            MyApplication.checKForPopup = false
+        }
+
+
+    }
+
+    private fun vehiclePopupWindow() {
+        dailogBuilder = AlertDialog.Builder(context)
+        statusDailogBuilder = AlertDialog.Builder(context)
+        val contactPopupView: View = layoutInflater.inflate(R.layout.vehicle_popup_window, null)
+        val statusPopupView: View = layoutInflater.inflate(R.layout.status_popup_window, null)
+        alertDialog = dailogBuilder.create()
+        dialog = statusDailogBuilder.create()
+        binding.vehicleListBtn.setOnClickListener {
+            searchAdapter.notifyDataSetChanged()
+            alertDialog.setView(contactPopupView)
+            alertDialog.show()
+
+            val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+            val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
+            alertDialog.getWindow()?.setLayout(width, height);
+            alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        }
+
+        binding.statusListBtn.setOnClickListener {
+            if (binding.secondState.text == "End Break" || binding.secondState.text == "Fin del descanso" || binding.secondState.text == "Fim do intervalo") {
+
+                if (binding.secondState.visibility == View.GONE) {
+                    statusAdapter.notifyDataSetChanged()
+                    dialog.setView(statusPopupView)
+                    dialog.show()
+                    val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                    val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
+                    dialog.getWindow()?.setLayout(width, height);
+                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                }
+
+            } else {
+                statusAdapter.notifyDataSetChanged()
+                dialog.setView(statusPopupView)
+                dialog.show()
+                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
+                val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
+                dialog.getWindow()?.setLayout(width, height);
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
+        }
+        statusRecyclerView = statusPopupView.findViewById(R.id.status_RV)
+        searchView = contactPopupView.findViewById<SearchView>(R.id.searchText)
+        recyclerView = contactPopupView.findViewById(R.id.vehiclesRecyclerView)
+        dismiss = statusPopupView.findViewById(R.id.close)
+
+
+        dismiss.setOnClickListener {
+            dialog.dismiss()
+        }
+
+    }
+
+    private fun closePopup() {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+
+                if (networkAlertDialog != null) {
+                    networkAlertDialog!!.dismiss()
+                    Log.d("CallingOpenPop2", "Self dismiss")
+                    networkAlertDialog = null
+                }
+
+            }
+        }
+    }
+
+//-----------------------------------------------------Utils---------------------------------------------------
+
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("STATE_TESTING", "In On Resume")
+        var position = tinyDB.getInt("state")
+        if (position != 0) {
+            position = position.minus(1)
+            viewModel.selectState(position)
+        }
+        (activity as MainActivity).binding.menu.setItemSelected(R.id.home, true)
+    }
+
+    private fun setColors() {
+        (activity as MainActivity).setGrad(
+            ResendApis.primaryColor,
+            ResendApis.secondaryColor,
+            binding.secondState
+        )
+        (activity as MainActivity).setGrad(
+            ResendApis.primaryColor,
+            ResendApis.secondaryColor,
+            binding.TakeBreak
+        )
+        binding.date.setTextColor(Color.parseColor(ResendApis.primaryColor))
+    }
+
+
+    private fun animators() {
         mainViewModel.popupLiveData.observe(viewLifecycleOwner, {
             if (it != 0) {
                 createPopup()
@@ -163,270 +408,8 @@ class HomeFragment : Fragment(), OnclickItem {
         binding.profileImage.setOnClickListener {
             mainViewModel.navigationLiveData.postValue("2")
         }
-        Timer().schedule(1000) {
-//            closePopup()
-        }
 
     }
-
-    fun vehiclePopupWindow() {
-        dailogBuilder = AlertDialog.Builder(getContext())
-        statusDailogBuilder = AlertDialog.Builder(getContext())
-        val contactPopupView: View = layoutInflater.inflate(R.layout.vehicle_popup_window, null)
-        val statusPopupView: View = layoutInflater.inflate(R.layout.status_popup_window, null)
-        alertDialog = dailogBuilder.create()
-        dialog = statusDailogBuilder.create()
-        binding.vehicleListBtn.setOnClickListener {
-            if (binding.StateActive.isVisible) {
-
-            } else if (binding.secondState.text == "End Break" || binding.secondState.text == "Fin del descanso" || binding.secondState.text == "Fim do intervalo") {
-
-            } else {
-                searchAdapter.notifyDataSetChanged()
-                alertDialog.setView(contactPopupView)
-                alertDialog.show()
-
-                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-                val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-                alertDialog.getWindow()?.setLayout(width, height);
-                alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            }
-        }
-
-        binding.statusListBtn.setOnClickListener {
-            if (binding.secondState.text == "End Break" || binding.secondState.text == "Fin del descanso" || binding.secondState.text == "Fim do intervalo") {
-
-                if (binding.secondState.visibility == View.GONE) {
-                    statusAdapter.notifyDataSetChanged()
-                    dialog.setView(statusPopupView)
-                    dialog.show()
-                    val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-                    val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
-                    dialog.getWindow()?.setLayout(width, height);
-                    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                }
-
-            } else {
-                statusAdapter.notifyDataSetChanged()
-                dialog.setView(statusPopupView)
-                dialog.show()
-                val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
-                val height = (resources.displayMetrics.heightPixels * 0.45).toInt()
-                dialog.getWindow()?.setLayout(width, height);
-                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            }
-        }
-        statusRecyclerView = statusPopupView.findViewById(R.id.status_RV)
-        searchView = contactPopupView.findViewById<SearchView>(R.id.searchText)
-        recyclerView = contactPopupView.findViewById(R.id.vehiclesRecyclerView)
-        dismiss = statusPopupView.findViewById(R.id.close)
-
-
-        dismiss.setOnClickListener {
-            dialog.dismiss()
-        }
-
-
-    }
-
-    fun searchVehicle() {
-        var context = (activity as MainActivity).context
-
-        searchAdapter =
-            SearchAdapter(viewModel.searchedArrayList, this, viewModel.vehicleArrayListforUpload)
-        recyclerView.adapter = searchAdapter
-
-        val typeface = ResourcesCompat.getFont(context, R.font.open_sans_regular)
-        val id: Int = searchView.getContext().getResources()
-            .getIdentifier("android:id/search_src_text", null, null)
-        val textView = searchView.findViewById(id) as TextView
-        textView.hint = getString(R.string.search_here)
-        textView.textSize = 20f
-        textView.typeface = typeface
-
-        searchView.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                searchAdapter.getFilter().filter(newText)
-                println("New text${newText.length}")
-                return false
-            }
-        })
-
-
-    }
-
-    fun statusShow() {
-        statusAdapter = StatusAdapter(viewModel.statusArrayList, this)
-        statusRecyclerView.adapter = statusAdapter
-
-    }
-
-    override fun vehicleSelected(position: Int) {
-        println("position of holder $position")
-        var Position = position.plus(1)
-        tinyDB.putInt("vehicle", Position)
-
-        alertDialog.dismiss()
-        viewModel.selectVehicle(position)
-    }
-
-
-    override fun statusSelection(position: Int) {
-
-
-        var selected=tinyDB.getInt("state")
-        selected = selected.minus(1)
-        Log.d("StatusTesting","---- $selected-----$position")
-        if(selected != position) {
-            dialog.dismiss()
-            viewModel.checkNetConnection()
-            var Position = position.plus(1)
-            var previous = tinyDB.getInt("state")
-            if (previous != 0) {
-                tinyDB.putInt("previous_state", previous)
-            }
-
-            tinyDB.putInt("state", Position)
-             viewModel.selectState(position)
-            viewModel.hitStateAPI(position)
-            (activity as MainActivity).getLocation(requireContext())
-        }
-    }
-
-
-    fun checkLanguage() {
-        if (MyApplication.checkForLanguageChange == 200) {
-            MyApplication.checkForLanguageChange = 0
-            mainViewModel.navigationLiveData.postValue("3")
-        }
-
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("STATE_TESTING","In On Resume")
-        var position = tinyDB.getInt("state")
-        if (position != 0) {
-            position = position.minus(1)
-            viewModel.selectState(position)
-        }
-        (activity as MainActivity).binding.menu.setItemSelected(R.id.home, true)
-    }
-
-
-
-
-    fun createPopup() {
-        networkDialogBuilder = AlertDialog.Builder(context)
-        val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
-
-        Log.d("CallingOpenPop2", "before---")
-        if (networkAlertDialog == null) {
-
-            Log.d("CallingOpenPop2", "after---")
-            networkAlertDialog = networkDialogBuilder.create()
-
-            proceed_btn = PopupView.findViewById(R.id.proceed_btn)
-            cancel_btn = PopupView.findViewById(R.id.cancel_btn)
-            if (!MyApplication.checKForPopup) {
-                try {
-                    viewModel.openPopup(networkAlertDialog!!, PopupView, resources)
-                } catch (e: Exception) {
-                    Log.d("CallingOpenPop", "Exception...${e.localizedMessage}")
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                }
-
-            } else {
-                networkAlertDialog=null
-                MyApplication.checKForPopup = false
-            }
-
-            (activity as MainActivity).setGrad(
-                ResendApis.primaryColor,
-                ResendApis.secondaryColor,
-                proceed_btn
-            )
-            cancel_btn.setOnClickListener {
-                Log.d("HomeFragment", "Inside acncel btn listner")
-
-                var stateCheck = tinyDB.getBoolean("STATEAPI")
-                if (stateCheck) {
-                    var position = tinyDB.getInt("previous_state")
-                    if (position != 0) {
-                       tinyDB.putInt("state", position)
-                        viewModel.selectState(position-1)
-                    }
-
-                }
-                networkAlertDialog!!.dismiss()
-                networkAlertDialog=null
-
-            }
-            proceed_btn.setOnClickListener {
-
-                var position = tinyDB.getInt("state")
-                if (position != 0) {
-                    position = position.minus(1)
-                    viewModel.selectState(position)
-                }
-                var stateCheck = tinyDB.getBoolean("STATEAPI")
-                if (stateCheck) {
-
-
-                        Log.d("APIDATATESTING","IN IF BLOCK")
-                    (activity as MainActivity).updatePendingData(true)
-                }
-                else {
-                    Log.d("APIDATATESTING","IN Else")
-//                    if (!(activity as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
-//                        val intent =
-//                            Intent((activity as MainActivity).context, LoadingScreen::class.java)
-//                        startActivity(intent)
-//
-//                    }
-                    (activity as MainActivity).updatePendingData(false)
-                }
-
-
-                networkAlertDialog!!.dismiss()
-                networkAlertDialog=null
-            }
-        }
-
-
-
-
-
-        if (MyApplication.checKForPopup) {
-            closePopup()
-            MyApplication.checKForPopup = false
-        }
-
-
-    }
-
-
-    fun closePopup() {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-
-                if (networkAlertDialog != null) {
-                    networkAlertDialog!!.dismiss()
-                    Log.d("CallingOpenPop2", "Self dismiss")
-                    networkAlertDialog=null
-                }
-
-            }
-        }
-    }
-
-
 }
 
 

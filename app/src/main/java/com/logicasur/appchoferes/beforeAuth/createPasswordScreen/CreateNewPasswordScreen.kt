@@ -23,8 +23,8 @@ class CreateNewPasswordScreen : BaseClass() {
     val context: Context = this
 
 
-    lateinit var imm:InputMethodManager
-    val createPasswordViewModel: CreatePasswordViewModel by viewModels()
+
+    private val createPasswordViewModel: CreatePasswordViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val language=Language()
@@ -34,7 +34,7 @@ class CreateNewPasswordScreen : BaseClass() {
         initView()
     }
 
-    fun initView() {
+    private fun initView() {
 
         if(ResendApis.primaryColor.isEmpty() && ResendApis.secondaryColor.isEmpty()){
             ResendApis.primaryColor = "#7A59FC"
@@ -45,12 +45,7 @@ class CreateNewPasswordScreen : BaseClass() {
         createPasswordViewModel.viewsForCreatePassword(context, binding)
          showSoftKeyboard(binding.editPassword)
     }
-    fun showSoftKeyboard(view: View) {
-        if (view.requestFocus()) {
-            val imm = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
-    }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -58,13 +53,6 @@ class CreateNewPasswordScreen : BaseClass() {
 
     }
 
-     fun closeKeyboard() {
-        val view = this.currentFocus
-        if (view != null) {
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
 
 
     override fun onBackPressed() {
@@ -72,12 +60,26 @@ class CreateNewPasswordScreen : BaseClass() {
         finish()
     }
 
+
+    //-------------------------------------------------------utils-----------------------------------
     fun moveToNext(){
-        var intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         finishAffinity()
     }
-
+    fun closeKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+    private fun showSoftKeyboard(view: View) {
+        if (view.requestFocus()) {
+            val imm = context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
 
 }
