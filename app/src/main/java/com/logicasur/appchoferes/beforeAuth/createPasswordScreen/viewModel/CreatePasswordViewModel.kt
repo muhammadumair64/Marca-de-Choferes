@@ -190,13 +190,13 @@ class CreatePasswordViewModel @Inject constructor(
     private fun hideOrUnhidePassword(iconImage : ImageView, editText: EditText){
 
         if (editText.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
-            editText.setTransformationMethod(PasswordTransformationMethod.getInstance())
-            editText.setSelection(editText.getText().length);
+            editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            editText.setSelection(editText.text.length)
             iconImage.setImageResource(R.drawable.hide_password)
         } else {
             Log.d("SIGNINSCREEN","In Else block")
-            editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
-            editText.setSelection(editText.text.length)
+            editText.setTransformationMethod(PasswordTransformationMethod.getInstance())
+            editText.setSelection(editText.getText().length)
             iconImage.setImageResource(R.drawable.ic_icon_visibility)
         }
     }
