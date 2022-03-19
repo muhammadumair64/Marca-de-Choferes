@@ -13,7 +13,7 @@ import retrofit2.http.*
 interface RetrofitInterface {
 
     @FormUrlEncoded
-    @POST("beforeAuth/login")
+    @POST("auth/login")
     suspend fun userSignup(
         @Field("username") name: String,
         @Field("password") password: String,
@@ -35,19 +35,19 @@ interface RetrofitInterface {
 
 
     @FormUrlEncoded
-    @POST("beforeAuth/recover")
+    @POST("auth/recover")
     suspend fun forgotPassword(
         @Field("username") name: String
     ): Response<ForgotPasswordResponse>
 
 
-    @POST("beforeAuth/logout")
+    @POST("auth/logout")
     suspend fun userLogout(
     ): Response<MessageResponse>
 
 
     @FormUrlEncoded
-    @POST("beforeAuth/change")
+    @POST("auth/change")
     suspend fun createNewPassword(
         @Field("password") password: String,
         @Header("Cookie") sessionIdAndToken: String
@@ -55,7 +55,7 @@ interface RetrofitInterface {
 
 
     @FormUrlEncoded
-    @POST("beforeAuth/reset/{otpScreen}")
+    @POST("auth/reset/{otpScreen}")
     suspend fun sendOTP(
         @Path("otpScreen") otp: Int,
         @Field("username") name: String,

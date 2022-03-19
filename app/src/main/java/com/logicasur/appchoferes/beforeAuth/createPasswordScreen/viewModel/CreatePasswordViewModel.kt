@@ -187,17 +187,19 @@ class CreatePasswordViewModel @Inject constructor(
         (activityContext as CreateNewPasswordScreen).closeKeyboard()
     }
 
-    private fun hideOrUnhidePassword(iconImage: ImageView, editText: EditText) {
-        hideBehaviourOnET(editText)
+    private fun hideOrUnhidePassword(iconImage : ImageView, editText: EditText){
+
         if (editText.transformationMethod.equals(PasswordTransformationMethod.getInstance())) {
+            editText.setTransformationMethod(PasswordTransformationMethod.getInstance())
+            editText.setSelection(editText.getText().length);
             iconImage.setImageResource(R.drawable.hide_password)
         } else {
+            Log.d("SIGNINSCREEN","In Else block")
+            editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            editText.setSelection(editText.text.length)
             iconImage.setImageResource(R.drawable.ic_icon_visibility)
         }
     }
 
-    private fun hideBehaviourOnET(editText: EditText) {
-        editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
-        editText.setSelection(editText.text.length)
-    }
+ 
 }
