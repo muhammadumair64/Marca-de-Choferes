@@ -35,21 +35,21 @@ class ServerCheck constructor(
 
     suspend fun serverCheck(action: () -> Unit) {
 
-        var checkServerResponse: MessageResponse?
+        var checkServerResponse: MessageResponse
 
         tagsForToast()
         Log.d(TAG, "Server Check function 1st")
 
         CoroutineScope(Job()).launch(Dispatchers.IO) {
             try {
-                val Token = tinyDB.getString("Cookie")
+                val token = tinyDB.getString("Cookie")
 
                 Log.d(TAG, "Server CHECK API Hit")
                 checkServerResponse =
-                    authRepository.checkServer(Token!!)
+                    authRepository.checkServer(token ?: "")
 
                 Log.d(TAG, "$checkServerResponse")
-                if (checkServerResponse == MessageResponse("ok")) {
+                if (checkServerResponse.checkIfMessageIsOkay()) {
                     Log.d(TAG, "Server is working fine")
                     action()
                 }
@@ -57,85 +57,18 @@ class ServerCheck constructor(
 
             } catch (e: SocketTimeoutException) {
                 Log.d("Exception", "SocketTimeOut..${e.localizedMessage}")
-                withContext(Dispatchers.Main)
-                {
-                    if(MyApplication.authCheck){
-                        MyApplication.authCheck = false
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
-                    }else{
-                        endLoading()
-                    }
-                    if(MyApplication.syncCheck){
-
-                        delay(3000)
-                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(null,true)
-                        MyApplication.syncCheck = false
-
-
-                    }
-
-                }
+                handleException()
             } catch (e: SocketException) {
                 Log.d("Exception", "Socket..${e.localizedMessage}")
-                withContext(Dispatchers.Main)
-                {
-                    if(MyApplication.authCheck){
-                        MyApplication.authCheck = false
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
-                    }else{
-                        endLoading()
-                    }
-                    if(MyApplication.syncCheck){
-                        delay(3000)
-                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, true)
-                        MyApplication.syncCheck = false
-
-
-                    }
-                }
-
+                handleException()
             } catch (e: NoInternetException) {
 
                 Log.d("Exception", "NoInternet..${e.localizedMessage}")
-                withContext(Dispatchers.Main)
-                {
-                    if (MyApplication.authCheck) {
-                        MyApplication.authCheck = false
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
-                    } else {
-                        endLoading()
-                    }
-                    if(MyApplication.syncCheck){
-                        CoroutineScope(Job()).launch {
-                            withContext(Dispatchers.Main) {
-                                delay(3000)
-                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
-                                MyApplication.syncCheck = false
-                            }
-                        }
-                    }
-                }
+                handleException()
             } catch (e: Exception) {
 
                 Log.d("Exception", "first place Exception..${e.localizedMessage}")
-                withContext(Dispatchers.Main)
-                {
-                    if (MyApplication.authCheck) {
-                        MyApplication.authCheck = false
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
-                    } else {
-                        endLoading()
-                    }
-
-                    if(MyApplication.syncCheck){
-                        delay(3000)
-                                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, true)
-                                MyApplication.syncCheck = false
-
-
-                    }
-
-                }
+                handleException()
             }
 
 
@@ -146,129 +79,28 @@ class ServerCheck constructor(
 
     fun endLoading() {
         if (!MyApplication.checKForSyncLoading) {
-            LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
         }
     }
 
 
-    suspend fun serverCheckActivityOrStatus(
-        datetime: String?,
-        totalTime: Int?,
-        activity: Int?,
-        geoPosition: GeoPosition?,
-        vehicle: Vehicle?, state: State?, resendApis: ResendApis, action1: () -> Unit
-    ) {
-        tagsForToast()
-        Log.d(TAG, "Server Check function 2nd")
-        CoroutineScope(Job()).launch(Dispatchers.IO) {
+   suspend fun handleException(){
+       withContext(Dispatchers.Main)
+       {
+           if(MyApplication.authCheck){
+               MyApplication.authCheck = false
+               LoadingScreen.OnEndLoadingCallbacks?.openServerPopup()
+           }else{
+               endLoading()
+           }
+           if(MyApplication.syncCheck){
+               LoadingScreen.OnEndLoadingCallbacks?.openPopup(null,true)
+               MyApplication.syncCheck = false
+           }
 
-            var firstTimeCome = 0
-            val timeoutForServerCheck = Timer()
-            timeoutForServerCheck!!.schedule(object : TimerTask() {
-                override fun run() {
-                    if (firstTimeCome == 1) {
-                        CoroutineScope(Job()).launch(Dispatchers.IO) {
-                            if (state == null) {
-                                mainRepository.insertUnsentStateOrUploadActivity(
-                                    UnsentStatusOrUploadActivity(
-                                        0,
-                                        datetime!!,
-                                        null,
-                                        null,
-                                        activity!!,
-                                        totalTime,
-                                        vehicle!!.id,
-                                        vehicle.description,
-                                        vehicle.plateNumber,
-                                        geoPosition!!.latitud,
-                                        geoPosition.longitud
-                                    )
-                                )
+       }
+   }
 
-
-                                runOnMain {
-                                    Log.d("LOADING_TESTING", "IN_server check end loading")
-                                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                                }
-
-
-                            } else {
-                                mainRepository.insertUnsentStateOrUploadActivity(
-                                    UnsentStatusOrUploadActivity(
-                                        0,
-                                        datetime!!,
-                                        state.id,
-                                        state.description, null, totalTime,
-                                        vehicle!!.id,
-                                        vehicle.description,
-                                        vehicle.plateNumber,
-                                        geoPosition!!.latitud,
-                                        geoPosition.longitud
-                                    )
-                                )
-
-                                Log.d("STATE_TESTING", "IN END LOeADING")
-
-                                runOnMain {
-                                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-                                }
-
-                            }
-                            Log.d("SERVICE_TESTING", "ServerCheck")
-                            resendApis.checkNetAndUpload()
-
-
-
-
-                            withContext(Dispatchers.Main) {
-                                if (!MyApplication.checKForSyncLoading) {
-                                    if(CheckConnection.netCheck(MyApplication.appContext))
-                                    {
-                                        Log.d(TAG,"Check Connection Check Net")
-                                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
-                                    }
-
-                                }
-                            }
-
-                        }
-                        timeoutForServerCheck.purge()
-                        timeoutForServerCheck.cancel()
-                    } else {
-                        firstTimeCome++
-                    }
-
-                }
-            }, 0, 8000)
-
-
-
-            try {
-                tinyDB.getString("Cookie")?.let { token ->
-
-                    authRepository.checkServer(token).apply {
-                        Log.d(TAG, "$this")
-                        if (this.checkIfMessageIsOkay()) {
-
-                            Log.d(TAG, "Server is working fine")
-                            action1()
-                            timeoutForServerCheck.purge()
-                            timeoutForServerCheck.cancel()
-                        }
-                    }
-
-
-                }
-
-
-            } catch (e: Exception) {
-
-                Log.d(TAG, "2nd place  Exception..${e.localizedMessage}")
-
-            }
-
-        }
-    }
 
 
     fun serverCheckMainActivityApi(
@@ -306,36 +138,37 @@ class ServerCheck constructor(
                             val inBetweenApiCallTimer = Timer().also { timer ->
                                 timer.schedule(object : TimerTask() {
                                     override fun run() {
-                                        if (checkOnApiCall == 1 || checkOnApiCall == 2) {
+                                        when (checkOnApiCall) {
+                                            in 1..3 -> {
+                                                CoroutineScope(Job()).launch {
+                                                    try {
+                                                        serverCheckDuringStatus() {}
+                                                    } catch (e: Exception) {
+                                                        Log.d(
+                                                            "EXCEPTION_TESTING",
+                                                            " ${e.localizedMessage}"
+                                                        )
+                                                    }
 
-
-                                            CoroutineScope(Job()).launch {
-                                                try {
-                                                    serverCheckDuringStatus() {}
-                                                } catch (e: Exception) {
-                                                    Log.d(
-                                                        "EXCEPTION_TESTING",
-                                                        " ${e.localizedMessage}"
-                                                    )
                                                 }
-
+                                                checkOnApiCall++
+                                                if(checkOnApiCall > 3){
+                                                    Log.d("NETCHECKTEST", "----workingTesting")
+                                                    timer.purge()
+                                                    timer.cancel()
+                                                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
+                                                }
                                             }
-
-
-                                            checkOnApiCall++
-                                        } else if (checkOnApiCall > 2) {
-                                            Log.d("NETCHECKTEST", "----workingTesting")
-                                            timer.purge()
-                                            timer.cancel()
-
-                                        } else {
-                                            checkOnApiCall++
+                                            else -> {
+                                                checkOnApiCall++
+                                            }
                                         }
 
                                     }
-                                }, 0, 13000)
+                                }, 0, 15000)
 
                             }
+
                             apiCall() {
                                 // Server is not well
                                 Log.d(TAG, "Response is received Cancel the timer.")
@@ -351,7 +184,7 @@ class ServerCheck constructor(
                         Log.d("NETCHECKTEST", "----In Also")
                         if (toSaveInDB) openPopup(null, true) else {
                             Log.d("NETCHECKTEST", "----In else")
-                            CoroutineScope(Job()).launch(Dispatchers.Main) {
+                            withContext(Dispatchers.Main) {
                                 Log.d(TAG,"Open Server Popup....serverCheckMainActivityApi")
                                 openServerPopup()
                             }
@@ -366,7 +199,6 @@ class ServerCheck constructor(
 
                           }else{
                               (MyApplication.activityContext as MainActivity).updatePendingData(false)
-
                           }
 
                   }
@@ -402,11 +234,11 @@ class ServerCheck constructor(
                 }
 
             } catch (e: SocketTimeoutException) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, true)
+                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
                 Log.d("Exception", "SocketTimeOut..${e.localizedMessage}")
 
             } catch (e: SocketException) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, true)
+                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
                 Log.d("Exception", "Socket..${e.localizedMessage}")
 
 

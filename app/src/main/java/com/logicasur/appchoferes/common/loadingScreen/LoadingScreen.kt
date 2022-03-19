@@ -27,57 +27,54 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
-    lateinit var proceed_btn  : AppCompatButton
+class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
+    lateinit var proceed_btn: AppCompatButton
     lateinit var cancel_btn: RelativeLayout
     var networkAlertDialog: AlertDialog? = null
-    lateinit var networkDialogBuilder:AlertDialog.Builder
+    lateinit var networkDialogBuilder: AlertDialog.Builder
 
-    lateinit var go_back_btn  : AppCompatButton
+    lateinit var go_back_btn: AppCompatButton
     var serverAlertDialog: AlertDialog? = null
-    lateinit var serverDialogBuilder:AlertDialog.Builder
-
+    lateinit var serverDialogBuilder: AlertDialog.Builder
 
 
     val loadingViewModel: loadingViewModel by viewModels()
-    companion object
-    {
-         var OnEndLoadingCallbacks : OnEndLoadingCallbacks? = null
+
+    companion object {
+        var OnEndLoadingCallbacks: OnEndLoadingCallbacks? = null
 
     }
 
     lateinit var tinyDB: TinyDB
-    var imageFromServer=""
-    lateinit var  imageBackground:ImageView
+    var imageFromServer = ""
+    lateinit var imageBackground: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        OnEndLoadingCallbacks  = this
+        OnEndLoadingCallbacks = this
         loadingViewModel.activityContext = this
-        val language= Language()
+        val language = Language()
         language.setLanguage(baseContext)
         setContentView(R.layout.activity_loading_screen)
 
-        tinyDB= TinyDB(this)
-        ResendApis.primaryColor=tinyDB.getString("primaryColor")!!
-        ResendApis.secondaryColor=tinyDB.getString("secondrayColor")!!
+        tinyDB = TinyDB(this)
+        ResendApis.primaryColor = tinyDB.getString("primaryColor")!!
+        ResendApis.secondaryColor = tinyDB.getString("secondrayColor")!!
         initView()
-         imageFromServer= tinyDB.getString("loadingBG").toString()
-        if(imageFromServer.isNotEmpty()){
+        imageFromServer = tinyDB.getString("loadingBG").toString()
+        if (imageFromServer.isNotEmpty()) {
             Base64ToBitmap(imageFromServer)
-        }else{
-            Log.d("LOADINGSCRTEST","Empty")
+        } else {
+            Log.d("LOADINGSCRTEST", "Empty")
         }
 
 
     }
 
-   fun initView(){
-       setBarColor()
-       MyApplication.loadingContext = this
+    fun initView() {
+        setBarColor()
+        MyApplication.loadingContext = this
 
-         imageBackground=findViewById(R.id.loadingBackground)
-
-
+        imageBackground = findViewById(R.id.loadingBackground)
 
 
     }
@@ -89,127 +86,126 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
     }
 
     fun Base64ToBitmap(base64: String) {
-        Log.d("LOADINGSCRTEST","IN BASE64")
+        Log.d("LOADINGSCRTEST", "IN BASE64")
         val imageBytes = Base64.decode(base64, 0)
         val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         imageBackground.setImageBitmap(image)
     }
 
     override fun endLoading() {
-        Log.d("LoadingScreenFinish","Finish")
+        Log.d("LoadingScreenFinish", "Finish")
         finish()
     }
 
     override fun openPopup(myTimer: Timer?, boolean: Boolean) {
-         createPopup(myTimer,boolean)
+        createPopup(myTimer, boolean)
     }
 
     override fun openServerPopup() {
 
-            createServerAlertPopup()
+        createServerAlertPopup()
 
 
     }
 
     override fun calculateTimeFromLocalDB() {
-       println("IN CALCULATION BLOCK")
+        println("IN CALCULATION BLOCK")
         loadingViewModel.getPreviousTimeWhenOffline(false)
     }
 
 
-
     override fun onDestroy() {
-        try{
+        try {
             networkAlertDialog?.dismiss()
             serverAlertDialog?.dismiss()
 
 
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.localizedMessage
         }
         super.onDestroy()
 
 
 
-        Log.d("LOADING_TESTING","Yes")
+        Log.d("LOADING_TESTING", "Yes")
     }
 
 
-
-
-
-//-------------------------------------------------Utils----------------------------------------------
+    //-------------------------------------------------Utils----------------------------------------------
     private fun createServerAlertPopup() {
-           Log.d("POPUP_TESTING","IN SERVER POPUP")
-           serverDialogBuilder = AlertDialog.Builder(this)
-           val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
-           serverAlertDialog = serverDialogBuilder.create()
-           go_back_btn=PopupView.findViewById(R.id.go_back)
+        Log.d("POPUP_TESTING", "IN SERVER POPUP")
+        serverDialogBuilder = AlertDialog.Builder(this)
+        val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
+        serverAlertDialog = serverDialogBuilder.create()
+        go_back_btn = PopupView.findViewById(R.id.go_back)
 
-           Log.d("POPUP_TESTING"," In VIEW MODEL After delay")
+        Log.d("POPUP_TESTING", " In VIEW MODEL After delay")
 
-           loadingViewModel.openServerPopup(serverAlertDialog!!,PopupView,resources)
-         try{
-             setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
-         }catch (e:Exception){
-             e.localizedMessage
-         }
+        loadingViewModel.openServerPopup(serverAlertDialog!!, PopupView, resources)
+        try {
+            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
+        } catch (e: Exception) {
+            e.localizedMessage
+        }
 
-           go_back_btn.setOnClickListener {
-               serverAlertDialog!!.dismiss()
-               finish()
+        go_back_btn.setOnClickListener {
+            serverAlertDialog!!.dismiss()
+            finish()
 
-           }
-       }
+        }
+    }
+
     private fun createPopup(myTimer: Timer?, boolean: Boolean) {
 
         runOnUiThread {
-            Log.d("STATUS_TESTING","IN WINDOW")
-            networkDialogBuilder = AlertDialog.Builder(this)
-            val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
-            networkAlertDialog= networkDialogBuilder.create()
-            proceed_btn=PopupView.findViewById(R.id.proceed_btn)
-            cancel_btn=PopupView.findViewById(R.id.cancel_btn)
-            loadingViewModel.openPopup(networkAlertDialog!!,PopupView,resources)
-            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
-            cancel_btn.setOnClickListener {
+            Log.d("STATUS_TESTING", "IN WINDOW")
+            if (networkAlertDialog == null) {
+                networkDialogBuilder = AlertDialog.Builder(this)
+                val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
+                networkAlertDialog = networkDialogBuilder.create()
+                proceed_btn = PopupView.findViewById(R.id.proceed_btn)
+                cancel_btn = PopupView.findViewById(R.id.cancel_btn)
+                loadingViewModel.openPopup(networkAlertDialog!!, PopupView, resources)
+                setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
+                cancel_btn.setOnClickListener {
 
-                networkAlertDialog!!.dismiss()
+                    networkAlertDialog?.dismiss()
+                    networkAlertDialog =  null
 
-                if(myTimer != null){
-                    finishAffinity()
-                }
-                finish()
-
-            }
-            proceed_btn.setOnClickListener {
-                if(myTimer!=null || boolean){
-                    if(boolean){
-                        myTimer?.cancel()
-                    }
-                    loadingViewModel.getPreviousTimeWhenOffline(true)
-                }
-                else{
-
-                    try{
-                        Log.d("STATUS_TESTING","Before entring DaTa base")
-                        (activity as MainActivity).updatePendingData(true)
-                    } catch (e:Exception){
-                        Log.d("IN Starting main","ERROR")
+                    if (myTimer != null) {
+                        finishAffinity()
                     }
                     finish()
 
                 }
+                proceed_btn.setOnClickListener {
+                    if (myTimer != null || boolean) {
+                        if (boolean) {
+                            myTimer?.cancel()
+                        }
+                        loadingViewModel.getPreviousTimeWhenOffline(true)
+                    } else {
 
-                networkAlertDialog!! .dismiss()
+                        try {
+                            Log.d("STATUS_TESTING", "Before entring DaTa base")
+                            (activity as MainActivity).updatePendingData(true)
+                        } catch (e: Exception) {
+                            Log.d("IN Starting main", "ERROR")
+                        }
+                        finish()
+
+                    }
+
+                    networkAlertDialog?.dismiss()
+                    networkAlertDialog = null
+                }
             }
         }
 
 
-
-
     }
-    private fun setBarColor(){
+
+    private fun setBarColor() {
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
@@ -217,15 +213,14 @@ class LoadingScreen :BaseClass(), OnEndLoadingCallbacks {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
 
-
         val color = tinyDB.getString("primaryColor")
-        if(color?.isNotEmpty() == true){
+        if (color?.isNotEmpty() == true) {
             window.setStatusBarColor(Color.parseColor(color))
         }
 
     }
 
-   }
+}
 
 
 
