@@ -480,7 +480,8 @@ class MainActivity : BaseClass() {
         activity: Int?,
         geoPosition: GeoPosition?,
         vehicle: Vehicle?,
-        authRepository: AuthRepository
+        authRepository: AuthRepository,
+        function: () -> Unit
 
     ) {
         Log.d("updateActivity", "Function")
@@ -501,6 +502,7 @@ class MainActivity : BaseClass() {
             tinyDB.putObject("GeoPosition", geoPosition)
             updatePendingData(false)
             LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+            function()
 //            MyApplication.checKForActivityLoading = false
 
         } else {
@@ -549,6 +551,7 @@ class MainActivity : BaseClass() {
 
 
                         if (response != null) {
+                            function()
                             withContext(Dispatchers.Main) {
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                             }
