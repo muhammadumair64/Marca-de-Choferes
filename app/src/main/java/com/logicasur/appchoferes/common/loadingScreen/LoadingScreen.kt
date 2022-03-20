@@ -160,6 +160,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
         runOnUiThread {
             Log.d("STATUS_TESTING", "IN WINDOW")
             if (networkAlertDialog == null) {
+                Log.d("STATUS_TESTING", "IN WINDOW EX")
                 networkDialogBuilder = AlertDialog.Builder(this)
                 val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
                 networkAlertDialog = networkDialogBuilder.create()

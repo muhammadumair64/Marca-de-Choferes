@@ -43,6 +43,8 @@ class loadingViewModel @Inject constructor(
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)
         try {
+
+            networkAlertDialog.show()
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
             val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
             networkAlertDialog.window?.setLayout(width, height)
