@@ -31,10 +31,10 @@ import kotlin.concurrent.schedule
 @AndroidEntryPoint
 class SplashScreen : BaseClass() {
     val viewModel: SplashScreenViewModel by viewModels()
-    lateinit var tinyDB: TinyDB
+
     lateinit var binding: ActivitySplashScreenBinding
     var background = ""
-    var spleshCheck = true
+    var toGetSplashImage = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +45,7 @@ class SplashScreen : BaseClass() {
             val language = Language()
             language.setLanguage(baseContext)
             viewModel.viewsOfActivity(this@SplashScreen)
-            tinyDB = TinyDB(this@SplashScreen)
+
             startScreen()
         }
 
@@ -54,22 +54,22 @@ class SplashScreen : BaseClass() {
     private fun initViews() {
         buttonTextSetter()
         showSplashScreen()
-        val checker = tinyDB.getString("User")
+        val checker = viewModel.tinyDB.getString("User")
         println("checker $checker")
         binding.startButton.setOnClickListener {
             if (checker?.length!! >= 3) {
                 if (CheckConnection.netCheck(this)) {
-                    moveToLoadingScreen()
-                    viewModel.syncData() //change
+                    lifecycleScope.launch (Dispatchers.IO){
+                        viewModel.syncData(true) //change
+                    }
+
                 } else {
 
-                    moveToLoadingScreen()
+
                     if (viewModel.myTimer != null) {
                         viewModel.myTimer!!.cancel()
                     }
                     viewModel.checkData()
-
-
                 }
 
             } else {
@@ -80,46 +80,65 @@ class SplashScreen : BaseClass() {
         }
 
         setButtonColor()
-
-
     }
 
 
-    //----------------------utils----------------------------------
-    private fun moveToLoadingScreen() {
-        val intent = Intent(this, LoadingScreen::class.java)
-        startActivity(intent)
-    }
 
-    private fun showSplashScreen() {
-        if (spleshCheck) {
-            if (CheckConnection.netCheck(this)) {
-                viewModel.getSplashScreen()
-            } else {
-                Toast.makeText(this, "Verifique su conexión", Toast.LENGTH_SHORT).show()
+
+
+
+
+
+
+
+    private fun startScreen() {
+        val splashCheck = viewModel.tinyDB.getBoolean("NOSPLASH")
+        val checker = viewModel.tinyDB.getString("User")
+        println("Current User is : $checker, $splashCheck")
+        when {
+            checker != null -> {
+                when {
+                    checker.isNotEmpty() -> {
+                        toGetSplashImage = false
+                        viewModel.tinyDB.putBoolean("SYNC_CHECK", false)
+                        viewModel.checkData() //change
+
+                    }
+                    splashCheck -> {
+                        Log.d("SPLASHCHECK","-----in splash block")
+                        moveToSignIn()
+                    }
+                    else -> {
+                        otpTimeCheck()
+                    }
+                }
+            }
+            splashCheck -> {
+                Log.d("SPLASHCHECK","-----in splash block")
+                moveToSignIn()
+            }
+            else -> {
+                otpTimeCheck()
             }
         }
-    }
 
-    private fun setButtonColor() {
-        val firstColor = tinyDB.getString("primaryColor")
-        val secondColor = tinyDB.getString("secondrayColor")
-        if (firstColor?.isNotEmpty() == true && secondColor?.isNotEmpty() == true) {
-            setGrad(firstColor, secondColor, binding.startButton)
-            setBarColor()
-        } else {
-            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, binding.startButton)
+        val context = this
+        Timer().schedule(200) {
+            lifecycleScope.launch {
+                withContext(Dispatchers.Main) {
+                    binding =
+                        DataBindingUtil.setContentView(context, R.layout.activity_splash_screen)
+                    initViews()
+                }
+
+            }
+
         }
     }
 
-    fun base64ToBitmap(base64: String) {
-        val imageBytes = Base64.decode(base64, 0)
-        val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-        binding.background.setImageBitmap(image)
-    }
 
     private fun otpTimeCheck() {
-        val time = tinyDB.getString("OTPtime")
+        val time = viewModel.tinyDB.getString("OTPtime")
         if (time != null) {
             val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
             val currentDate = sdf.format(Date())
@@ -150,12 +169,59 @@ class SplashScreen : BaseClass() {
 
     }
 
+    //----------------------utils----------------------------------
+
+    private fun showSplashScreen() {
+        if (toGetSplashImage) {
+            if (CheckConnection.netCheck(this)) {
+                viewModel.getSplashScreen()
+            } else {
+                Toast.makeText(this, "Verifique su conexión", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setButtonColor() {
+        val firstColor = viewModel.tinyDB.getString("primaryColor")
+        val secondColor = viewModel.tinyDB.getString("secondrayColor")
+        if (firstColor?.isNotEmpty() == true && secondColor?.isNotEmpty() == true) {
+            setGrad(firstColor, secondColor, binding.startButton)
+            setBarColor()
+        } else {
+            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, binding.startButton)
+        }
+    }
+
+    fun base64ToBitmap(base64: String) {
+        val imageBytes = Base64.decode(base64, 0)
+        val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        binding.background.setImageBitmap(image)
+    }
+    private fun moveToSignIn() {
+        val intent = Intent(this, SignInActivity::class.java)
+        startActivity(intent)
+
+    }
+
+
+    private fun setBarColor() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        val color = viewModel.tinyDB.getString("primaryColor")
+        if (color != null) {
+            if (color.isNotEmpty()) {
+                window.statusBarColor = Color.parseColor(color)
+            }
+        }
+
+    }
+
     private fun buttonTextSetter() {
 
-        val checker = tinyDB.getString("User")
+        val checker = viewModel.tinyDB.getString("User")
         println("checker $checker")
         if (checker?.length!! >= 3) {
-            when (tinyDB.getString("language")) {
+            when (viewModel.tinyDB.getString("language")) {
                 "0" -> {
 
                     binding.startButton.text = "Rever"
@@ -175,63 +241,6 @@ class SplashScreen : BaseClass() {
 
         }
 
-
-    }
-
-    private fun setBarColor() {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        val color = tinyDB.getString("primaryColor")
-        if (color != null) {
-            if (color.isNotEmpty()) {
-                window.statusBarColor = Color.parseColor(color)
-            }
-        }
-
-    }
-
-    private fun startScreen() {
-        val splashCheck =tinyDB.getBoolean("NOSPLASH")
-        val checker = tinyDB.getString("User")
-        println("Current User is : $checker, $splashCheck")
-        if (checker != null) {
-            if(checker.isNotEmpty()) {
-                spleshCheck = false
-                moveToLoadingScreen()
-                tinyDB.putBoolean("SYNC_CHECK", false)
-                viewModel.checkData() //change
-
-            } else if(splashCheck) {
-                Log.d("SPLASHCHECK","-----in splash block")
-                moveToSignIn()
-            }else {
-                otpTimeCheck()
-            }
-        }else if(splashCheck) {
-            Log.d("SPLASHCHECK","-----in splash block")
-            moveToSignIn()
-        }else
-        {
-            otpTimeCheck()
-        }
-
-        val context = this
-        Timer().schedule(200) {
-            lifecycleScope.launch {
-                withContext(Dispatchers.Main) {
-                    binding =
-                        DataBindingUtil.setContentView(context, R.layout.activity_splash_screen)
-                    initViews()
-                }
-
-            }
-
-        }
-    }
-
-    private fun moveToSignIn() {
-        val intent = Intent(this, SignInActivity::class.java)
-        startActivity(intent)
 
     }
 

@@ -1492,6 +1492,7 @@ class HomeViewModel @Inject constructor(
             Log.d("StatusTesting", "IN FUNCTION HOME VIEW MODEL LINE 1311")
             if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
                 LoadingScreen.dialogActionCallBacks = (activityContext as MainActivity)
+                LoadingScreen.OnEndLoadingCallbacks?.endLoading("Loading Screen Ended from Home View Model 1495")
                 ContextCompat.startActivity(
                     activityContext!!,
                     loadingIntent,

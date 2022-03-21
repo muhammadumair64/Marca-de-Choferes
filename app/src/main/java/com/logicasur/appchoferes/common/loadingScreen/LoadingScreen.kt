@@ -34,7 +34,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     lateinit var cancel_btn: RelativeLayout
     var networkAlertDialog: AlertDialog? = null
     lateinit var networkDialogBuilder: AlertDialog.Builder
-lateinit var topTextView :TextView
+    lateinit var topTextView :TextView
     lateinit var subTextView :TextView
     lateinit var go_back_btn: AppCompatButton
     var serverAlertDialog: AlertDialog? = null
@@ -44,7 +44,7 @@ lateinit var topTextView :TextView
     val loadingViewModel: loadingViewModel by viewModels()
 
     companion object {
-         var OnEndLoadingCallbacks: OnEndLoadingCallbacks? = null
+          var OnEndLoadingCallbacks: OnEndLoadingCallbacks? = null
          var  dialogActionCallBacks :dialogActionCallBacks?= null
     }
 
