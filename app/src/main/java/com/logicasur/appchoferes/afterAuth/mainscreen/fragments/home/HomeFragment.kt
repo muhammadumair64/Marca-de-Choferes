@@ -165,8 +165,6 @@ class HomeFragment : Fragment(), OnclickItem {
     }
 
     override fun statusSelection(position: Int) {
-
-
         var selected = tinyDB.getInt("state")
         selected = selected.minus(1)
         Log.d("StatusTesting", "---- $selected-----$position")
@@ -245,8 +243,6 @@ class HomeFragment : Fragment(), OnclickItem {
                 }
                 val stateCheck = tinyDB.getBoolean("STATEAPI")
                 if (stateCheck) {
-
-
                     Log.d("APIDATATESTING", "IN IF BLOCK")
                     (activity as MainActivity).updatePendingData(true)
                 } else {

@@ -206,7 +206,18 @@ lateinit var topTextView :TextView
                         try {
                             dialogActionCallBacks?.clickOnProceed()
                             Log.d("STATUS_TESTING", "Before entring DaTa base")
-                            (activity as MainActivity).updatePendingData(true)
+
+                            val stateCheck = tinyDB.getBoolean("STATEAPI")
+                            if (stateCheck) {
+                                Log.d("APIDATATESTING", "IN IF BLOCK")
+                                (MyApplication.activityContext as MainActivity).updatePendingData(true)
+                            } else {
+                                Log.d("APIDATATESTING", "IN Else")
+                                (MyApplication.activityContext as MainActivity).updatePendingData(false)
+                            }
+
+
+
                         } catch (e: Exception) {
                             Log.d("IN Starting main", "ERROR")
                         }
