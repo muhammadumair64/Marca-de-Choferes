@@ -268,7 +268,7 @@ class ResendApis constructor(
         // If User  does not came from sync than exit loading screen
         if (MyApplication.checKForActivityLoading) {
             Log.d("LoadingEND", "----true----")
-            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+            LoadingScreen.OnEndLoadingCallbacks?.endLoading("From ResendApi")
             MyApplication.checKForActivityLoading = false
         }
     }

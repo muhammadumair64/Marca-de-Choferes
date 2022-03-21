@@ -117,7 +117,7 @@ class CreatePasswordViewModel @Inject constructor(
                     e.printStackTrace()
                     showToast()
                 } catch (e: SocketException) {
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading("from create new pass word ")
                     showToast()
                 } catch (e: Exception) {
                     Log.d("connection Exception", "Connect Not Available")

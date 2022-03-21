@@ -286,7 +286,7 @@ class ConfigurationViewModel @Inject constructor(
                     Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: SocketException) {
-                LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                LoadingScreen.OnEndLoadingCallbacks?.endLoading("from configration line 289")
                 Log.d(TAG, "Connection Not Available")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
@@ -342,7 +342,7 @@ class ConfigurationViewModel @Inject constructor(
                 Log.d(TAG, "position 2")
                 e.printStackTrace()
             } catch (e: SocketException) {
-                LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                LoadingScreen.OnEndLoadingCallbacks!!.endLoading("from configration line 345")
                 Log.d(TAG, "Connection Not Available")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()

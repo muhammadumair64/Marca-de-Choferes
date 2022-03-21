@@ -170,7 +170,7 @@ class SplashScreenViewModel @Inject constructor(
             Log.d("LoadingImage", "Response Exception ${e.localizedMessage}")
 
         } catch (e: SocketException) {
-            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+            LoadingScreen.OnEndLoadingCallbacks?.endLoading("From splesh screen line nbr 173")
             Log.d("connection Exception", "Connect Not Available")
             showToast()
         }
@@ -259,7 +259,7 @@ class SplashScreenViewModel @Inject constructor(
                     }
                 } catch (e: SocketException) {
                     Log.d("connection Exception", "Connect Not Available")
-                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading("From Splash Screen line nbr 262")
                 } catch (e: Exception) {
                     Log.d("connection Exception", "Connect Not Available")
                 }

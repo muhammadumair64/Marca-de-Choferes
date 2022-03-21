@@ -258,7 +258,7 @@ class ProfileViewModel @Inject constructor(
                 }
             } catch (e: SocketException) {
                 Log.d("ImageUploadAvatar", "SocketException")
-                LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                LoadingScreen.OnEndLoadingCallbacks?.endLoading("From profile view model linw nbr 261")
                 Log.d("ImageUploadAvatar", "Connect Not Available")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
@@ -309,7 +309,7 @@ class ProfileViewModel @Inject constructor(
                     Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: SocketException) {
-                LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                LoadingScreen.OnEndLoadingCallbacks?.endLoading("From profile view model linw nbr 312")
                 Log.d("connection Exception", "Connect Not Available")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()

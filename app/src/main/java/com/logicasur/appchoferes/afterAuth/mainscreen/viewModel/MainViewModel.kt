@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor():ViewModel() {
         popupLiveData.value=0
     }
 
- fun updateValueTo1(){
+    fun updateValueTo1(){
     navigationLiveData.value="1"
     println("My value ${navigationLiveData.value}")
 }

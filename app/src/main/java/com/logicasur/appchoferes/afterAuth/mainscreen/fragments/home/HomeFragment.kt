@@ -207,7 +207,7 @@ class HomeFragment : Fragment(), OnclickItem {
                     viewModel.openPopup(networkAlertDialog!!, PopupView, resources)
                 } catch (e: Exception) {
                     Log.d("CallingOpenPop", "Exception...${e.localizedMessage}")
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                    LoadingScreen.OnEndLoadingCallbacks?.endLoading("From home fragment")
                 }
 
             } else {
@@ -250,6 +250,7 @@ class HomeFragment : Fragment(), OnclickItem {
                     Log.d("APIDATATESTING", "IN IF BLOCK")
                     (activity as MainActivity).updatePendingData(true)
                 } else {
+                    actionCallOnProceed()
                     Log.d("APIDATATESTING", "IN Else")
                     (activity as MainActivity).updatePendingData(false)
                 }
@@ -410,8 +411,11 @@ class HomeFragment : Fragment(), OnclickItem {
         }
 
     }
-}
 
+    fun actionCallOnProceed(){
+        (context as MainActivity).clickOnProceed()
+    }
+}
 
 
 

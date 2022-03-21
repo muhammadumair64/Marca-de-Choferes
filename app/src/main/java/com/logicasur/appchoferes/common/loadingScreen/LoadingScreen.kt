@@ -23,6 +23,7 @@ import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.beforeAuth.otpScreen.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.timerServices.UploadRemaingDataService.Companion.activity
+import com.logicasur.appchoferes.common.loadingScreen.interfaces.dialogActionCallBacks
 import java.util.*
 
 
@@ -41,8 +42,8 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     val loadingViewModel: loadingViewModel by viewModels()
 
     companion object {
-        var OnEndLoadingCallbacks: OnEndLoadingCallbacks? = null
-
+         var OnEndLoadingCallbacks: OnEndLoadingCallbacks? = null
+         var  dialogActionCallBacks :dialogActionCallBacks?= null
     }
 
     lateinit var tinyDB: TinyDB
@@ -92,10 +93,11 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
         imageBackground.setImageBitmap(image)
     }
 
-    override fun endLoading() {
-        Log.d("LoadingScreenFinish", "Finish")
+    override fun endLoading(messsage: String) {
+        Log.d("LOADING_TESTING","THIS WINDOW END BY $messsage")
         finish()
     }
+
 
     override fun openPopup(myTimer: Timer?, b: Boolean) {
         Log.d("POPUP_TESTING", "IN SERVER POPUP override function")
@@ -128,7 +130,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
 
 
 
-        Log.d("LOADING_TESTING", "Yes")
+
     }
 
 
@@ -177,6 +179,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
                     if (myTimer != null || boolean) {
                         finishAffinity()
                     }
+                    dialogActionCallBacks?.clickOnCancel()
                     finish()
 
                 }
@@ -189,6 +192,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
                     } else {
 
                         try {
+                            dialogActionCallBacks?.clickOnProceed()
                             Log.d("STATUS_TESTING", "Before entring DaTa base")
                             (activity as MainActivity).updatePendingData(true)
                         } catch (e: Exception) {

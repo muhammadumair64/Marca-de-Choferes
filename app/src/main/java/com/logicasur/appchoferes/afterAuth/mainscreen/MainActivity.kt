@@ -53,6 +53,7 @@ import com.logicasur.appchoferes.Extra.OnHomePressedListener
 import com.logicasur.appchoferes.Extra.HomeWatcher
 import com.google.android.gms.location.*
 import android.os.PowerManager
+import com.logicasur.appchoferes.common.loadingScreen.interfaces.dialogActionCallBacks
 import com.logicasur.appchoferes.databinding.ActivityMainBinding
 import com.logicasur.appchoferes.databinding.FragmentHomeBinding
 import com.logicasur.appchoferes.data.repository.MainRepository
@@ -68,13 +69,14 @@ import kotlin.collections.ArrayList
 
 
 @AndroidEntryPoint
-class MainActivity : BaseClass() {
+class MainActivity : BaseClass(),dialogActionCallBacks {
 
     companion object {
         const val LOCATION_SETTING_REQUEST = 999
         var action: (() -> Unit)? = null
     }
 
+    var apiActionGlobal: (() -> Unit)? = null
     var arrayList: ArrayList<UpdateActivityDataClass> = ArrayList()
     var TAG1 = ""
     var TAG2 = ""
@@ -131,7 +133,7 @@ class MainActivity : BaseClass() {
         initView()
         setTimer()
         getWidth()
-        initPermission() { nullFunction() }
+        initPermission({}) {}
         navigationBar()
         homePress()
     }
@@ -203,7 +205,7 @@ class MainActivity : BaseClass() {
         dataBinding = binding
     }
 
-    //------------------------------------------------Timers Functionality----------------------------------
+    //--------------------------------------------------Timers Functionality----------------------------------
     fun startTimer() {
         if (!isMyServiceRunning(TimerService::class.java)) {
             println("work timer start")
@@ -292,7 +294,7 @@ class MainActivity : BaseClass() {
         return GpsStatus
     }
 
-    private fun showEnableLocationSetting(action: () -> Unit) {
+    private fun showEnableLocationSetting(action: () -> Unit, apiAction: (() -> Unit)?) {
 
         this.let {
             val locationRequest = LocationRequest.create()
@@ -307,6 +309,7 @@ class MainActivity : BaseClass() {
             if (CheckConnection.netCheck(this)) {
                 Log.d("PENDINGAPITESTING", "IN GPS POPUP SETTING")
                 MainActivity.action = action
+                apiActionGlobal = apiAction
             } else {
                 Toast.makeText(this, "NET IS NOT AVAILIABLE", Toast.LENGTH_SHORT).show()
             }
@@ -410,7 +413,6 @@ class MainActivity : BaseClass() {
         vehicle: Vehicle?,
         authRepository: AuthRepository,
         stopInBetweenServerCheck: () -> Unit
-
     ) {
         Log.d("updateActivity", "Function")
 
@@ -435,7 +437,7 @@ class MainActivity : BaseClass() {
             tinyDB.putObject("upadteActivity", obj)
             tinyDB.putObject("GeoPosition", geoPosition)
             updatePendingData(false)
-            LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
+            LoadingScreen.OnEndLoadingCallbacks!!.endLoading("from main activity")
             stopInBetweenServerCheck()
 
         } else {
@@ -482,6 +484,7 @@ class MainActivity : BaseClass() {
                         if (response != null) {
                             stopInBetweenServerCheck()
                             withContext(Dispatchers.Main) {
+                                action?.let { it() }
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                             }
                         }
@@ -521,7 +524,8 @@ class MainActivity : BaseClass() {
                 withContext(Dispatchers.IO) {
                     if (CheckConnection.netCheck(this@MainActivity)) {
                         withContext(Dispatchers.Main) {
-                            action?.invoke()
+                            MainActivity.action = action
+                            apiActionGlobal?.let { it() }
                             getLocation(context)
                         }
 
@@ -621,7 +625,7 @@ class MainActivity : BaseClass() {
     }
 
     //---------------------------------------------------Permissions-----------------------------------------
-    fun initPermission(action: () -> Unit) {
+    fun initPermission(uiAction: () -> Unit, apiAction:(()->Unit)? ){
 
         val permissions =
             arrayOf(
@@ -642,7 +646,7 @@ class MainActivity : BaseClass() {
                         requestBackgroundPermission()
                     }
 
-                    checkGpsStatus(action)
+                    checkGpsStatus(uiAction,apiAction)
 
 
                 }
@@ -691,7 +695,7 @@ class MainActivity : BaseClass() {
     }
 
 
-    fun checkGpsStatus(action: () -> Unit) {
+    fun checkGpsStatus(action: () -> Unit, apiAction: (() -> Unit)?) {
         val locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
         val GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (GpsStatus) {
@@ -699,7 +703,8 @@ class MainActivity : BaseClass() {
                 withContext(Dispatchers.IO) {
                     if (CheckConnection.netCheck(this@MainActivity)) {
                         withContext(Dispatchers.Main) {
-                            action()
+                            MainActivity.action = action
+                            apiAction?.let { it() }
                             getLocation(context)
                         }
 
@@ -708,6 +713,7 @@ class MainActivity : BaseClass() {
                             mainViewModel.updatePopupValue()
                             val check = tinyDB.getBoolean("STATEAPI")
                             if (!check) {
+                                apiActionGlobal = apiAction
                                 MainActivity.action = action
                             }
                         }
@@ -717,7 +723,7 @@ class MainActivity : BaseClass() {
 
 
         } else {
-            showEnableLocationSetting(action)
+            showEnableLocationSetting(action,apiAction)
         }
     }
 
@@ -856,7 +862,8 @@ class MainActivity : BaseClass() {
 
         if (!checkState) {
             Log.d("MainActivity...", "update Pending Data.")
-            action?.invoke()
+//            action?.invoke()
+            apiActionGlobal?.let { it() }
         }
 
 
@@ -1006,5 +1013,22 @@ class MainActivity : BaseClass() {
 
     private fun makeTimeString(hour: Int, min: Int, sec: Int): String =
         String.format("%02d:%02d", hour, min)
+
+    override fun clickOnProceed() {
+
+        action?.let { it() }
+    }
+
+    override fun clickOnCancel() {
+        val stateCheck = tinyDB.getBoolean("STATEAPI")
+        if (stateCheck) {
+            val position = tinyDB.getInt("previous_state")
+            if (position != 0) {
+                tinyDB.putInt("state", position)
+            }
+
+        }
+    }
+
 
 }

@@ -39,7 +39,7 @@ class ServerCheck constructor(
 
         tagsForToast()
         Log.d(TAG, "Server Check function 1st")
-        Log.d("POPUP_ISSUE_TESTING","--------2 ${MyApplication.syncCheck}")
+        Log.d("POPUP_ISSUE_TESTING", "--------2 ${MyApplication.syncCheck}")
         CoroutineScope(Job()).launch(Dispatchers.IO) {
             try {
                 val token = tinyDB.getString("Cookie")
@@ -79,35 +79,34 @@ class ServerCheck constructor(
     }
 
     fun endLoading() {
-        if (!MyApplication.checKForSyncLoading) {
-            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
-        }
+//        if (!MyApplication.checKForSyncLoading) {
+//            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+//        }
     }
 
 
-   private suspend fun handleException(){
-       CoroutineScope(Job()).launch {
-           withContext(Dispatchers.Main)
-           {
-               Log.d("POPUP_ISSUE_TESTING","IN START OF FUNCTION  ${MyApplication.syncCheck}")
-               if(MyApplication.syncCheck){
-                   Log.d("POPUP_ISSUE_TESTING","IN SYNC BLOCK")
-                   delay(3000)
-                   LoadingScreen.OnEndLoadingCallbacks?.openPopup(null,true)
-                   MyApplication.syncCheck = false
-               }
-               if(MyApplication.authCheck){
-                   MyApplication.authCheck = false
-                   LoadingScreen.OnEndLoadingCallbacks?.openServerPopup()
-               }else{
-                   endLoading()
-               }
+    private suspend fun handleException() {
+        CoroutineScope(Job()).launch {
+            withContext(Dispatchers.Main)
+            {
+                Log.d("POPUP_ISSUE_TESTING", "IN START OF FUNCTION  ${MyApplication.syncCheck}")
+                if (MyApplication.syncCheck) {
+                    Log.d("POPUP_ISSUE_TESTING", "IN SYNC BLOCK")
+                    delay(3000)
+                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, true)
+                    MyApplication.syncCheck = false
+                }
+                if (MyApplication.authCheck) {
+                    MyApplication.authCheck = false
+                    LoadingScreen.OnEndLoadingCallbacks?.openServerPopup()
+                } else {
+                    endLoading()
+                }
 
 
-           }
-       }
-   }
-
+            }
+        }
+    }
 
 
     fun serverCheckMainActivityApi(
@@ -120,7 +119,7 @@ class ServerCheck constructor(
         Log.d(TAG, "Server Check function 3rd")
 
 
-        mainActivityCall( apiCall,toSaveInDB)
+        mainActivityCall(apiCall, toSaveInDB)
 
 
     }
@@ -159,11 +158,14 @@ class ServerCheck constructor(
 
                                                 }
                                                 checkOnApiCall++
-                                                if(checkOnApiCall > 3){
+                                                if (checkOnApiCall > 3) {
                                                     Log.d("NETCHECKTEST", "----workingTesting")
                                                     timer.purge()
                                                     timer.cancel()
-                                                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
+                                                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(
+                                                        null,
+                                                        false
+                                                    )
                                                 }
                                             }
                                             else -> {
@@ -185,30 +187,29 @@ class ServerCheck constructor(
                             }
                         }
                     }
-                }
-                catch (e:SocketTimeoutException) {
+                } catch (e: SocketTimeoutException) {
                     LoadingScreen.OnEndLoadingCallbacks?.apply {
                         Log.d("NETCHECKTEST", "----In Also")
-                        if (toSaveInDB) openPopup(null, true) else {
+                        if (toSaveInDB) openPopup(null, false) else {
                             Log.d("NETCHECKTEST", "----In else")
                             withContext(Dispatchers.Main) {
-                                Log.d(TAG,"Open Server Popup....serverCheckMainActivityApi")
+                                Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
                                 openServerPopup()
                             }
 
                         }
                     }
-                }
-                catch (e: Exception) {
-                  if(toSaveInDB){
-                          if(tinyDB.getBoolean("STATEAPI")){
-                              (MyApplication.activityContext as MainActivity).updatePendingData(true)
-
-                          }else{
-                              (MyApplication.activityContext as MainActivity).updatePendingData(false)
-                          }
-
-                  }
+                } catch (e: Exception) {
+                    if (toSaveInDB) {
+//                          if(tinyDB.getBoolean("STATEAPI")){
+//                              (MyApplication.activityContext as MainActivity).updatePendingData(true)
+//
+//                          }else{
+//                              (MyApplication.activityContext as MainActivity).updatePendingData(false)
+//                          }
+                        delay(3000)
+                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
+                    }
                     Log.d("EXCEPTION_TESTING", " ${e.localizedMessage}")
                 }
 

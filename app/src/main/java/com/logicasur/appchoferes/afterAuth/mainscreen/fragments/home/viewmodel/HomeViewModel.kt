@@ -138,6 +138,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun takeBreakAction() {
+        tinyDB.putInt("SELECTEDACTIVITY", 1)
         val intent = (activityContext as MainActivity)
         MyApplication.check = 0
         Log.d("HomeViewModel...", "Call btn take from takeBreakAction function.")
@@ -148,10 +149,12 @@ class HomeViewModel @Inject constructor(
 
         tinyDB.putString("selectedState", "takeBreak")
         Log.d("HomeViewModel...", "Call hit Api Activity(1)")
-        prepareDataForActivityAPI(1, MyApplication.BreakToSend)
+
     }
 
+
     private fun endDayAction() {
+        tinyDB.putInt("SELECTEDACTIVITY", 3)
         val intent = (activityContext as MainActivity)
         MyApplication.check = 300
         buttonEndDay()
@@ -164,7 +167,7 @@ class HomeViewModel @Inject constructor(
         tinyDB.putInt("MaxBar", maxWork)
         tinyDB.putString("selectedState", "endDay")
         Log.d("HomeViewModel...", "Call hit Api Activity(3)")
-        prepareDataForActivityAPI(3, MyApplication.TimeToSend)
+
     }
 
     private fun initialStateAction() {
@@ -283,9 +286,10 @@ class HomeViewModel @Inject constructor(
 
     private fun buttonSecondState() {
         val intent = (activityContext as MainActivity)
+
         if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
             goToSecondState()
-
+            tinyDB.putInt("SELECTEDACTIVITY", 2)
             val overBreakTime = tinyDB.getBoolean("overBreakTime")
             if (overBreakTime) {
                 dataBinding!!.breakBar.progressBarColor =
@@ -300,9 +304,10 @@ class HomeViewModel @Inject constructor(
             Log.d("break timer", "${MyApplication.BreakToSend}")
 
             Log.d("HomeViewModel...", "Call hit Api Activity(2)")
-            prepareDataForActivityAPI(2, MyApplication.BreakToSend)
+
             dataBinding!!.statusListBtn.isClickable = true
         } else {
+            tinyDB.putInt("SELECTEDACTIVITY", 0)
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD297")
             val time = 0
             MyApplication.dayEndCheck = 0
@@ -328,7 +333,6 @@ class HomeViewModel @Inject constructor(
 
             goToActivState()
             Log.d("HomeViewModel...", "Call hit Api Activity(0)")
-            prepareDataForActivityAPI(0, MyApplication.TimeToSend)
 
         }
     }
@@ -471,7 +475,7 @@ class HomeViewModel @Inject constructor(
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
 
-        if (ActivityCompat.checkSelfPermission(
+        if(ActivityCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -656,7 +660,7 @@ class HomeViewModel @Inject constructor(
                             } catch (e: SocketException) {
                                 showToast()
                             } catch (e: Exception) {
-                                LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+                                LoadingScreen.OnEndLoadingCallbacks?.endLoading("From profile view model line nbr 659")
                                 Log.d("connection Exception", "Connect Not Available")
                             }
                         }
@@ -675,7 +679,7 @@ class HomeViewModel @Inject constructor(
         val status = statusArrayListforUpload[position]
         tinyDB.putObject("STATE_OBJ", status)
         tinyDB.putBoolean("STATEAPI", true)
-        (activityContext as MainActivity).initPermission() { getLocation(activityContext!!, false) }
+        (activityContext as MainActivity).initPermission({}) { getLocation(activityContext!!, false)}
     }
 
 
@@ -708,6 +712,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+
+
+
     private fun stateUploadByAction(
         currentDate: String,
         timeToSend: Int,
@@ -716,18 +723,9 @@ class HomeViewModel @Inject constructor(
         vehicle: Vehicle
     ) {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            /**
-             *  changes
-             */
-            if (mainRepository.isExistsUnsentUploadActivityDB()) {
-                (activityContext as MainActivity).updatePendingData(true)
-                var position = tinyDB.getInt("state")
-                position = position.minus(1)
-                selectState(position)
-//                action()
-                (MyApplication.loadingContext as LoadingScreen).finish()
-            } else {
+
+
+
                 resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction ->
 
                     updateState(
@@ -739,15 +737,12 @@ class HomeViewModel @Inject constructor(
                     )
                     { serverAction() }
                 }
-            }
 
-
-        }
 
 
     }
 
-
+//-----------------------------------------------------------------------------------------------
     @SuppressLint("SimpleDateFormat")
     fun prepareDataForActivityAPI(activity: Int, totalTime: Int?) {
         Log.d("LOADING_ISSUE_TESTING", "IN_ hit activity api")
@@ -771,7 +766,7 @@ class HomeViewModel @Inject constructor(
 
     fun uploadActivity(activity: Int, totalTime: Int?, geoPosition: GeoPosition) {
         Log.d("startUpload", "activity function.")
-        MyApplication.checKForActivityLoading = true
+//        MyApplication.checKForActivityLoading = true
         var currentDate = sdf.format(Date())
         when (activity) {
             0 -> tinyDB.putString("WorkDate", currentDate)
@@ -1240,14 +1235,18 @@ class HomeViewModel @Inject constructor(
         dataBinding?.secondState?.setOnClickListener {
             Log.d("HomeViewModel...", "Click on Second state")
             tinyDB.putBoolean("STATEAPI", false)
-            if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo") {
-                tinyDB.putInt("SELECTEDACTIVITY", 2)
-            } else {
-                tinyDB.putInt("SELECTEDACTIVITY", 0)
-            }
+
             checkNetConnection()
             MainActivity.action = null
-            (activityContext as MainActivity).initPermission() { secondStateAction() }
+            if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo"){
+                (activityContext as MainActivity).initPermission({secondStateAction()}) { prepareDataForActivityAPI(2, MyApplication.BreakToSend) }
+            }else{
+                (activityContext as MainActivity).initPermission({secondStateAction()}) { prepareDataForActivityAPI(0, MyApplication.TimeToSend) }
+            }
+
+
+
+
 
         }
 
@@ -1256,13 +1255,13 @@ class HomeViewModel @Inject constructor(
 
             tinyDB.putBoolean("STATEAPI", false)
 
-            tinyDB.putInt("SELECTEDACTIVITY", 1)
+
 
             checkNetConnection()
 
 
             MainActivity.action = null
-            (activityContext as MainActivity).initPermission() { takeBreakAction() }
+            (activityContext as MainActivity).initPermission({takeBreakAction()}) {  prepareDataForActivityAPI(1, MyApplication.BreakToSend)}
 
 
         }
@@ -1271,11 +1270,11 @@ class HomeViewModel @Inject constructor(
             Log.d("HomeViewModel...", "Click on End Day.")
 
             tinyDB.putBoolean("STATEAPI", false)
-            tinyDB.putInt("SELECTEDACTIVITY", 3)
+
 
             checkNetConnection()
             MainActivity.action = null
-            (activityContext as MainActivity).initPermission() { endDayAction() }
+            (activityContext as MainActivity).initPermission({endDayAction()}) { prepareDataForActivityAPI(3, MyApplication.TimeToSend) }
 
 
         }
@@ -1284,7 +1283,7 @@ class HomeViewModel @Inject constructor(
             tinyDB.putBoolean("STATEAPI", false)
 
             MainActivity.action = null
-            (activityContext as MainActivity).initPermission() { initialStateAction() }
+            (activityContext as MainActivity).initPermission({initialStateAction()}) {}
 
         }
 
@@ -1492,6 +1491,7 @@ class HomeViewModel @Inject constructor(
         if (CheckConnection.netCheck(activityContext!!)) {
             Log.d("StatusTesting", "IN FUNCTION HOME VIEW MODEL LINE 1311")
             if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
+                LoadingScreen.dialogActionCallBacks = (activityContext as MainActivity)
                 ContextCompat.startActivity(
                     activityContext!!,
                     loadingIntent,
@@ -1538,7 +1538,7 @@ class HomeViewModel @Inject constructor(
 
 
         } catch (e: Exception) {
-            LoadingScreen.OnEndLoadingCallbacks?.endLoading()
+            LoadingScreen.OnEndLoadingCallbacks?.endLoading("from view Model line nbr 1544")
             Log.d("OpenPop", "Exception ${e.localizedMessage}")
         }
 
@@ -1581,5 +1581,7 @@ class HomeViewModel @Inject constructor(
         println("imageprinted")
 
     }
+
+
 
 }
