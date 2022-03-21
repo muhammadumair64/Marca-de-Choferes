@@ -12,12 +12,14 @@ import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.Extra.TimeCalculator
 import com.logicasur.appchoferes.Extra.TinyDB
+import com.logicasur.appchoferes.R
 import com.logicasur.appchoferes.afterAuth.mainscreen.MainActivity
 import com.logicasur.appchoferes.data.repository.MainRepository
 import com.logicasur.appchoferes.utils.myApplication.MyApplication
@@ -40,8 +42,14 @@ class loadingViewModel @Inject constructor(
     val sdf = SimpleDateFormat("yyyy-MM-dd")
     val currentDate = sdf.format(Date())
 //----------------------------------------------------------Popups---------------------------------------
-    fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
-        networkAlertDialog.setView(PopupView)
+    fun openPopup(
+    networkAlertDialog: AlertDialog,
+    PopupView: View,
+    resources: Resources,
+    forServer: Boolean,
+    subTextView: TextView,
+    topTextView: TextView
+) {
         try {
 
             networkAlertDialog.show()
@@ -51,9 +59,10 @@ class loadingViewModel @Inject constructor(
             networkAlertDialog.setCancelable(false)
             networkAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val window: Window? = networkAlertDialog.window
-            val wlp: WindowManager.LayoutParams = window!!.getAttributes()
+            val wlp: WindowManager.LayoutParams = window!!.attributes
             wlp.gravity = Gravity.BOTTOM
-            window.setAttributes(wlp)
+            window.attributes = wlp
+
 
 
         } catch (e: Exception) {

@@ -1,20 +1,13 @@
 package com.logicasur.appchoferes.common.serverCheck
 
 import android.util.Log
-import com.logicasur.appchoferes.Extra.CheckConnection
-import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.data.repository.AuthRepository
 import com.logicasur.appchoferes.common.loadingScreen.LoadingScreen
-import com.logicasur.appchoferes.afterAuth.mainscreen.MainActivity
 import com.logicasur.appchoferes.data.repository.MainRepository
 import com.logicasur.appchoferes.utils.myApplication.MyApplication
-import com.logicasur.appchoferes.data.network.GeoPosition
 import com.logicasur.appchoferes.data.network.NoInternetException
 import com.logicasur.appchoferes.data.network.logoutResponse.MessageResponse
-import com.logicasur.appchoferes.data.network.signinResponse.State
-import com.logicasur.appchoferes.data.network.signinResponse.Vehicle
-import com.logicasur.appchoferes.data.network.unsentApis.UnsentStatusOrUploadActivity
 import kotlinx.coroutines.*
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -93,7 +86,7 @@ class ServerCheck constructor(
                 if (MyApplication.syncCheck) {
                     Log.d("POPUP_ISSUE_TESTING", "IN SYNC BLOCK")
                     delay(3000)
-                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, true)
+                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, true, true)
                     MyApplication.syncCheck = false
                 }
                 if (MyApplication.authCheck) {
@@ -164,7 +157,8 @@ class ServerCheck constructor(
                                                     timer.cancel()
                                                     LoadingScreen.OnEndLoadingCallbacks?.openPopup(
                                                         null,
-                                                        false
+                                                        false,
+                                                        true
                                                     )
                                                 }
                                             }
@@ -190,7 +184,7 @@ class ServerCheck constructor(
                 } catch (e: SocketTimeoutException) {
                     LoadingScreen.OnEndLoadingCallbacks?.apply {
                         Log.d("NETCHECKTEST", "----In Also")
-                        if (toSaveInDB) openPopup(null, false) else {
+                        if (toSaveInDB) openPopup(null, false, true) else {
                             Log.d("NETCHECKTEST", "----In else")
                             withContext(Dispatchers.Main) {
                                 Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
@@ -208,7 +202,15 @@ class ServerCheck constructor(
 //                              (MyApplication.activityContext as MainActivity).updatePendingData(false)
 //                          }
                         delay(3000)
-                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
+                        LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, true)
+                    }else {
+                        Log.d("NETCHECKTEST", "----In else")
+                        withContext(Dispatchers.Main) {
+                            delay(3000)
+                            Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
+                            LoadingScreen.OnEndLoadingCallbacks?.openServerPopup()
+                        }
+
                     }
                     Log.d("EXCEPTION_TESTING", " ${e.localizedMessage}")
                 }
@@ -242,20 +244,20 @@ class ServerCheck constructor(
                 }
 
             } catch (e: SocketTimeoutException) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
+                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false , true)
                 Log.d("Exception", "SocketTimeOut..${e.localizedMessage}")
 
             } catch (e: SocketException) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
+                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, true)
                 Log.d("Exception", "Socket..${e.localizedMessage}")
 
 
             } catch (e: NoInternetException) {
-
+                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, false)
                 Log.d("Exception", "NoInternet..${e.localizedMessage}")
 
             } catch (e: Exception) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
+                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, true)
                 Log.d("Exception", " last Place Exception..${e.localizedMessage}")
 
             }

@@ -18,6 +18,7 @@ import android.view.View
 
 import android.view.WindowManager
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.utils.ResendApis
@@ -33,7 +34,8 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     lateinit var cancel_btn: RelativeLayout
     var networkAlertDialog: AlertDialog? = null
     lateinit var networkDialogBuilder: AlertDialog.Builder
-
+lateinit var topTextView :TextView
+    lateinit var subTextView :TextView
     lateinit var go_back_btn: AppCompatButton
     var serverAlertDialog: AlertDialog? = null
     lateinit var serverDialogBuilder: AlertDialog.Builder
@@ -99,9 +101,9 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     }
 
 
-    override fun openPopup(myTimer: Timer?, b: Boolean) {
+    override fun openPopup(myTimer: Timer?, check: Boolean, forServer: Boolean) {
         Log.d("POPUP_TESTING", "IN SERVER POPUP override function")
-        createPopup(myTimer, b)
+        createPopup(myTimer, check,forServer)
     }
 
     override fun openServerPopup() {
@@ -158,7 +160,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
         }
     }
 
-    private fun createPopup(myTimer: Timer?, boolean: Boolean) {
+    private fun createPopup(myTimer: Timer?, boolean: Boolean, forServer: Boolean) {
         Log.d("STATUS_TESTING", "IN WINDOW")
         runOnUiThread {
             Log.d("STATUS_TESTING", "IN WINDOW")
@@ -166,13 +168,23 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
                 Log.d("STATUS_TESTING", "IN WINDOW EX")
                 networkDialogBuilder = AlertDialog.Builder(this)
                 val PopupView: View = layoutInflater.inflate(R.layout.item_networkcheck_popup, null)
-                networkAlertDialog = networkDialogBuilder.create()
                 proceed_btn = PopupView.findViewById(R.id.proceed_btn)
                 cancel_btn = PopupView.findViewById(R.id.cancel_btn)
-                loadingViewModel.openPopup(networkAlertDialog!!, PopupView, resources)
-                setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
-                cancel_btn.setOnClickListener {
+                networkAlertDialog = networkDialogBuilder.create()
+                topTextView = PopupView.findViewById(R.id.topText)
+                subTextView = PopupView.findViewById(R.id.subText)
+                networkAlertDialog?.setView(PopupView)
 
+                loadingViewModel.openPopup(networkAlertDialog!!, PopupView, resources,forServer,subTextView,topTextView)
+                setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
+                if(forServer){
+                    Log.d("POPUP_TESTING","IN TEXT CHANGE BLOCK")
+                    subTextView.text = resources.getString(R.string.proceed_offline)
+                    topTextView.text = resources.getString(R.string.go_back_top_text)
+                }
+
+
+                cancel_btn.setOnClickListener {
                     networkAlertDialog?.dismiss()
                     networkAlertDialog =  null
 

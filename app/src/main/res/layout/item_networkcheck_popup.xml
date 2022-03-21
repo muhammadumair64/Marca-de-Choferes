@@ -15,6 +15,7 @@
     android:layout_centerHorizontal="true"
     >
     <TextView
+        android:paddingStart="@dimen/_2sdp"
         android:id="@+id/topText"
         android:textSize="@dimen/_15sdp"
         android:textColor="@color/Privacy_policy_text_color"

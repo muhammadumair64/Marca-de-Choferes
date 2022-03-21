@@ -45,7 +45,8 @@
     <string name="subtext">¿Quieres continuar sin Internet?</string>
     <string name="proceed">Continuar</string>
     <string name="cancel">Cancelar</string>
-    <string name="go_back">Regresa</string>
+    <string name="go_back">OK</string>
     <string name="go_back_top_text"> No se puede conectar con el servidor</string>
     <string name="go_back_sub_text">Intenta más tarde</string>
+    <string name="proceed_offline">continuar fuera de línea</string>
 </resources>

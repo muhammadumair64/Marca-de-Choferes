@@ -4,7 +4,7 @@ import java.util.*
 
 interface OnEndLoadingCallbacks {
     fun endLoading(messsage:String)
-    fun openPopup(myTimer: Timer?, b: Boolean)
+    fun openPopup(myTimer: Timer?, b: Boolean, forServer: Boolean)
    fun openServerPopup()
    fun calculateTimeFromLocalDB()
 }
