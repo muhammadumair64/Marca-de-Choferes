@@ -101,7 +101,8 @@ class ConfigurationViewModel @Inject constructor(
             updatingSelectedLanguage(text0, image0)
             updatingUnSelectedLanguage(text1, image1)
             updatingUnSelectedLanguage(text2, image2)
-            moveToLoadingScreen()
+         finishDialog(alterDialog)
+
             viewModelScope.launch(Dispatchers.IO) {
                 resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                     selectedLanguageUpload(0, alterDialog) {
@@ -116,7 +117,7 @@ class ConfigurationViewModel @Inject constructor(
             updatingSelectedLanguage(text1, image1)
             updatingUnSelectedLanguage(text0, image0)
             updatingUnSelectedLanguage(text2, image2)
-            moveToLoadingScreen()
+            finishDialog(alterDialog)
             viewModelScope.launch(Dispatchers.IO) {
                 resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                     selectedLanguageUpload(1, alterDialog) {
@@ -133,7 +134,7 @@ class ConfigurationViewModel @Inject constructor(
             updatingSelectedLanguage(text2, image2)
             updatingUnSelectedLanguage(text1, image1)
             updatingUnSelectedLanguage(text0, image0)
-            moveToLoadingScreen()
+            finishDialog(alterDialog)
 
             viewModelScope.launch(Dispatchers.IO) {
                 resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
@@ -210,7 +211,15 @@ class ConfigurationViewModel @Inject constructor(
         val intent = Intent(activityContext, LoadingScreen::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
     }
-
+private fun finishDialog(alterDialog: AlertDialog) {
+    moveToLoadingScreen()
+    try{
+        alterDialog.dismiss()
+    }catch (e:Exception){
+        e.localizedMessage
+        Log.d("LANGUAGE_WINDOW","IN CATCH BLOCK")
+    }
+}
 
     private fun selectedLanguageUpload(
         language: Int,

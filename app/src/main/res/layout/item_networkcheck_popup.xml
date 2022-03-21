@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:text="@string/toptext"
         android:fontFamily="@font/open_sans_regular"
+        android:gravity="center"
         />
     <TextView
         android:layout_marginTop="@dimen/_4sdp"
