@@ -115,12 +115,12 @@ class ProfileFragment : Fragment() {
 
         binding.editProfile.setOnClickListener {
             lifecycleScope.launch {
-                        if (CheckConnection.netCheck(context)) {
+
                             initPermission()
-                        } else {
-                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
-                                .show()
-                        }
+//                        } else {
+//                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
+//                                .show()
+//                        }
 
             }
 
@@ -203,7 +203,7 @@ class ProfileFragment : Fragment() {
         binding.editName.setOnClickListener {
 
             lifecycleScope.launch {
-                        if (CheckConnection.netCheck(context)) {
+//                        if (CheckConnection.netCheck(context)) {
 
                             option = 1
                             alertDialog.setView(contactPopupView)
@@ -218,10 +218,10 @@ class ProfileFragment : Fragment() {
                             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
 
-                        } else {
-                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
-                                .show()
-                        }
+//                        } else {
+//                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
+//                                .show()
+//                        }
 
 
 
@@ -232,7 +232,7 @@ class ProfileFragment : Fragment() {
 
 
             lifecycleScope.launch {
-                        if (CheckConnection.netCheck(context)) {
+
 
                             option = 2
                             alertDialog.setView(contactPopupView)
@@ -247,10 +247,10 @@ class ProfileFragment : Fragment() {
                             alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
 
-                        } else {
-                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
-                                .show()
-                        }
+//                        } else {
+//                            Toast.makeText(context, profileViewModel.TAG2, Toast.LENGTH_SHORT)
+//                                .show()
+//                        }
 
 
 

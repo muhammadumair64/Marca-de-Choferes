@@ -155,7 +155,7 @@ class ConfigurationViewModel @Inject constructor(
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
                         withContext(Dispatchers.Main) {
-                            if (CheckConnection.netCheck(activityContext!!)) {
+
                                 moveToLoadingScreen()
                                 Log.d("ConfigurationViewModel", "true")
 
@@ -163,10 +163,10 @@ class ConfigurationViewModel @Inject constructor(
 
                                     selectedNotifyStateUpload(true, serverAction)
                                 }
-
-                            } else {
-                                Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
-                            }
+//
+//                            } else {
+//                                Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
+//                            }
                         }
 
                     }
@@ -180,7 +180,6 @@ class ConfigurationViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
 
                     withContext(Dispatchers.Main) {
-                        if (CheckConnection.netCheck(activityContext!!)) {
                             moveToLoadingScreen()
                             Log.d(TAG, "false")
 
@@ -191,9 +190,9 @@ class ConfigurationViewModel @Inject constructor(
                             }
 
 
-                        } else {
-                            Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
-                        }
+//                        } else {
+//                            Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
+//                        }
                     }
 
 

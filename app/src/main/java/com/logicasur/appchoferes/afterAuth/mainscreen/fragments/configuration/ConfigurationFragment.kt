@@ -123,7 +123,7 @@ class ConfigurationFragment : Fragment() {
 
                 val check = CheckConnection.netCheck(context)
                 withContext(Dispatchers.Main) {
-                    if (check) {
+
                         alertDialog.setView(contactPopupView)
                         viewModel.selectLanguage()
                         alertDialog.show()
@@ -131,9 +131,9 @@ class ConfigurationFragment : Fragment() {
                         val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
                         alertDialog.window?.setLayout(width, height)
                         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    } else {
-                        Toast.makeText(context, viewModel.TAG2, Toast.LENGTH_SHORT).show()
-                    }
+//                    } else {
+//                        Toast.makeText(context, viewModel.TAG2, Toast.LENGTH_SHORT).show()
+//                    }
                 }
 
             }

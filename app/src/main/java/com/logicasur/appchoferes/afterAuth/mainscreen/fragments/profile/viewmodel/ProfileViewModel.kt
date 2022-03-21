@@ -70,12 +70,10 @@ class ProfileViewModel @Inject constructor(
             edit.setOnClickListener {
 
                 viewModelScope.launch {
-                    if (CheckConnection.netCheck(activityContext!!)) {
+
                         val intent = Intent(context, CreateNewPasswordScreen::class.java)
                         ContextCompat.startActivity(context, intent, Bundle.EMPTY)
-                    } else {
-                        Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
-                    }
+
 
                 }
 
@@ -85,20 +83,20 @@ class ProfileViewModel @Inject constructor(
             Logout.setOnClickListener {
                 viewModelScope.launch(Dispatchers.IO) {
 
-                    if (CheckConnection.netCheck(activityContext!!)) {
+
 
                         moveToLoadingScreen()
 
                         resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                             logoutUser() { serverAction() }
                         }
-                    } else {
-                        withContext(Dispatchers.Main)
-                        {
-                            Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
-                        }
-
-                    }
+//                    } else {
+//                        withContext(Dispatchers.Main)
+//                        {
+//                            Toast.makeText(context, TAG2, Toast.LENGTH_SHORT).show()
+//                        }
+//
+//                    }
 
 
                 }
@@ -132,15 +130,7 @@ class ProfileViewModel @Inject constructor(
                     authRepository.clearUnsend()
 //                        authRepository.clearWholeDB()
 
-                    val lastworkDate = tinyDB.getString("WorkDate")
-                    val lastBreakDate = tinyDB.getString("BreakDate")
-                    val user = tinyDB.getString("User")
-                    tinyDB.clear()
-                    tinyDB.putString("WorkDate", lastworkDate)
-                    tinyDB.putString("BreakDate", lastBreakDate)
-                    tinyDB.putString("LastUser", user)
-                    ResendApis.primaryColor = "#7A59FC"
-                    ResendApis.secondaryColor = "#653FFB"
+                    performSomeActionOnLogout()
                     val intent = Intent(activityContext, SignInActivity::class.java)
                     ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
                     (activityContext as MainActivity).finish()
@@ -378,6 +368,17 @@ class ProfileViewModel @Inject constructor(
         }
 
     }
-
+private fun performSomeActionOnLogout(){
+    val lastworkDate = tinyDB.getString("WorkDate")
+    val lastBreakDate = tinyDB.getString("BreakDate")
+    val user = tinyDB.getString("User")
+    tinyDB.clear()
+    tinyDB.putString("WorkDate", lastworkDate)
+    tinyDB.putString("BreakDate", lastBreakDate)
+    tinyDB.putString("LastUser", user)
+    tinyDB.putBoolean("NOSPLASH",true)
+    ResendApis.primaryColor = "#7A59FC"
+    ResendApis.secondaryColor = "#653FFB"
+}
 
 }

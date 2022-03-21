@@ -168,7 +168,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     getLoadingScreenImage()
 
                 } catch (e: ResponseException) {
-                    val response = convertErrorBody(e.response)
+
 
 
                     withContext(Dispatchers.Main){
@@ -176,7 +176,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                         LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
 
                     }
-                    println("ErrorResponse $response")
+                    println("ErrorResponse ${e.localizedMessage}")
                 }
                 catch (e: ApiException) {
                     withContext(Dispatchers.Main) {
@@ -468,6 +468,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
 
 
     private fun saveDataInTinyDataBase(response: SigninResponse, userName: String){
+        tinyDB.putBoolean("NOSPLASH",true)
         val lastUser= tinyDB.getString("LastUser")
         if(lastUser != null){
             if(userName.trim() != lastUser.trim()){

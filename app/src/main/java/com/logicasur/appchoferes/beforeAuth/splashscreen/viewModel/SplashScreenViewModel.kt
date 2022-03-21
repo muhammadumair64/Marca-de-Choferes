@@ -161,9 +161,11 @@ class SplashScreenViewModel @Inject constructor(
 
 
         } catch (e: ApiException) {
+            getAvatar()
             e.printStackTrace()
             Log.d("LoadingImage", "API EXCEPTION ${e.localizedMessage}")
         } catch (e: NoInternetException) {
+            getAvatar()
             println("position 2")
             e.printStackTrace()
             Log.d("LoadingImage", "No Internet EXCEPTION ${e.localizedMessage}")
@@ -171,12 +173,17 @@ class SplashScreenViewModel @Inject constructor(
             showToast()
         } catch (e: ResponseException) {
             println("ErrorResponse")
+            getAvatar()
             Log.d("LoadingImage", "Response Exception ${e.localizedMessage}")
 
         } catch (e: SocketException) {
-            LoadingScreen.OnEndLoadingCallbacks?.endLoading("From splesh screen line nbr 173")
+            getAvatar()
             Log.d("connection Exception", "Connect Not Available")
             showToast()
+        }catch (e:SocketTimeoutException){
+            getAvatar()
+        }catch (e:Exception){
+            getAvatar()
         }
 
 
@@ -218,6 +225,14 @@ class SplashScreenViewModel @Inject constructor(
                     moveToMainScreen()
                     println("ErrorResponse")
                 } catch (e: SocketException) {
+                    moveToMainScreen()
+                    Log.d("connection Exception", "Connect Not Available")
+                    showToast()
+                }catch (e:SocketTimeoutException){
+                    moveToMainScreen()
+                    Log.d("connection Exception", "Connect Not Available")
+                    showToast()
+                }catch (e:Exception){
                     moveToMainScreen()
                     Log.d("connection Exception", "Connect Not Available")
                     showToast()

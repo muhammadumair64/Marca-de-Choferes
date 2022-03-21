@@ -164,9 +164,8 @@ class OTPViewModel @Inject constructor(
                     }
                 } catch (e: ResponseException) {
                     tinyDB.putString("User", "")
-                    val response = convertErrorBody(e.response)
                     showServerPopup()
-                    println("ErrorResponse $response")
+                    println("ErrorResponse ${e.localizedMessage}")
                 } catch (e: ApiException) {
                     showServerPopup()
                     e.printStackTrace()

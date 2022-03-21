@@ -41,13 +41,13 @@ class SplashScreen : BaseClass() {
         super.onCreate(savedInstanceState)
 
         Log.d("SYNC_TESTING", "In On create")
-
-        val language = Language()
-        language.setLanguage(baseContext)
-        viewModel.viewsOfActivity(this)
-        tinyDB = TinyDB(this)
-        startScreen()
-
+        lifecycleScope.launch {
+            val language = Language()
+            language.setLanguage(baseContext)
+            viewModel.viewsOfActivity(this@SplashScreen)
+            tinyDB = TinyDB(this@SplashScreen)
+            startScreen()
+        }
 
     }
 
@@ -118,7 +118,7 @@ class SplashScreen : BaseClass() {
         binding.background.setImageBitmap(image)
     }
 
-   private fun otpTimeCheck() {
+    private fun otpTimeCheck() {
         val time = tinyDB.getString("OTPtime")
         if (time != null) {
             val sdf = SimpleDateFormat("yyyy-MM-dd:hh:mm:ss")
@@ -150,7 +150,7 @@ class SplashScreen : BaseClass() {
 
     }
 
-   private fun buttonTextSetter() {
+    private fun buttonTextSetter() {
 
         val checker = tinyDB.getString("User")
         println("checker $checker")
@@ -191,19 +191,27 @@ class SplashScreen : BaseClass() {
     }
 
     private fun startScreen() {
+        val splashCheck =tinyDB.getBoolean("NOSPLASH")
         val checker = tinyDB.getString("User")
-        println("Current User is : $checker")
+        println("Current User is : $checker, $splashCheck")
         if (checker != null) {
-            if (checker.isNotEmpty()) {
+            if(checker.isNotEmpty()) {
                 spleshCheck = false
-               moveToLoadingScreen()
+                moveToLoadingScreen()
                 tinyDB.putBoolean("SYNC_CHECK", false)
                 viewModel.checkData() //change
 
-            } else {
+            } else if(splashCheck) {
+                Log.d("SPLASHCHECK","-----in splash block")
+                moveToSignIn()
+            }else {
                 otpTimeCheck()
             }
-        } else {
+        }else if(splashCheck) {
+            Log.d("SPLASHCHECK","-----in splash block")
+            moveToSignIn()
+        }else
+        {
             otpTimeCheck()
         }
 

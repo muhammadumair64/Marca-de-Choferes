@@ -436,6 +436,7 @@ class MainActivity : BaseClass(),dialogActionCallBacks {
             Log.d("PENDINGDATATESTING", "DATA IS IN MAIN____ $obj")
             tinyDB.putObject("upadteActivity", obj)
             tinyDB.putObject("GeoPosition", geoPosition)
+            action?.let { it() }
             updatePendingData(false)
             LoadingScreen.OnEndLoadingCallbacks!!.endLoading("from main activity")
             stopInBetweenServerCheck()
@@ -862,8 +863,8 @@ class MainActivity : BaseClass(),dialogActionCallBacks {
 
         if (!checkState) {
             Log.d("MainActivity...", "update Pending Data.")
-//            action?.invoke()
-            apiActionGlobal?.let { it() }
+            action?.invoke()
+//            apiActionGlobal?.let { it() }
         }
 
 

@@ -117,9 +117,9 @@ class MyModule {
             val sslSocketFactory = sslContext.socketFactory
             OkHttpClient.Builder()
                 .addInterceptor(networkConnectionInterceptor)
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10 , TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(40, TimeUnit.SECONDS)
+                .readTimeout(40 , TimeUnit.SECONDS)
+                .writeTimeout(25, TimeUnit.SECONDS)
                 .sslSocketFactory(sslSocketFactory, trustManager)
                 .hostnameVerifier(HostnameVerifier { hostname, session -> true })
                 .build()
