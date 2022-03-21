@@ -254,7 +254,7 @@ class ServerCheck constructor(
                 Log.d("Exception", "NoInternet..${e.localizedMessage}")
 
             } catch (e: Exception) {
-
+                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false)
                 Log.d("Exception", " last Place Exception..${e.localizedMessage}")
 
             }

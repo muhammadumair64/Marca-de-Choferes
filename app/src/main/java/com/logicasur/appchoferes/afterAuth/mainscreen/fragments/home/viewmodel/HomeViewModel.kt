@@ -260,9 +260,9 @@ class HomeViewModel @Inject constructor(
         workTimerLargeToSmall()
         breakTimerSmallToLarge()
         dataBinding!!.statusListBtn.visibility = View.GONE
-        dataBinding?.StateActive?.setVisibility(View.GONE)
+        dataBinding?.StateActive?.visibility = View.GONE
         dataBinding?.vehicleListBtn?.isClickable = true
-        dataBinding?.spacer?.setVisibility(View.VISIBLE)
+        dataBinding?.spacer?.visibility = View.VISIBLE
 
 
         val language = tinyDB.getString("language")
@@ -304,7 +304,7 @@ class HomeViewModel @Inject constructor(
             dataBinding!!.statusListBtn.isClickable = true
         } else {
             dataBinding?.breakBar?.progressBarColor = Color.parseColor("#FFD297")
-            var time = 0
+            val time = 0
             MyApplication.dayEndCheck = 0
             intent.timeBreak = 0.0
             tinyDB.putInt("lasttimebreak", 1)
@@ -312,7 +312,7 @@ class HomeViewModel @Inject constructor(
             maxBreakBarValue = MyApplication.TotalBreak
             maxWorkBarValue = MyApplication.TotalTime
             dataBinding?.breakBar?.progress = 0f
-            var overtime = getTimeStringFromDouble(time)
+            val overtime = getTimeStringFromDouble(time)
             dataBinding!!.overTime!!.text = overtime
             startDaySetter(intent)
             Timer().schedule(200) {
@@ -791,33 +791,8 @@ class HomeViewModel @Inject constructor(
 
                 /**
                  * My Changes
-                 *
                  */
 
-                if (mainRepository.isExistsUnsentUploadActivityDB()) {
-                    Log.d("ACTIVITY_BY_DATABASE", "IN INSERT MODE")
-                    if (activity == 2) {
-                        if (totalTime != null) {
-                            tinyDB.putInt("lasttimebreak", totalTime)
-                        }
-                    }
-                    tinyDB.putInt("ActivityCheck", activity)
-                    val obj =
-                        UpdateActivityDataClass(
-                            currentDate,
-                            totalTime,
-                            activity,
-                            geoPosition,
-                            vehicle,
-                            null
-                        )
-                    Log.d("PENDINGDATATESTING", "DATA IS IN MAIN____ $obj")
-                    tinyDB.putObject("upadteActivity", obj)
-                    tinyDB.putObject("GeoPosition", geoPosition)
-                    (activityContext as MainActivity).updatePendingData(false)
-                    LoadingScreen.OnEndLoadingCallbacks!!.endLoading()
-
-                } else {
                     resendApis.serverCheck.serverCheckMainActivityApi(true) { serverAction ->
                         updateActivityForAction(
                             currentDate,
@@ -828,7 +803,7 @@ class HomeViewModel @Inject constructor(
                         ) { serverAction() }
 
                     }
-                }
+
 
 
             }
@@ -1517,20 +1492,25 @@ class HomeViewModel @Inject constructor(
         if (CheckConnection.netCheck(activityContext!!)) {
             Log.d("StatusTesting", "IN FUNCTION HOME VIEW MODEL LINE 1311")
             if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
-                viewModelScope.launch(Dispatchers.IO) {
-                    if (!mainRepository.isExistsUnsentUploadActivityDB()) {
-                        withContext(Dispatchers.Main) {
-                            ContextCompat.startActivity(
-                                activityContext!!,
-                                loadingIntent,
-                                Bundle.EMPTY
-                            )
-                        }
-
-                    }
-
-
-                }
+                ContextCompat.startActivity(
+                    activityContext!!,
+                    loadingIntent,
+                    Bundle.EMPTY
+                )
+//                viewModelScope.launch(Dispatchers.IO) {
+//                    if (!mainRepository.isExistsUnsentUploadActivityDB()) {
+//                        withContext(Dispatchers.Main) {
+//                            ContextCompat.startActivity(
+//                                activityContext!!,
+//                                loadingIntent,
+//                                Bundle.EMPTY
+//                            )
+//                        }
+//
+//                    }
+//
+//
+//                }
 
 
             }
