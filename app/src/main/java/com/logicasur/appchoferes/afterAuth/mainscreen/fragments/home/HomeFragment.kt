@@ -413,7 +413,7 @@ class HomeFragment : Fragment(), OnclickItem {
     }
 
     fun actionCallOnProceed(){
-        (context as MainActivity).clickOnProceed()
+        (MyApplication.activityContext as MainActivity).clickOnProceed()
     }
 }
 
