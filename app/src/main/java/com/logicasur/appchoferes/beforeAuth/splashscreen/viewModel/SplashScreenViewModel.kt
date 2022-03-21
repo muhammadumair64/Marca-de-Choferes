@@ -58,90 +58,101 @@ class SplashScreenViewModel @Inject constructor(
     }
 
     fun checkData() {
+
         MyApplication.checKForSyncLoading = true
         MyApplication.syncCheck = true
+
+        // Start the loader
+        moveToLoadingScreen()
+        // Start Service for resend apis
         resendApis.checkNetAndUpload()
         myTimer = Timer()
         Log.d("SYNC_CHECK_TESTING", "Before timer  ${MyApplication.syncCheck}")
 
         myTimer!!.schedule(object : TimerTask() {
             override fun run() {
-                val check = tinyDB.getBoolean("SYNC_CHECK")
-                if (check) {
-                    Log.d("SYNC_CHECK_TESTING", "RUN SYNC")
-                    syncData()
-                    myTimer!!.cancel()
-                } else {
-                    Log.d("SYNC_CHECK_TESTING", "In False")
-                    val netCheck = activityContext?.let { CheckConnection.netCheck(it) }
-                    if (netCheck == false) {
-                        MyApplication.checKForPopup = true
-                        viewModelScope.launch {
+
+                viewModelScope.launch(Dispatchers.IO) {
+
+                    if (tinyDB.getBoolean("SYNC_CHECK")) {
+                        Log.d("SYNC_CHECK_TESTING", "RUN SYNC")
+                        syncData(false)
+                        myTimer!!.cancel()
+                    } else {
+                        Log.d("SYNC_CHECK_TESTING", "In False")
+                        val netCheck = activityContext?.let { CheckConnection.netCheck(it) }
+                        if (netCheck == false) {
+                            MyApplication.checKForPopup = true
+
                             withContext(Dispatchers.Main) {
                                 delay(3000)
                                 LoadingScreen.OnEndLoadingCallbacks?.openPopup(
                                     myTimer!!,
-                                    false,
-                                    false
+                                    b = false,
+                                    forServer = false
                                 )
                                 myTimer!!.cancel()
                             }
+
                         }
                     }
                 }
+
+
             }
         }, 0, 4000)
     }
 
 
-    fun syncData() {
+    suspend fun syncData(toShowLoader: Boolean) {
         val token = tinyDB.getString("Cookie")
-        viewModelScope.launch {
 
-            withContext(Dispatchers.IO) {
-                try {
-                    val response =
-                        authRepository.userSync(token!!)
-
-                    println("SuccessResponse $response")
-
-                    if (response != null) {
-                        authRepository.clearData()
-                        authRepository.InsertSigninData(response)
-                        saveDataInTinyDatabase(response)
-                        checkLocalBaseAndPassData(response)
-                        checkLoadingScreenImage(response)
-
-
-                    }
-                } catch (e: ResponseException) {
-                    repeatSync()
-                    println("ErrorResponse")
-                } catch (e: ApiException) {
-                    repeatSync()
-                    e.printStackTrace()
-                } catch (e: NoInternetException) {
-                    println("position 2")
-                    e.printStackTrace()
-                    repeatSync()
-                    showToast()
-
-                } catch (e: SocketTimeoutException) {
-                    repeatSync()
-                    LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!, false, false)
-                    showToast()
-                } catch (e: Exception) {
-                    repeatSync()
-                    println("ErrorResponse ${e.localizedMessage}")
-                } catch (e: SocketException) {
-                    repeatSync()
-                    Log.d("connection Exception", "Connect Not Available")
-                    showToast()
-
-
-                }
-            }
+        if(toShowLoader){
+            moveToLoadingScreen()
         }
+
+        try {
+
+            val response =
+                authRepository.userSync(token!!)
+
+            println("SuccessResponse $response")
+
+            if (response != null) {
+                authRepository.clearData()
+                authRepository.InsertSigninData(response)
+                saveDataInTinyDatabase(response)
+                checkLocalBaseAndPassData(response)
+                checkLoadingScreenImage(response)
+            }
+        } catch (e: ResponseException) {
+            repeatSync()
+            println("ErrorResponse")
+        } catch (e: ApiException) {
+            repeatSync()
+            e.printStackTrace()
+        } catch (e: NoInternetException) {
+            println("position 2")
+            e.printStackTrace()
+            repeatSync()
+            showToast()
+
+        } catch (e: SocketTimeoutException) {
+            repeatSync()
+            LoadingScreen.OnEndLoadingCallbacks?.openPopup(myTimer!!, false, false)
+            showToast()
+        } catch (e: Exception) {
+            repeatSync()
+            println("ErrorResponse ${e.localizedMessage}")
+        } catch (e: SocketException) {
+            repeatSync()
+            Log.d("connection Exception", "Connect Not Available")
+            showToast()
+
+
+        }
+
+
     }
 
 
@@ -180,9 +191,9 @@ class SplashScreenViewModel @Inject constructor(
             getAvatar()
             Log.d("connection Exception", "Connect Not Available")
             showToast()
-        }catch (e:SocketTimeoutException){
+        } catch (e: SocketTimeoutException) {
             getAvatar()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             getAvatar()
         }
 
@@ -228,11 +239,11 @@ class SplashScreenViewModel @Inject constructor(
                     moveToMainScreen()
                     Log.d("connection Exception", "Connect Not Available")
                     showToast()
-                }catch (e:SocketTimeoutException){
+                } catch (e: SocketTimeoutException) {
                     moveToMainScreen()
                     Log.d("connection Exception", "Connect Not Available")
                     showToast()
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     moveToMainScreen()
                     Log.d("connection Exception", "Connect Not Available")
                     showToast()
@@ -287,6 +298,7 @@ class SplashScreenViewModel @Inject constructor(
 
 
     }
+
     private fun getPreviousTime(response: SigninResponse) {
 
         Log.d("NEGATIVE_TESTING", "in function")
@@ -333,6 +345,7 @@ class SplashScreenViewModel @Inject constructor(
 
 
     }
+
     fun getWorkTime(response: SigninResponse) {
         Log.d("NEGATIVE_TESTING", "in function 3")
         tinyDB.putString("checkTimer", "workTime")
@@ -493,7 +506,7 @@ class SplashScreenViewModel @Inject constructor(
 
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
-                    if (mainRepository.getUnsentStartBreakTimeDetails() != null){
+                    if (mainRepository.getUnsentStartBreakTimeDetails() != null) {
                         mainRepository.deleteAllUnsentStartBreakTime()
                     }
                     mainRepository.insertUnsentStartBreakTime(
@@ -521,5 +534,11 @@ class SplashScreenViewModel @Inject constructor(
         val intent = Intent(activityContext, MainActivity::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
         (activityContext as SplashScreen).finish()
+    }
+
+    private fun moveToLoadingScreen() {
+        LoadingScreen.OnEndLoadingCallbacks?.endLoading("Ending From Splash 541")
+        val intent = Intent(activityContext, LoadingScreen::class.java)
+        ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
     }
 }

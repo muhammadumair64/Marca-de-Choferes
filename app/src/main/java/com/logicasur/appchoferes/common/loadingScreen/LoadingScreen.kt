@@ -44,7 +44,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     val loadingViewModel: loadingViewModel by viewModels()
 
     companion object {
-         var OnEndLoadingCallbacks: OnEndLoadingCallbacks? = null
+          var OnEndLoadingCallbacks: OnEndLoadingCallbacks? = null
          var  dialogActionCallBacks :dialogActionCallBacks?= null
     }
 
