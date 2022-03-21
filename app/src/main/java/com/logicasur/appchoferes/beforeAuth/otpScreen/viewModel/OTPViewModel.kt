@@ -411,7 +411,7 @@ class OTPViewModel @Inject constructor(
     private suspend fun showServerPopup() {
         withContext(Dispatchers.Main) {
             MyApplication.authCheck = true
-            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
 
         }
 

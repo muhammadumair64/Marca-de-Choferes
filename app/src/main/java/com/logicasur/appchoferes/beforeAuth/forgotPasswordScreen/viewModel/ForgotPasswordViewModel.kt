@@ -95,14 +95,14 @@ class ForgotPasswordViewModel @Inject constructor(
                 } catch (e: ResponseException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
 
                     }
 
                 } catch (e: ApiException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
@@ -111,7 +111,7 @@ class ForgotPasswordViewModel @Inject constructor(
                     withContext(Dispatchers.Main) {
 
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
 
                     }
 
@@ -119,12 +119,12 @@ class ForgotPasswordViewModel @Inject constructor(
                     Log.d("connection Exception", "Connect Not Available")
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                 }
 

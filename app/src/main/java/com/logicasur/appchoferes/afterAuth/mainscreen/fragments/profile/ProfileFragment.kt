@@ -273,8 +273,7 @@ class ProfileFragment : Fragment() {
         }
 
         confirmbtn.setOnClickListener {
-            val intent = Intent(context, LoadingScreen::class.java)
-            startActivity(intent)
+
             val nameChanges = changedName.text
             if ((nameChanges.length >= 3)) {
                 val fatherName = binding.FatherName.text
@@ -282,7 +281,7 @@ class ProfileFragment : Fragment() {
                 Log.d("input Parameters", "$nameChanges  $fatherName  $name")
                 if (option == 1) {
 
-
+                    profileViewModel.moveToLoadingScreen()
                     lifecycleScope.launch(Dispatchers.IO) {
                         resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                             profileViewModel.updateProfile(

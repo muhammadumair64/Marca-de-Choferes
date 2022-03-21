@@ -187,6 +187,7 @@ class ProfileViewModel @Inject constructor(
         val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
         val encoded = Base64.encodeToString(byteArray, Base64.DEFAULT)
         println("encoded $encoded")
+        moveToLoadingScreen()
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("ImageUploadAvatar", "Before Calling Function.")
             resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
@@ -195,10 +196,11 @@ class ProfileViewModel @Inject constructor(
             }
         }
 
-        moveToLoadingScreen()
+
     }
 
-    fun moveToLoadingScreen() {
+   fun moveToLoadingScreen() {
+        LoadingScreen.OnEndLoadingCallbacks?.endLoading("From configration line 210")
         val intent = Intent(activityContext, LoadingScreen::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
     }
@@ -380,5 +382,6 @@ private fun performSomeActionOnLogout(){
     ResendApis.primaryColor = "#7A59FC"
     ResendApis.secondaryColor = "#653FFB"
 }
+
 
 }

@@ -23,7 +23,6 @@ import androidx.appcompat.widget.AppCompatButton
 import com.logicasur.appchoferes.Extra.BaseClass
 import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.beforeAuth.otpScreen.interfaces.OnEndLoadingCallbacks
-import com.logicasur.appchoferes.afterAuth.mainscreen.fragments.home.timerServices.UploadRemaingDataService.Companion.activity
 import com.logicasur.appchoferes.common.loadingScreen.interfaces.dialogActionCallBacks
 import java.util.*
 
@@ -34,7 +33,8 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     lateinit var cancel_btn: RelativeLayout
     var networkAlertDialog: AlertDialog? = null
     lateinit var networkDialogBuilder: AlertDialog.Builder
-lateinit var topTextView :TextView
+    lateinit var topTextView :TextView
+    lateinit var topServerTextView :TextView
     lateinit var subTextView :TextView
     lateinit var go_back_btn: AppCompatButton
     var serverAlertDialog: AlertDialog? = null
@@ -106,9 +106,9 @@ lateinit var topTextView :TextView
         createPopup(myTimer, check,forServer)
     }
 
-    override fun openServerPopup() {
+    override fun openServerPopup(forServer: Boolean) {
 
-        createServerAlertPopup()
+        createServerAlertPopup(forServer)
 
 
     }
@@ -137,18 +137,22 @@ lateinit var topTextView :TextView
 
 
     //-------------------------------------------------Utils----------------------------------------------
-    private fun createServerAlertPopup() {
+    private fun createServerAlertPopup(forServer: Boolean) {
         Log.d("POPUP_TESTING", "IN SERVER POPUP")
         serverDialogBuilder = AlertDialog.Builder(this)
         val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
         serverAlertDialog = serverDialogBuilder.create()
         go_back_btn = PopupView.findViewById(R.id.go_back)
+        topServerTextView = PopupView.findViewById(R.id.topTextServer)
 
         Log.d("POPUP_TESTING", " In VIEW MODEL After delay")
 
         loadingViewModel.openServerPopup(serverAlertDialog!!, PopupView, resources)
         try {
             setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
+            if(forServer){
+                topServerTextView.text = resources.getString(R.string.toptext)
+            }
         } catch (e: Exception) {
             e.localizedMessage
         }

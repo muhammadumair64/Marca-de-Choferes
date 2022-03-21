@@ -91,7 +91,7 @@ class ServerCheck constructor(
                 }
                 if (MyApplication.authCheck) {
                     MyApplication.authCheck = false
-                    LoadingScreen.OnEndLoadingCallbacks?.openServerPopup()
+                    LoadingScreen.OnEndLoadingCallbacks?.openServerPopup(false)
                 } else {
                     endLoading()
                 }
@@ -141,7 +141,7 @@ class ServerCheck constructor(
                                             in 1..3 -> {
                                                 CoroutineScope(Job()).launch {
                                                     try {
-                                                        serverCheckDuringStatus() {}
+                                                        serverCheckDuringStatus(toSaveInDB) {}
                                                     } catch (e: Exception) {
                                                         Log.d(
                                                             "EXCEPTION_TESTING",
@@ -181,6 +181,18 @@ class ServerCheck constructor(
                             }
                         }
                     }
+                }catch (e:NoInternetException){
+                    LoadingScreen.OnEndLoadingCallbacks?.apply {
+                        Log.d("NETCHECKTEST", "----In Also")
+                        if (toSaveInDB) openPopup(null, false, false) else {
+                            Log.d("NETCHECKTEST", "----In else")
+                            withContext(Dispatchers.Main) {
+                                Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
+                                openServerPopup(false)
+                            }
+
+                        }
+                    }
                 } catch (e: SocketTimeoutException) {
                     LoadingScreen.OnEndLoadingCallbacks?.apply {
                         Log.d("NETCHECKTEST", "----In Also")
@@ -188,7 +200,7 @@ class ServerCheck constructor(
                             Log.d("NETCHECKTEST", "----In else")
                             withContext(Dispatchers.Main) {
                                 Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
-                                openServerPopup()
+                                openServerPopup(true)
                             }
 
                         }
@@ -208,7 +220,7 @@ class ServerCheck constructor(
                         withContext(Dispatchers.Main) {
                             delay(3000)
                             Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
-                            LoadingScreen.OnEndLoadingCallbacks?.openServerPopup()
+                            LoadingScreen.OnEndLoadingCallbacks?.openServerPopup(true)
                         }
 
                     }
@@ -225,7 +237,7 @@ class ServerCheck constructor(
 
 
     suspend fun serverCheckDuringStatus(
-        statusApiCall: () -> Unit
+        toSaveInDB: Boolean,statusApiCall: () -> Unit
     ) {
 
         tagsForToast()
@@ -244,20 +256,59 @@ class ServerCheck constructor(
                 }
 
             } catch (e: SocketTimeoutException) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false , true)
-                Log.d("Exception", "SocketTimeOut..${e.localizedMessage}")
+                LoadingScreen.OnEndLoadingCallbacks?.apply {
+                    Log.d("NETCHECKTEST", "----In Also")
+                    if (toSaveInDB) openPopup(null, false, true) else {
+                        Log.d("NETCHECKTEST", "----In else")
+                        withContext(Dispatchers.Main) {
+                            Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
+                            openServerPopup(true)
+                        }
+
+                    }
+                }
 
             } catch (e: SocketException) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, true)
+                LoadingScreen.OnEndLoadingCallbacks?.apply {
+                    Log.d("NETCHECKTEST", "----In Also")
+                    if (toSaveInDB) openPopup(null, false, true) else {
+                        Log.d("NETCHECKTEST", "----In else")
+                        withContext(Dispatchers.Main) {
+                            Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
+                            openServerPopup(true)
+                        }
+
+                    }
+                }
                 Log.d("Exception", "Socket..${e.localizedMessage}")
 
 
             } catch (e: NoInternetException) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, false)
+                LoadingScreen.OnEndLoadingCallbacks?.apply {
+                    Log.d("NETCHECKTEST", "----In Also")
+                    if (toSaveInDB) openPopup(null, false, false) else {
+                        Log.d("NETCHECKTEST", "----In else")
+                        withContext(Dispatchers.Main) {
+                            Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
+                            openServerPopup(false)
+                        }
+
+                    }
+                }
                 Log.d("Exception", "NoInternet..${e.localizedMessage}")
 
             } catch (e: Exception) {
-                LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, true)
+                LoadingScreen.OnEndLoadingCallbacks?.apply {
+                    Log.d("NETCHECKTEST", "----In Also")
+                    if (toSaveInDB) openPopup(null, false, true) else {
+                        Log.d("NETCHECKTEST", "----In else")
+                        withContext(Dispatchers.Main) {
+                            Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
+                            openServerPopup(true)
+                        }
+
+                    }
+                }
                 Log.d("Exception", " last Place Exception..${e.localizedMessage}")
 
             }

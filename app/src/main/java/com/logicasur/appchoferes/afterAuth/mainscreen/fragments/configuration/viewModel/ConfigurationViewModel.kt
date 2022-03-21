@@ -207,10 +207,13 @@ class ConfigurationViewModel @Inject constructor(
 
 
     private fun moveToLoadingScreen() {
+        LoadingScreen.OnEndLoadingCallbacks?.endLoading("From configration line 210")
         val intent = Intent(activityContext, LoadingScreen::class.java)
         ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
     }
-private fun finishDialog(alterDialog: AlertDialog) {
+
+
+     private fun finishDialog(alterDialog: AlertDialog) {
     moveToLoadingScreen()
     try{
         alterDialog.dismiss()

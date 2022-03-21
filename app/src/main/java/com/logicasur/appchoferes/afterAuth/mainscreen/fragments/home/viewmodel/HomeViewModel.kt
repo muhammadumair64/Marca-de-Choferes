@@ -755,6 +755,7 @@ class HomeViewModel @Inject constructor(
 
         totalTimeForActivty = totalTime!!
         selectedActivty = activity
+       checkNetConnection()
         if (CheckConnection.netCheck(activityContext!!)) {
             Log.d("LOADING_ISSUE_TESTING", "In condition")
             getLocation(activityContext!!, true)
@@ -1236,7 +1237,7 @@ class HomeViewModel @Inject constructor(
             Log.d("HomeViewModel...", "Click on Second state")
             tinyDB.putBoolean("STATEAPI", false)
 
-            checkNetConnection()
+//            checkNetConnection()
             MainActivity.action = null
             if (dataBinding?.secondState?.text == "End Break" || dataBinding?.secondState?.text == "Fin del descanso" || dataBinding?.secondState?.text == "Fim do intervalo"){
                 (activityContext as MainActivity).initPermission({secondStateAction()}) { prepareDataForActivityAPI(2, MyApplication.BreakToSend) }
@@ -1257,9 +1258,7 @@ class HomeViewModel @Inject constructor(
 
 
 
-            checkNetConnection()
-
-
+//            checkNetConnection()
             MainActivity.action = null
             (activityContext as MainActivity).initPermission({takeBreakAction()}) {  prepareDataForActivityAPI(1, MyApplication.BreakToSend)}
 
@@ -1272,7 +1271,7 @@ class HomeViewModel @Inject constructor(
             tinyDB.putBoolean("STATEAPI", false)
 
 
-            checkNetConnection()
+//            checkNetConnection()
             MainActivity.action = null
             (activityContext as MainActivity).initPermission({endDayAction()}) { prepareDataForActivityAPI(3, MyApplication.TimeToSend) }
 
@@ -1492,33 +1491,22 @@ class HomeViewModel @Inject constructor(
             Log.d("StatusTesting", "IN FUNCTION HOME VIEW MODEL LINE 1311")
             if (!(activityContext as MainActivity).isMyServiceRunning(LoadingScreen::class.java)) {
                 LoadingScreen.dialogActionCallBacks = (activityContext as MainActivity)
-                ContextCompat.startActivity(
-                    activityContext!!,
-                    loadingIntent,
-                    Bundle.EMPTY
-                )
-//                viewModelScope.launch(Dispatchers.IO) {
-//                    if (!mainRepository.isExistsUnsentUploadActivityDB()) {
-//                        withContext(Dispatchers.Main) {
-//                            ContextCompat.startActivity(
-//                                activityContext!!,
-//                                loadingIntent,
-//                                Bundle.EMPTY
-//                            )
-//                        }
-//
-//                    }
-//
-//
-//                }
-
-
+                moveToLoadingScreen()
             }
         }
 
 
     }
 
+
+    private fun moveToLoadingScreen() {
+        LoadingScreen.OnEndLoadingCallbacks?.endLoading("From configration line 210")
+        ContextCompat.startActivity(
+            activityContext!!,
+            loadingIntent,
+            Bundle.EMPTY
+        )
+    }
 
     fun openPopup(networkAlertDialog: AlertDialog, PopupView: View, resources: Resources) {
         networkAlertDialog.setView(PopupView)

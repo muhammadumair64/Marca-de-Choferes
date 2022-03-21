@@ -173,7 +173,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
 
                     withContext(Dispatchers.Main){
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
 
                     }
                     println("ErrorResponse ${e.localizedMessage}")
@@ -181,7 +181,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                 catch (e: ApiException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     e.printStackTrace()
                 }
@@ -191,7 +191,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                 }
                 catch(e: SocketException){
@@ -199,13 +199,13 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                 }
                 catch(e: Exception){
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     Log.d("connection Exception", "Connect Not Available")
                 }
@@ -237,7 +237,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     Log.d("LoadingImage","API EXCEPTION ${e.localizedMessage}")
                 }
@@ -246,7 +246,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     Log.d("LoadingImage","No Internet EXCEPTION ${e.localizedMessage}")
                 }
@@ -254,7 +254,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     println("ErrorResponse")
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     Log.d("LoadingImage","Response Exception ${e.localizedMessage}")
 
@@ -262,14 +262,14 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                 catch(e: SocketException){
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     Log.d("connection Exception","Connect Not Available")
                 }
                 catch(e:Exception){
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     Log.d("connection Exception", "Connect Not Available")
                 }
@@ -310,7 +310,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                 catch (e: ApiException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     e.printStackTrace()
                 }
@@ -321,13 +321,13 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
 
                   withContext(Dispatchers.Main){
                       MyApplication.authCheck = true
-                      LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                      LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                   }
                      }
                 catch (e: ResponseException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                     println("ErrorResponse")
                 }
@@ -336,7 +336,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup()
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
                     }
                 }
 

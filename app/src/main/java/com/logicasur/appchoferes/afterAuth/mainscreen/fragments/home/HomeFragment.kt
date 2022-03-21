@@ -170,7 +170,7 @@ class HomeFragment : Fragment(), OnclickItem {
         Log.d("StatusTesting", "---- $selected-----$position")
         if (selected != position) {
             dialog.dismiss()
-            viewModel.checkNetConnection()
+
             val Position = position.plus(1)
             val previous = tinyDB.getInt("state")
             if (previous != 0) {
@@ -180,6 +180,7 @@ class HomeFragment : Fragment(), OnclickItem {
             tinyDB.putInt("state", Position)
             viewModel.selectState(position)
             viewModel.getDataForStateApi(position)
+            viewModel.checkNetConnection()
             (activity as MainActivity).getLocation(requireContext())
         }
     }
