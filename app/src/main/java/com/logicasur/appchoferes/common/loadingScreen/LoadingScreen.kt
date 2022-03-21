@@ -97,8 +97,9 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
         finish()
     }
 
-    override fun openPopup(myTimer: Timer?, boolean: Boolean) {
-        createPopup(myTimer, boolean)
+    override fun openPopup(myTimer: Timer?, b: Boolean) {
+        Log.d("POPUP_TESTING", "IN SERVER POPUP override function")
+        createPopup(myTimer, b)
     }
 
     override fun openServerPopup() {
@@ -156,7 +157,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     }
 
     private fun createPopup(myTimer: Timer?, boolean: Boolean) {
-
+        Log.d("STATUS_TESTING", "IN WINDOW")
         runOnUiThread {
             Log.d("STATUS_TESTING", "IN WINDOW")
             if (networkAlertDialog == null) {
@@ -173,7 +174,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
                     networkAlertDialog?.dismiss()
                     networkAlertDialog =  null
 
-                    if (myTimer != null) {
+                    if (myTimer != null || boolean) {
                         finishAffinity()
                     }
                     finish()

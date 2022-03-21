@@ -39,12 +39,13 @@ class ServerCheck constructor(
 
         tagsForToast()
         Log.d(TAG, "Server Check function 1st")
-
+        Log.d("POPUP_ISSUE_TESTING","--------2 ${MyApplication.syncCheck}")
         CoroutineScope(Job()).launch(Dispatchers.IO) {
             try {
                 val token = tinyDB.getString("Cookie")
 
                 Log.d(TAG, "Server CHECK API Hit")
+
                 checkServerResponse =
                     authRepository.checkServer(token ?: "")
 
@@ -66,9 +67,9 @@ class ServerCheck constructor(
                 Log.d("Exception", "NoInternet..${e.localizedMessage}")
                 handleException()
             } catch (e: Exception) {
-
-                Log.d("Exception", "first place Exception..${e.localizedMessage}")
                 handleException()
+                Log.d("Exception", "first place Exception..${e.localizedMessage}")
+
             }
 
 
@@ -84,20 +85,26 @@ class ServerCheck constructor(
     }
 
 
-   suspend fun handleException(){
-       withContext(Dispatchers.Main)
-       {
-           if(MyApplication.authCheck){
-               MyApplication.authCheck = false
-               LoadingScreen.OnEndLoadingCallbacks?.openServerPopup()
-           }else{
-               endLoading()
-           }
-           if(MyApplication.syncCheck){
-               LoadingScreen.OnEndLoadingCallbacks?.openPopup(null,true)
-               MyApplication.syncCheck = false
-           }
+   private suspend fun handleException(){
+       CoroutineScope(Job()).launch {
+           withContext(Dispatchers.Main)
+           {
+               Log.d("POPUP_ISSUE_TESTING","IN START OF FUNCTION  ${MyApplication.syncCheck}")
+               if(MyApplication.syncCheck){
+                   Log.d("POPUP_ISSUE_TESTING","IN SYNC BLOCK")
+                   delay(3000)
+                   LoadingScreen.OnEndLoadingCallbacks?.openPopup(null,true)
+                   MyApplication.syncCheck = false
+               }
+               if(MyApplication.authCheck){
+                   MyApplication.authCheck = false
+                   LoadingScreen.OnEndLoadingCallbacks?.openServerPopup()
+               }else{
+                   endLoading()
+               }
 
+
+           }
        }
    }
 

@@ -42,7 +42,7 @@ class ResendApis constructor(
         checkNetTimer = Timer()
         checkNetTimer?.schedule(object : TimerTask() {
             override fun run() {
-
+                Log.d("POPUP_ISSUE_TESTING","-------- ${MyApplication.syncCheck}")
                 CoroutineScope(Job()).launch(Dispatchers.IO) {
                     serverCheck.serverCheck {
                         startService()

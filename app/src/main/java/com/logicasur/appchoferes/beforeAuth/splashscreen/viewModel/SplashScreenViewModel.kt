@@ -62,6 +62,8 @@ class SplashScreenViewModel @Inject constructor(
         MyApplication.syncCheck = true
         resendApis.checkNetAndUpload()
         myTimer = Timer()
+        Log.d("SYNC_CHECK_TESTING", "Before timer  ${MyApplication.syncCheck}")
+
         myTimer!!.schedule(object : TimerTask() {
             override fun run() {
                 val check = tinyDB.getBoolean("SYNC_CHECK")
