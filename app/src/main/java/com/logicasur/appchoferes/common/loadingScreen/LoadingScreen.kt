@@ -2,28 +2,28 @@ package com.logicasur.appchoferes.common.loadingScreen
 
 import android.app.AlertDialog
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
-import android.widget.ImageView
-import com.logicasur.appchoferes.R
-import androidx.activity.viewModels
-import com.logicasur.appchoferes.Extra.Language
-import com.logicasur.appchoferes.Extra.TinyDB
-import com.logicasur.appchoferes.afterAuth.mainscreen.MainActivity
-import com.logicasur.appchoferes.utils.myApplication.MyApplication
-import dagger.hilt.android.AndroidEntryPoint
-import android.graphics.Color
 import android.view.View
-
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import com.logicasur.appchoferes.Extra.BaseClass
-import com.logicasur.appchoferes.utils.ResendApis
+import com.logicasur.appchoferes.Extra.Language
+import com.logicasur.appchoferes.Extra.TinyDB
+import com.logicasur.appchoferes.R
+import com.logicasur.appchoferes.afterAuth.mainscreen.MainActivity
 import com.logicasur.appchoferes.beforeAuth.otpScreen.interfaces.OnEndLoadingCallbacks
 import com.logicasur.appchoferes.common.loadingScreen.interfaces.dialogActionCallBacks
+import com.logicasur.appchoferes.utils.ResendApis
+import com.logicasur.appchoferes.utils.myApplication.MyApplication
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 
@@ -45,7 +45,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
 
     companion object {
           var OnEndLoadingCallbacks: OnEndLoadingCallbacks? = null
-         var  dialogActionCallBacks :dialogActionCallBacks?= null
+          var  dialogActionCallBacks :dialogActionCallBacks?= null
     }
 
     lateinit var tinyDB: TinyDB
@@ -74,12 +74,13 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     }
 
     fun initView() {
+
         isStarted= true
         setBarColor()
         MyApplication.loadingContext = this
 
         imageBackground = findViewById(R.id.loadingBackground)
-
+        hideKeyboard()
 
     }
 
@@ -102,14 +103,14 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     }
 
 
-    override fun openPopup(myTimer: Timer?, check: Boolean, forServer: Boolean) {
+    override fun openPopup(myTimer: Timer?, b: Boolean, forServer: Boolean) {
         Log.d("POPUP_TESTING", "IN SERVER POPUP override function")
-        createPopup(myTimer, check,forServer)
+        createPopup(myTimer, b,forServer)
     }
 
-    override fun openServerPopup(forServer: Boolean) {
+    override fun openServerPopup(b: Boolean, s: String) {
 
-        createServerAlertPopup(forServer)
+        createServerAlertPopup(b,s)
 
 
     }
@@ -138,7 +139,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
 
 
     //-------------------------------------------------Utils----------------------------------------------
-    private fun createServerAlertPopup(forServer: Boolean) {
+    private fun createServerAlertPopup(forServer: Boolean, message: String) {
         runOnUiThread {
             Log.d("POPUP_TESTING", "IN SERVER POPUP")
             serverDialogBuilder = AlertDialog.Builder(this)
@@ -147,14 +148,18 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
             go_back_btn = PopupView.findViewById(R.id.go_back)
             topServerTextView = PopupView.findViewById(R.id.topTextServer)
 
-            Log.d("POPUP_TESTING", " In VIEW MODEL After delay")
-
+            Log.d("POPUP_TESTING", " In VIEW MODEL After delay $message")
+            if(message.isNotEmpty()){
+                Log.d("POPUP_TESTING", " In condition $message")
+                topServerTextView.text = message
+            }else if(!forServer) {
+                topServerTextView.text = resources.getString(R.string.toptext)
+            }
             loadingViewModel.openServerPopup(serverAlertDialog!!, PopupView, resources)
             try {
                 setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
-                if (!forServer) {
-                    topServerTextView.text = resources.getString(R.string.toptext)
-                }
+
+
             } catch (e: Exception) {
                 e.localizedMessage
             }
@@ -254,6 +259,11 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
             window.setStatusBarColor(Color.parseColor(color))
         }
 
+    }
+
+    fun hideKeyboard() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
     }
 
 }

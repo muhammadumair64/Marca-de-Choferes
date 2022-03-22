@@ -74,13 +74,13 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
             signInBtn.setOnClickListener {
 
                 if(validateEmailAndPassword(email,editPassword)){
-                    if(checkDeviceNetActiveAndNotify()){
+
                         viewModelScope.launch(Dispatchers.IO) {
                             MyApplication.authCheck = true
                             sigInAuthApi(email.text.toString().trim(),editPassword.text.toString().trim())
                         }
                         showLoadingScreen()
-                    }
+
 
                 }
 
@@ -112,7 +112,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
         val iTotalBlocks = iStat.blockCountLong
         val iAvailableSpace = formatSize(iAvailableBlocks * iBlockSize)
         val iTotalSpace = formatSize(iTotalBlocks * iBlockSize)
-        var unUsed =(iTotalBlocks * iBlockSize)-(iAvailableBlocks * iBlockSize)
+        val unUsed =(iTotalBlocks * iBlockSize)-(iAvailableBlocks * iBlockSize)
         val usedSpace= formatSize(unUsed)
         
         val name = userName
@@ -173,7 +173,8 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
 
                     withContext(Dispatchers.Main){
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        Log.d("POPUP_TESTING","before showing")
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false,"Usuario o contraseña incorrectos")
 
                     }
                     println("ErrorResponse ${e.localizedMessage}")
@@ -181,7 +182,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                 catch (e: ApiException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false, "Usuario o contraseña incorrectos")
                     }
                     e.printStackTrace()
                 }
@@ -191,7 +192,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     e.printStackTrace()
                     withContext(Dispatchers.Main){
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false, "")
                     }
                 }
                 catch(e: SocketException){
@@ -199,13 +200,13 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                 }
                 catch(e: Exception){
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                     Log.d("connection Exception", "Connect Not Available")
                 }
@@ -237,7 +238,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false, "")
                     }
                     Log.d("LoadingImage","API EXCEPTION ${e.localizedMessage}")
                 }
@@ -246,7 +247,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     e.printStackTrace()
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false, "")
                     }
                     Log.d("LoadingImage","No Internet EXCEPTION ${e.localizedMessage}")
                 }
@@ -254,7 +255,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     println("ErrorResponse")
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                     Log.d("LoadingImage","Response Exception ${e.localizedMessage}")
 
@@ -262,14 +263,14 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                 catch(e: SocketException){
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                     Log.d("connection Exception","Connect Not Available")
                 }
                 catch(e:Exception){
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                     Log.d("connection Exception", "Connect Not Available")
                 }
@@ -310,7 +311,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                 catch (e: ApiException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false, "")
                     }
                     e.printStackTrace()
                 }
@@ -321,13 +322,13 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
 
                   withContext(Dispatchers.Main){
                       MyApplication.authCheck = true
-                      LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                      LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false, "")
                   }
                      }
                 catch (e: ResponseException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                     println("ErrorResponse")
                 }
@@ -336,7 +337,7 @@ class SigninViewModel @Inject constructor(val authRepository: AuthRepository, va
                     Log.d("connection Exception","Connect Not Available")
                     withContext(Dispatchers.Main){
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                 }
 

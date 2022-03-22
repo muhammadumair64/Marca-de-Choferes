@@ -437,9 +437,10 @@ class MainActivity : BaseClass(),dialogActionCallBacks {
             tinyDB.putObject("upadteActivity", obj)
             tinyDB.putObject("GeoPosition", geoPosition)
             action?.let { it() }
+            stopInBetweenServerCheck()
             updatePendingData(false)
             LoadingScreen.OnEndLoadingCallbacks!!.endLoading("from main activity")
-            stopInBetweenServerCheck()
+
 
         } else {
             Log.d("END_DAY_TESTING", "StartLoading")
@@ -491,19 +492,19 @@ class MainActivity : BaseClass(),dialogActionCallBacks {
                         }
 
                     } catch (e: ResponseException) {
-                        showToastOrSaveDate()
+                        updatePendingData(false)
                         println("ErrorResponse")
                     } catch (e: ApiException) {
-                        showToastOrSaveDate()
+                        updatePendingData(false)
                         e.printStackTrace()
                     } catch (e: NoInternetException) {
-                        showToastOrSaveDate()
+                        updatePendingData(false)
                     } catch (e: SocketTimeoutException) {
-                        showToastOrSaveDate()
+                        updatePendingData(false)
                     } catch (e: SocketException) {
-                        showToastOrSaveDate()
+                        updatePendingData(false)
                     } catch (e: Exception) {
-                        showToastOrSaveDate()
+                        updatePendingData(false)
                         Log.d("connection Exception", "Connect Not Available")
                     }
                 }

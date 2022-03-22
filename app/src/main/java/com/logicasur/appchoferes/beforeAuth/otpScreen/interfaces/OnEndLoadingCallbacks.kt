@@ -5,6 +5,6 @@ import java.util.*
 interface OnEndLoadingCallbacks {
     fun endLoading(messsage:String)
     fun openPopup(myTimer: Timer?, b: Boolean, forServer: Boolean)
-   fun openServerPopup(b: Boolean)
+   fun openServerPopup(b: Boolean, s: String)
    fun calculateTimeFromLocalDB()
 }

@@ -105,21 +105,19 @@ class CreatePasswordViewModel @Inject constructor(
                     }
 
                 } catch (e: ResponseException) {
-                    (activityContext as CreateNewPasswordScreen).finish()
-                    println("ErrorResponse")
-                    val intent = Intent(activityContext, CreateNewPasswordScreen::class.java)
-                    ContextCompat.startActivity(activityContext!!, intent, Bundle.EMPTY)
+                    showServerPopup(true, "")
 
                 } catch (e: ApiException) {
+                    showServerPopup(true, "")
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-                    showToast()
+                    showServerPopup(false, "")
                 } catch (e: SocketException) {
-                    LoadingScreen.OnEndLoadingCallbacks?.endLoading("from create new pass word ")
-                    showToast()
+                    showServerPopup(true, "")
                 } catch (e: Exception) {
+                    showServerPopup(true, "")
                     Log.d("connection Exception", "Connect Not Available")
                 }
             }
@@ -153,6 +151,14 @@ class CreatePasswordViewModel @Inject constructor(
         }
     }
 
+    private suspend fun showServerPopup(forServer: Boolean, message: String) {
+        withContext(Dispatchers.Main) {
+            MyApplication.authCheck = true
+            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(forServer, message)
+
+        }
+
+    }
     private fun checkPasswordAndHitApi(
         password: String,
         repeatPassword: String,

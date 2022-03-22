@@ -137,9 +137,10 @@ class ProfileViewModel @Inject constructor(
                 }
 
             } catch (e: ResponseException) {
-                (MyApplication.loadingContext as LoadingScreen).finish()
+                showServerPopup(true, "")
                 println("logout Failed $e")
             } catch (e: Exception) {
+                showServerPopup(true, "")
                 Log.d("connection Exception", "Connect Not Available")
             }
 
@@ -233,29 +234,22 @@ class ProfileViewModel @Inject constructor(
 
             } catch (e: ResponseException) {
                 Log.d("ImageUploadAvatar", "Error Response")
-                (MyApplication.loadingContext as LoadingScreen).finish()
+                showServerPopup(true, "")
                 println("ErrorResponse")
 
             } catch (e: ApiException) {
                 Log.d("ImageUploadAvatar", "ApiException")
-                (MyApplication.loadingContext as LoadingScreen).finish()
+                showServerPopup(true, "")
                 e.printStackTrace()
             } catch (e: NoInternetException) {
                 Log.d("ImageUploadAvatar", "NoInternetException")
-                (MyApplication.loadingContext as LoadingScreen).finish()
-
                 e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-                }
+                showServerPopup(false, "")
             } catch (e: SocketException) {
                 Log.d("ImageUploadAvatar", "SocketException")
-                LoadingScreen.OnEndLoadingCallbacks?.endLoading("From profile view model linw nbr 261")
-                Log.d("ImageUploadAvatar", "Connect Not Available")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-                }
+                showServerPopup(true, "")
             } catch (e: Exception) {
+                showServerPopup(true, "")
                 Log.d("ImageUploadAvatar", "Exception")
             }
 
@@ -289,24 +283,20 @@ class ProfileViewModel @Inject constructor(
                 }
 
             } catch (e: ResponseException) {
-                (MyApplication.loadingContext as LoadingScreen).finish()
+                showServerPopup(true, "")
                 println("ErrorResponse")
             } catch (e: ApiException) {
                 e.printStackTrace()
+                showServerPopup(true, "")
             } catch (e: NoInternetException) {
                 println("position 2")
                 e.printStackTrace()
-                (MyApplication.loadingContext as LoadingScreen).finish()
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-                }
+                showServerPopup(false, "")
             } catch (e: SocketException) {
-                LoadingScreen.OnEndLoadingCallbacks?.endLoading("From profile view model linw nbr 312")
+                showServerPopup(true, "")
                 Log.d("connection Exception", "Connect Not Available")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
-                }
             } catch (e: Exception) {
+                showServerPopup(true, "")
                 Log.d("connection Exception", "Connect Not Available")
             }
 
@@ -382,6 +372,13 @@ private fun performSomeActionOnLogout(){
     ResendApis.primaryColor = "#7A59FC"
     ResendApis.secondaryColor = "#653FFB"
 }
+    private suspend fun showServerPopup(forServer: Boolean, message: String) {
+        withContext(Dispatchers.Main) {
+            MyApplication.authCheck = true
+            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(forServer, message)
 
+        }
+
+    }
 
 }

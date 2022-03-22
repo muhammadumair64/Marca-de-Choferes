@@ -43,14 +43,22 @@ class ResendApis constructor(
         checkNetTimer?.schedule(object : TimerTask() {
             override fun run() {
                 Log.d("POPUP_ISSUE_TESTING","-------- ${MyApplication.syncCheck}")
-                CoroutineScope(Job()).launch(Dispatchers.IO) {
-                    serverCheck.serverCheck {
-                        startService()
+                if(!isMyServiceRunning(
+                        ServiceUploadOfflineActivities::class.java
+                    )){
+
+                    CoroutineScope(Job()).launch(Dispatchers.IO) {
+                        serverCheck.serverCheck {
+                            startService()
+                        }
+
+
+                        endIfLoadingIsStarted()
                     }
-
-
-                    endIfLoadingIsStarted()
+                }else{
+                    cancelTimer()
                 }
+
 
 
             }

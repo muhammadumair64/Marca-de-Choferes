@@ -285,24 +285,27 @@ class ConfigurationViewModel @Inject constructor(
                     }
                 }
             } catch (e: ResponseException) {
-                (MyApplication.loadingContext as LoadingScreen).finish()
+
+                showServerPopup(true, "")
                 Log.d(TAG, "logout Failed $e")
             } catch (e: ApiException) {
+                showServerPopup(true, "")
                 e.printStackTrace()
             } catch (e: NoInternetException) {
 
                 Log.d(TAG, "position 2")
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                    showServerPopup(false, "")
                 }
             } catch (e: SocketException) {
                 LoadingScreen.OnEndLoadingCallbacks?.endLoading("from configration line 289")
                 Log.d(TAG, "Connection Not Available")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                    showServerPopup(true, "")
                 }
             } catch (e: Exception) {
+                showServerPopup(true, "")
                 Log.d(TAG, "Connection Not Available")
             }
 
@@ -345,25 +348,38 @@ class ConfigurationViewModel @Inject constructor(
                 }
 
             } catch (e: ResponseException) {
-                (MyApplication.loadingContext as LoadingScreen).finish()
+                showServerPopup(true, "")
+
                 Log.d(TAG, "logout Failed $e")
             } catch (e: ApiException) {
+                showServerPopup(false, "")
                 e.printStackTrace()
             } catch (e: NoInternetException) {
+                showServerPopup(false, "")
                 Log.d(TAG, "position 2")
                 e.printStackTrace()
             } catch (e: SocketException) {
                 LoadingScreen.OnEndLoadingCallbacks!!.endLoading("from configration line 345")
                 Log.d(TAG, "Connection Not Available")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(activityContext, TAG2, Toast.LENGTH_SHORT).show()
+                    showServerPopup(true, "")
                 }
             } catch (e: Exception) {
+                showServerPopup(true, "")
                 Log.d(TAG, "Connection Not Available")
             }
 
         }
 
+
+    }
+
+    private suspend fun showServerPopup(forServer: Boolean, message: String) {
+        withContext(Dispatchers.Main) {
+            MyApplication.authCheck = true
+            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(forServer, message)
+
+        }
 
     }
 

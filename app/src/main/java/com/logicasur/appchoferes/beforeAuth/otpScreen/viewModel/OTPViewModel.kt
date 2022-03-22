@@ -164,21 +164,21 @@ class OTPViewModel @Inject constructor(
                     }
                 } catch (e: ResponseException) {
                     tinyDB.putString("User", "")
-                    showServerPopup()
+                    showServerPopup(true,"OTP incorrecta")
                     println("ErrorResponse ${e.localizedMessage}")
                 } catch (e: ApiException) {
-                    showServerPopup()
+                    showServerPopup(false, "OTP incorrecta")
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
-                    showServerPopup()
+                    showServerPopup(false, "")
                 } catch (e: SocketException) {
 
                     Log.d("connection Exception", "Connect Not Available")
-                    showServerPopup()
+                    showServerPopup(true, "")
                 } catch (e: Exception) {
-                    showServerPopup()
+                    showServerPopup(true, "")
                 }
 
             }
@@ -206,23 +206,23 @@ class OTPViewModel @Inject constructor(
                     }
 
                 } catch (e: ApiException) {
-                    showServerPopup()
+                    showServerPopup(true, "")
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
                     println("position 2")
                     e.printStackTrace()
 
-                    showServerPopup()
+                    showServerPopup(false, "")
                 } catch (e: ResponseException) {
-                    showServerPopup()
+                    showServerPopup(true, "")
                     println("ErrorResponse")
 
                 } catch (e: SocketException) {
 
                     Log.d("connection Exception", "Connect Not Available")
-                    showServerPopup()
+                    showServerPopup(true, "")
                 } catch (e: Exception) {
-                    showServerPopup()
+                    showServerPopup(true, "")
                 }
             }
         }
@@ -257,24 +257,24 @@ class OTPViewModel @Inject constructor(
                     }
 
                 } catch (e: ResponseException) {
-                    showServerPopup()
+                    showServerPopup(true, "")
                     e.printStackTrace()
                 } catch (e: ApiException) {
-                    showServerPopup()
+                    showServerPopup(false, "")
 
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
 
                     println("position 2")
                     e.printStackTrace()
-                    showServerPopup()
+                    showServerPopup(false, "")
                 } catch (e: SocketException) {
 
-                    showServerPopup()
+                    showServerPopup(true, "")
                     Log.d("connection Exception", "Connect Not Available")
 
                 } catch (e: Exception) {
-                    showServerPopup()
+                    showServerPopup(true, "")
                 }
             }
         }
@@ -408,10 +408,10 @@ class OTPViewModel @Inject constructor(
         tinyDB.putBoolean("notify", notify)
     }
 
-    private suspend fun showServerPopup() {
+    private suspend fun showServerPopup(forServer: Boolean, message: String) {
         withContext(Dispatchers.Main) {
             MyApplication.authCheck = true
-            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+            LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(forServer, message)
 
         }
 

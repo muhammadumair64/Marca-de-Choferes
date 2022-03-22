@@ -645,22 +645,29 @@ class HomeViewModel @Inject constructor(
                                 }
 
                             } catch (e: ResponseException) {
+                                (activityContext as MainActivity).updatePendingData(true)
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                                 println("ErrorResponse")
                             } catch (e: ApiException) {
+                                (activityContext as MainActivity).updatePendingData(true)
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                                 e.printStackTrace()
                             } catch (e: NoInternetException) {
                                 println("position 2")
+
                                 e.printStackTrace()
-                                showToast()
+                                (MyApplication.loadingContext as LoadingScreen).finish()
+                                (activityContext as MainActivity).updatePendingData(true)
                             } catch (e: SocketTimeoutException) {
 
-                                showToast()
+                                (MyApplication.loadingContext as LoadingScreen).finish()
+                                (activityContext as MainActivity).updatePendingData(true)
                             } catch (e: SocketException) {
-                                showToast()
+                                (MyApplication.loadingContext as LoadingScreen).finish()
+                                (activityContext as MainActivity).updatePendingData(true)
                             } catch (e: Exception) {
-                                LoadingScreen.OnEndLoadingCallbacks?.endLoading("From profile view model line nbr 659")
+                                (MyApplication.loadingContext as LoadingScreen).finish()
+                                (activityContext as MainActivity).updatePendingData(true)
                                 Log.d("connection Exception", "Connect Not Available")
                             }
                         }

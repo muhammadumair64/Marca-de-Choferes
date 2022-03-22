@@ -35,6 +35,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.utils.ResendApis
 import com.logicasur.appchoferes.common.loadingScreen.LoadingScreen
+import com.logicasur.appchoferes.utils.myApplication.MyApplication
 import com.nabinbhandari.android.permissions.PermissionHandler
 import com.nabinbhandari.android.permissions.Permissions
 import dagger.hilt.android.AndroidEntryPoint

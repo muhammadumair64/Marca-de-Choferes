@@ -95,14 +95,15 @@ class ForgotPasswordViewModel @Inject constructor(
                 } catch (e: ResponseException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false,
+                                "Nombre de usuario incorrecto")
 
                     }
 
                 } catch (e: ApiException) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false, "")
                     }
                     e.printStackTrace()
                 } catch (e: NoInternetException) {
@@ -111,7 +112,7 @@ class ForgotPasswordViewModel @Inject constructor(
                     withContext(Dispatchers.Main) {
 
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false, "")
 
                     }
 
@@ -119,12 +120,12 @@ class ForgotPasswordViewModel @Inject constructor(
                     Log.d("connection Exception", "Connect Not Available")
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         MyApplication.authCheck = true
-                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(false)
+                        LoadingScreen.OnEndLoadingCallbacks!!.openServerPopup(true, "")
                     }
                 }
 

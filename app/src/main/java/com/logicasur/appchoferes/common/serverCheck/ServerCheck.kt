@@ -1,10 +1,6 @@
 package com.logicasur.appchoferes.common.serverCheck
 
-import android.app.ActivityManager
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.lifecycle.Lifecycle
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.data.repository.AuthRepository
 import com.logicasur.appchoferes.common.loadingScreen.LoadingScreen
@@ -94,7 +90,7 @@ class ServerCheck constructor(
                 }
                 if (MyApplication.authCheck) {
                     MyApplication.authCheck = false
-                    LoadingScreen.OnEndLoadingCallbacks?.openServerPopup(netCheck)
+                    LoadingScreen.OnEndLoadingCallbacks?.openServerPopup(netCheck, "")
                 } else {
                     endLoading()
                 }
@@ -291,7 +287,7 @@ private fun handleExceptionForMainApis(toSaveInDB: Boolean,forServer:Boolean){
         Log.d("NETCHECKTEST", "----In else")
 
             Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
-            LoadingScreen.OnEndLoadingCallbacks?.openServerPopup(forServer)
+            LoadingScreen.OnEndLoadingCallbacks?.openServerPopup(forServer, "")
     }
 }
 
