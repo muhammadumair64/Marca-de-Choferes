@@ -81,13 +81,13 @@ class loadingViewModel @Inject constructor(
         Log.d("POPUP_TESTING", " In VIEW MODEL")
         try {
             if (!serverAlertDialog.isShowing) {
-                serverAlertDialog.show()
+                    serverAlertDialog.show()
             }
 
 
             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
             val height = (resources.displayMetrics.heightPixels * 0.60).toInt()
-            serverAlertDialog.getWindow()?.setLayout(width, height)
+            serverAlertDialog.window?.setLayout(width, height)
             serverAlertDialog.setCancelable(false)
             serverAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val window: Window? = serverAlertDialog.getWindow()
@@ -97,7 +97,7 @@ class loadingViewModel @Inject constructor(
 
 
         } catch (e: Exception) {
-            Log.d("PopupWindowTesting", "In Catch Block")
+            Log.d("PopupWindowTesting", "In Catch Block ${e.localizedMessage}")
         }
 
     }

@@ -39,7 +39,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     lateinit var go_back_btn: AppCompatButton
     var serverAlertDialog: AlertDialog? = null
     lateinit var serverDialogBuilder: AlertDialog.Builder
-
+      var isStarted :Boolean = false
 
     val loadingViewModel: loadingViewModel by viewModels()
 
@@ -74,6 +74,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
     }
 
     fun initView() {
+        isStarted= true
         setBarColor()
         MyApplication.loadingContext = this
 
@@ -138,29 +139,31 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
 
     //-------------------------------------------------Utils----------------------------------------------
     private fun createServerAlertPopup(forServer: Boolean) {
-        Log.d("POPUP_TESTING", "IN SERVER POPUP")
-        serverDialogBuilder = AlertDialog.Builder(this)
-        val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
-        serverAlertDialog = serverDialogBuilder.create()
-        go_back_btn = PopupView.findViewById(R.id.go_back)
-        topServerTextView = PopupView.findViewById(R.id.topTextServer)
+        runOnUiThread {
+            Log.d("POPUP_TESTING", "IN SERVER POPUP")
+            serverDialogBuilder = AlertDialog.Builder(this)
+            val PopupView: View = layoutInflater.inflate(R.layout.server_downpopup, null)
+            serverAlertDialog = serverDialogBuilder.create()
+            go_back_btn = PopupView.findViewById(R.id.go_back)
+            topServerTextView = PopupView.findViewById(R.id.topTextServer)
 
-        Log.d("POPUP_TESTING", " In VIEW MODEL After delay")
+            Log.d("POPUP_TESTING", " In VIEW MODEL After delay")
 
-        loadingViewModel.openServerPopup(serverAlertDialog!!, PopupView, resources)
-        try {
-            setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
-            if(forServer){
-                topServerTextView.text = resources.getString(R.string.toptext)
+            loadingViewModel.openServerPopup(serverAlertDialog!!, PopupView, resources)
+            try {
+                setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, go_back_btn)
+                if (!forServer) {
+                    topServerTextView.text = resources.getString(R.string.toptext)
+                }
+            } catch (e: Exception) {
+                e.localizedMessage
             }
-        } catch (e: Exception) {
-            e.localizedMessage
-        }
 
-        go_back_btn.setOnClickListener {
-            serverAlertDialog!!.dismiss()
-            finish()
+            go_back_btn.setOnClickListener {
+                serverAlertDialog!!.dismiss()
+                finish()
 
+            }
         }
     }
 
