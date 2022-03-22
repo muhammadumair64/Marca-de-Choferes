@@ -38,6 +38,7 @@
         <activity
             android:name="com.logicasur.appchoferes.common.loadingScreen.LoadingScreen"
             android:exported="true"
+            android:windowSoftInputMode="stateHidden"
             android:hardwareAccelerated="false"
             android:noHistory="true"
             android:screenOrientation="portrait" />
