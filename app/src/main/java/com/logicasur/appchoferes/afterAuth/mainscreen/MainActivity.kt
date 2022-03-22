@@ -493,18 +493,24 @@ class MainActivity : BaseClass(),dialogActionCallBacks {
 
                     } catch (e: ResponseException) {
                         updatePendingData(false)
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                         println("ErrorResponse")
                     } catch (e: ApiException) {
                         updatePendingData(false)
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                         e.printStackTrace()
                     } catch (e: NoInternetException) {
                         updatePendingData(false)
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                     } catch (e: SocketTimeoutException) {
                         updatePendingData(false)
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                     } catch (e: SocketException) {
                         updatePendingData(false)
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                     } catch (e: Exception) {
                         updatePendingData(false)
+                        (MyApplication.loadingContext as LoadingScreen).finish()
                         Log.d("connection Exception", "Connect Not Available")
                     }
                 }
@@ -864,7 +870,10 @@ class MainActivity : BaseClass(),dialogActionCallBacks {
 
         if (!checkState) {
             Log.d("MainActivity...", "update Pending Data.")
-            action?.invoke()
+            runOnUiThread {
+                action?.invoke()
+            }
+
 //            apiActionGlobal?.let { it() }
         }
 

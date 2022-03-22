@@ -649,6 +649,7 @@ class HomeViewModel @Inject constructor(
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                                 println("ErrorResponse")
                             } catch (e: ApiException) {
+                                println("position 1")
                                 (activityContext as MainActivity).updatePendingData(true)
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                                 e.printStackTrace()
@@ -659,10 +660,11 @@ class HomeViewModel @Inject constructor(
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                                 (activityContext as MainActivity).updatePendingData(true)
                             } catch (e: SocketTimeoutException) {
-
+                                println("position 4")
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                                 (activityContext as MainActivity).updatePendingData(true)
                             } catch (e: SocketException) {
+                                println("position 2")
                                 (MyApplication.loadingContext as LoadingScreen).finish()
                                 (activityContext as MainActivity).updatePendingData(true)
                             } catch (e: Exception) {
