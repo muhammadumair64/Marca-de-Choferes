@@ -273,7 +273,6 @@ class ProfileFragment : Fragment() {
         }
 
         confirmbtn.setOnClickListener {
-
             val nameChanges = changedName.text
             if ((nameChanges.length >= 3)) {
                 val fatherName = binding.FatherName.text
@@ -294,6 +293,7 @@ class ProfileFragment : Fragment() {
                     }
 
                 } else {
+                    profileViewModel.moveToLoadingScreen()
                     lifecycleScope.launch(Dispatchers.IO) {
                         resendApis.serverCheck.serverCheckMainActivityApi { serverAction ->
                             profileViewModel.updateProfile(
