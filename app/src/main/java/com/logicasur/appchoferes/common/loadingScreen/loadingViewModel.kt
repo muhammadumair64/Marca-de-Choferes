@@ -153,7 +153,7 @@ class loadingViewModel @Inject constructor(
                         checkStateByDataBase()
                     }
                     if (fromWindow) {
-                        var intent = Intent(activityContext, MainActivity::class.java)
+                        val intent = Intent(activityContext, MainActivity::class.java)
                         ContextCompat.startActivity(activityContext, intent, Bundle.EMPTY)
                     }
 

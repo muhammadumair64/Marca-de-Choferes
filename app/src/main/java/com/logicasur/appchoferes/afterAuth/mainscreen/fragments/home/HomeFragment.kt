@@ -248,6 +248,7 @@ class HomeFragment : Fragment(), OnclickItem {
                     (activity as MainActivity).updatePendingData(true)
                 } else {
                     actionCallOnProceed()
+                    viewModel.insertDataWhenOffline()
                     Log.d("APIDATATESTING", "IN Else")
                     (activity as MainActivity).updatePendingData(false)
                 }

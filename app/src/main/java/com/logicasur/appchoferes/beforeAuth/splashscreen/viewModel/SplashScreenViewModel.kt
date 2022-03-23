@@ -371,8 +371,10 @@ class SplashScreenViewModel @Inject constructor(
 
     private suspend fun checkLocalBaseAndPassData(response: SigninResponse) {
         if (resendApis.serverCheck.mainRepository.isExistsUnsentUploadActivityDB()) {
+            Log.d("TIMER_TESTING_SYNC","IN IF BLOCK")
             LoadingScreen.OnEndLoadingCallbacks!!.calculateTimeFromLocalDB()
         } else {
+            Log.d("TIMER_TESTING_SYNC","IN ElSE BLOCK")
             getPreviousTime(response)
             tinyDB.putInt("lastVehicleid", response.lastVar!!.lastIdVehicle!!.id!!)
             if (response.lastVar.lastActivity != 3) {

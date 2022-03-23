@@ -138,6 +138,14 @@
 
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/edit_profile_click"
+                android:layout_width="@dimen/_34sdp"
+                android:layout_height="@dimen/_34sdp"
+                android:layout_alignRight="@id/profile_image"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/_55sdp" />
+
         </RelativeLayout>
 
         <LinearLayout

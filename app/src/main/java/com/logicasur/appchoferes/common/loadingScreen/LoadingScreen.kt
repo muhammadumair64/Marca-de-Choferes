@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import com.logicasur.appchoferes.Extra.BaseClass
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.Language
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.R
@@ -80,7 +81,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
         MyApplication.loadingContext = this
 
         imageBackground = findViewById(R.id.loadingBackground)
-        hideKeyboard()
+//        hideKeyboard()
 
     }
 
@@ -152,7 +153,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
             if(message.isNotEmpty()){
                 Log.d("POPUP_TESTING", " In condition $message")
                 topServerTextView.text = message
-            }else if(!forServer) {
+            }else if(!forServer || !CheckConnection.netCheck(this)) {
                 topServerTextView.text = resources.getString(R.string.toptext)
             }
             loadingViewModel.openServerPopup(serverAlertDialog!!, PopupView, resources)
@@ -189,7 +190,7 @@ class LoadingScreen : BaseClass(), OnEndLoadingCallbacks {
 
                 loadingViewModel.openPopup(networkAlertDialog!!, PopupView, resources,forServer,subTextView,topTextView)
                 setGrad(ResendApis.primaryColor, ResendApis.secondaryColor, proceed_btn)
-                if(forServer){
+                if(forServer && CheckConnection.netCheck(this)){
                     Log.d("POPUP_TESTING","IN TEXT CHANGE BLOCK")
                     subTextView.text = resources.getString(R.string.proceed_offline)
                     topTextView.text = resources.getString(R.string.go_back_top_text)

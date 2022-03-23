@@ -884,6 +884,27 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun insertDataWhenOffline(){
+        val sdf = SimpleDateFormat("yyyy-MM-dd,HH:mm:ss")
+        var currentDate = sdf.format(Date())
+        currentDate += "Z"
+        var time = 0
+       val acticity=tinyDB.getInt("SELECTEDACTIVITY")
+        when(acticity){
+            0->{
+                time= MyApplication.TimeToSend
+            }
+            1->{
+                time=MyApplication.BreakToSend
+            }
+            2->{
+                time=MyApplication.BreakToSend
+            }
+        }
+
+        insertActivityTimeInDB(currentDate,time,acticity)
+    }
+
     private fun setPreviousWork() {
         val intent = (activityContext as MainActivity)
         if (MyApplication.check == 200) {

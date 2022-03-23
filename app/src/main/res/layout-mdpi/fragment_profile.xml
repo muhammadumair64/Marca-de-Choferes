@@ -134,6 +134,7 @@
                     android:src="@drawable/ic_pen" />
 
             </androidx.cardview.widget.CardView>
+           c
         </RelativeLayout>
 
         <LinearLayout

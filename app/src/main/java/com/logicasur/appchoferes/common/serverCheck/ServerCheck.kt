@@ -1,6 +1,7 @@
 package com.logicasur.appchoferes.common.serverCheck
 
 import android.util.Log
+import com.logicasur.appchoferes.Extra.CheckConnection
 import com.logicasur.appchoferes.Extra.TinyDB
 import com.logicasur.appchoferes.data.repository.AuthRepository
 import com.logicasur.appchoferes.common.loadingScreen.LoadingScreen
@@ -56,11 +57,11 @@ class ServerCheck constructor(
                 Log.d("Exception", "Socket..${e.localizedMessage}")
                 checkLoadingCallBack(true)
             } catch (e: NoInternetException) {
-
                 Log.d("Exception", "NoInternet..${e.localizedMessage}")
                 checkLoadingCallBack(false)
             } catch (e: Exception) {
-                 checkLoadingCallBack(true)
+
+                checkLoadingCallBack(true)
                 Log.d("Exception", "first place Exception..${e.localizedMessage}")
 
             }
@@ -78,7 +79,7 @@ class ServerCheck constructor(
     }
 
 
-    private  fun handleException(netCheck: Boolean) {
+    private fun handleException(netCheck: Boolean) {
         CoroutineScope(Job()).launch {
             withContext(Dispatchers.Main)
             {
@@ -180,17 +181,16 @@ class ServerCheck constructor(
                             }
                         }
                     }
-                }catch (e:NoInternetException){
+                } catch (e: NoInternetException) {
                     CoroutineScope(Job()).launch {
-                        checkLoadingCallBackForMainAPis(false,  toSaveInDB)
+                        checkLoadingCallBackForMainAPis(false, toSaveInDB)
                         Log.d("NETCHECKTEST", "----In no Internt Exception")
                     }
 
 
                 } catch (e: SocketTimeoutException) {
 
-                    checkLoadingCallBackForMainAPis(true,  toSaveInDB)
-
+                    checkLoadingCallBackForMainAPis(true, toSaveInDB)
 
 
                 } catch (e: Exception) {
@@ -208,7 +208,7 @@ class ServerCheck constructor(
 
 
     suspend fun serverCheckDuringStatus(
-        toSaveInDB: Boolean,statusApiCall: () -> Unit
+        toSaveInDB: Boolean, statusApiCall: () -> Unit
     ) {
 
         tagsForToast()
@@ -279,34 +279,33 @@ class ServerCheck constructor(
         }
     }
 
-private fun handleExceptionForMainApis(toSaveInDB: Boolean,forServer:Boolean){
-    if (toSaveInDB) {
-        LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, forServer)
-    }
-    else {
-        Log.d("NETCHECKTEST", "----In else")
+    private fun handleExceptionForMainApis(toSaveInDB: Boolean, forServer: Boolean) {
+        if (toSaveInDB) {
+            LoadingScreen.OnEndLoadingCallbacks?.openPopup(null, false, forServer)
+        } else {
+            Log.d("NETCHECKTEST", "----In else")
 
             Log.d(TAG, "Open Server Popup....serverCheckMainActivityApi")
             LoadingScreen.OnEndLoadingCallbacks?.openServerPopup(forServer, "")
+        }
     }
-}
 
 
     private fun checkLoadingCallBack(forServer: Boolean) {
-        Log.d("CallBackTesting","In Call back function")
-        if(LoadingScreen.OnEndLoadingCallbacks == null){
+        Log.d("CallBackTesting", "In Call back function")
+        if (LoadingScreen.OnEndLoadingCallbacks == null) {
             val callBackTimer = Timer()
             callBackTimer.schedule(object : TimerTask() {
                 override fun run() {
-                    Log.d("CallBackTesting","In Timer")
-                       if(LoadingScreen.OnEndLoadingCallbacks != null){
-                                Log.d("CallBackTesting","IN for server check")
-                               callBackTimer.cancel()
-                               callBackTimer.purge()
-                               handleException(forServer)
+                    Log.d("CallBackTesting", "In Timer")
+                    if (LoadingScreen.OnEndLoadingCallbacks != null) {
+                        Log.d("CallBackTesting", "IN for server check")
+                        callBackTimer.cancel()
+                        callBackTimer.purge()
+                        handleException(forServer)
 
 
-                       }
+                    }
                 }
             }, 0, 1000)
         }
@@ -315,28 +314,29 @@ private fun handleExceptionForMainApis(toSaveInDB: Boolean,forServer:Boolean){
 
 
     private fun checkLoadingCallBackForMainAPis(forServer: Boolean, toSaveInDB: Boolean) {
-        Log.d("CallBackTesting","In Call back function for main apis")
-            val callBackTimer = Timer()
-            callBackTimer.schedule(object : TimerTask() {
-                override fun run() {
-                        Log.d("CallBackTesting","In Timer")
-                    val loadingCheck= (MyApplication.loadingContext as  LoadingScreen).window.decorView.rootView.isShown
-                    Log.d("CallBackTesting","In loading check $loadingCheck")
-                    if(LoadingScreen.OnEndLoadingCallbacks != null && loadingCheck ){
-                            Log.d("CallBackTesting","Call back not null for main apis")
-                            CoroutineScope(Job()).launch {
+        Log.d("CallBackTesting", "In Call back function for main apis")
+        val callBackTimer = Timer()
+        callBackTimer.schedule(object : TimerTask() {
+            override fun run() {
+                Log.d("CallBackTesting", "In Timer")
+                val loadingCheck =
+                    (MyApplication.loadingContext as LoadingScreen).window.decorView.rootView.isShown
+                Log.d("CallBackTesting", "In loading check $loadingCheck")
+                if (LoadingScreen.OnEndLoadingCallbacks != null && loadingCheck) {
+                    Log.d("CallBackTesting", "Call back not null for main apis")
+                    CoroutineScope(Job()).launch {
 
-                                handleExceptionForMainApis(toSaveInDB,forServer)
-                            }
-                            callBackTimer.cancel()
-                            callBackTimer.purge()
-                        }
-
-
+                        handleExceptionForMainApis(toSaveInDB, forServer)
+                    }
+                    callBackTimer.cancel()
+                    callBackTimer.purge()
                 }
-            }, 0, 1000)
-        }
 
+
+            }
+        }, 0, 1000)
     }
+
+}
 
 

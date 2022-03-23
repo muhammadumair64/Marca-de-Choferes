@@ -49,6 +49,7 @@ class CreateNewPasswordScreen : BaseClass() {
 
     override fun onDestroy() {
         super.onDestroy()
+        closeKeyboard()
           println("function start")
 
     }
@@ -57,6 +58,7 @@ class CreateNewPasswordScreen : BaseClass() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+        closeKeyboard()
         finish()
     }
 

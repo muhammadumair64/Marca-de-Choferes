@@ -114,7 +114,7 @@ class ProfileFragment : Fragment() {
         })
 
 
-        binding.editProfile.setOnClickListener {
+        binding.editProfileClick?.setOnClickListener {
             lifecycleScope.launch {
 
                             initPermission()
@@ -212,6 +212,7 @@ class ProfileFragment : Fragment() {
                             val name = binding.TitleName.text
                             println("showable name is $name")
                             changedName.setText("$name", TextView.BufferType.EDITABLE);
+                            changedName.setSelection(changedName.length())
                             alertDialog.show()
                             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
                             val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
@@ -241,6 +242,7 @@ class ProfileFragment : Fragment() {
                             val name = binding.FatherName.text
                             println("showable name is $name")
                             changedName.setText("$name", TextView.BufferType.EDITABLE);
+                            changedName.setSelection(changedName.length())
                             alertDialog.show()
                             val width = (resources.displayMetrics.widthPixels * 0.90).toInt()
                             val height = (resources.displayMetrics.heightPixels * 0.40).toInt()

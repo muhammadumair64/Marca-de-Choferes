@@ -55,7 +55,11 @@ class CreatePasswordViewModel @Inject constructor(
         tagForToast()
         binding.backButton.setOnClickListener {
 
-            (context as CreateNewPasswordScreen).finish()
+            (context as CreateNewPasswordScreen).apply {
+                closeKeyboard()
+        finish()
+            }
+
         }
 
         binding.showPassBtn.setOnClickListener {

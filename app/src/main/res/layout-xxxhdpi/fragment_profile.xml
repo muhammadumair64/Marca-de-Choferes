@@ -135,6 +135,13 @@
                     android:src="@drawable/ic_pen" />
 
             </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/edit_profile_click"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_alignRight="@id/profile_image"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/_45sdp" />
         </RelativeLayout>
 
         <LinearLayout
