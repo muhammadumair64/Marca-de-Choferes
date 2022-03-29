@@ -199,8 +199,6 @@ class ProfileFragment : Fragment() {
         title = contactPopupView.findViewById(R.id.popupTitleName)
         var option = 1
         val context = (activity as MainActivity).context
-
-
         binding.editName.setOnClickListener {
 
             lifecycleScope.launch {

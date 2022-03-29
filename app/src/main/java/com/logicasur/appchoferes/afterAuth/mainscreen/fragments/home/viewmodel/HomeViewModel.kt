@@ -312,6 +312,8 @@ class HomeViewModel @Inject constructor(
             val time = 0
             MyApplication.dayEndCheck = 0
             intent.timeBreak = 0.0
+            dataBinding?.TimerBreak?.text="00:00"
+            dataBinding?.workTimer?.text ="00:00"
             tinyDB.putInt("lasttimebreak", 1)
             tinyDB.putInt("lasttimework", 1)
             maxBreakBarValue = MyApplication.TotalBreak
@@ -1563,16 +1565,7 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    private suspend fun showToast() {
-        withContext(Dispatchers.Main) {
-            (MyApplication.loadingContext as LoadingScreen).finish()
-            Toast.makeText(
-                activityContext,
-                (activityContext as MainActivity).TAG2,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
+
 
     /**
      * Formaters

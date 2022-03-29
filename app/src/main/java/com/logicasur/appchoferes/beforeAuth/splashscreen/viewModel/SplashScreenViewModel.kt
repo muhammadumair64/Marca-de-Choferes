@@ -409,6 +409,11 @@ class SplashScreenViewModel @Inject constructor(
         if (response.colors.primary.isNotEmpty()) {
             ResendApis.primaryColor = response.colors.primary
             ResendApis.secondaryColor = response.colors.secondary
+
+//            ResendApis.primaryColor = "#FC9918"
+//            ResendApis.secondaryColor = "#FC9918"
+
+
             Log.d("COLORCHECKTESTING", response.colors.primary)
             tinyDB.putString("primaryColor", ResendApis.primaryColor)
             tinyDB.putString("secondrayColor", ResendApis.secondaryColor)
